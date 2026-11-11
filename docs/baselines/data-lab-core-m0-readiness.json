@@ -1,0 +1,234 @@
+{
+  "contract": "data-lab-core-readiness-baseline/v1",
+  "capturedOn": "2026-09-26",
+  "repository": "kehrnel",
+  "owners": {
+    "baseline": "Data Lab Core",
+    "contracts": "Data Lab Core",
+    "fhir": "FHIR Resource Store strategy",
+    "openEhr": "openEHR RPS Dual strategy",
+    "terminology": "Kehrnel terminology gateway and SNOMED CT strategy"
+  },
+  "inventory": {
+    "strategyCount": 8,
+    "sourceCategoryCatalog": {
+      "contract": "source-category-catalog/v1",
+      "path": "src/kehrnel/engine/source_categories/catalog.json",
+      "categories": 31,
+      "healthcare": 15,
+      "pharmaceutical": 16
+    },
+    "sourceProfileCatalog": {
+      "contract": "source-profile-catalog/v1",
+      "path": "src/kehrnel/engine/source_profiles/catalog.json",
+      "profiles": 4,
+      "knownApplications": ["app.openmrs.mysql", "app.bahmni.reference"],
+      "standardsNativeExchanges": ["exchange.fhir-r4-json", "exchange.openehr-json"]
+    },
+    "mappingCatalog": {
+      "contract": "mapping-catalog/v1",
+      "path": "src/kehrnel/engine/mappings/catalog.json",
+      "mappings": 1,
+      "simulated": ["mapping.openmrs-to-openehr.lab-observation"]
+    },
+    "portfolio": {
+      "contract": "strategy-portfolio/v1",
+      "path": "src/kehrnel/engine/strategies/portfolio.json",
+      "primary": ["openehr.rps_dual", "openehr.rps_dual_ibm"],
+      "supported": ["fhir.resource_store", "cdisc.sdr"],
+      "preview": ["contextobjects.rps", "genomics.variant_first", "snomedct.mongodb", "x12.co_single"]
+    },
+    "strategyPacks": [
+      {"id": "cdisc.sdr", "version": "0.2.0", "domain": "cdisc", "operations": 39, "inputSchemas": 39, "outputSchemas": 39, "interactionContracts": 4},
+      {"id": "contextobjects.rps", "version": "1.0.0", "domain": "context", "operations": 3, "inputSchemas": 3, "outputSchemas": 3, "interactionContracts": 0},
+      {"id": "fhir.resource_store", "version": "0.13.1", "domain": "FHIR", "operations": 24, "inputSchemas": 24, "outputSchemas": 24, "interactionContracts": 2},
+      {"id": "genomics.variant_first", "version": "0.1.0", "domain": "genomics", "operations": 0, "inputSchemas": 0, "outputSchemas": 0, "interactionContracts": 0},
+      {"id": "openehr.rps_dual", "version": "0.2.0", "domain": "openEHR", "operations": 10, "inputSchemas": 10, "outputSchemas": 7, "interactionContracts": 0},
+      {"id": "openehr.rps_dual_ibm", "version": "0.2.0", "domain": "openEHR", "operations": 9, "inputSchemas": 9, "outputSchemas": 0, "interactionContracts": 0},
+      {"id": "snomedct.mongodb", "version": "0.5.0", "domain": "snomedct", "operations": 31, "inputSchemas": 31, "outputSchemas": 31, "interactionContracts": 0},
+      {"id": "x12.co_single", "version": "1.0.0", "domain": "X12", "operations": 4, "inputSchemas": 4, "outputSchemas": 0, "interactionContracts": 0}
+    ],
+    "strategySpecs": 7,
+    "operationSchemaCoverage": {
+      "operations": 120,
+      "inputSchemaObjects": 120,
+      "constrainedInputSchemas": 108,
+      "permissiveInputSchemaPlaceholders": 12,
+      "outputSchemas": 104
+    },
+    "apiRouteDeclarations": {
+      "total": 209,
+      "methods": {"delete": 7, "get": 93, "patch": 1, "post": 100, "put": 8},
+      "sourceModules": 18,
+      "sourceRoot": "src/kehrnel/api",
+      "countMethod": "Direct Python decorators matching @router/@app get|post|put|patch|delete"
+    },
+    "tests": {
+      "testFiles": 153,
+      "contract": 89,
+      "unit": 56,
+      "integration": 2,
+      "endToEnd": 1,
+      "supportCategories": 5,
+      "nonDestructiveFoundationCommand": "scripts/test-data-lab-foundation",
+      "nonDestructiveFoundationPassed": 82,
+      "supportedStrategyGate": {
+        "command": "scripts/test-supported-strategies",
+        "environment": {
+          "KEHRNEL_SKIP_DOTENV": "true",
+          "dedicatedTestDatabaseVariables": "unset"
+        },
+        "passed": 452,
+        "skipped": 37,
+        "xfailed": 0,
+        "xpassed": 0,
+        "failed": 0,
+        "errors": 0
+      },
+      "broadContractSnapshot": {
+        "command": ".venv/bin/python -m pytest -q tests/contract",
+        "environment": {
+          "KEHRNEL_SKIP_DOTENV": "true",
+          "dedicatedTestDatabaseVariables": "unset"
+        },
+        "passed": 443,
+        "skipped": 37,
+        "xfailed": 0,
+        "xpassed": 0,
+        "failed": 0,
+        "errors": 0,
+        "status": "green_with_expected_database_skips"
+      }
+    },
+    "knownDuplicateSeams": [
+      {
+        "area": "manifest models",
+        "status": "converged in KDL-001a",
+        "authority": "src/kehrnel/contracts/manifest.py",
+        "compatibilityPaths": ["src/kehrnel/engine/core/manifest.py", "src/kehrnel/strategy_sdk/manifest.py"]
+      },
+      {
+        "area": "plugin ABI",
+        "status": "intentionally separate",
+        "paths": ["src/kehrnel/engine/core/plugin.py", "src/kehrnel/strategy_sdk/plugin.py"],
+        "reason": "The execution and external SDK lifecycle contracts are not compatible; convergence is separate work."
+      },
+      {
+        "area": "query implementations",
+        "status": "domain-specific by design",
+        "paths": ["src/kehrnel/engine/strategies/fhir/resource_store/scripts/query.py", "src/kehrnel/engine/strategies/openehr/rps_dual/query"],
+        "nextContract": "query-plan-trace/v1"
+      }
+    ]
+  },
+  "dataSafety": [
+    {
+      "asset": "FHIR generated cohorts",
+      "classification": "synthetic",
+      "redistributionStatus": "pending_dependency_license_audit",
+      "publicM0Eligible": false,
+      "evidence": ["src/kehrnel/engine/strategies/fhir/resource_store/specification/cohort_blueprints.json", "src/kehrnel/engine/strategies/fhir/resource_store/scripts/cohort_blueprints.py"]
+    },
+    {
+      "asset": "openEHR reference sample pack",
+      "classification": "masked_private_source_derivative",
+      "redistributionStatus": "blocked_pending_review",
+      "publicM0Eligible": false,
+      "evidence": ["src/kehrnel/engine/strategies/openehr/rps_dual/samples/README.md"]
+    },
+    {
+      "asset": "SNOMED CT release content",
+      "classification": "licensed_external_content",
+      "redistributionStatus": "remote_provider_only_or_tenant_licensed",
+      "publicM0Eligible": false,
+      "evidence": ["src/kehrnel/engine/strategies/snomedct/mongodb/manifest.json", "docs/terminology-service-plan.md"]
+    },
+    {
+      "asset": "local environment and runtime state",
+      "classification": "environment_specific",
+      "redistributionStatus": "excluded",
+      "publicM0Eligible": false,
+      "evidence": [".gitignore", ".dockerignore"]
+    }
+  ],
+  "clinicalReadiness": {
+    "maximumScore": 35,
+    "criteria": ["terminologyIntegration", "deterministicData", "traceCompleteness", "redistributionRights", "resetSafety", "setupDependencies", "tests"],
+    "candidates": [
+      {
+        "strategyId": "fhir.resource_store",
+        "score": 24,
+        "scores": {"terminologyIntegration": 4, "deterministicData": 4, "traceCompleteness": 4, "redistributionRights": 2, "resetSafety": 3, "setupDependencies": 3, "tests": 4},
+        "testEvidence": {
+          "command": ".venv/bin/python -m pytest -q tests/contract/resource_store",
+          "environment": {"KEHRNEL_SKIP_DOTENV": "true", "FHIR_TEST_MONGODB_URI": "unset", "FHIR_TEST_DB": "unset"},
+          "passed": 215,
+          "skipped": 37,
+          "failed": 0,
+          "mongoExecutionDisabled": true
+        },
+        "evidence": [
+          "src/kehrnel/engine/strategies/fhir/resource_store/specification/manifest.json",
+          "src/kehrnel/engine/strategies/fhir/resource_store/scripts/terminology_validation.py",
+          "src/kehrnel/engine/strategies/fhir/resource_store/scripts/cohort_blueprints.py",
+          "src/kehrnel/engine/strategies/fhir/resource_store/scripts/query.py"
+        ]
+      },
+      {
+        "strategyId": "openehr.rps_dual",
+        "score": 15,
+        "scores": {"terminologyIntegration": 1, "deterministicData": 2, "traceCompleteness": 3, "redistributionRights": 1, "resetSafety": 1, "setupDependencies": 3, "tests": 4},
+        "testEvidence": {
+          "command": ".venv/bin/python -m pytest -q tests/contract/rps_dual",
+          "environment": {"KEHRNEL_SKIP_DOTENV": "true"},
+          "passed": 32,
+          "failed": 0,
+          "xfailed": 0,
+          "xpassed": 0
+        },
+        "evidence": [
+          "src/kehrnel/engine/strategies/openehr/rps_dual/strategy.py",
+          "src/kehrnel/engine/strategies/openehr/rps_dual/query/executor.py",
+          "src/kehrnel/engine/strategies/openehr/rps_dual/samples/README.md"
+        ]
+      }
+    ],
+    "decision": {
+      "primaryClinicalStrategyId": "openehr.rps_dual",
+      "requiredProfileStrategyId": "openehr.rps_dual_ibm",
+      "supportedStrategyIds": ["fhir.resource_store", "cdisc.sdr"],
+      "previewStrategyIds": ["contextobjects.rps", "genomics.variant_first", "snomedct.mongodb", "x12.co_single"],
+      "primaryDemoId": "clinical-semantic-query",
+      "compositionId": "clinical-snomed",
+      "status": "engineering_primary_not_public_ready",
+      "secondary": {"strategyId": "fhir.resource_store", "supportStatus": "supported", "runtimeAvailability": "available"},
+      "accountableOwner": "Data Lab Core",
+      "artifactRefs": null,
+      "reason": "openEHR is the product-primary operational and agentic data path; its RPS Dual and IBM exact-model profiles block release. FHIR remains supported and currently has fewer public-demo blockers, while CDISC is the supported Life Sciences path."
+    },
+    "promotionBlockers": [
+      "Implement pinned terminology expansion to a bounded AQL query and complete MQL trace.",
+      "Replace or clear openEHR demo-data provenance and terminology redistribution rights.",
+      "Add cross-process full-resource determinism golden tests.",
+      "Implement guarded demo up, reset and cleanup in a dedicated namespace.",
+      "Run the skipped Mongo suite in an ephemeral database and capture winning-index evidence."
+    ]
+  },
+  "unsupportedClaims": [
+    "No public-ready FHIR plus SNOMED composition exists yet.",
+    "No production-complete FHIR server conformance is claimed.",
+    "No public-safe openEHR demo-data provenance is established.",
+    "No generic N-source compiler or production composite activation exists.",
+    "No wheel or container digest is represented by packageDigest.",
+    "No strategy packageDigest alone identifies all Core, domain, persistence or external dependency bytes.",
+    "No production scale, SLO or horizontal-scaling evidence exists for the M0 journey."
+  ],
+  "migrationLedger": [
+    {"work": "foundation contracts and package identity", "owner": "Data Lab Core", "path": "src/kehrnel/contracts", "ticket": "KDL-001", "implementedSlice": "KDL-001a", "remaining": "public API response adoption and generated OpenAPI coverage"},
+    {"work": "three-layer strategy evidence", "owner": "Data Lab Core and strategy owners", "path": "strategy manifests and specs", "ticket": "KDL-002"},
+    {"work": "FHIR clinical exhibit", "owner": "FHIR Resource Store strategy", "path": "src/kehrnel/engine/strategies/fhir/resource_store", "ticket": "KDL-003 to KDL-005"},
+    {"work": "terminology composition", "owner": "Kehrnel terminology gateway", "path": "src/kehrnel/engine/terminology", "ticket": "KDL-007"},
+    {"work": "openEHR primary path and IBM exact-model profile", "owner": "openEHR RPS Dual strategy", "path": "src/kehrnel/engine/strategies/openehr", "ticket": "KDL-002 to KDL-007"},
+    {"work": "typed mapping IR and bounded OpenMRS laboratory simulation", "owner": "Data Lab Core", "path": "src/kehrnel/engine/mappings", "ticket": "KDL-011", "remaining": "YAML import, repeating and polymorphic mapping, connectors, reconciliation, drift and multi-source proof"}
+  ]
+}

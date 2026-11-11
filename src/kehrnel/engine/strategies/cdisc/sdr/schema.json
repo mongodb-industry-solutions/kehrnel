@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CDISC Study Data Repository Configuration",
+  "description": "Tenant scope, MongoDB collections, governed intake limits, validation gates, rebuildable projections, semantic retrieval, and query limits for cdisc.sdr.",
+  "type": "object",
+  "required": ["database", "tenant_id", "collections"],
+  "properties": {
+    "database": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required strategy-owned MongoDB database for the CDISC study repository. Review this value during activation."
+    },
+    "tenant_id": {"type": "string", "minLength": 1, "default": "default", "description": "Tenant boundary injected by every governed operation."},
+    "collections": {
+      "type": "object",
+      "description": "Distinct MongoDB collections for canonical, evidence, and rebuildable CDISC documents.",
+      "required": ["studies", "snapshots", "datasets", "records", "entities", "materializations", "standards", "artifacts", "validation_runs", "validation_findings", "validation_waivers", "transformations"],
+      "properties": {
+        "studies": {"type": "string", "minLength": 1},
+        "snapshots": {"type": "string", "minLength": 1},
+        "datasets": {"type": "string", "minLength": 1},
+        "records": {"type": "string", "minLength": 1},
+        "entities": {"type": "string", "minLength": 1},
+        "materializations": {"type": "string", "minLength": 1},
+        "standards": {"type": "string", "minLength": 1},
+        "artifacts": {"type": "string", "minLength": 1},
+        "validation_runs": {"type": "string", "minLength": 1},
+        "validation_findings": {"type": "string", "minLength": 1},
+        "validation_waivers": {"type": "string", "minLength": 1},
+        "transformations": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "ingest": {
+      "type": "object",
+      "description": "Synchronous canonicalization and publication defaults.",
+      "properties": {
+        "default_publication_state": {"type": "string", "enum": ["staged", "published"], "default": "staged"},
+        "batch_size": {"type": "integer", "minimum": 1, "maximum": 10000, "default": 1000},
+        "max_records_per_dataset": {"type": "integer", "minimum": 1, "maximum": 100000000, "default": 2000000}
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "description": "Inline transfer limits; larger files use direct object-store operations.",
+      "properties": {
+        "max_inline_bytes": {"type": "integer", "minimum": 1, "maximum": 1000000000, "default": 25000000},
+        "max_replay_bytes": {"type": "integer", "minimum": 1, "maximum": 1000000000, "default": 25000000}
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "description": "Publication gate and external validation behavior.",
+      "properties": {
+        "require_before_publish": {"type": "boolean", "default": true},
+        "require_registered_standards": {"type": "boolean", "default": false},
+        "external_failure_policy": {"type": "string", "enum": ["finding", "raise"], "default": "finding"},
+        "blocking_severities": {
+          "type": "array",
+          "default": ["error"],
+          "minItems": 1,
+          "items": {"type": "string", "enum": ["error", "warning", "info"]},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "projections": {
+      "type": "object",
+      "description": "Rebuild policy for facets, entities, workload views, and semantic text.",
+      "properties": {
+        "rebuild_on_publish": {"type": "boolean", "default": true},
+        "max_records_per_rebuild": {"type": "integer", "minimum": 1, "maximum": 10000000, "default": 250000}
+      },
+      "additionalProperties": false
+    },
+    "semantic": {
+      "type": "object",
+      "description": "Optional search projections; canonical CDISC documents remain authoritative.",
+      "properties": {
+        "enabled": {"type": "boolean", "default": true},
+        "auto_embedding_model": {"type": "string", "minLength": 1, "default": "voyage-4"},
+        "max_text_chars": {"type": "integer", "minimum": 128, "maximum": 50000, "default": 4000},
+        "max_fallback_scan": {"type": "integer", "minimum": 1, "maximum": 1000000, "default": 10000},
+        "lexical_index": {"type": "string", "minLength": 1, "default": "cdisc_semantic_text"},
+        "auto_embed_index": {"type": "string", "minLength": 1, "default": "cdisc_semantic_auto_embed"},
+        "exclude_variables": {"type": "array", "items": {"type": "string"}, "uniqueItems": true, "default": ["USUBJID", "SUBJID"]}
+      },
+      "additionalProperties": false
+    },
+    "query": {
+      "type": "object",
+      "description": "Bounds and explicit extension paths for cdisc-query/v1.",
+      "properties": {
+        "default_limit": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 100},
+        "max_limit": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 1000},
+        "extra_allowed_paths": {"type": "array", "items": {"type": "string"}, "default": []}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

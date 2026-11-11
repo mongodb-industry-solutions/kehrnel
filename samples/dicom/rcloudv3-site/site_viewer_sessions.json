@@ -1,0 +1,3211 @@
+[
+  {
+    "_id": "vw-0e7f18c0a0ad",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.207962574484399539658729323243509159695",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-07T05:06:10.138Z"
+    }
+  },
+  {
+    "_id": "vw-16bd1daec7ea",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.63402019196557527119949808938432697694",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-06T08:00:41.423Z"
+    }
+  },
+  {
+    "_id": "vw-23689b0b5613",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.207962574484399539658729323243509159695",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-06T09:48:36.037Z"
+    }
+  },
+  {
+    "_id": "vw-38e690abbff2",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:13:03.250Z"
+    },
+    "GIntCallCount": 36,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 7798648,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:03.722Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 49,
+        "GIntTotalMs": 49,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:03.874Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 16,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:03.907Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 22,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:03.949Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PM5644&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 52,
+        "GIntTotalMs": 52,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:03.958Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 64,
+        "GIntTotalMs": 119,
+        "GLngBytes": 36148
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.279Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36648.1555586123.754/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 83,
+        "GLngBytes": 1555414
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.432Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 27,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.512Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.35168.1555586462.541/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 39,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.510Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.39344.1555586455.865/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 55,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.698Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 82,
+        "GIntTotalMs": 82,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.696Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 84,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.696Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.31712.1555586797.811/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 83,
+        "GIntTotalMs": 105,
+        "GLngBytes": 76399
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.696Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 82,
+        "GIntTotalMs": 105,
+        "GLngBytes": 80665
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.696Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 83,
+        "GIntTotalMs": 105,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.696Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36537.1555586012.643/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 106,
+        "GLngBytes": 317139
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.698Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 82,
+        "GIntTotalMs": 106,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.698Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 104,
+        "GIntTotalMs": 109,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:04.699Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6198790083075602079010362193135551056/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 103,
+        "GIntTotalMs": 122,
+        "GLngBytes": 187668
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:26.079Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:26.393Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 26,
+        "GIntTotalMs": 26,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:26.502Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 20,
+        "GIntTotalMs": 20,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:26.510Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PM5644&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:26.589Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 26,
+        "GLngBytes": 36148
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:26.961Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36648.1555586123.754/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 55,
+        "GLngBytes": 1555414
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.138Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 6,
+        "GIntTotalMs": 18,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.292Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.39344.1555586455.865/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 34,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.292Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.35168.1555586462.541/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 42,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.577Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 23,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.576Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 30,
+        "GLngBytes": 80665
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.576Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.31712.1555586797.811/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 30,
+        "GLngBytes": 76399
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.578Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 28,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.576Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 31,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.579Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 29,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.576Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36537.1555586012.643/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 33,
+        "GLngBytes": 317139
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.579Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6198790083075602079010362193135551056/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 44,
+        "GLngBytes": 187668
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:13:27.577Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 138,
+        "GIntTotalMs": 162,
+        "GLngBytes": 166739
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:13:03.722Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:13:27.739Z"
+    }
+  },
+  {
+    "_id": "vw-399e0084f8c9",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "GStrSeriesUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+    "GStrSopUid": "1.2.276.0.7230010.3.1.4.253549293.35168.1555586462.541",
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:14:04.717Z"
+    },
+    "GIntCallCount": 44,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 6628818,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:06.394Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 18,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:06.608Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 15,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:06.655Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=00080021%2C00080031%2C0008103E%2C00200011&SeriesInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 18,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:06.671Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PM5644&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 17,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:06.725Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 58,
+        "GLngBytes": 36148
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:07.146Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.35168.1555586462.541/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 37,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:07.307Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 32,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:07.511Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36537.1555586012.643/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 29,
+        "GLngBytes": 317139
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:07.511Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.31712.1555586797.811/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 31,
+        "GLngBytes": 76399
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:07.513Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.39344.1555586455.865/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 45,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:07.514Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36648.1555586123.754/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 63,
+        "GLngBytes": 1555414
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.060Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 21,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.061Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 7,
+        "GIntTotalMs": 22,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.061Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 24,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.061Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 20,
+        "GIntTotalMs": 30,
+        "GLngBytes": 80665
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.064Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 27,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.064Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6198790083075602079010362193135551056/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 7,
+        "GIntTotalMs": 30,
+        "GLngBytes": 187668
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:08.062Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 32,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.634Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 25,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.634Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 26,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.634Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 30,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.634Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 29,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.634Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 31,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.871Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 19,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.871Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 21,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.871Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 24,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.871Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 24,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.870Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 27,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.992Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 17,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.992Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 22,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.994Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 23,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.994Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 25,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:09.993Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 37,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:10.126Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 26,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:10.216Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 36,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:10.603Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 26,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:10.614Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 22,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:10.614Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 25,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:12.191Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 36,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:12.252Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 23,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:12.350Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 20,
+        "GIntTotalMs": 28,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:12.446Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 22,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:13.465Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 32,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:14:13.465Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 35,
+        "GLngBytes": 72590
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:14:06.394Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:14:13.500Z"
+    }
+  },
+  {
+    "_id": "vw-53309a5caeaf",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-07T05:14:44.816Z"
+    }
+  },
+  {
+    "_id": "vw-591ce2c7409e",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.123649988723414845493691225072059353696",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-05T09:28:53.968Z"
+    }
+  },
+  {
+    "_id": "vw-6002cdbda5d5",
+    "GStrUserName": "test",
+    "GStrStudyUid": "2.25.207962574484399539658729323243509159695",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-06T06:01:11.406Z"
+    }
+  },
+  {
+    "_id": "vw-795ced227fbf",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:15:42.958Z"
+    },
+    "GIntCallCount": 57,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 733139052,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.591Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 15,
+        "GLngBytes": 5208
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.780Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+        "GIntStatus": 200,
+        "GIntWaitMs": 20,
+        "GIntTotalMs": 20,
+        "GLngBytes": 951
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.831Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 17,
+        "GLngBytes": 5208
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.874Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PATIENT003&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 13,
+        "GLngBytes": 951
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.886Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38893/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 15,
+        "GLngBytes": 11859
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.883Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38875/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 25,
+        "GIntTotalMs": 25,
+        "GLngBytes": 11845
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.886Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38873/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 32,
+        "GIntTotalMs": 32,
+        "GLngBytes": 12856
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.887Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38891/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 35,
+        "GIntTotalMs": 35,
+        "GLngBytes": 12871
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.888Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39068/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 40,
+        "GIntTotalMs": 40,
+        "GLngBytes": 12856
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.888Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39070/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 40,
+        "GIntTotalMs": 40,
+        "GLngBytes": 11843
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.895Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38899.1/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 40,
+        "GIntTotalMs": 41,
+        "GLngBytes": 62767
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.889Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 47,
+        "GIntTotalMs": 47,
+        "GLngBytes": 62154
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.895Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39076.1/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 43,
+        "GIntTotalMs": 47,
+        "GLngBytes": 60957
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:43.896Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39093/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 46,
+        "GIntTotalMs": 87,
+        "GLngBytes": 165250
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.373Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39070/instances/1.2.840.113681.168453812.1778820075.11776.39071/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 5685,
+        "GLngBytes": 17039567
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.373Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38899.1/instances/1.2.840.113681.168453812.1778820075.11776.38900.1/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 6742,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.614Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38899.1/instances/1.2.840.113681.168453812.1778820075.11776.38900.1/frames/33",
+        "GIntStatus": 200,
+        "GIntWaitMs": 99,
+        "GIntTotalMs": 7864,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.374Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39076.1/instances/1.2.840.113681.168453812.1778820075.11776.39077.1/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 46,
+        "GIntTotalMs": 8108,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.373Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38875/instances/1.2.840.113681.168453812.1778820075.11776.38876/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 8241,
+        "GLngBytes": 17039567
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.374Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38873/instances/1.2.840.113681.168453812.1778820075.11776.38874/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 8648,
+        "GLngBytes": 17039567
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.620Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/32",
+        "GIntStatus": 200,
+        "GIntWaitMs": 158,
+        "GIntTotalMs": 8783,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.374Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 9058,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.620Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39076.1/instances/1.2.840.113681.168453812.1778820075.11776.39077.1/frames/32",
+        "GIntStatus": 200,
+        "GIntWaitMs": 158,
+        "GIntTotalMs": 9460,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.373Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38891/instances/1.2.840.113681.168453812.1778820075.11776.38892/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 9825,
+        "GLngBytes": 17039567
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.374Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39068/instances/1.2.840.113681.168453812.1778820075.11776.39069/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 11188,
+        "GLngBytes": 17039567
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:44.373Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38893/instances/1.2.840.113681.168453812.1778820075.11776.38894/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 11510,
+        "GLngBytes": 17039567
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:02.938Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 4537,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:02.953Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/3",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 4609,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:03.671Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38899.1/instances/1.2.840.113681.168453812.1778820075.11776.38900.1/frames/2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 5560,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:03.699Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38899.1/instances/1.2.840.113681.168453812.1778820075.11776.38900.1/frames/3",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 5628,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:04.244Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39076.1/instances/1.2.840.113681.168453812.1778820075.11776.39077.1/frames/3",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 5679,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:04.231Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39076.1/instances/1.2.840.113681.168453812.1778820075.11776.39077.1/frames/2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 25,
+        "GIntTotalMs": 5903,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.722Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/7",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 13863,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.748Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/9",
+        "GIntStatus": 200,
+        "GIntWaitMs": 131,
+        "GIntTotalMs": 14187,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.720Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/5",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14223,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.721Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/6",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14302,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.723Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/8",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 14322,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.717Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/4",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 14420,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.749Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/15",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 15326,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.748Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/10",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 16347,
+        "GLngBytes": 17039569
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.749Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/13",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 17046,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.754Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/23",
+        "GIntStatus": 200,
+        "GIntWaitMs": 248,
+        "GIntTotalMs": 17808,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.749Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/14",
+        "GIntStatus": 200,
+        "GIntWaitMs": 19,
+        "GIntTotalMs": 17819,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.748Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/11",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 17821,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.748Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/12",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 17831,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.751Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/18",
+        "GIntStatus": 200,
+        "GIntWaitMs": 157,
+        "GIntTotalMs": 17829,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.804Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/25",
+        "GIntStatus": 200,
+        "GIntWaitMs": 397,
+        "GIntTotalMs": 17776,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.804Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/24",
+        "GIntStatus": 200,
+        "GIntWaitMs": 273,
+        "GIntTotalMs": 18301,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.902Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/28",
+        "GIntStatus": 200,
+        "GIntWaitMs": 376,
+        "GIntTotalMs": 18875,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.750Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/19",
+        "GIntStatus": 200,
+        "GIntWaitMs": 252,
+        "GIntTotalMs": 19030,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.805Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/26",
+        "GIntStatus": 200,
+        "GIntWaitMs": 198,
+        "GIntTotalMs": 20874,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.750Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/20",
+        "GIntStatus": 200,
+        "GIntWaitMs": 252,
+        "GIntTotalMs": 20930,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.750Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/16",
+        "GIntStatus": 200,
+        "GIntWaitMs": 52,
+        "GIntTotalMs": 20932,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.750Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/17",
+        "GIntStatus": 200,
+        "GIntWaitMs": 52,
+        "GIntTotalMs": 20932,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.902Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/27",
+        "GIntStatus": 200,
+        "GIntWaitMs": 419,
+        "GIntTotalMs": 20783,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.754Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/22",
+        "GIntStatus": 200,
+        "GIntWaitMs": 324,
+        "GIntTotalMs": 22484,
+        "GLngBytes": 17039570
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:16:17.753Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.38881.1/instances/1.2.840.113681.168453812.1778820075.11776.38882.1/frames/21",
+        "GIntStatus": 200,
+        "GIntWaitMs": 249,
+        "GIntTotalMs": 23904,
+        "GLngBytes": 17039570
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:15:43.591Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:16:41.657Z"
+    }
+  },
+  {
+    "_id": "vw-7cccc4b74890",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.63402019196557527119949808938432697694",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-02T10:58:21.110Z"
+    },
+    "GIntCallCount": 20,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 50186,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:22.162Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 21,
+        "GLngBytes": 512
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:22.446Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=2.25.63402019196557527119949808938432697694",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 929
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:22.545Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 512
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:22.582Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PAT0000010&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 28,
+        "GIntTotalMs": 28,
+        "GLngBytes": 18539
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:22.598Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 142,
+        "GIntTotalMs": 144,
+        "GLngBytes": 3306
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:23.214Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.255192305091601772574598079180126468358/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 126,
+        "GLngBytes": 185
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:23.388Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.65566541627610335604086382324012236835/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 16,
+        "GLngBytes": 184
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:58:23.603Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.255192305091601772574598079180126468358/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 17,
+        "GLngBytes": 185
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:08.378Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 21,
+        "GLngBytes": 512
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:08.589Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=2.25.63402019196557527119949808938432697694",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 21,
+        "GLngBytes": 929
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:08.650Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 512
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:08.668Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PAT0000010&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 17,
+        "GLngBytes": 18539
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:08.712Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 18,
+        "GLngBytes": 3306
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:09.172Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.65566541627610335604086382324012236835/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 21,
+        "GLngBytes": 184
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T10:59:09.261Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.255192305091601772574598079180126468358/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 17,
+        "GLngBytes": 185
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T11:01:51.136Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.255192305091601772574598079180126468358/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 17,
+        "GLngBytes": 185
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T11:01:51.965Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.65566541627610335604086382324012236835/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 15,
+        "GLngBytes": 184
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T11:01:52.309Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.255192305091601772574598079180126468358/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 15,
+        "GLngBytes": 185
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T11:01:53.279Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.65566541627610335604086382324012236835/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 23,
+        "GLngBytes": 184
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-02T11:02:18.475Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=2.25.63402019196557527119949808938432697694",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 12,
+        "GLngBytes": 929
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-02T10:58:22.162Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-02T11:02:18.487Z"
+    }
+  },
+  {
+    "_id": "vw-8cfa1f2855e2",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.63402019196557527119949808938432697694",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T07:50:19.154Z"
+    },
+    "GIntCallCount": 0,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 0,
+    "GLstObjCalls": []
+  },
+  {
+    "_id": "vw-8db6ff92b45b",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+    "GStrSeriesUid": "1.2.840.113681.168453812.1778820075.11776.39070",
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:15:26.884Z"
+    },
+    "GIntCallCount": 6,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 17059034,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:27.549Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 5208
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:27.738Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 18,
+        "GLngBytes": 951
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:27.782Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series?includefield=00080021%2C00080031%2C0008103E%2C00200011&SeriesInstanceUID=1.2.840.113681.168453812.1778820075.11776.39070",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 514
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:27.796Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PATIENT003&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 17,
+        "GLngBytes": 951
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:27.843Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39070/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 19,
+        "GIntTotalMs": 23,
+        "GLngBytes": 11843
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:15:28.152Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074/series/1.2.840.113681.168453812.1778820075.11776.39070/instances/1.2.840.113681.168453812.1778820075.11776.39071/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 1280,
+        "GLngBytes": 17039567
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:15:27.549Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:15:29.432Z"
+    }
+  },
+  {
+    "_id": "vw-9b049336c79c",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.63402019196557527119949808938432697694",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T07:47:20.250Z"
+    },
+    "GIntCallCount": 7,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 24167,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:22.766Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 137,
+        "GIntTotalMs": 140,
+        "GLngBytes": 512
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:23.094Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=2.25.63402019196557527119949808938432697694",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 14,
+        "GLngBytes": 929
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:23.184Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 19,
+        "GIntTotalMs": 19,
+        "GLngBytes": 512
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:23.201Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PAT0000010&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 28,
+        "GLngBytes": 18539
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:23.258Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 135,
+        "GIntTotalMs": 142,
+        "GLngBytes": 3306
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:23.623Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.65566541627610335604086382324012236835/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 80,
+        "GLngBytes": 184
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T07:47:23.745Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/2.25.63402019196557527119949808938432697694/series/2.25.183275672623134171094515444913411522061/instances/2.25.255192305091601772574598079180126468358/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 24,
+        "GLngBytes": 185
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T07:47:22.766Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T07:47:23.769Z"
+    }
+  },
+  {
+    "_id": "vw-ad1f7759a8cd",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.207962574484399539658729323243509159695",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-07T05:06:42.297Z"
+    }
+  },
+  {
+    "_id": "vw-d18159b0a89b",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.209493966961674040026904997099508867496",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T07:52:03.278Z"
+    },
+    "GIntCallCount": 0,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 0,
+    "GLstObjCalls": []
+  },
+  {
+    "_id": "vw-d3ca141ec234",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+    "GStrSeriesUid": "1.2.840.113681.168453812.1778820075.11776.39070",
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-07T05:14:05.421Z"
+    }
+  },
+  {
+    "_id": "vw-dcd6723dcda2",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.211071008800468774056485261062712721529",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T07:51:52.062Z"
+    },
+    "GIntCallCount": 0,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 0,
+    "GLstObjCalls": []
+  },
+  {
+    "_id": "vw-e1f0b9ad6337",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "GStrSeriesUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+    "GStrSopUid": "1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421",
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:12:04.002Z"
+    },
+    "GIntCallCount": 10,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 671024,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:04.510Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 15,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:04.602Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 13,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:04.651Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=00080021%2C00080031%2C0008103E%2C00200011&SeriesInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 11,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:04.664Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PM5644&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 17,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:04.706Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 27,
+        "GLngBytes": 36148
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:05.019Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 26,
+        "GLngBytes": 80665
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:05.110Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 7,
+        "GIntTotalMs": 17,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:05.166Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 27,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:05.166Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.31712.1555586797.811/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 31,
+        "GLngBytes": 76399
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:05.167Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36537.1555586012.643/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 111,
+        "GLngBytes": 317139
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:12:04.510Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:12:05.278Z"
+    }
+  },
+  {
+    "_id": "vw-e611a867df56",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:12:32.112Z"
+    },
+    "GIntCallCount": 46,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 6824728,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:32.785Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 18,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:32.982Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 17,
+        "GIntTotalMs": 17,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:32.982Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=00080021%2C00080031%2C0008103E%2C00200011",
+        "GIntStatus": 200,
+        "GIntWaitMs": 19,
+        "GIntTotalMs": 19,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.032Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PM5644&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 45,
+        "GIntTotalMs": 45,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.078Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 19,
+        "GIntTotalMs": 99,
+        "GLngBytes": 36148
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.443Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36648.1555586123.754/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 25,
+        "GIntTotalMs": 54,
+        "GLngBytes": 1555414
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.566Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 25,
+        "GIntTotalMs": 37,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.784Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.35168.1555586462.541/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 40,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.784Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.39344.1555586455.865/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 118,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.963Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.31712.1555586797.811/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 22,
+        "GLngBytes": 76399
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.963Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 39,
+        "GLngBytes": 80665
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.979Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6198790083075602079010362193135551056/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 24,
+        "GIntTotalMs": 30,
+        "GLngBytes": 187668
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.963Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36537.1555586012.643/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 39,
+        "GIntTotalMs": 47,
+        "GLngBytes": 317139
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.979Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 24,
+        "GIntTotalMs": 34,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.978Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 25,
+        "GIntTotalMs": 35,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.979Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 28,
+        "GIntTotalMs": 37,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.978Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 99,
+        "GIntTotalMs": 123,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:33.978Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 99,
+        "GIntTotalMs": 132,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:35.703Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 22,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:35.703Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 23,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:35.703Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 26,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:35.703Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 31,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:35.703Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 31,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.035Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 21,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.036Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 23,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.035Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 16,
+        "GIntTotalMs": 25,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.035Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 37,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.035Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 18,
+        "GIntTotalMs": 39,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.181Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 16,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.180Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 22,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.181Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 24,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.182Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 26,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.182Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 26,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.386Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 28,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.698Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 35,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.746Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 30,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.805Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 31,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.900Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 21,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:36.971Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 30,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:37.192Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 15,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:37.236Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 23,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:37.348Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 10,
+        "GIntTotalMs": 23,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:37.442Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 14,
+        "GIntTotalMs": 25,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:37.590Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 23,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:38.202Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 25,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:12:38.202Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 30,
+        "GLngBytes": 72590
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:12:32.785Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:12:38.232Z"
+    }
+  },
+  {
+    "_id": "vw-e6fa9848512a",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.63402019196557527119949808938432697694",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T07:49:49.089Z"
+    },
+    "GIntCallCount": 0,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 0,
+    "GLstObjCalls": []
+  },
+  {
+    "_id": "vw-eca45c12cb00",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "GStrSeriesUid": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T09:11:55.372Z"
+    },
+    "GIntCallCount": 34,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 5625637,
+    "GLstObjCalls": [
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:56.384Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=0008103E%2C00080021",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 16,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:56.606Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060&StudyInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 13,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:56.662Z"
+        },
+        "GStrKind": "search-series",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series?includefield=00080021%2C00080031%2C0008103E%2C00200011&SeriesInstanceUID=1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 21,
+        "GLngBytes": 473
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:56.680Z"
+        },
+        "GStrKind": "search-studies",
+        "GStrPath": "studies?00100020=PM5644&limit=101&offset=0&fuzzymatching=false&includefield=00081030%2C00080060",
+        "GIntStatus": 200,
+        "GIntWaitMs": 19,
+        "GIntTotalMs": 19,
+        "GLngBytes": 898
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:56.733Z"
+        },
+        "GStrKind": "metadata",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/metadata",
+        "GIntStatus": 200,
+        "GIntWaitMs": 26,
+        "GIntTotalMs": 48,
+        "GLngBytes": 36148
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.080Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36648.1555586123.754/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 80,
+        "GLngBytes": 1555414
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.207Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 7,
+        "GIntTotalMs": 21,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.338Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.39344.1555586455.865/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 63,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.338Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.35168.1555586462.541/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 166,
+        "GLngBytes": 518614
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.579Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36537.1555586012.643/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 33,
+        "GLngBytes": 317139
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.580Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36316.1555586890.421/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 32,
+        "GLngBytes": 80665
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.602Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.31712.1555586797.811/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 33,
+        "GLngBytes": 76399
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.603Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 30,
+        "GIntTotalMs": 100,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.604Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 97,
+        "GIntTotalMs": 98,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.603Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 34,
+        "GIntTotalMs": 100,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.603Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 100,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.604Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6198790083075602079010362193135551056/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 98,
+        "GIntTotalMs": 106,
+        "GLngBytes": 187668
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:57.604Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 98,
+        "GIntTotalMs": 108,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:58.879Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 23,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:58.880Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 23,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:58.881Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 25,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:58.881Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 26,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:58.903Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 28,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.280Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 22,
+        "GIntTotalMs": 22,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.278Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 24,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.280Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 22,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.281Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 21,
+        "GIntTotalMs": 24,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.302Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 15,
+        "GIntTotalMs": 26,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.418Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.36426.1555586901.532/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 9,
+        "GIntTotalMs": 18,
+        "GLngBytes": 85341
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.419Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.6087790083075602079010362193135552167/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 8,
+        "GIntTotalMs": 18,
+        "GLngBytes": 31337
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.418Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.276.0.7230010.3.1.4.253549293.32600.1555587156.33/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 12,
+        "GIntTotalMs": 20,
+        "GLngBytes": 72590
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.419Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 11,
+        "GIntTotalMs": 25,
+        "GLngBytes": 164573
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.418Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452123454639147743424396042/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 13,
+        "GIntTotalMs": 30,
+        "GLngBytes": 166739
+      },
+      {
+        "GDtmStartUtc": {
+          "$date": "2026-10-01T09:11:59.778Z"
+        },
+        "GStrKind": "frames",
+        "GStrPath": "studies/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2/series/1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3/instances/1.2.826.0.1.3680043.2.1143.1130983337452298264639147743424395031/frames/1",
+        "GIntStatus": 200,
+        "GIntWaitMs": 23,
+        "GIntTotalMs": 45,
+        "GLngBytes": 164573
+      }
+    ],
+    "GDtmFirstCallUtc": {
+      "$date": "2026-10-01T09:11:56.384Z"
+    },
+    "GDtmLastCallEndUtc": {
+      "$date": "2026-10-01T09:11:59.823Z"
+    }
+  },
+  {
+    "_id": "vw-f440c4b4c734",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+    "GStrSeriesUid": null,
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-07T05:14:28.420Z"
+    }
+  },
+  {
+    "_id": "vw-fbf9a1d484d3",
+    "GStrUserName": "admin",
+    "GStrStudyUid": "2.25.63402019196557527119949808938432697694",
+    "GStrSeriesUid": "2.25.183275672623134171094515444913411522061",
+    "GStrSopUid": null,
+    "GDtmStartedUtc": {
+      "$date": "2026-10-01T07:50:08.724Z"
+    },
+    "GIntCallCount": 0,
+    "GIntErrorCount": 0,
+    "GLngTotalBytes": 0,
+    "GLstObjCalls": []
+  }
+]

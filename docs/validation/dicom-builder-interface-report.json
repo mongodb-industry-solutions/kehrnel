@@ -1,0 +1,87 @@
+{
+  "strategyId": "dicom.tiered_store",
+  "strategyVersion": "0.2.0",
+  "validatedUTC": "2026-10-27T09:30:30.083337+00:00",
+  "sourceProfileRef": {
+    "kind": "source-profile",
+    "id": "exchange.dicom-metadata-json",
+    "version": "0.1.0",
+    "digest": "sha256:5352c75dc6e9b7e32a973afdd530f03b867f31acc0077687f9f517d28f5f01c7"
+  },
+  "blueprintTemplateRef": {
+    "kind": "solution-blueprint-template",
+    "id": "template.healthcare.dicom-metadata-starter",
+    "version": "0.1.0",
+    "digest": "sha256:c18394969dc6a42bda340420c0a5d686f326cba98a3adc6751d25a3826854883"
+  },
+  "referenceArchitectureRef": {
+    "kind": "reference-architecture",
+    "id": "architecture.healthcare.dicom-metadata",
+    "version": "0.1.0",
+    "digest": "sha256:358d713e2360e5594bda0afaa79e041f212215e5d733cfff58b9c9ed6f200866"
+  },
+  "suites": [
+    {
+      "suite": [
+        "tests/contract/test_dicom_builder_journey.py",
+        "tests/contract/test_source_aware_strategy_compiler.py",
+        "tests/contract/test_reference_architecture_instantiation.py",
+        "tests/contract/test_industry_outcome_catalog_runtime.py",
+        "tests/contract/test_contract_schema_registry.py"
+      ],
+      "results": {
+        "tests": 62,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junitSHA256": "f0b9148625bc4f94d770b0007c4fbe72df689c4d4896367aa0b8e9ab3562fb13"
+    },
+    {
+      "suite": [
+        "tests/contract/test_semantic_execution_planner.py",
+        "tests/contract/test_architecture_plan_compiler.py",
+        "tests/contract/test_solution_blueprint_canonicalization.py",
+        "tests/contract/test_solution_blueprint_instantiation_contracts.py",
+        "tests/contract/test_outcome_catalog.py",
+        "tests/contract/test_strategy_portfolio.py",
+        "tests/unit/test_catalog_maintenance.py",
+        "tests/unit/test_dicom_tiered_store.py"
+      ],
+      "results": {
+        "tests": 129,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junitSHA256": "09a88275f6c3d068f5a0c95febd3ee148507e9dcb9c3041921043dfad0b8f26f"
+    }
+  ],
+  "totalPassed": 191,
+  "backend": "In-process HTTP runtime, resolver-backed lazy localhost binding; no live database or remote object store required for this increment.",
+  "evidence": [
+    "Content-addressed source/category/template/architecture links",
+    "Customer-compatible metadata intake; no raw binary or SQL connector claim",
+    "Deterministic explicit-preview selection without production portfolio promotion",
+    "Implicit preview and stale source references rejected",
+    "Regular targeted indexes compilable; Search execution still requires implementation",
+    "HTTP catalog instantiation/proposal does not persist an activation",
+    "Separate explicit activation requires resolver bindings",
+    "Query discovery and all nine packaged query examples compile through the activated runtime",
+    "Published schema regeneration and exact manifest bytes",
+    "Existing semantic/architecture/template/catalog and DICOM unit regressions",
+    "SDK non-activating builder example executed successfully"
+  ],
+  "limitations": {
+    "canonicalBlueprintPackageActivation": false,
+    "actualHealthcareDataLabUI": false,
+    "newDatabaseExecutionBenchmark": false,
+    "scaleValidated": false,
+    "hyperscalerTransfersValidated": false,
+    "nativeGCSAdapter": false,
+    "atlasSearchExecution": false,
+    "publishedCohorts": false,
+    "pixelDelivery": false
+  },
+  "previousQueryExecutionEvidence": "docs/validation/dicom-query-interface-report.json"
+}

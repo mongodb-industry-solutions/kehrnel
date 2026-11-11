@@ -1,0 +1,2141 @@
+[
+  {
+    "_id": {
+      "$oid": "6ab3ae26326a2a17f3321bfd"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:47:02.716Z"
+    },
+    "opType": "Find",
+    "action": "FindStudies",
+    "callerType": 2,
+    "callerId": "",
+    "centerId": "Test1",
+    "studyUID": "",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f332349b"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.178Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.338985395889339302341595196740984871558",
+    "targetUID": "Test2",
+    "correlationId": "db4995e8fbad447889f0c1d07e34532f",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234a0"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.190Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.112400644772087102672360628332877329856",
+    "targetUID": "Test2",
+    "correlationId": "a92b2c330fd84fd8830ab97d3185b148",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234ad"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.219Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.158062386013806175490411939277304850278",
+    "seriesUID": "2.25.270983407049168031612287833163778743059",
+    "targetUID": "2.25.142705063835494561124917574021213625531",
+    "correlationId": "a5d2cbb74829479b835e078513bbe4ca",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234b3"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.223Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.15939010744565850716106002795070378717",
+    "targetUID": "Test2",
+    "correlationId": "f935c1f36c414843911a917d9e60416e",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234b9"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.253Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.300728604485027546763696657634292093794",
+    "seriesUID": "2.25.46492252949121069715471490612799548417",
+    "targetUID": "2.25.49561401047775578455878361233891034667",
+    "correlationId": "a0ea83a4b4634f038c2d142d5a7b7ef8",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234ba"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.254Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.167143203702821397538248380496379933667",
+    "seriesUID": "2.25.29870252101021464098771418396471750764",
+    "targetUID": "2.25.272681657512875566273770248679611538094",
+    "correlationId": "b75ccc7be14649b092f8707e135a5a71",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234c0"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.280Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.277650343243374963156991445200531021534",
+    "targetUID": "2.25.309487253432591642640962722093433161409",
+    "correlationId": "bed8de30f0354b7d87d436345145d58d",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234c1"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.280Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.229369391580985980788606656367575857592",
+    "targetUID": "2.25.313030399584619154475035118965556295693",
+    "correlationId": "59655c85acd64685a5da4799177c18a2",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234cf"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.305Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.250160724780659509818743696427723495004",
+    "targetUID": "2.25.175079162018817541374999765262599941892",
+    "correlationId": "a4eb67f89a254823bf51b4d61ff3e7bd",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234d3"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.312Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.108648127248202310061829924221707698087",
+    "targetUID": "Test2",
+    "correlationId": "e3007695da064b5ea6581d5aa2fcb31b",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234d4"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.312Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.22103366104506230596177114747083681609",
+    "targetUID": "Test2",
+    "correlationId": "7b5fc7b6e77849f99941d243e292f808",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234e6"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.360Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.63076745958187522525088329375795165411",
+    "seriesUID": "2.25.84230974156653967707122669651285818667",
+    "targetUID": "2.25.188705000628337028832377369647266800310",
+    "correlationId": "e6a820fcd72b4ffd9c839c1a1ef3f968",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234e7"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.361Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.96446745909360811324107598101807531481",
+    "seriesUID": "2.25.175016452265574088847825708926829608992",
+    "targetUID": "2.25.11169054756633358637448670496530583082",
+    "correlationId": "9ee0f3c8ec23425cb332240f75ac57ec",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234ee"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.385Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.271082417253788581339132284255066985670",
+    "targetUID": "2.25.62312105903693487975364982370638451388",
+    "correlationId": "6c6cd843d8ac4fe2bfe92934578572a4",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f33234ef"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.386Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.374980530662978270769932444562878789",
+    "targetUID": "2.25.299567898098144675547970472811869083446",
+    "correlationId": "b77863e33d7c42929cc5c55c0c9da690",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f332351f"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.543Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.270966754920629282956000024251796054052",
+    "seriesUID": "2.25.172154361460484956537491932068535153536",
+    "targetUID": "2.25.340274971889342091892130461306799037787",
+    "correlationId": "d3bd5a5862434f4ebb0dc61e2c0b7400",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f3323524"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.545Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.228656673651256693066168603284724181521",
+    "seriesUID": "2.25.97790638410227109303698178111768071302",
+    "targetUID": "2.25.215461338251309470219124918454713738810",
+    "correlationId": "133da4980b8e436cac1a8721a8076d47",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f3323528"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.582Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.172332468907563858793809863180065108326",
+    "seriesUID": "2.25.228926041676861552253452296384124076815",
+    "targetUID": "2.25.169299665946070162990461322354781027643",
+    "correlationId": "b86b423fc57740f18fd6b441037651b2",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f332353b"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.636Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.290916487758609832742041669563510564834",
+    "seriesUID": "2.25.258123987268779879083206741311730800920",
+    "targetUID": "2.25.43734566526398325538642119844581875785",
+    "correlationId": "3c1522e57d4d4bcbadb71a2ca6323eb3",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aec0326a2a17f332353c"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:49:36.637Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.275546033799902055340413056230416100542",
+    "seriesUID": "2.25.285057911121950169690550753964706427071",
+    "targetUID": "2.25.250529371572914254318857771109426236292",
+    "correlationId": "fcba03a4f00e47eeb657ab2182180fa8",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3aefb154c59209f329913"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:50:35.461Z"
+    },
+    "opType": "Find",
+    "action": "FindStudies",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Site",
+    "studyUID": "",
+    "correlationId": "integratedload-qido-discovery-a0d90e046e0f41c886de2eae726dc712",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3af08a4559ed7386ba57c"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:50:48.224Z"
+    },
+    "opType": "Find",
+    "action": "FindStudies",
+    "callerType": 0,
+    "callerId": "4861e946-92c0-402b-a02c-8691fc1e2b71",
+    "centerId": "Test1",
+    "studyUID": "2.25.34357806967777967987684478839259066333",
+    "correlationId": "DF-14758d28/5530d718",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3af5e063a7fc1fb701b9e"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T10:52:14.562Z"
+    },
+    "opType": "Find",
+    "action": "FindStudies",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Site",
+    "studyUID": "",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b4f1326a2a17f3328aa9"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:16:01.181Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.235650517104703430312263880947016310859",
+    "targetUID": "Test2",
+    "correlationId": "e8a602d2d3c9474083a40daf883479fc",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b4f1326a2a17f3328abe"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:16:01.295Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.249869019348818838150340980140305240924",
+    "seriesUID": "2.25.42315855809367631211606451666971866258",
+    "targetUID": "2.25.253981170022271551649480219883334216795",
+    "correlationId": "4a149478e1694e5eb3e45d832257bce8",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b4f1326a2a17f3328ac0"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:16:01.296Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.296730652257481863774105977182429771388",
+    "seriesUID": "2.25.196126492506870891893027266328506907567",
+    "targetUID": "2.25.122294298734095785434151199354557586217",
+    "correlationId": "c3170522f49f461994177df9d0cecbfb",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b4f1326a2a17f3328ac7"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:16:01.312Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.147265839767639769224393425996846801924",
+    "targetUID": "2.25.65153096206246416406897164843401686381",
+    "correlationId": "905808eaae31400687b8dadab4c853aa",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b93246444a7065a81ba4"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:34:10.966Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.270111579065663732796354159445024954601",
+    "targetUID": "Test2",
+    "correlationId": "666a05cac873428d80a1eb2805802b9f",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b933326a2a17f332f6a1"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:34:11.051Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.131270668309367939351860051008237534239",
+    "seriesUID": "2.25.194606456831425970445789156645504697771",
+    "targetUID": "2.25.163494282752091911933679342687670923062",
+    "correlationId": "c0080c5684074e7b8067a1bba537bd16",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b933326a2a17f332f6a2"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:34:11.056Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.241591399067604754335273393452923855213",
+    "seriesUID": "2.25.311434658644267515059888517104784266501",
+    "targetUID": "2.25.86796458275850445119151826825942051269",
+    "correlationId": "c37306569ff442a0b47d8be44f63ef48",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ab3b93346444a7065a81bc1"
+    },
+    "timestamp": {
+      "$date": "2026-09-23T11:34:11.101Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Test1",
+    "studyUID": "2.25.227916121940319833936875268221828219488",
+    "targetUID": "2.25.249543527891670188357538322900410722879",
+    "correlationId": "7bb38c7adf2a4e738b9bca8fca7c80c4",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6abe022abd52358eaf51034b"
+    },
+    "timestamp": {
+      "$date": "2026-10-01T06:48:10.112Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "05c803a7-5342-47cf-a9b6-fc0ed3944dfc",
+    "centerId": "Site",
+    "studyUID": "2.25.63402019196557527119949808938432697694",
+    "correlationId": "st-95ac4115",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6abe10117a6e25c6b1c7faf7"
+    },
+    "timestamp": {
+      "$date": "2026-10-01T07:47:29.704Z"
+    },
+    "opType": "Find",
+    "action": "FindInstances",
+    "callerType": 0,
+    "callerId": "05c803a7-5342-47cf-a9b6-fc0ed3944dfc",
+    "centerId": "Site",
+    "studyUID": "2.25.63402019196557527119949808938432697694",
+    "seriesUID": "2.25.183275672623134171094515444913411522061",
+    "correlationId": "st-b67ec905",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6abe23dc4c56cf399cd7d4f4"
+    },
+    "timestamp": {
+      "$date": "2026-10-01T09:11:56.673Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "05c803a7-5342-47cf-a9b6-fc0ed3944dfc",
+    "centerId": "Site",
+    "studyUID": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "seriesUID": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+    "correlationId": "vw-eca45c12cb00",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6abe23e44c56cf399cd7d4f8"
+    },
+    "timestamp": {
+      "$date": "2026-10-01T09:12:04.668Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "05c803a7-5342-47cf-a9b6-fc0ed3944dfc",
+    "centerId": "Site",
+    "studyUID": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.2",
+    "seriesUID": "1.3.6.1.4.1.34261.90254037371867.41912.1553085024.3",
+    "correlationId": "vw-e1f0b9ad6337",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac4aaae5c0ff54cb74ab277"
+    },
+    "timestamp": {
+      "$date": "2026-10-06T08:00:46.302Z"
+    },
+    "opType": "Find",
+    "action": "FindStudies",
+    "callerType": 1,
+    "callerId": "",
+    "callerName": "admin",
+    "centerId": "Site",
+    "studyUID": "2.25.63402019196557527119949808938432697694",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac4aaae5c0ff54cb74ab278"
+    },
+    "timestamp": {
+      "$date": "2026-10-06T08:00:46.410Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 1,
+    "callerId": "",
+    "callerName": "admin",
+    "centerId": "Site",
+    "studyUID": "2.25.63402019196557527119949808938432697694",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac5d5214d67815f61dca181"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T05:14:09.896Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 1,
+    "callerId": "",
+    "callerName": "admin",
+    "centerId": "Site",
+    "studyUID": "1.2.826.0.1.3680043.2.403.1.1260507083458246.1.345049948074",
+    "seriesUID": "1.2.840.113681.168453812.1778820075.11776.39070",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6071e761f3657b7700992"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:47:26.017Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.33001897098802343574568412542275390556",
+    "targetUID": "2.25.82477924385824123154079761175850084626",
+    "correlationId": "cc851871fd0b4224a336681e27071537",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6071e761f3657b7700994"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:47:26.060Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.271071799801905960701978257541419827558",
+    "seriesUID": "2.25.186015797307923842073188719760354392706",
+    "targetUID": "2.25.172855531527378654533531931279399402524",
+    "correlationId": "9c83abb65f964949a066c055482adba2",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac60732761f3657b770138f"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:47:46.952Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "",
+    "seriesUID": "2.25.65081100054820502504636909155024166518",
+    "correlationId": "integratedload-qido-d63259e7e47646d490c5795109fa9d11",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac60733761f3657b7701399"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:47:47.025Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "",
+    "correlationId": "integratedload-qido-936f96f463e5457fb53ea8e7e868336d",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac60733761f3657b77013a7"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:47:47.208Z"
+    },
+    "opType": "Find",
+    "action": "FindInstances",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "",
+    "correlationId": "integratedload-qido-f9ed2b51b1024417bc5b788fa3bde09c",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac60735761f3657b77014ac"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:47:49.415Z"
+    },
+    "opType": "Find",
+    "action": "FindInstances",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.131270668309367939351860051008237534239",
+    "correlationId": "integratedload-qido-b917c88b64bf4467858e70df6588dac7",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac608f4761f3657b77029bf"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:55:16.826Z"
+    },
+    "opType": "Manage",
+    "action": "FuseStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.106633989071437235951554961754019464370",
+    "targetUID": "2.25.323040617460012349533327990352200592388",
+    "correlationId": "0c193763db404d0581927e191ff8a257",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac608f4761f3657b77029c0"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T08:55:16.829Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.34698784344699934710008785152751775319",
+    "seriesUID": "2.25.272463414920961006915235905697130933218",
+    "targetUID": "2.25.161538331629522189580840242062724819400",
+    "correlationId": "3c5363ff4215482aad7ebdb74627dc81",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614f122040abfef88486e"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:25.884Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.274318864109710761615698534620282784658",
+    "targetUID": "Test2",
+    "correlationId": "1eb30d2ac45f40a0bd79ee6825fa5585",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614f17000ad9268ea29ac"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:25.868Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.6886786821056061391760888346861051340",
+    "targetUID": "Test2",
+    "correlationId": "a5c9a096606b438ba5d5ad5eb1b3e6fc",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614f27000ad9268ea2a51"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:26.708Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.151227202286935919805493732808589935795",
+    "targetUID": "Test2",
+    "correlationId": "dc7899f6552943c6ad6a7fea29abe987",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614f2761f3657b770f1eb"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:26.713Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.184169511550741528808314373657781321584",
+    "targetUID": "Test2",
+    "correlationId": "488462ead32e46c3a40305f2710528b8",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614fb22040abfef8852dc"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:35.783Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.280316068430347493592111064846636194405",
+    "targetUID": "Test2",
+    "correlationId": "d6daa6332bbe4629a526ec12c1fb8c5b",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614fb347c8a739bc5aff5"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:35.835Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.183539439600319004205210343506200743222",
+    "targetUID": "Test2",
+    "correlationId": "d706c9e92b4d43d899c5a9afdc40b57d",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614fc347c8a739bc5b062"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:36.290Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.224819318439686732022841787946317602383",
+    "targetUID": "Test2",
+    "correlationId": "dc313bcecefb4f07a4dd820dfe4c2b70",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac614fc761f3657b770fc53"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:36.282Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.145406596954296648315856777081692709516",
+    "targetUID": "Test2",
+    "correlationId": "bb037a2b877a4554bcc0ea5e2fbc563c",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6150922040abfef88629b"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:49.836Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.65340739796409802174072087701194236989",
+    "targetUID": "Test2",
+    "correlationId": "47d37fd43dd7449482a5d3e50190fe0e",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6150922040abfef8862a6"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:49.877Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.173444911684462763304587619922112",
+    "targetUID": "Test2",
+    "correlationId": "2bcaf4f2b4404e578f77009032d7c227",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6150a7000ad9268ea443a"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:50.362Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.36246780990639115103743116345082148622",
+    "targetUID": "Test2",
+    "correlationId": "5f91d0a376cd4615b74c3d82f4b08f8c",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6150a761f3657b7710c12"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:46:50.362Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.25025027335229354971251080687977258045",
+    "targetUID": "Test2",
+    "correlationId": "0840630f82c741b094bab716de4b96a6",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6179722040abfef89db36"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:57:43.485Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.316448259044192452117709060713800416609",
+    "targetUID": "Test2",
+    "correlationId": "2be37538bf1d4331b4a43e570af2ddec",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61797347c8a739bc737d9"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:57:43.348Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.327826323571063427082593246541762173102",
+    "targetUID": "Test2",
+    "correlationId": "50f415d59b594db58441e6227b114273",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617977000ad9268ebbbea"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:57:43.246Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.156318789040212241536658231676587441351",
+    "targetUID": "Test2",
+    "correlationId": "41ad20f86e0d4c4c8b1e0e486cfc0bc2",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617977000ad9268ebbc24"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:57:43.507Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.141395981579565119007752960428893639967",
+    "targetUID": "Test2",
+    "correlationId": "e6d8b09871f44fba9116fdc36e89a1fe",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617aa761f3657b7729a2a"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:58:02.528Z"
+    },
+    "opType": "Manage",
+    "action": "SplitSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.142750250720617025966468158952012403864",
+    "seriesUID": "2.25.154145862272724998853719837712100021834",
+    "targetUID": "2.25.202188762223653631441415919166984421529",
+    "correlationId": "85b52a4d1a3140daaaffb3d165313c34",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617af347c8a739bc755b3"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:58:07.824Z"
+    },
+    "opType": "Find",
+    "action": "FindStudies",
+    "callerType": 0,
+    "callerId": "87ee66f0-09ff-4c92-a71a-e69b3d01f9ce",
+    "centerId": "Test1",
+    "studyUID": "",
+    "correlationId": "DF-1c4f4af0/a5ab9a46",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ac617c422040abfef8a0f5f"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:58:28.184Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.303570342539942755966973707810915985741",
+    "targetUID": "Test2",
+    "correlationId": "a28d94b3cee4440e9984f5ce6f40e2e5",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617c422040abfef8a0f9f"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:58:28.453Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.112975869996281385604072498180599786028",
+    "targetUID": "Test2",
+    "correlationId": "39277d2cada14be48c62bd7c29cacc4b",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617c4347c8a739bc76cc9"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:58:28.841Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.332540088637600263977067155965019684489",
+    "targetUID": "Test2",
+    "correlationId": "e4f4a6aad7a041dbade4ac8551656064",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac617c47000ad9268ebf10a"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T09:58:28.871Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.176726920244664042941452177599907894511",
+    "targetUID": "Test2",
+    "correlationId": "e8e689b12a4747019fe96b1f8c53f22d",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a6222040abfef8b98ff"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:38.067Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.21480802977580947423065665183667138042",
+    "targetUID": "Test2",
+    "correlationId": "06d7166c599e4faa8d7e1f1c87172061",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a627000ad9268ed7a38"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:38.052Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.139089295380824349483726093069124973021",
+    "targetUID": "Test2",
+    "correlationId": "8139c1f782464ddfb4b7a698817b0f97",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a627000ad9268ed7a52"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:38.145Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.278902858195067656090478036243780996089",
+    "targetUID": "Test2",
+    "correlationId": "2c6462a22b2e41fd8789f00b2c8483cc",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a62761f3657b7744228"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:38.155Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.337910231005809156248311445810062229609",
+    "targetUID": "Test2",
+    "correlationId": "415533a554754af49f195229c7ac90fb",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a6f347c8a739bc8fd45"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:51.648Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.297157885364942206487650669324586813420",
+    "targetUID": "Test2",
+    "correlationId": "9390561568e7415b91d240bdef490456",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a7122040abfef8ba137"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:53.209Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.131766617330409235360503634855646261854",
+    "targetUID": "Test2",
+    "correlationId": "debf1de289b7432a8dd350d3ae33d58b",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61a71347c8a739bc8fe37"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:09:53.225Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.86172224505795902175648309494210165368",
+    "targetUID": "Test2",
+    "correlationId": "61406218d2e347248a0828e120d6b626",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61ea2761f3657b775e70c"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:27:46.209Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.308583125988612142223481415142148236680",
+    "targetUID": "Test2",
+    "correlationId": "a90c267ba313435ba679b6e8249faa48",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61ea2761f3657b775e71a"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:27:46.261Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.320877301397341342840274842768328272627",
+    "targetUID": "Test2",
+    "correlationId": "e7e90cde11f0462db4f500a65399f6f2",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61ea2761f3657b775e7aa"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:27:46.462Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.78961236635529993801711698895611501478",
+    "targetUID": "Test2",
+    "correlationId": "76bda1f7d88c4a25af81b6ab6972ba84",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac61ea2761f3657b775e7ad"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:27:46.463Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.159927687106310977544568720653508649574",
+    "targetUID": "Test2",
+    "correlationId": "fe7abee2480043388c5395b6138db3bc",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac622971d6c784bb63f3582"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:44:39.106Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.316705689548623387705850682368452602174",
+    "targetUID": "Test2",
+    "correlationId": "4ad9d1e6f76a4daeb81a7e757cf30773",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62297200daf4036add5d0"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:44:39.042Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.264439120068015031530721636762138392253",
+    "targetUID": "Test2",
+    "correlationId": "49c962a861fa454b85b4d56137516f08",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62297200daf4036add5d1"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:44:39.045Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.281526802220907398074197175478824648300",
+    "targetUID": "Test2",
+    "correlationId": "50765310ed7b49c8b2cdc28560385579",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62297761f3657b7782192"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:44:39.143Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.132150802999855888796147333401214459229",
+    "targetUID": "Test2",
+    "correlationId": "6b454f9d4c15447785ede20318425106",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6233c761f3657b7787dd2"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:47:24.306Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.149915025167192983772739059643175182959",
+    "targetUID": "Test2",
+    "correlationId": "b5879d20ee91430f9771fa81a7c291f5",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6233c761f3657b7787dd3"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:47:24.306Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.192615811424405561333713096777593714498",
+    "targetUID": "Test2",
+    "correlationId": "ce0448499d614085900389ea405a2c79",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6233c761f3657b7787e00"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:47:24.477Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.12767300971964263784730633381561812583",
+    "targetUID": "Test2",
+    "correlationId": "96eee95c74a745458413ef3ddb02ac2d",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac6233cc95791adc291b7dd"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T10:47:24.467Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.248161033644120731361412240647168793956",
+    "targetUID": "Test2",
+    "correlationId": "44b285b42b1d41d5b4e0dde8f8f2d5d2",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62d41761f3657b7799067"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T11:30:09.456Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test2",
+    "studyUID": "2.25.101807122086476231783979795408402248786",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62d4d761f3657b779a74c"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T11:30:21.536Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test2",
+    "studyUID": "2.25.115235268796608339574095675682093803526",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62e054872cc172f3cb7d8"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T11:33:25.561Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.107399294619866556553621796622396682763",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac62eb04872cc172f3d231a"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T11:36:16.182Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.114970883494518099448514196925637903024",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac630bcdb258a3827501a31"
+    },
+    "timestamp": {
+      "$date": "2026-10-07T11:45:00.757Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.193730051184285016801764091385403928490",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ac72bb8ee42c593e6707af0"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T05:35:52.398Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.228790346819942016196614168966489272155",
+    "targetUID": "Test2",
+    "correlationId": "a3dfdb8495e84e79a615f4c012601ef6",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac72bb8ee42c593e6707b04"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T05:35:52.409Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.139845370366792331718972173057312878395",
+    "targetUID": "Test2",
+    "correlationId": "b4528752588b4481bbcd5677697c873d",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac72bb8ee42c593e6707b77"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T05:35:52.892Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.95215798864837611427455534398514966145",
+    "targetUID": "Test2",
+    "correlationId": "e8969bf1d5524f2ba5cafca26b749f45",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac72bb9ee42c593e6707ba7"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T05:35:53.003Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.325479654856422153320914504154613076345",
+    "targetUID": "Test2",
+    "correlationId": "262824c8fd4a48648ce462e8c23b5dae",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73761ee42c593e6718702"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:25:37.788Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.56229149686911413380793565577163211962",
+    "targetUID": "Test2",
+    "correlationId": "76597d9fa662476f9452997c037ca265",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73761ee42c593e6718703"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:25:37.788Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.241886729317985042867270754910753331743",
+    "targetUID": "Test2",
+    "correlationId": "15cb3f56d4b847d688ab9a48686af951",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73762ee42c593e671876d"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:25:38.092Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.134454323770421365906241061619244180878",
+    "targetUID": "Test2",
+    "correlationId": "f11b1a718589453589fc280684a22aa3",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73762ee42c593e67187ad"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:25:38.295Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.181184000699381136289579324561806647348",
+    "targetUID": "Test2",
+    "correlationId": "3855241dea1b40e1b709cd53ad03d489",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73bbaee42c593e67251ea"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:44:10.670Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.68700677984970611264917979505554760816",
+    "targetUID": "Test2",
+    "correlationId": "1f2fcc716cb64017858632da9a5c0c38",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73bbaee42c593e6725236"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:44:10.899Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.10076684487685525477564724058752298023",
+    "targetUID": "Test2",
+    "correlationId": "e2fce0ae61bd43218b10726f64dc26f6",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73bbbee42c593e672527a"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:44:11.091Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.155137288029607578588444468841852322586",
+    "targetUID": "Test2",
+    "correlationId": "9732f20da6784f7a85013ab47a3f6ab4",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac73bbbee42c593e6725284"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T06:44:11.171Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.287653264305469523977029050762878243847",
+    "targetUID": "Test2",
+    "correlationId": "a6fa920021ce44e99f0306370fe7b4cd",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac740b8ee42c593e6733547"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T07:05:28.072Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.246498145283866979971946095039799970745",
+    "targetUID": "Test2",
+    "correlationId": "ec0120f6452047e0804dcb53e35d74d3",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac740b8ee42c593e673354c"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T07:05:28.091Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.170984337500373121988963833326659983133",
+    "targetUID": "Test2",
+    "correlationId": "f0d96308e85042ff851715ee035d42eb",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac740b8ee42c593e67335b4"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T07:05:28.398Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.318359382786142605422988547201766895667",
+    "targetUID": "Test2",
+    "correlationId": "f90bd58c4ee9486fb039338663197345",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ac740b8ee42c593e673361f"
+    },
+    "timestamp": {
+      "$date": "2026-10-08T07:05:28.773Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.97945081756373351160750572563660580995",
+    "targetUID": "Test2",
+    "correlationId": "7bb39fdc41384c6095bcb47e2af3feca",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6acba43f7344a002431699be"
+    },
+    "timestamp": {
+      "$date": "2026-10-11T14:59:11.097Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.309588643375297327586268520545150953783",
+    "targetUID": "Test2",
+    "correlationId": "2d1d563dbc0e4434b41854441fcb13fa",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6acba43f7344a002431699c7"
+    },
+    "timestamp": {
+      "$date": "2026-10-11T14:59:11.562Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.97269617924838974841503076924372078917",
+    "targetUID": "Test2",
+    "correlationId": "cb8e41e2bd5c4f61b812cee9b956176c",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6acba4487344a00243169a90"
+    },
+    "timestamp": {
+      "$date": "2026-10-11T14:59:20.569Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.266021395125304345615288660915640494910",
+    "targetUID": "Test2",
+    "correlationId": "6509a04eb9fc4ead92c430f24ceff7ab",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6acba4487344a00243169a9d"
+    },
+    "timestamp": {
+      "$date": "2026-10-11T14:59:20.946Z"
+    },
+    "opType": "Manage",
+    "action": "MoveStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.79045645688010731193764661755257228502",
+    "targetUID": "Test2",
+    "correlationId": "8a9e18f8e1a54a98b9dabfa1cfe8529f",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ace09fa67627bb84041c5d6"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T10:37:46.268Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "",
+    "correlationId": "integratedload-qido-f7fec8f8d59a42fe93bdf5d51003e3b6",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ace09fe67627bb84041c75e"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T10:37:50.685Z"
+    },
+    "opType": "Find",
+    "action": "FindSeries",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "",
+    "seriesUID": "2.25.50096065035382814868107018819069147481",
+    "correlationId": "integratedload-qido-32cf0e75934846e788feeb2cedca9852",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ace119567627bb84043ed2d"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:10:13.474Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test4",
+    "studyUID": "2.25.91176621819458308190464169954134487655",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ace1199f915f2d6225a4eeb"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:10:17.327Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test4",
+    "studyUID": "2.25.140229659043606096731720129373177108867",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ace152e6d76c7e30c35f897"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:25:34.237Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test4",
+    "studyUID": "2.25.209694235594562740447457429969836356961",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ace17316d76c7e30c36ae02"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:34:09.751Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test2",
+    "studyUID": "2.25.68631527952264356412278145377553339658",
+    "correlationId": "2c07242f3f864f0a948f3595ae13c495",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ace1731f915f2d6225e8856"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:34:09.755Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test2",
+    "studyUID": "2.25.193730051184285016801764091385403928490",
+    "correlationId": "25fa19e7ad6f43c59f2570e9d12d2564",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6ace174df915f2d6225ea9e3"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:34:37.261Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.107399294619866556553621796622396682763",
+    "correlationId": "db5ae7bdf17e43be90c226afb97bac0a",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ace1763f915f2d6225ec454"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:34:59.422Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test2",
+    "studyUID": "2.25.101807122086476231783979795408402248786",
+    "correlationId": "e8d00fbe60524917b1688e980e38be16",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ace1786167ef3c90a428601"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:35:34.620Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.114970883494518099448514196925637903024",
+    "correlationId": "863c9d7972534393869f31d90d104b57",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6ace179af915f2d6225ee0aa"
+    },
+    "timestamp": {
+      "$date": "2026-10-13T11:35:54.700Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test2",
+    "studyUID": "2.25.115235268796608339574095675682093803526",
+    "correlationId": "dabcfc13006f4020ac1d0f65bd021a1f",
+    "success": false
+  },
+  {
+    "_id": {
+      "$oid": "6acf14812f33d30253892f9e"
+    },
+    "timestamp": {
+      "$date": "2026-10-14T05:34:57.309Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test4",
+    "studyUID": "2.25.60746208250845676408999178465498325451",
+    "correlationId": "8f030484fd5049c689066a624523f345",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6adf331b7263f89c8a8432c2"
+    },
+    "timestamp": {
+      "$date": "2026-10-26T11:01:47.138Z"
+    },
+    "opType": "Open",
+    "action": "DownloadInstance",
+    "callerType": 1,
+    "callerId": "",
+    "callerName": "flowsim-viewer-probe",
+    "centerId": "Site",
+    "studyUID": "2.25.29851191744144420107154865786371144316",
+    "seriesUID": "2.25.17899448090249015530815332072088403097",
+    "sopInstanceUID": "2.25.112125409116688546461246017237753385821",
+    "success": true
+  },
+  {
+    "_id": {
+      "$oid": "6adf348798476ff94a082b51"
+    },
+    "timestamp": {
+      "$date": "2026-10-26T11:07:51.381Z"
+    },
+    "opType": "Manage",
+    "action": "DeleteStudy",
+    "callerType": 0,
+    "callerId": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "studyUID": "2.25.29851191744144420107154865786371144316",
+    "correlationId": "8a789561cc134f4f8468c989a402e06e",
+    "success": true
+  }
+]

@@ -1,0 +1,98 @@
+resource: Goal
+fhir_version: R4
+
+search_parameters:
+  lifecycle-status:
+    type: token
+    description: "proposed | planned | accepted | active | on-hold | completed | cancelled | entered-in-error | rejected"
+    fields:
+      - field: "lifecycleStatus"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "Who this goal is intended for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Who this goal is intended for"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  target-date:
+    type: date
+    description: "Reach goal on or before"
+    fields:
+      - field: "_search.targetDate"
+        type: date
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+
+  target:
+    source: target
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: target[*].dueDate
+        target_field: targetDate
+        datatype: date
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_goal_compartment_patient
+      sparse: true
+  - fields:
+      - "lifecycleStatus": 1
+    options:
+      name: idx_r4_goal_status

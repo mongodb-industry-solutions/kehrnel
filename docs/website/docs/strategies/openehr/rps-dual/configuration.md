@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # RPS Dual Configuration
@@ -65,10 +65,10 @@ The current default activation baseline is:
   },
   "ids": {
     "ehr_id": "string",
-    "composition_id": "objectid"
+    "composition_id": "string"
   },
   "paths": {
-    "separator": "."
+    "separator": ":"
   },
   "fields": {
     "document": {
@@ -89,6 +89,10 @@ The current default activation baseline is:
   },
   "transform": {
     "apply_shortcuts": true,
+    "envelope": {
+      "base": {},
+      "search": {}
+    },
     "coding": {
       "arcodes": {
         "strategy": "sequential"
@@ -133,6 +137,8 @@ The main supported override areas are:
   stored MongoDB documents.
 - `transform.apply_shortcuts` if you want the slim search payload to preserve
   full RM key names instead of shortcut labels.
+- `transform.envelope.base` and `transform.envelope.search` for optional
+  passthrough mappings from source envelope paths to output document fields.
 - `transform.coding.arcodes.*` and `transform.coding.atcodes.*` if you want
   different archetype or at-code strategies.
 - `transform.mappings` if you want the search-side projection to be built from a
@@ -142,7 +148,11 @@ The main supported override areas are:
 
 Current consistency boundary:
 
-- `paths.separator` is fixed to `.` in the current strategy surface.
+- The query-safe `paths.separator` values accepted by strategy activation are
+  `.`, `/`, and `:`. The default is `:`; `.` remains supported for older data,
+  and IBM exact-model environments commonly use `/`. The JSON schema currently
+  also lists `|` and `~`, but runtime validation rejects them because the query
+  compiler does not guarantee safe round-tripping for those values.
 - `collections.compositions.encodingProfile` and
   `collections.search.encodingProfile` are restricted to
   `profile.codedpath` or `profile.search_shortcuts`.
@@ -152,6 +162,11 @@ Current consistency boundary:
 - top-level `ehr_id` and `comp_id` predicates are coerced according to
   `ids.ehr_id` and `ids.composition_id`, so the query layer matches the ingest
   layer for string, `objectid`, and UUID-backed storage.
+- `composition_id` defaults to `string` because an openEHR OBJECT_VERSION_ID can
+  contain a creating-system identifier and version (`uuid::system::version`).
+  Selecting `objectid` or `uuidbin` is an explicit physical-model choice; ingest
+  rejects incompatible values instead of storing a different BSON type from the
+  one declared by the Atlas Search index.
 
 ## Congruence Rules
 
@@ -197,6 +212,58 @@ With mappings:
 
 Recommended rule: treat the Atlas Search definition as derived from
 `transform.mappings`, not as a hand-maintained artifact.
+
+Healthcare Data Lab's per-template **Analytics** selection is the authoring
+surface for this mapping. Selecting a small set of fields does not create a new
+strategy or another search collection. Kehrnel compiles all active selections
+into the shared `compositions_search` model and its shared Atlas Search index.
+The selected fields should be the smallest set required by the intended
+cross-patient queries.
+
+Projection materialization can be certified for one or more templates without
+requiring every unrelated template in the tenant to be rebuilt at the same
+time:
+
+```json
+{
+  "batch_size": 100,
+  "template_ids": ["sample_laboratory_v0.4"]
+}
+```
+
+This is a logical rebuild scope within `openehr.rps_dual`. It still writes to
+the configured shared search collection and uses the shared index definition.
+Coverage, mapped-empty checks, orphan checks, checkpoints, and readiness are
+evaluated for the requested templates. Sidecars for other templates remain in
+place and do not block the scoped receipt. A governed canonical write
+invalidates both the global receipt and every affected shared-projection scope
+before the write becomes visible.
+
+Healthcare Data Lab's per-template **Analytics** selection is the authoring
+surface for this mapping. Selecting a small set of fields does not create a new
+strategy or another search collection. Kehrnel compiles all active selections
+into the shared `compositions_search` model and its shared Atlas Search index.
+The selected fields should be the smallest set required by the intended
+cross-patient queries.
+
+Projection materialization can be certified for one or more templates without
+requiring every unrelated template in the tenant to be rebuilt at the same
+time:
+
+```json
+{
+  "batch_size": 100,
+  "template_ids": ["sample_laboratory_v0.4"]
+}
+```
+
+This is a logical rebuild scope within `openehr.rps_dual`. It still writes to
+the configured shared search collection and uses the shared index definition.
+Coverage, mapped-empty checks, orphan checks, checkpoints, and readiness are
+evaluated for the requested templates. Sidecars for other templates remain in
+place and do not block the scoped receipt. A governed canonical write
+invalidates both the global receipt and every affected shared-projection scope
+before the write becomes visible.
 
 The packaged `bundles/searchIndex/searchIndex.json` file is still useful as a
 seed or snapshot, but it should reflect the same mappings-driven workflow rather

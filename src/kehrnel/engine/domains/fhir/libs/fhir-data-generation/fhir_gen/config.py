@@ -8,6 +8,7 @@ LIB_ROOT = PACKAGE_ROOT.parent
 _LIB_ENV_FILE = LIB_ROOT / ".env"
 SCHEMA_PATH = PACKAGE_ROOT / "schema" / "fhir.schema.v5.json"
 V6_SCHEMA_PATH = PACKAGE_ROOT / "schema" / "fhir.schema.v6.json"
+V4_SCHEMA_PATH = PACKAGE_ROOT / "schema" / "fhir.schema.v4.json"
 CODES_PATH = PACKAGE_ROOT / "hl7_codes" / "healthcare_codes.yaml"
 DEFAULT_SCHEMA_VERSION = "R5"
 
@@ -29,6 +30,7 @@ class Settings(BaseSettings):
     schema_path: Path | None = None
     codes_path: Path = CODES_PATH
     log_level: str = "INFO"
+    profile_pack: str | None = None  # e.g. "us_core" (R4 only)
 
     @field_validator("schema_version", mode="before")
     @classmethod
@@ -55,6 +57,8 @@ class Settings(BaseSettings):
             name = self.schema_path.name.lower()
             if "v6" in name:
                 return "R6"
+            if "v4" in name:
+                return "R4"
             if "v5" in name:
                 return "R5"
         return normalize_schema_version(self.schema_version)

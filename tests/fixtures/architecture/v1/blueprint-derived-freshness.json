@@ -1,0 +1,46 @@
+{
+  "contract": "solution-blueprint/v1",
+  "blueprintId": "derived-cohort-freshness",
+  "industry": "healthcare",
+  "revision": 1,
+  "objective": "Make acknowledged clinical writes visible to a derived cohort projection within five seconds.",
+  "participants": [
+    {"participantId": "clinical-app", "label": "Clinical application", "kind": "application", "lifecycle": "planned"},
+    {"participantId": "clinical-store", "label": "Clinical store", "kind": "repository", "lifecycle": "planned"},
+    {"participantId": "cohort-service", "label": "Cohort service", "kind": "service", "lifecycle": "planned"}
+  ],
+  "interactions": [
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "clinical-app.create-clinical-event", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      "interactionId": "create-clinical-event",
+      "behavior": "create",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "clinical-app", "providerRef": "clinical-store"},
+      "interface": {"kind": "rest", "protocolVersion": "1"},
+      "semanticScopeId": "clinical-event",
+      "workloadRef": {"kind": "workload-profile", "id": "clinical-write", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      "guarantees": {"acknowledgement": "derived_visible", "consistency": "bounded_staleness", "latencyTargetMs": 5000, "freshnessTargetSeconds": 5, "idempotencyRequired": true}
+    },
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {"kind": "interaction-contract", "id": "cohort-service.query-clinical-event", "version": "1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+      "interactionId": "query-clinical-event",
+      "behavior": "query",
+      "pattern": "request_response",
+      "roles": {"requesterRef": "clinical-app", "providerRef": "cohort-service"},
+      "interface": {"kind": "mql", "protocolVersion": "8"},
+      "semanticScopeId": "clinical-event",
+      "workloadRef": {"kind": "workload-profile", "id": "cohort-selective", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      "guarantees": {"acknowledgement": "accepted", "consistency": "bounded_staleness", "latencyTargetMs": 250, "freshnessTargetSeconds": 5, "idempotencyRequired": false}
+    }
+  ],
+  "semanticAuthorities": [{"scopeId": "clinical-event", "mode": "derived", "authorityRef": {"kind": "context-object-definition", "id": "clinical-event", "version": "1.0.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}}],
+  "recordAuthorityPolicies": [{"contract": "record-authority-policy/v1", "artifactRef": {"kind": "record-authority-policy", "id": "clinical-event-authority", "version": "1.0.0", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, "scope": {"scopeId": "clinical-event", "domain": "clinical", "recordTypes": ["clinical-event"], "paths": [], "lifecycleStates": []}, "authoritativeWriterRef": "clinical-app", "permittedWriterRefs": ["clinical-app"], "conflictPolicy": "reject", "versionPolicyRef": {"kind": "version-policy", "id": "clinical-event-version", "version": "1.0.0", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}, "correctionBehavior": "Append a corrected event and rebuild the derived view.", "provenanceRequired": true}],
+  "dataPostures": [{"scopeId": "clinical-event", "posture": "selective_materialization", "servingRepositoryRef": "clinical-store"}],
+  "constraints": {"tenancyMode": "single_tenant", "regions": ["eu-west-1"], "estimatedDocuments": 5000000, "peakReadsPerSecond": 200, "peakWritesPerSecond": 100, "retentionDays": 3650},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "preferredFoundationRefs": [],
+  "assumptions": ["The materializer can observe every acknowledged write."],
+  "decisions": ["Acknowledgement includes derived-view visibility within the stated freshness target."]
+}

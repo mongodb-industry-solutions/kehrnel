@@ -1,0 +1,11 @@
+{
+  "db": {
+    "provider": "mongodb",
+    "uri": "mongodb://mongodb:27017",
+    "database": "kehrnel_cdisc"
+  },
+  "artifact": {
+    "provider": "filesystem",
+    "root": "/var/lib/kehrnel/cdisc-artifacts"
+  }
+}

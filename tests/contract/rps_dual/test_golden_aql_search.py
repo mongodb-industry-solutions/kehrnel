@@ -6,18 +6,25 @@ from kehrnel.engine.core.types import StrategyContext
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Compatibility embeddedDocument grouping not yet restored", strict=False)
-async def test_cross_patient_aql_compiles_to_search_first():
+async def test_cross_patient_aql_uses_search_for_non_metadata_predicates():
     cfg = load_json(DEFAULTS_PATH)
     strat = RPSDualStrategy(MANIFEST)
     ctx = StrategyContext(environment_id="env", config=cfg)
     ir = parse_aql("select t as t from compositions where text = 'hello'")
+    ir.scope = "cross_patient"
+    ir.predicates = [
+        {
+            "path": "admin_salut/items[at0007]/items[at0014]/value/defining_code/code_string",
+            "op": "eq",
+            "value": "VAL1",
+        },
+        {"path": "med_ac/time/value", "op": "gt", "value": "2020-01-01T00:00:00"},
+    ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
     assert pipeline, "pipeline expected"
     assert "$search" in pipeline[0], "cross-patient should start with $search"
-    # embeddedDocument grouping should appear for predicates
     search_stage = pipeline[0]["$search"]
     compound = search_stage.get("compound", {})
-    filters = compound.get("filter", [])
-    assert any("embeddedDocument" in f for f in filters), "embeddedDocument grouping expected"
+    assert len(compound.get("must", [])) == 2
+    assert plan.explain["builder"]["reason"] == "scope_cross_patient"

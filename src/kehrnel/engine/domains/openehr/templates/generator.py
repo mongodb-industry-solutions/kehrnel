@@ -1216,12 +1216,6 @@ class kehrnelGenerator:
                 return m[code]
         return None  
 
-    def _nearest_archetype_id(self, ancestors) -> Optional[str]:
-        for node in reversed(ancestors):
-            aid = node.get("archetype_details", {}).get("archetype_id", {}).get("value")
-            if aid:
-                return aid
-        return None
 
     def _ordinal_value_for(self, code: str, archetype_id: Optional[str]) -> Optional[int]:
         # Prefer archetype-scoped map if you have one; fall back to global

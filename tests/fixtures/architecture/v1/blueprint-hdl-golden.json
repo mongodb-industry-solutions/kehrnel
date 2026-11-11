@@ -1,0 +1,88 @@
+{
+  "contract": "solution-blueprint/v1",
+  "blueprintId": "customer.patient-context",
+  "industry": "healthcare",
+  "objective": "Provide governed patient context to a clinical application.",
+  "participants": [
+    {
+      "participantId": "clinical-app",
+      "label": "Clinical application",
+      "kind": "application",
+      "lifecycle": "planned"
+    },
+    {
+      "participantId": "openehr-cdr",
+      "label": "openEHR CDR",
+      "kind": "repository",
+      "lifecycle": "planned"
+    }
+  ],
+  "interactions": [
+    {
+      "contract": "interaction-contract/v1",
+      "artifactRef": {
+        "kind": "interaction-contract",
+        "id": "clinical-app.read-context",
+        "version": "1.0.0",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "interactionId": "read-context",
+      "behavior": "read",
+      "pattern": "request_response",
+      "roles": {
+        "requesterRef": "clinical-app",
+        "providerRef": "openehr-cdr"
+      },
+      "interface": {
+        "kind": "openehr",
+        "protocolVersion": "1.0.3"
+      },
+      "semanticScopeId": "clinical-record",
+      "workloadRef": {
+        "kind": "workload-profile",
+        "id": "patient-context-read",
+        "version": "1.0.0",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "guarantees": {
+        "acknowledgement": "accepted",
+        "consistency": "strong",
+        "idempotencyRequired": false
+      }
+    }
+  ],
+  "semanticAuthorities": [
+    {
+      "scopeId": "clinical-record",
+      "mode": "native",
+      "authorityRef": {
+        "kind": "openehr-template",
+        "id": "clinical-record",
+        "version": "1.0.0",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      }
+    }
+  ],
+  "recordAuthorityPolicies": [],
+  "dataPostures": [
+    {
+      "scopeId": "clinical-record",
+      "posture": "mongodb_system_of_record",
+      "servingRepositoryRef": "openehr-cdr"
+    }
+  ],
+  "targetCapabilityProfileRef": {
+    "kind": "target-capability-profile",
+    "id": "atlas-production",
+    "version": "1.0.0",
+    "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "revision": 1,
+  "constraints": {
+    "tenancyMode": "single_tenant",
+    "regions": []
+  },
+  "preferredFoundationRefs": [],
+  "assumptions": [],
+  "decisions": []
+}

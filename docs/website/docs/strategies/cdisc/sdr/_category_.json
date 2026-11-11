@@ -1,0 +1,8 @@
+{
+  "label": "sdr",
+  "position": 1,
+  "link": {
+    "type": "doc",
+    "id": "strategies/cdisc/sdr/index"
+  }
+}

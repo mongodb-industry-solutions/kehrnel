@@ -33,21 +33,64 @@
       "sample_immunization_list_v0.5",
       "sample_laboratory_v0.4"
     ],
-    "data_field_count": 5,
+    "data_field_count": 8,
     "data_paths": [
+      "ani",
       "cx.st.v",
       "time.v",
       "v",
       "v.df.cs",
-      "v.magnitude"
+      "v.df.tid.v",
+      "v.magnitude",
+      "v.v"
     ],
     "nodes_field": "sn",
     "path_field": "p",
     "data_field": "data",
     "sort_field": "sort_time",
+    "sort_fields": [
+      "comp_id",
+      "sort_time"
+    ],
     "sources": [
       "analytics_fields"
     ],
     "apply_shortcuts": true
+  },
+  "heart_failure_demo": {
+    "contract": "openehr-heart-failure-demo/v1",
+    "template_id": "sample_laboratory_v0.4",
+    "root_concept": "84114007",
+    "expanded_codes": [
+      "195111005",
+      "84114007"
+    ],
+    "terminology_evidence": {
+      "observation": "illustrative",
+      "authoritative": false,
+      "description": "A deliberately small hand-curated fixture subset; a live run must replace it with a pinned terminology expansion receipt."
+    },
+    "terminology_id": "SNOMED-CT",
+    "clinically_recognised_since": "2025-01-01T00:00:00Z",
+    "scenario_count": 5,
+    "positive_case_ids": [
+      "hf-root-after-2025",
+      "hf-expanded-after-2025"
+    ],
+    "negative_case_ids": [
+      "wrong-concept-after-2025",
+      "wrong-terminology-after-2025",
+      "hf-before-2025"
+    ],
+    "canonical_dir": "canonical/sample_laboratory_v0_4_heart_failure",
+    "envelope_file": "envelopes/sample_laboratory_v0_4_heart_failure.ndjson",
+    "query_file": "queries/cross_patient_heart_failure_since_2025.aql",
+    "adversarial_correlation_fixture": {
+      "case_id": "split-evaluation-correlation-negative",
+      "envelope_file": "adversarial/split_evaluation_correlation.envelope.json",
+      "opt_conformant": false,
+      "excluded_from_all_ndjson": true,
+      "purpose": "Heart failure occurs before the period and a different diagnosis occurs after it; predicates must not be joined across EVALUATION instances."
+    }
   }
 }

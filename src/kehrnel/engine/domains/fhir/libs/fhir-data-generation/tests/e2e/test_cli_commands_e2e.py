@@ -44,7 +44,9 @@ class TestGenerateManyScenariosApi:
         counts = scenario.resolve_counts(minimal=not USE_FULL_COUNTS)
         gen = ResourceGenerator(seed=scenario.seed)
         results = gen.generate_many(list(scenario.resources), counts=counts)
-        for rtype in scenario.resources:
+        known = set(gen.schema_registry.all_resources())
+        assert set(results) == set(scenario.resources) & known
+        for rtype in set(scenario.resources) & known:
             assert rtype in results
             assert len(results[rtype]) == counts[rtype]
             assert results[rtype][0]["resourceType"] == rtype

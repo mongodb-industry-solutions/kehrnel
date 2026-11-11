@@ -1,0 +1,23 @@
+{
+  "contract": "performance-forecast/v1",
+  "artifactRef": {"kind": "performance-forecast", "id": "greenfield-openehr-cdr.cohort-selective", "version": "1.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+  "observationKind": "estimated",
+  "resolvedPlanRef": {"kind": "resolved-architecture-plan", "id": "greenfield-openehr-cdr", "version": "1.0.0", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+  "workloadRef": {"kind": "workload-profile", "id": "cohort-selective", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "performanceModelRef": {"kind": "performance-model", "id": "openehr-rps-dual-cohort", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+  "evidenceGrade": "b_calibrated",
+  "benchmarkEvidenceRefs": [{"kind": "benchmark-evidence", "id": "openehr-cohort-selective-small", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+  "p50LatencyMicroseconds": {"lower": 35000, "upper": 65000},
+  "p95LatencyMicroseconds": {"lower": 75000, "upper": 140000},
+  "p99LatencyMicroseconds": {"lower": 110000, "upper": 220000},
+  "throughputPerSecond": {"lower": 140, "upper": 240},
+  "storageBytes": {"lower": 600000000, "upper": 900000000},
+  "memoryBytes": {"lower": 3221225472, "upper": 6442450944},
+  "monthlyCostMicros": {"lower": 400000000, "upper": 900000000},
+  "matchingConditions": ["Selective predicates use the compiled search index.", "Shard fan-out is one."],
+  "nonMatchingConditions": ["Cold-cache full scans.", "Natural-language resolution time."],
+  "assumptions": ["Record shape and predicate selectivity match the benchmark envelope."],
+  "requiredTests": ["Run a tenant-calibrated load test before treating the range as production evidence."],
+  "isGuarantee": false
+}

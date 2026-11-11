@@ -1,0 +1,23 @@
+{
+  "datasetJSONVersion": "1.1.0",
+  "fileOID": "FILE.DM.EXAMPLE",
+  "studyOID": "STUDY-001",
+  "metaDataVersionOID": "MDV.SDTM.1",
+  "itemGroupOID": "IG.DM",
+  "records": 2,
+  "name": "DM",
+  "label": "Demographics",
+  "columns": [
+    {"itemOID": "IT.DM.STUDYID", "name": "STUDYID", "label": "Study Identifier", "dataType": "string", "length": 20, "keySequence": 1},
+    {"itemOID": "IT.DM.USUBJID", "name": "USUBJID", "label": "Unique Subject Identifier", "dataType": "string", "length": 40, "keySequence": 2},
+    {"itemOID": "IT.DM.DOMAIN", "name": "DOMAIN", "label": "Domain Abbreviation", "dataType": "string", "length": 2},
+    {"itemOID": "IT.DM.SUBJID", "name": "SUBJID", "label": "Subject Identifier", "dataType": "string", "length": 20},
+    {"itemOID": "IT.DM.SEX", "name": "SEX", "label": "Sex", "dataType": "string", "length": 1},
+    {"itemOID": "IT.DM.ARMCD", "name": "ARMCD", "label": "Planned Arm Code", "dataType": "string", "length": 8},
+    {"itemOID": "IT.DM.ARM", "name": "ARM", "label": "Description of Planned Arm", "dataType": "string", "length": 40}
+  ],
+  "rows": [
+    ["STUDY-001", "STUDY-001-001", "DM", "001", "F", "PBO", "Placebo"],
+    ["STUDY-001", "STUDY-001-002", "DM", "002", "M", "TRT", "Investigational Treatment"]
+  ]
+}

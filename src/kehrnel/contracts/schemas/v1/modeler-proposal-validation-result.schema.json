@@ -1,0 +1,235 @@
+{
+  "$defs": {
+    "BlueprintRevisionIdentity": {
+      "additionalProperties": false,
+      "description": "One exact immutable Blueprint revision used as proposal input.",
+      "properties": {
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "blueprintId",
+        "revision",
+        "digest"
+      ],
+      "title": "BlueprintRevisionIdentity",
+      "type": "object"
+    },
+    "CompilationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Refs",
+          "type": "array"
+        },
+        "severity": {
+          "$ref": "#/$defs/IssueSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "CompilationIssue",
+      "type": "object"
+    },
+    "IssueSeverity": {
+      "enum": [
+        "info",
+        "review",
+        "blocking"
+      ],
+      "title": "IssueSeverity",
+      "type": "string"
+    },
+    "ModelerAssistantScope": {
+      "additionalProperties": false,
+      "description": "Identity and authorization context injected by the hosting server.\n\nClients and the language model must not choose these values.  The\n``authorizationDigest`` lets an integration fail closed if permissions\nchange between proposal, validation, and approval.",
+      "properties": {
+        "actorId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actorid",
+          "type": "string"
+        },
+        "authorizationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Authorizationdigest",
+          "type": "string"
+        },
+        "binding": {
+          "const": "server_bound",
+          "title": "Binding",
+          "type": "string"
+        },
+        "projectId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Projectid",
+          "type": "string"
+        },
+        "purpose": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Role",
+          "type": "string"
+        },
+        "sessionId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Sessionid",
+          "type": "string"
+        },
+        "tenantId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Tenantid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "binding",
+        "tenantId",
+        "projectId",
+        "actorId",
+        "sessionId",
+        "role",
+        "purpose",
+        "authorizationDigest"
+      ],
+      "title": "ModelerAssistantScope",
+      "type": "object"
+    },
+    "ModelerValidationStatus": {
+      "enum": [
+        "valid",
+        "invalid",
+        "stale_base"
+      ],
+      "title": "ModelerValidationStatus",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:modeler-proposal-validation-result",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Content-addressed receipt produced only by deterministic Core.",
+  "properties": {
+    "baseBlueprint": {
+      "$ref": "#/$defs/BlueprintRevisionIdentity"
+    },
+    "candidateBlueprintDigest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Candidateblueprintdigest"
+    },
+    "contract": {
+      "const": "modeler-proposal-validation-result/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/CompilationIssue"
+      },
+      "maxItems": 256,
+      "title": "Issues",
+      "type": "array"
+    },
+    "proposalDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Proposaldigest",
+      "type": "string"
+    },
+    "proposalId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Proposalid",
+      "type": "string"
+    },
+    "scope": {
+      "$ref": "#/$defs/ModelerAssistantScope"
+    },
+    "status": {
+      "$ref": "#/$defs/ModelerValidationStatus"
+    },
+    "validatedChangeIds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 256,
+      "title": "Validatedchangeids",
+      "type": "array"
+    },
+    "validationDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Validationdigest",
+      "type": "string"
+    },
+    "validatorOrigin": {
+      "const": "deterministic_core",
+      "title": "Validatororigin",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "validatorOrigin",
+    "status",
+    "validationDigest",
+    "scope",
+    "proposalId",
+    "proposalDigest",
+    "baseBlueprint"
+  ],
+  "title": "ModelerProposalValidationResult",
+  "type": "object"
+}

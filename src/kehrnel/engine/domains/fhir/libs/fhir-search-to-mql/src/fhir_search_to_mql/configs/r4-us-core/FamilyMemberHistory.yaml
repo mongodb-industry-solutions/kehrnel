@@ -1,0 +1,122 @@
+resource: FamilyMemberHistory
+fhir_version: R4
+profile: us-core
+
+search_parameters:
+  status:
+    type: token
+    description: "partial | completed | entered-in-error | health-unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "The identity of a subject to list family member history items for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  relationship:
+    type: token
+    description: "A search by a relationship type"
+    fields:
+      - field: "_search.relationshipCode"
+        tokenType: code
+
+  code:
+    type: token
+    description: "A search by a condition code"
+    fields:
+      - field: "_search.conditionCode"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  relationship:
+    source: relationship
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: relationship.coding[*].code
+        target_field: relationshipCode
+        datatype: array[string]
+
+  condition_code:
+    source: condition
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: condition[*].code.coding[*].code
+        target_field: conditionCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_fmh_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_fmh_status
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_fmh_meta_profile
+      sparse: true

@@ -17,6 +17,7 @@ Built-in schemes (no configuration required):
 """
 from __future__ import annotations
 
+import asyncio
 import importlib
 import inspect
 import json
@@ -145,7 +146,10 @@ async def resolve_bindings(
 ) -> dict[str, Any] | None:
     if resolver is None:
         return None
-    result = resolver(
+    # A configured resolver may use synchronous MongoDB/secret APIs. Run its
+    # invocation in a worker; to_thread also carries request contextvars. Native
+    # async functions and sync wrappers returning coroutines remain supported.
+    kwargs = dict(
         bindings_ref=bindings_ref,
         env_id=env_id,
         domain=domain,
@@ -153,6 +157,10 @@ async def resolve_bindings(
         op=op,
         context=context or {},
     )
+    if inspect.iscoroutinefunction(resolver):
+        result = resolver(**kwargs)
+    else:
+        result = await asyncio.to_thread(resolver, **kwargs)
     if inspect.isawaitable(result):
         result = await result
     if result is not None and not isinstance(result, dict):

@@ -120,7 +120,8 @@ class SpecialConverter(BaseConverter):
         # Create date converter with meta.lastUpdated field
         config = {
             'type': 'date',
-            'fields': [{'field': 'meta.lastUpdated', 'type': 'date'}]
+            'fields': [{'field': 'meta.lastUpdated', 'type': 'date'}],
+            '_parameter_name': '_lastUpdated',
         }
         
         converter = DateConverter(config)
@@ -337,7 +338,7 @@ class SpecialConverter(BaseConverter):
         
         # Step 2: Build final query with extracted IDs
         multi_step.set_final_query_builder(
-            lambda ids: {"_id": {"$in": ids}} if ids else {"_id": None}
+            lambda ids: {"_id": {"$in": ids}}
         )
         
         return multi_step

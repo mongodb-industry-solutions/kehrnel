@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, Request
 from typing import Any, Dict
 
+from kehrnel.api.common.delegated_principal import require_package
 from kehrnel.api.core.admin.routes import _error_response, _require_admin_access, _require_env_access
 
 router = APIRouter()
@@ -17,6 +18,7 @@ async def run_op_by_domain(env_id: str, domain: str, op: str, request: Request, 
         activation = rt.registry.get_activation(env_id, domain.lower())
         if not activation:
             raise KeyError(f"No activation for env {env_id} domain {domain}")
+        require_package(request, activation.strategy_id)
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload or {}, "domain": domain})
         return {"ok": True, "result": result}
     except Exception as exc:

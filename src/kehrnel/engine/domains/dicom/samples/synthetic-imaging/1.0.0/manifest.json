@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "dicom-source-samples/v1",
+  "domain": "dicom",
+  "id": "dicom.synthetic-imaging",
+  "version": "1.0.0",
+  "kind": "synthetic",
+  "containsPixels": false,
+  "sourceContract": "customer study se[] + instance header/ContentIndex",
+  "encoding": "mongodb-extended-json/v2",
+  "provenance": {
+    "type": "synthetic",
+    "generatorVersion": "1.0.0",
+    "description": "Frozen metadata fixtures from the existing Kehrnel DICOM rule playground; no patient records or renderable pixel payloads."
+  },
+  "rights": {
+    "license": "Apache-2.0",
+    "basis": "Synthetic fixtures distributed with Kehrnel; repository LICENSE applies."
+  },
+  "intendedUse": [
+    "developer_playground",
+    "regression_testing"
+  ],
+  "limitations": [
+    "Small illustrative source, not representative modality coverage.",
+    "ContentIndex is illustrative and has no corresponding binary.",
+    "No inferred diagnosis or cross-collection patient linkage."
+  ],
+  "variants": {
+    "mixed": {
+      "assets": {
+        "studies": {
+          "path": "mixed/studies.json",
+          "sha256": "sha256:ae45266dfb223d0a7ebb3e529844bdcde8ec2eb89a52d69af56bb80b0aec469f",
+          "bytes": 943
+        },
+        "instances": {
+          "path": "mixed/instances.json",
+          "sha256": "sha256:5a505bbeec16f3b21616f60c33f099da51456d3723f807526fb3e0075ceb704c",
+          "bytes": 31740
+        }
+      },
+      "counts": {
+        "studies": 2,
+        "instances": 12
+      }
+    },
+    "ct": {
+      "assets": {
+        "studies": {
+          "path": "ct/studies.json",
+          "sha256": "sha256:34b45ad0740eb2f4a4597295a274f79649e71ba58f07c41e2a2d5a42a0cc324c",
+          "bytes": 943
+        },
+        "instances": {
+          "path": "ct/instances.json",
+          "sha256": "sha256:bc24d9e8266e9dbf78035d150a49858e1dc1f38ca8c049582160d7f46148a5ff",
+          "bytes": 31740
+        }
+      },
+      "counts": {
+        "studies": 2,
+        "instances": 12
+      }
+    },
+    "mr": {
+      "assets": {
+        "studies": {
+          "path": "mr/studies.json",
+          "sha256": "sha256:adc7a3d8e14c4d17c803e66f78d0e22402d53b4df04aabe76e6377f936a0a4e1",
+          "bytes": 943
+        },
+        "instances": {
+          "path": "mr/instances.json",
+          "sha256": "sha256:fb52242af3588d4667a41952ebb99ce11c0e8107e7e95efe709f6d4b27d55289",
+          "bytes": 31740
+        }
+      },
+      "counts": {
+        "studies": 2,
+        "instances": 12
+      }
+    },
+    "mg": {
+      "assets": {
+        "studies": {
+          "path": "mg/studies.json",
+          "sha256": "sha256:7bd34f06c3b7d54d60a865a51ff93f6268d154eb1d4a37bcf2a617d34d6fcec5",
+          "bytes": 943
+        },
+        "instances": {
+          "path": "mg/instances.json",
+          "sha256": "sha256:219c445655b3ec115a2de265a40eae1a34c4c2b7cc93b611c7ad2e59f5c3132b",
+          "bytes": 31764
+        }
+      },
+      "counts": {
+        "studies": 2,
+        "instances": 12
+      }
+    },
+    "legacy": {
+      "assets": {
+        "studies": {
+          "path": "legacy/studies.json",
+          "sha256": "sha256:ae45266dfb223d0a7ebb3e529844bdcde8ec2eb89a52d69af56bb80b0aec469f",
+          "bytes": 943
+        },
+        "instances": {
+          "path": "legacy/instances.json",
+          "sha256": "sha256:928488cd23bb39a5786937be6c81f0aabf7223957faaa6982e1cab83d4378595",
+          "bytes": 6951
+        }
+      },
+      "counts": {
+        "studies": 2,
+        "instances": 12
+      }
+    }
+  }
+}

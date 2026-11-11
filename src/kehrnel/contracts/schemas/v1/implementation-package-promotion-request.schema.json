@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-promotion-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approval": {
+      "const": "approved",
+      "title": "Approval",
+      "type": "string"
+    },
+    "contract": {
+      "const": "implementation-package-promotion-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "expectedPackageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "preparationExecutionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "releaseNotes": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Releasenotes"
+    },
+    "runtimeEvidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "minItems": 1,
+      "title": "Runtimeevidencerefs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract",
+    "preparationExecutionRef",
+    "expectedPackageRef",
+    "runtimeEvidenceRefs",
+    "approval"
+  ],
+  "title": "ImplementationPackagePromotionRequest",
+  "type": "object"
+}

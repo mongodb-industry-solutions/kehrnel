@@ -1,0 +1,742 @@
+{
+  "contract": "strategy-example-catalog/v1",
+  "strategyId": "snomedct.mongodb",
+  "language_default": "es",
+  "ecl_examples": [
+    {
+      "label": "Clinical findings",
+      "expression": "<< 404684003",
+      "language": "en",
+      "purpose": "Descendant-or-self value-set expansion (all clinical findings)."
+    },
+    {
+      "label": "Cardiovascular disorders",
+      "expression": "<< 49601007",
+      "language": "en",
+      "purpose": "Cardiovascular disorders subtree."
+    },
+    {
+      "label": "Clinical findings minus neoplasms",
+      "expression": "<< 404684003 MINUS << 363346000",
+      "language": "en",
+      "purpose": "Set difference: findings minus neoplastic disease."
+    },
+    {
+      "label": "Findings at heart structure",
+      "expression": "<< 404684003 : 363698007 = << 80891009",
+      "language": "en",
+      "purpose": "Flagship attribute refinement: findings whose finding site is a heart structure."
+    },
+    {
+      "label": "Findings at breast structure",
+      "expression": "<< 404684003 : 363698007 = << 76752008",
+      "language": "en",
+      "purpose": "Findings whose finding site is a breast structure."
+    },
+    {
+      "label": "Procedures at heart structure",
+      "expression": "<< 71388002 : 363704007 = << 80891009",
+      "language": "en",
+      "purpose": "Procedures with procedure site = heart structure."
+    }
+  ],
+  "ecl_builder": {
+    "focus": [
+      {
+        "label": "Clinical finding",
+        "value": "<< 404684003"
+      },
+      {
+        "label": "Disorder",
+        "value": "<< 64572001"
+      },
+      {
+        "label": "Procedure",
+        "value": "<< 71388002"
+      },
+      {
+        "label": "Product",
+        "value": "<< 373873005"
+      }
+    ],
+    "attributes": [
+      {
+        "label": "Finding site",
+        "value": "363698007"
+      },
+      {
+        "label": "Associated morphology",
+        "value": "116676008"
+      },
+      {
+        "label": "Causative agent",
+        "value": "246075003"
+      },
+      {
+        "label": "Procedure site",
+        "value": "363704007"
+      },
+      {
+        "label": "Method",
+        "value": "260686004"
+      }
+    ],
+    "targets": [
+      {
+        "label": "Heart structure",
+        "value": "<< 80891009"
+      },
+      {
+        "label": "Breast structure",
+        "value": "<< 76752008"
+      },
+      {
+        "label": "Lung structure",
+        "value": "<< 39607008"
+      },
+      {
+        "label": "Malignant neoplasm",
+        "value": "<< 367651003"
+      },
+      {
+        "label": "Bacteria",
+        "value": "<< 409822003"
+      }
+    ]
+  },
+  "scoped_searches": [
+    {
+      "id": "heart-findings",
+      "marker": "ATTR",
+      "title": "Heart findings",
+      "query": "cardiaca",
+      "languageCode": "es",
+      "mode": "hybrid",
+      "scope": {
+        "areaConceptId": "",
+        "ecl": "<< 404684003 : 363698007 = << 80891009"
+      },
+      "scopeLabel": "Clinical finding + finding site heart structure"
+    },
+    {
+      "id": "cardio-disorders",
+      "marker": "ECL",
+      "title": "Cardiovascular disorders",
+      "query": "heart failure",
+      "languageCode": "en",
+      "mode": "hybrid",
+      "scope": {
+        "areaConceptId": "49601007",
+        "ecl": ""
+      },
+      "scopeLabel": "Descendants of cardiovascular disorder"
+    },
+    {
+      "id": "breast-findings",
+      "marker": "ATTR",
+      "title": "Breast findings",
+      "query": "carcinoma",
+      "languageCode": "en",
+      "mode": "hybrid",
+      "scope": {
+        "areaConceptId": "",
+        "ecl": "<< 404684003 : 363698007 = << 76752008"
+      },
+      "scopeLabel": "Clinical finding + finding site breast structure"
+    },
+    {
+      "id": "heart-procedures",
+      "marker": "ATTR",
+      "title": "Heart procedures",
+      "query": "bypass",
+      "languageCode": "en",
+      "mode": "hybrid",
+      "scope": {
+        "areaConceptId": "",
+        "ecl": "<< 71388002 : 363704007 = << 80891009"
+      },
+      "scopeLabel": "Procedure + procedure site heart structure"
+    },
+    {
+      "id": "non-neoplasm-findings",
+      "marker": "MINUS",
+      "title": "Findings excluding neoplasms",
+      "query": "pain",
+      "languageCode": "en",
+      "mode": "lexical",
+      "scope": {
+        "areaConceptId": "",
+        "ecl": "<< 404684003 MINUS << 363346000"
+      },
+      "scopeLabel": "Clinical findings with neoplasms removed"
+    },
+    {
+      "id": "products",
+      "marker": "AREA",
+      "title": "Medicinal products",
+      "query": "insulin",
+      "languageCode": "en",
+      "mode": "hybrid",
+      "scope": {
+        "areaConceptId": "373873005",
+        "ecl": ""
+      },
+      "scopeLabel": "Descendants of pharmaceutical / biologic product"
+    }
+  ],
+  "basic_queries": [
+    {
+      "label": "Type 2 diabetes",
+      "query": "type 2 diabetes",
+      "languageCode": "en"
+    },
+    {
+      "label": "Carcinoma de mama",
+      "query": "carcinoma de mama",
+      "languageCode": "es"
+    },
+    {
+      "label": "Myocardial infarction",
+      "query": "myocardial infarction",
+      "languageCode": "en"
+    },
+    {
+      "label": "Atrial fibrillation",
+      "query": "atrial fibrillation",
+      "languageCode": "en"
+    },
+    {
+      "label": "Cáncer de pulmón",
+      "query": "cáncer de pulmón",
+      "languageCode": "es"
+    },
+    {
+      "label": "Heart failure",
+      "query": "heart failure",
+      "languageCode": "en"
+    }
+  ],
+  "semantic_phrases": [
+    {
+      "label": "high blood sugar",
+      "query": "high blood sugar",
+      "languageCode": "en"
+    },
+    {
+      "label": "irregular heartbeat",
+      "query": "irregular heartbeat",
+      "languageCode": "en"
+    },
+    {
+      "label": "hardening of the arteries",
+      "query": "hardening of the arteries",
+      "languageCode": "en"
+    },
+    {
+      "label": "leaky heart valve",
+      "query": "leaky heart valve",
+      "languageCode": "en"
+    },
+    {
+      "label": "mini stroke",
+      "query": "mini stroke",
+      "languageCode": "en"
+    },
+    {
+      "label": "azúcar alta en sangre",
+      "query": "azucar alta en sangre",
+      "languageCode": "es"
+    }
+  ],
+  "grounding_notes": [
+    {
+      "id": "ex-diabetes-en",
+      "group": "Simple note",
+      "title": "Diabetes follow-up (EN)",
+      "languageCode": "en",
+      "recommendedPrimary": "Type 2 diabetes mellitus",
+      "text": "Reason for visit: Follow-up for type 2 diabetes mellitus.\nHistory of present illness: The patient has had type 2 diabetes mellitus for 12 years. Recent laboratory results showed increased urine albumin. The patient reports intermittent numbness in both feet but denies foot ulcers. No symptoms of hypoglycemia were reported.\nAssessment:\n1. Type 2 diabetes mellitus with suspected diabetic nephropathy.\n2. Peripheral neuropathy symptoms, likely related to diabetes.\n3. No evidence of diabetic retinopathy on ophthalmology review last month.\n4. Hypertension, controlled.\nPast medical history: Hyperlipidemia. No history of type 1 diabetes mellitus or diabetic ketoacidosis.\nFamily history: Father with type 2 diabetes mellitus.\nPlan: Continue metformin. Start SGLT2 inhibitor if renal function remains stable. Repeat urine albumin-creatinine ratio in 3 months. Refer to podiatry for foot risk assessment."
+    },
+    {
+      "id": "ex-diabetes-es",
+      "group": "Simple note",
+      "title": "Diabetes seguimiento (ES)",
+      "languageCode": "es",
+      "recommendedPrimary": "Diabetes mellitus tipo 2",
+      "text": "Motivo de consulta: Revisión de diabetes mellitus tipo 2.\nEnfermedad actual: Paciente con diabetes mellitus tipo 2 de 12 años de evolución. En el último control se observa aumento de albúmina en orina. Refiere hormigueo intermitente en ambos pies, sin úlceras ni lesiones cutáneas. No ha presentado episodios recientes de hipoglucemia.\nEvaluación:\n1. Diabetes mellitus tipo 2.\n2. Sospecha de nefropatía diabética por albuminuria persistente.\n3. Síntomas compatibles con neuropatía periférica diabética.\n4. Sin evidencia de retinopatía diabética en la revisión oftalmológica reciente.\n5. Hipertensión arterial controlada.\nAntecedentes personales: Dislipemia. Sin antecedentes de diabetes mellitus tipo 1 ni cetoacidosis diabética.\nAntecedentes familiares: Padre con diabetes mellitus tipo 2.\nPlan: Continuar metformina. Valorar inicio de inhibidor SGLT2 si la función renal se mantiene estable. Repetir cociente albúmina-creatinina en orina en 3 meses. Derivar a podología para valoración del riesgo de pie diabético."
+    },
+    {
+      "id": "ex-hf-en",
+      "group": "Discharge summary",
+      "title": "Heart failure discharge (EN)",
+      "languageCode": "en",
+      "recommendedPrimary": "Acute decompensated heart failure",
+      "text": "Discharge summary\nReason for admission: Progressive shortness of breath and ankle swelling for 5 days.\nHistory of present illness: The patient was admitted with acute decompensated heart failure. On arrival, oxygen saturation was 89% on room air, with bilateral basal crackles and peripheral edema. Chest X-ray showed pulmonary congestion. Troponin was not elevated. There was no evidence of acute myocardial infarction.\nPast medical history: Chronic heart failure with reduced ejection fraction, hypertension, chronic kidney disease stage 3, and atrial fibrillation. No previous stroke.\nHospital course: The patient was treated with intravenous furosemide with good diuresis and clinical improvement. Echocardiogram showed left ventricular ejection fraction of 35%. Atrial fibrillation remained rate controlled. Renal function worsened transiently during diuresis but returned near baseline before discharge.\nDischarge assessment:\n1. Acute decompensated heart failure on chronic heart failure with reduced ejection fraction.\n2. Atrial fibrillation, rate controlled.\n3. Chronic kidney disease stage 3.\n4. Hypertension.\n5. Acute myocardial infarction ruled out.\nDischarge plan: Continue oral furosemide, beta blocker, ACE inhibitor, and anticoagulation. Heart failure clinic follow-up in 2 weeks. Repeat renal function blood test in 1 week."
+    },
+    {
+      "id": "ex-hf-es",
+      "group": "Discharge summary",
+      "title": "Alta cardiología (ES)",
+      "languageCode": "es",
+      "recommendedPrimary": "Insuficiencia cardíaca aguda descompensada",
+      "text": "Informe de alta\nMotivo de ingreso: Disnea progresiva y edemas en extremidades inferiores de varios días de evolución.\nEnfermedad actual: Paciente que ingresa por insuficiencia cardíaca aguda descompensada. A la llegada presenta saturación de oxígeno del 89% basal, crepitantes bibasales y edemas maleolares. La radiografía de tórax muestra signos de congestión pulmonar. La troponina no presenta elevación significativa. No hay datos de infarto agudo de miocardio.\nAntecedentes personales: Insuficiencia cardíaca crónica con fracción de eyección reducida, fibrilación auricular, hipertensión arterial y enfermedad renal crónica estadio 3. Sin antecedentes de ictus.\nEvolución durante el ingreso: Se inicia tratamiento con furosemida intravenosa, con buena respuesta diurética y mejoría clínica progresiva. El ecocardiograma muestra fracción de eyección del ventrículo izquierdo del 35%. La fibrilación auricular se mantiene con frecuencia controlada. La función renal empeora de forma transitoria durante la diuresis y vuelve a valores cercanos a los basales antes del alta.\nDiagnóstico al alta:\n1. Insuficiencia cardíaca aguda descompensada sobre insuficiencia cardíaca crónica con fracción de eyección reducida.\n2. Fibrilación auricular con frecuencia controlada.\n3. Enfermedad renal crónica estadio 3.\n4. Hipertensión arterial.\n5. Infarto agudo de miocardio descartado.\nPlan al alta: Continuar furosemida oral, betabloqueante, inhibidor de la enzima convertidora de angiotensina y anticoagulación. Control en consulta de insuficiencia cardíaca en 2 semanas. Repetir analítica con función renal en 1 semana."
+    },
+    {
+      "id": "ex-full-report-en",
+      "group": "Discharge summary",
+      "title": "Cardiology discharge — full multi-section (EN)",
+      "languageCode": "en",
+      "recommendedPrimary": "Acute decompensated heart failure",
+      "text": "Cardiology discharge summary\nReason for admission: acute decompensated heart failure.\nHistory of present illness: acute decompensated heart failure on a background of chronic systolic heart failure and ischemic heart disease.\nPast medical history: coronary artery disease, type 2 diabetes mellitus, essential hypertension, and chronic kidney disease.\nFamily history: father with myocardial infarction; mother with breast cancer.\nProcedures during admission: percutaneous coronary intervention.\nDischarge diagnoses:\n1. Acute decompensated heart failure.\n2. Atrial fibrillation.\n3. Coronary artery disease.\n4. Type 2 diabetes mellitus.\n5. Chronic kidney disease.\n6. Acute myocardial infarction ruled out.\n7. Pulmonary embolism excluded.\nMedications on discharge: aspirin."
+    },
+    {
+      "id": "ex-oncology-en",
+      "group": "Discharge summary",
+      "title": "Breast oncology discharge (EN)",
+      "languageCode": "en",
+      "recommendedPrimary": "Invasive ductal carcinoma of left breast",
+      "text": "Oncology discharge summary\nReason for admission: Elective surgery for biopsy-proven invasive ductal carcinoma of the left breast.\nClinical background: The patient was diagnosed with invasive ductal carcinoma of the left breast after abnormal screening mammography and core needle biopsy. Estrogen receptor was positive, progesterone receptor was positive, and HER2 was negative. There was no clinical evidence of distant metastatic disease before surgery. Family history is significant for mother with breast cancer at age 52.\nProcedure performed: Left breast lumpectomy with sentinel lymph node biopsy.\nHospital course: The procedure was uncomplicated. Postoperative pain was controlled with oral analgesia. No wound infection was observed. Final pathology confirmed invasive ductal carcinoma with negative surgical margins. One sentinel lymph node was negative for metastatic carcinoma.\nDischarge assessment:\n1. Invasive ductal carcinoma of the left breast, status post lumpectomy.\n2. No evidence of metastatic carcinoma.\n3. Family history of breast cancer.\n4. Postoperative wound infection not present.\nPlan: Refer to multidisciplinary tumor board. Arrange oncology follow-up for adjuvant radiotherapy and endocrine therapy discussion. Review final pathology in clinic."
+    },
+    {
+      "id": "ex-stroke-en",
+      "group": "Discharge summary",
+      "title": "Stroke discharge (EN)",
+      "languageCode": "en",
+      "recommendedPrimary": "Acute ischemic stroke",
+      "text": "Neurology discharge summary\nReason for admission: Sudden onset right arm weakness and difficulty speaking.\nHistory of present illness: The patient presented within 2 hours of symptom onset. Neurological examination showed expressive aphasia and right-sided weakness. CT brain showed no intracranial hemorrhage. CT angiography did not show large vessel occlusion. MRI brain later confirmed acute ischemic stroke in the left middle cerebral artery territory.\nPast medical history: Paroxysmal atrial fibrillation, hypertension, and hyperlipidemia. No history of intracranial bleeding.\nHospital course: Intravenous thrombolysis was given after exclusion of hemorrhage. Symptoms improved partially. Cardiac monitoring showed intermittent atrial fibrillation.\nDischarge assessment:\n1. Acute ischemic stroke in the left middle cerebral artery territory.\n2. Expressive aphasia, improving.\n3. Paroxysmal atrial fibrillation, likely embolic source.\n4. Intracranial hemorrhage ruled out.\nPlan: Start oral anticoagulation after repeat brain imaging. Continue statin and antihypertensive therapy. Outpatient stroke clinic follow-up and community physiotherapy."
+    },
+    {
+      "id": "ex-chestpain-en",
+      "group": "Ambiguous / safety (do not over-code)",
+      "title": "Chest pain ED note (EN)",
+      "languageCode": "en",
+      "recommendedPrimary": "Possible unstable angina",
+      "text": "Emergency department note\nChief complaint: Chest pain.\nHistory: The patient reports central chest discomfort lasting 20 minutes while walking upstairs. Pain resolved before arrival. The patient denies current chest pain, shortness of breath, syncope, or palpitations. Past medical history includes hypertension and type 2 diabetes mellitus. Father had myocardial infarction at age 60.\nExamination: Blood pressure 158/92 mmHg. Heart sounds normal. Lungs clear.\nInvestigations: Initial ECG shows no ST elevation. First troponin is normal. Chest X-ray is normal.\nAssessment: Chest pain, possible unstable angina. Acute myocardial infarction not confirmed at this time.\nPlan: Repeat ECG and troponin in 3 hours. Admit to observation unit for cardiac monitoring. Continue aspirin and statin."
+    },
+    {
+      "id": "ex-chestpain-es",
+      "group": "Ambiguous / safety (do not over-code)",
+      "title": "Dolor torácico urgencias (ES)",
+      "languageCode": "es",
+      "recommendedPrimary": "Posible angina inestable",
+      "text": "Nota de urgencias\nMotivo de consulta: Dolor torácico.\nEnfermedad actual: Paciente que refiere opresión centrotorácica de 20 minutos de duración mientras subía escaleras. El dolor cede antes de la llegada a urgencias. Niega dolor torácico actual, disnea, síncope o palpitaciones. Antecedentes de hipertensión arterial y diabetes mellitus tipo 2. Padre con infarto de miocardio a los 60 años.\nExploración física: Presión arterial 158/92 mmHg. Auscultación cardíaca sin soplos. Auscultación pulmonar normal.\nPruebas complementarias: Electrocardiograma inicial sin elevación del segmento ST. Primera troponina normal. Radiografía de tórax sin hallazgos patológicos.\nEvaluación: Dolor torácico, posible angina inestable. Infarto agudo de miocardio no confirmado en este momento.\nPlan: Repetir electrocardiograma y troponina en 3 horas. Ingreso en unidad de observación para monitorización cardíaca. Continuar aspirina y estatina."
+    }
+  ],
+  "gold_notes": [
+    {
+      "id": "gold-en-diabetes",
+      "title": "Diabetes with complications (EN)",
+      "languageCode": "en",
+      "text": "HPI: Patient with type 2 diabetes mellitus.\nAssessment: Diabetic nephropathy. No evidence of diabetic retinopathy on current review.\nFamily history: Mother with type 2 diabetes.\nPlan: Continue metformin and repeat urine albumin.",
+      "facts": [
+        {
+          "phrase": "type 2 diabetes mellitus",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "44054006",
+          "term": "Type 2 diabetes mellitus"
+        },
+        {
+          "phrase": "diabetic nephropathy",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active",
+          "conceptId": "127013003",
+          "term": "Disorder of kidney due to diabetes mellitus"
+        },
+        {
+          "phrase": "diabetic retinopathy",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "mother with type 2 diabetes",
+          "assertion": "present",
+          "subject": "family",
+          "section": "family_history"
+        },
+        {
+          "phrase": "metformin",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        }
+      ]
+    },
+    {
+      "id": "gold-es-diabetes",
+      "title": "Diabetes con complicaciones (ES)",
+      "languageCode": "es",
+      "text": "Motivo: Paciente con diabetes mellitus tipo 2.\nEvaluación: Nefropatía diabética. Sin evidencia de retinopatía diabética en el control actual.\nAntecedentes familiares: Madre con diabetes tipo 2.\nPlan: Continuar metformina y repetir albúmina en orina.",
+      "facts": [
+        {
+          "phrase": "diabetes mellitus tipo 2",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "44054006",
+          "term": "Diabetes mellitus type II"
+        },
+        {
+          "phrase": "nefropatía diabética",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active",
+          "conceptId": "127013003",
+          "term": "Diabetic renal disease"
+        },
+        {
+          "phrase": "retinopatía diabética",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "madre con diabetes tipo 2",
+          "assertion": "present",
+          "subject": "family",
+          "section": "family_history"
+        },
+        {
+          "phrase": "metformina",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        }
+      ]
+    },
+    {
+      "id": "gold-en-oncology",
+      "title": "Breast oncology (EN)",
+      "languageCode": "en",
+      "text": "Assessment: Carcinoma of breast.\nNo evidence of metastatic carcinoma.\nPlan: Refer to tumor board.",
+      "facts": [
+        {
+          "phrase": "carcinoma of breast",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active",
+          "conceptId": "254838004",
+          "term": "Carcinoma of breast"
+        },
+        {
+          "phrase": "metastatic carcinoma",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        }
+      ]
+    },
+    {
+      "id": "gold-en-cardiology",
+      "title": "Cardiology, secondary complication (EN)",
+      "languageCode": "en",
+      "text": "Assessment: Acute myocardial infarction complicated by heart failure.\nHistory of atrial fibrillation.\nDenies chest pain at present.",
+      "facts": [
+        {
+          "phrase": "myocardial infarction",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active",
+          "conceptId": "22298006",
+          "term": "Myocardial infarction"
+        },
+        {
+          "phrase": "heart failure",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active",
+          "conceptId": "84114007",
+          "term": "Heart failure"
+        },
+        {
+          "phrase": "atrial fibrillation",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "49436004",
+          "term": "Atrial fibrillation"
+        },
+        {
+          "phrase": "chest pain",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        }
+      ]
+    },
+    {
+      "id": "gold-en-cardio-renal",
+      "title": "Cardio-renal, ED workup (EN)",
+      "languageCode": "en",
+      "text": "Chief complaint: Shortness of breath.\nHistory: Known heart failure and chronic kidney disease. Hypertension on treatment.\nThe patient denies chest pain and has no fever.\nAssessment: Acute decompensated heart failure. Suspected pneumonia pending chest X-ray.\nPlan: IV furosemide, admit for monitoring.",
+      "facts": [
+        {
+          "phrase": "shortness of breath",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "chief_complaint"
+        },
+        {
+          "phrase": "heart failure",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "84114007",
+          "term": "Heart failure"
+        },
+        {
+          "phrase": "chronic kidney disease",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "709044004",
+          "term": "Chronic kidney disease"
+        },
+        {
+          "phrase": "hypertension",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "38341003",
+          "term": "Hypertensive disorder"
+        },
+        {
+          "phrase": "chest pain",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "fever",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "acute decompensated heart failure",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "pneumonia",
+          "assertion": "suspected",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "furosemide",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        }
+      ]
+    },
+    {
+      "id": "gold-en-ischemic",
+      "title": "Ischemic heart disease, procedure & meds (EN)",
+      "languageCode": "en",
+      "text": "History: Stable angina and type 2 diabetes mellitus. Father had myocardial infarction.\nAssessment: Coronary artery disease.\nProcedure: Coronary angiography performed today.\nPlan: Start aspirin and atorvastatin. No evidence of active bleeding.",
+      "facts": [
+        {
+          "phrase": "stable angina",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history"
+        },
+        {
+          "phrase": "type 2 diabetes mellitus",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "44054006",
+          "term": "Type 2 diabetes mellitus"
+        },
+        {
+          "phrase": "father had myocardial infarction",
+          "assertion": "present",
+          "subject": "family",
+          "section": "family_history"
+        },
+        {
+          "phrase": "coronary artery disease",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active",
+          "conceptId": "53741008",
+          "term": "Coronary arteriosclerosis"
+        },
+        {
+          "phrase": "coronary angiography",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "procedures"
+        },
+        {
+          "phrase": "aspirin",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        },
+        {
+          "phrase": "atorvastatin",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        },
+        {
+          "phrase": "active bleeding",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "plan"
+        }
+      ]
+    },
+    {
+      "id": "gold-en-respiratory",
+      "title": "Respiratory, COPD exacerbation (EN)",
+      "languageCode": "en",
+      "text": "Chief complaint: Productive cough and wheezing for three days.\nHistory: Chronic obstructive pulmonary disease. Ex-smoker.\nAssessment: Acute exacerbation of COPD. No signs of pneumonia on examination.\nPlan: Nebulized salbutamol and a course of prednisolone.",
+      "facts": [
+        {
+          "phrase": "productive cough",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "chief_complaint"
+        },
+        {
+          "phrase": "wheezing",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "chief_complaint"
+        },
+        {
+          "phrase": "chronic obstructive pulmonary disease",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "history",
+          "conceptId": "13645005",
+          "term": "Chronic obstructive lung disease"
+        },
+        {
+          "phrase": "acute exacerbation of COPD",
+          "assertion": "present",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "pneumonia",
+          "assertion": "absent",
+          "subject": "patient",
+          "section": "active"
+        },
+        {
+          "phrase": "salbutamol",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        },
+        {
+          "phrase": "prednisolone",
+          "assertion": "planned",
+          "subject": "patient",
+          "section": "plan"
+        }
+      ]
+    }
+  ],
+  "corpus_roots": [
+    {
+      "label": "Diabetes mellitus",
+      "root": "73211009"
+    },
+    {
+      "label": "Cardiovascular disease",
+      "root": "49601007"
+    },
+    {
+      "label": "Heart failure",
+      "root": "84114007"
+    },
+    {
+      "label": "Chronic kidney disease",
+      "root": "709044004"
+    },
+    {
+      "label": "Malignant neoplasm",
+      "root": "363346000"
+    },
+    {
+      "label": "Ischemic heart disease",
+      "root": "414545008"
+    }
+  ],
+  "value_sets": [
+    {
+      "name": "Heart failure and descendants",
+      "expression": "<< 84114007",
+      "description": "Descendant value set: heart failure plus all of its descendants."
+    },
+    {
+      "name": "Findings at heart structure",
+      "expression": "<< 404684003 : 363698007 = << 80891009",
+      "description": "Attribute-refinement value set: clinical findings whose finding site is a heart structure."
+    }
+  ],
+  "demo_flow": [
+    {
+      "step": 1,
+      "tab": "model",
+      "title": "Overview",
+      "description": "What SNOMED CT is and why one platform replaces four stores — canonical concepts, term sidecar, value sets, usage evidence."
+    },
+    {
+      "step": 2,
+      "tab": "search",
+      "title": "Navigate",
+      "description": "Search \"heart failure\" three ways (lexical / semantic / hybrid); open a concept; show the hierarchy and \"everything under\" as one indexed query."
+    },
+    {
+      "step": 3,
+      "tab": "ecl",
+      "title": "Value set",
+      "description": "Expand << 84114007 and the flagship refinement; read the compiled MongoDB plan and the index that makes it fast."
+    },
+    {
+      "step": 4,
+      "tab": "ground",
+      "title": "Ground a note",
+      "description": "Ground a note: negation and family-history context, bounded candidates from MongoDB, reviewer confirmation."
+    },
+    {
+      "step": 5,
+      "tab": "mongo",
+      "title": "Query by meaning",
+      "description": "Query the grounded corpus by SNOMED ancestor — the subsumption payoff."
+    },
+    {
+      "step": 6,
+      "tab": "benchmark",
+      "title": "Benchmark",
+      "description": "Grade retrieval against the gold-note pack; compare quality, tokens, and latency."
+    },
+    {
+      "step": 7,
+      "tab": "release",
+      "title": "Release operations (optional)",
+      "description": "Upload a licensed IRBD file → dry-run ingest → diff against the active release."
+    }
+  ],
+  "licensing": {
+    "title": "SNOMED CT licensing & attribution",
+    "paragraphs": [
+      "SNOMED and SNOMED CT are registered trademarks of the International Health Terminology Standards Development Organisation (SNOMED International / IHTSDO). This project is not affiliated with or endorsed by SNOMED International.",
+      "This deployment includes only a small sample dataset unless a licensed release has been ingested. SNOMED CT requires proper licensing. Organizations that hold the required license for their country or territory can run the import and transformation scripts against their own authorized release files.",
+      "Licensing terms vary by country and use case; per SNOMED International's published licensing policy, use within Member territories is generally covered by the national license, while affiliate use elsewhere may require licensing through the Member Licensing and Distribution Service. Confirm your obligations with SNOMED International or your national release centre — do not rely on this note as legal guidance.",
+      "This project provides the MongoDB data model and transformation pattern — not SNOMED CT content. Do not publish or redistribute a full SNOMED CT release unless the license terms explicitly allow it."
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "snomedct.synthetic-rf2",
+  "version": "1.0.0",
+  "domain": "snomedct",
+  "format": "rf2-snapshot",
+  "releaseId": "20261001",
+  "scope": "Synthetic preparation exercise; fictional identifiers, not clinical terminology",
+  "provenance": {
+    "origin": "Authored synthetic fixture",
+    "containsPatientData": false,
+    "containsOfficialRelease": false
+  },
+  "files": [
+    {
+      "path": "Snapshot/der2_Language_Snapshot.txt",
+      "sha256": "469d6ae8e60e9c3760f0eb3de1b9bdb1a35a84410a783f478abffd754de74f6b"
+    },
+    {
+      "path": "Snapshot/der2_iisssccRefset_ExtendedMap_Snapshot.txt",
+      "sha256": "58301ea8dcf18aa8eb9660b2125b39b7cf709f7640fa240f3d9a7246ef521536"
+    },
+    {
+      "path": "Snapshot/sct2_Concept_Snapshot.txt",
+      "sha256": "27fa7ac8f61febbe17fbde57832b8ec92b9938d8f1c142d7b0187d0200765db5"
+    },
+    {
+      "path": "Snapshot/sct2_Description_Snapshot.txt",
+      "sha256": "b9b2eec8ce7dcd8da268b3748f1222c79b26ad6387ce270c9ec4e9ab8b41ee6c"
+    },
+    {
+      "path": "Snapshot/sct2_RelationshipConcreteValues_Snapshot.txt",
+      "sha256": "2ded39c0560cb5bbba57585a44bfd35c5edc4fbc001af9779d5bbdffa98e1b97"
+    },
+    {
+      "path": "Snapshot/sct2_Relationship_Snapshot.txt",
+      "sha256": "f5882e1f5b52d1046a3b2e8cbcc723d7da7717dbac5089b27cccce560de5f745"
+    },
+    {
+      "path": "Snapshot/sct2_sRefset_OWLExpression_Snapshot.txt",
+      "sha256": "8e69def3e994a2cc7fa6edff2a5f768c0a63422d22323354ceed817d25eeb56f"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "_id": {
+      "$oid": "6ac4c9144d67815f61dca0c8"
+    },
+    "ci": "Test2",
+    "ct": "dimse_node",
+    "st": "up",
+    "md": {
+      "version": "0.0.2.0",
+      "uptimeSec": 0,
+      "bootstrap": true
+    },
+    "ca": {
+      "$date": "2026-10-06T10:10:28.078Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ac610f4fd5ed068da9aedc5"
+    },
+    "ci": "H696969",
+    "ct": "dimse_node",
+    "st": "online",
+    "md": {
+      "aeTitle": "FBORRELL_STORE",
+      "version": "1.0.0.0",
+      "uptimeSec": 1117
+    },
+    "ca": {
+      "$date": "2026-10-07T09:29:24.447Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ac63005311306460e4c3f21"
+    },
+    "ci": "Test2",
+    "ct": "dimse_node",
+    "st": "online",
+    "md": {
+      "aeTitle": "FLST1_STORE",
+      "version": "0.0.2-730b2fe",
+      "uptimeSec": 12294
+    },
+    "ca": {
+      "$date": "2026-10-07T11:41:57.536Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acf2a182f33d302538c0bbc"
+    },
+    "ci": "Test4",
+    "ct": "dimse_node",
+    "st": "online",
+    "md": {
+      "aeTitle": "TEST",
+      "version": "0.0.2-730b2fe",
+      "uptimeSec": 7091
+    },
+    "ca": {
+      "$date": "2026-10-14T07:07:04.675Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6acf2bb82f33d302538c0bbe"
+    },
+    "ci": "Test 3",
+    "ct": "dimse_node",
+    "st": "online",
+    "md": {
+      "aeTitle": "TEST01",
+      "version": "0.0.2-730b2fe",
+      "uptimeSec": 0
+    },
+    "ca": {
+      "$date": "2026-10-14T07:14:00.836Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ad0a66f8a3bf702ee5866ac"
+    },
+    "ci": "Test 5",
+    "ct": "dimse_node",
+    "st": "online",
+    "md": {
+      "aeTitle": "TEST",
+      "version": "0.0.2-c208479",
+      "uptimeSec": 331
+    },
+    "ca": {
+      "$date": "2026-10-15T10:09:51.396Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6adf606530285c76134a8169"
+    },
+    "ci": "Test1",
+    "ct": "dimse_node",
+    "st": "online",
+    "md": {
+      "aeTitle": "TEST",
+      "version": "0.0.2-730b2fe",
+      "uptimeSec": 13547
+    },
+    "ca": {
+      "$date": "2026-10-26T14:15:01.682Z"
+    }
+  }
+]

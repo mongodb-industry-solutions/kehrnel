@@ -1,0 +1,211 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "BlueprintRevisionRef": {
+      "additionalProperties": false,
+      "properties": {
+        "blueprintId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Blueprintid",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "blueprintId",
+        "revision",
+        "digest"
+      ],
+      "title": "BlueprintRevisionRef",
+      "type": "object"
+    },
+    "DeliveryLevel": {
+      "enum": [
+        "public_demonstration",
+        "customer_evaluation",
+        "production_implementation"
+      ],
+      "title": "DeliveryLevel",
+      "type": "string"
+    },
+    "RuntimeDependency": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dependencyId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Dependencyid",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/RuntimeDependencyKind"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        },
+        "requiredAtRuntime": {
+          "default": true,
+          "title": "Requiredatruntime",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "dependencyId",
+        "kind",
+        "purpose"
+      ],
+      "title": "RuntimeDependency",
+      "type": "object"
+    },
+    "RuntimeDependencyKind": {
+      "enum": [
+        "terminology",
+        "identity",
+        "connector",
+        "policy",
+        "observability",
+        "external_service"
+      ],
+      "title": "RuntimeDependencyKind",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "blueprintRef": {
+      "$ref": "#/$defs/BlueprintRevisionRef"
+    },
+    "compilerRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "contract": {
+      "const": "implementation-package/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deliveryLevel": {
+      "$ref": "#/$defs/DeliveryLevel"
+    },
+    "lifecycleOwner": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lifecycleowner"
+    },
+    "packageDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Packagedigest",
+      "type": "string"
+    },
+    "portalIndependent": {
+      "const": true,
+      "default": true,
+      "title": "Portalindependent",
+      "type": "boolean"
+    },
+    "requiredArtifactRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "minItems": 1,
+      "title": "Requiredartifactrefs",
+      "type": "array"
+    },
+    "resolvedPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "runtimeDependencies": {
+      "items": {
+        "$ref": "#/$defs/RuntimeDependency"
+      },
+      "title": "Runtimedependencies",
+      "type": "array"
+    },
+    "targetCapabilityProfileRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "blueprintRef",
+    "resolvedPlanRef",
+    "targetCapabilityProfileRef",
+    "requiredArtifactRefs",
+    "compilerRef",
+    "deliveryLevel",
+    "packageDigest"
+  ],
+  "title": "ImplementationPackage",
+  "type": "object"
+}

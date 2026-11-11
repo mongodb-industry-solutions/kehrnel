@@ -1,0 +1,351 @@
+[
+  {
+    "_id": "00b40c4a-dd5c-45e3-a1a1-9690f0d0abe9",
+    "centerId": "FBORRELL01",
+    "permissions": [
+      "STORE.RW",
+      "DW.RW",
+      "WL.RW",
+      "status.RW",
+      "HL7.RW"
+    ],
+    "name": "DimseNode-fborrell-dev",
+    "active": true,
+    "createdAt": "2026-07-17T06:45:19.473Z",
+    "updatedAt": "2026-07-17T08:38:39.224Z"
+  },
+  {
+    "_id": "0120305d-9a27-4661-91ce-3661b3b64bed",
+    "centerId": "H696969",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW"
+    ],
+    "name": "TEST NODE",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-07-24T10:26:42.833Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-24T10:26:42.833Z"
+    }
+  },
+  {
+    "_id": "6f8da179-7bd3-4038-8b2f-40b9a1f8f5ed",
+    "centerId": "Test2",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW",
+      "STORE.RW",
+      "DW.RW"
+    ],
+    "name": "FlowTest-fb01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T08:15:11.354Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:15:11.354Z"
+    }
+  },
+  {
+    "_id": "78faa962-ef89-4966-b214-7de377f32d8d",
+    "centerId": "Test4",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW",
+      "STORE.RW",
+      "DW.RW"
+    ],
+    "name": "FlowTest-pp01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T09:01:09.735Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T09:01:09.735Z"
+    }
+  },
+  {
+    "_id": "7f34bfba-d78a-45a3-8a7b-3006a5a57226",
+    "centerId": "Test1",
+    "permissions": [
+      "DW.RW",
+      "STOWRS.RW",
+      "SM.RW",
+      "HL7.RW",
+      "WL.RW",
+      "QRY.RW",
+      "CFG.RW"
+    ],
+    "name": "FLOWSIM-LoadTest-raguilar01 (FlowTestSimulator)",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T09:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T09:00:00Z"
+    }
+  },
+  {
+    "_id": "87ee66f0-09ff-4c92-a71a-e69b3d01f9ce",
+    "centerId": "Test1",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW",
+      "STORE.RW",
+      "DW.RW"
+    ],
+    "name": "Flow-rp01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T08:57:55.662Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:57:55.662Z"
+    }
+  },
+  {
+    "_id": "89194bbe-0b62-46f7-ae7c-50e37f3b85b1",
+    "centerId": "H696969",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW",
+      "STORE.RW"
+    ],
+    "name": "DIMSE proves CECHO",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-08-26T05:40:51.918Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-31T08:37:51.787Z"
+    }
+  },
+  {
+    "_id": "8f4f9eb6-013d-42b5-a8f9-33efdb26828a",
+    "centerId": "_root",
+    "permissions": [
+      "CFG.RW",
+      "WL.RW",
+      "HL7.RW"
+    ],
+    "name": "RCloudV3-Site-CoreApi-Client (WRONG TENANT - see efa2bcae-63b0-4abc-95be-dba341248b74)",
+    "active": false,
+    "createdAt": {
+      "$date": "2026-07-03T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-03T00:00:00Z"
+    }
+  },
+  {
+    "_id": "8fd2190d-01dd-4b98-bf0f-6895bdc48e58",
+    "centerId": "HC3",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW"
+    ],
+    "name": "HC3DIMSE",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-08-12T05:04:33.044Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-12T05:04:33.044Z"
+    }
+  },
+  {
+    "_id": "94cff495-c56d-4157-b856-c0c8a3680124",
+    "centerId": "test1",
+    "permissions": [
+      "CLI.RW"
+    ],
+    "name": "TEST 1",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-06-11T09:27:18.668Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T09:27:18.669Z"
+    }
+  },
+  {
+    "_id": "b63dbfe6-866a-4bc6-b9ab-9015cd9dd58c",
+    "centerId": "Test 3",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW",
+      "STORE.RW",
+      "DW.RW"
+    ],
+    "name": "FlowTest-fp01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T08:56:33.434Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:56:33.434Z"
+    }
+  },
+  {
+    "_id": "bbeec27f-cd58-416a-89d1-9ce93e2381c3",
+    "centerId": "Test 5",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW",
+      "STORE.RW",
+      "DW.RW"
+    ],
+    "name": "NodeDimseTest",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T09:03:05.217Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T09:03:05.217Z"
+    }
+  },
+  {
+    "_id": "d92f19cb-55d7-45c6-9233-912c26aeb2a5",
+    "centerId": "HC3",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW"
+    ],
+    "name": "Hospital B",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-08-12T10:57:12.705Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-12T10:57:12.705Z"
+    }
+  },
+  {
+    "_id": "d97a638c-48de-43d7-a439-285299ade05f",
+    "centerId": "Site",
+    "permissions": [
+      "CFG.RW",
+      "Status.RW",
+      "QRY.RW",
+      "SM.RW",
+      "DW.RW",
+      "WL.RW",
+      "STOWRS.RW",
+      "HL7.RW"
+    ],
+    "name": "Acceso del site de gestión",
+    "active": true,
+    "createdAt": "2026-08-05T08:45:00.000Z",
+    "updatedAt": {
+      "$date": "2026-09-25T06:19:48.411Z"
+    }
+  },
+  {
+    "_id": "e1332a5b-870d-4364-8803-f902568aa950",
+    "centerId": "H696969",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW"
+    ],
+    "name": "ddd",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-07-24T10:26:55.878Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-24T10:26:55.878Z"
+    }
+  },
+  {
+    "_id": "e26de745-c8e6-4190-af78-d72bd09d94c3",
+    "centerId": "H999999",
+    "permissions": [
+      "CLI.RW"
+    ],
+    "name": "DIMSE_CSPT",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-06-11T09:51:21.248Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T09:51:21.248Z"
+    }
+  },
+  {
+    "_id": "ec20fc4f-227a-4964-92fb-5de2037e96b6",
+    "centerId": "H696969",
+    "permissions": [
+      "CLI.RW",
+      "Status.RW",
+      "WL.RW"
+    ],
+    "name": "TEST NODE",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-07-24T10:26:41.700Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-24T10:26:41.700Z"
+    }
+  },
+  {
+    "_id": "efa2bcae-63b0-4abc-95be-dba341248b74",
+    "centerId": "_root",
+    "permissions": [
+      "CFG.RW",
+      "QRY.RW",
+      "SM.RW",
+      "DW.RW"
+    ],
+    "name": "RCloudV3-Site-CoreApi-Client",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-07-03T07:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-07-14T06:50:13.199Z"
+    }
+  },
+  {
+    "_id": "f9e34110-7800-4250-9f1e-08a3b892098a",
+    "centerId": "DimseTest1",
+    "permissions": [
+      "CLI.RW"
+    ],
+    "name": "DIMSE WEB TEST",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-06-11T07:02:55.270Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T07:02:55.275Z"
+    }
+  },
+  {
+    "_id": "ffc51e51-13b1-4f05-950f-f81e9b9cabaf",
+    "centerId": "H999999",
+    "permissions": [
+      "CLI.RW"
+    ],
+    "name": "DIMSETEST2",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-06-15T06:58:28.328Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-15T06:58:28.332Z"
+    }
+  }
+]

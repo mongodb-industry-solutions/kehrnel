@@ -1,0 +1,133 @@
+resource: Location
+fhir_version: R4
+profile: us-core
+
+search_parameters:
+  status:
+    type: token
+    description: "active | suspended | inactive"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  name:
+    type: string
+    description: "A portion of the location's name or alias"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "name"
+
+  address:
+    type: string
+    description: "A (part of the) address of the location"
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+
+  address-city:
+    type: string
+    description: "A city specified in an address"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  organization:
+    type: reference
+    description: "Searches for locations that are managed by the provided organization"
+    fields:
+      - field: "_search.managingOrganizationId"
+        referenceType: id
+      - field: "managingOrganization.reference"
+        referenceType: full
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  name:
+    source: name
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+
+  address:
+    source: address
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: address
+        target_field: addressFull
+        datatype: string
+      - source_path: address
+        target_field: addressFull_lower
+        datatype: string
+        normalize: lowercase
+      - source_path: address.city
+        target_field: addressCity
+        datatype: string
+      - source_path: address.city
+        target_field: addressCity_lower
+        datatype: string
+        normalize: lowercase
+
+  managingOrganization:
+    source: managingOrganization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: managingOrganization.reference
+        target_field: managingOrganizationId
+        datatype: string
+        extractType: id
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_loc_status
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_r4_loc_name
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_loc_meta_profile
+      sparse: true

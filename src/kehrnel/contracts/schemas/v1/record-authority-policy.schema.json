@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "AuthorityScope": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "minLength": 1,
+          "title": "Domain",
+          "type": "string"
+        },
+        "lifecycleStates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lifecyclestates",
+          "type": "array"
+        },
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paths",
+          "type": "array"
+        },
+        "recordTypes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Recordtypes",
+          "type": "array"
+        },
+        "scopeId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Scopeid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scopeId",
+        "domain"
+      ],
+      "title": "AuthorityScope",
+      "type": "object"
+    },
+    "RecordConflictPolicy": {
+      "enum": [
+        "reject",
+        "reconcile",
+        "append_distinct",
+        "reviewed_merge"
+      ],
+      "title": "RecordConflictPolicy",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:record-authority-policy",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "authoritativeWriterRef": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Authoritativewriterref",
+      "type": "string"
+    },
+    "conflictPolicy": {
+      "$ref": "#/$defs/RecordConflictPolicy"
+    },
+    "contract": {
+      "const": "record-authority-policy/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "correctionBehavior": {
+      "minLength": 1,
+      "title": "Correctionbehavior",
+      "type": "string"
+    },
+    "permittedWriterRefs": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Permittedwriterrefs",
+      "type": "array"
+    },
+    "provenanceRequired": {
+      "default": true,
+      "title": "Provenancerequired",
+      "type": "boolean"
+    },
+    "scope": {
+      "$ref": "#/$defs/AuthorityScope"
+    },
+    "versionPolicyRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "scope",
+    "authoritativeWriterRef",
+    "permittedWriterRefs",
+    "conflictPolicy",
+    "versionPolicyRef",
+    "correctionBehavior"
+  ],
+  "title": "RecordAuthorityPolicy",
+  "type": "object"
+}

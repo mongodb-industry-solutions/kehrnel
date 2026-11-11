@@ -14,6 +14,7 @@ from pymongo.errors import ConnectionFailure
 from kehrnel.api.bridge.app.core.config import settings
 from kehrnel.api.bridge.app.core.config_manager import initialize_config_manager, close_config_manager
 from kehrnel.engine.core.bindings_resolver import resolve_bindings as resolve_bindings_ref
+from kehrnel.engine.core.data_target import resolved_data_target_digest
 from kehrnel.engine.strategies.openehr.rps_dual.config import (
     build_coding_opts,
     build_flattener_config,
@@ -38,6 +39,7 @@ _DEFAULT_FLAT_COMPOSITIONS_COLL_NAME = settings.FLAT_COMPOSITIONS_COLL_NAME
 _DEFAULT_SEARCH_COMPOSITIONS_COLL_NAME = settings.SEARCH_COMPOSITIONS_COLL_NAME
 _DEFAULT_EHR_COLL_NAME = settings.EHR_COLL_NAME
 _DEFAULT_EHR_CONTRIBUTIONS_COLL = settings.EHR_CONTRIBUTIONS_COLL
+_DEFAULT_DATABASE_NAME = settings.MONGODB_DB
 _DEFAULT_CODES_COLLECTION = settings.search_config.codes_collection
 _DEFAULT_SHORTCUTS_COLLECTION = settings.search_config.shortcuts_collection
 _DEFAULT_SEARCH_INDEX_NAME = settings.search_config.search_index_name
@@ -90,6 +92,7 @@ def _dictionary_readiness_signature(context: dict, strategy_cfg, modes: dict[str
         context.get("domain") or "openehr",
         getattr(activation, "activation_id", None),
         getattr(activation, "config_hash", None),
+        context.get("data_target_digest"),
         context.get("database_name"),
         strategy_cfg.collections.codes.name,
         strategy_cfg.collections.shortcuts.name,
@@ -221,7 +224,11 @@ def _get_activation(request: Request, env_id: str, domain: str):
             detail="Strategy runtime is not available.",
         )
 
-    activation = runtime.registry.get_activation(env_id, domain) or runtime.registry.get_activation(env_id)
+    # Domain routes must never inherit the environment's sole activation from
+    # another domain.  The registry's domain-less fallback is convenient for
+    # CLI utilities, but would let an openEHR request bind (for example) a FHIR
+    # database and then apply openEHR default collection names inside it.
+    activation = runtime.registry.get_activation(env_id, domain)
     if activation is None:
         raise HTTPException(
             status_code=404,
@@ -281,6 +288,14 @@ async def _needs_dictionary_bootstrap(target_db: AsyncIOMotorDatabase, strategy_
 
 
 def _sync_legacy_openehr_settings(activation, database_name: str | None = None) -> dict[str, str | bool | None]:
+    """Resolve the legacy HTTP collection contract without mutating globals.
+
+    The historical implementation copied an activation into the process-wide
+    ``settings`` object.  That made two concurrent tenant requests race over
+    database, collection, and Atlas Search configuration.  Keep the function
+    name for compatibility with callers/tests, but make it a pure resolver;
+    the returned values belong to the request context.
+    """
     cfg = activation.config if isinstance(getattr(activation, "config", None), dict) else {}
     collections = cfg.get("collections") if isinstance(cfg, dict) else {}
     collections = collections if isinstance(collections, dict) else {}
@@ -309,21 +324,6 @@ def _sync_legacy_openehr_settings(activation, database_name: str | None = None) 
     ehr_collection = ehr_cfg.get("name") or _DEFAULT_EHR_COLL_NAME
     contributions_collection = contrib_cfg.get("name") or _DEFAULT_EHR_CONTRIBUTIONS_COLL
 
-    settings.COMPOSITIONS_COLL_NAME = canonical_collection
-    settings.FLAT_COMPOSITIONS_COLL_NAME = flat_collection
-    settings.SEARCH_COMPOSITIONS_COLL_NAME = search_collection
-    settings.EHR_COLL_NAME = ehr_collection
-    settings.EHR_CONTRIBUTIONS_COLL = contributions_collection
-    if database_name:
-        settings.MONGODB_DB = database_name
-
-    settings.search_config.flatten_collection = flat_collection or _DEFAULT_FLATTEN_COLLECTION
-    settings.search_config.search_collection = search_collection or _DEFAULT_SEARCH_COLLECTION
-    settings.search_config.codes_collection = codes_collection or _DEFAULT_CODES_COLLECTION
-    settings.search_config.shortcuts_collection = shortcuts_collection or _DEFAULT_SHORTCUTS_COLLECTION
-    settings.search_config.search_index_name = search_index_name or _DEFAULT_SEARCH_INDEX_NAME
-    settings.search_config.search_compositions_merge = _DEFAULT_SEARCH_COMPOSITIONS_MERGE
-
     return {
         "canonical_collection": canonical_collection,
         "flat_collection": flat_collection,
@@ -334,7 +334,8 @@ def _sync_legacy_openehr_settings(activation, database_name: str | None = None) 
         "search_enabled": search_enabled,
         "ehr_collection": ehr_collection,
         "contributions_collection": contributions_collection,
-        "database_name": database_name or settings.MONGODB_DB,
+        "search_compositions_merge": _DEFAULT_SEARCH_COMPOSITIONS_MERGE,
+        "database_name": database_name or _DEFAULT_DATABASE_NAME,
     }
 
 
@@ -345,11 +346,19 @@ async def _ensure_legacy_openehr_ingestion_runtime(
     target_db: AsyncIOMotorDatabase,
     database_name: str,
     synced: dict[str, str | bool | None],
+    context: dict | None = None,
 ) -> None:
     if not _is_rps_dual_activation(activation):
         return
 
-    runtime_state = getattr(request.app.state, "legacy_openehr_runtime", {}) or {}
+    context = context or getattr(request.state, "_openehr_context", None)
+    if context is None:
+        raise HTTPException(
+            status_code=500,
+            detail="Request-scoped openEHR context is not initialized.",
+        )
+
+    runtime_state = context.get("legacy_openehr_runtime") or {}
     signature = {
         "env_id": getattr(activation, "env_id", None),
         "activation_id": getattr(activation, "activation_id", None),
@@ -361,8 +370,8 @@ async def _ensure_legacy_openehr_ingestion_runtime(
     }
 
     if (
-        getattr(request.app.state, "flattener", None) is not None
-        and getattr(request.app.state, "unflattener", None) is not None
+        context.get("flattener") is not None
+        and context.get("unflattener") is not None
         and runtime_state == signature
     ):
         return
@@ -384,12 +393,11 @@ async def _ensure_legacy_openehr_ingestion_runtime(
         coding_opts=coding_opts,
     )
 
-    request.app.state.flattener = flattener
-    request.app.state.unflattener = CompositionUnflattener.from_flattener(flattener)
-    request.app.state.db = target_db
-    request.app.state.target_db = target_db
-    request.app.state.source_db = target_db
-    request.app.state.config = {
+    context["flattener"] = flattener
+    context["unflattener"] = CompositionUnflattener.from_flattener(flattener)
+    context["target_db"] = target_db
+    context["source_db"] = target_db
+    context["ingest_config"] = {
         "apply_shortcuts": strategy_cfg.transform.apply_shortcuts,
         "source": {
             "canonical_compositions_collection": synced.get("canonical_collection"),
@@ -402,18 +410,19 @@ async def _ensure_legacy_openehr_ingestion_runtime(
             "shortcuts_collection": synced.get("shortcuts_collection") or strategy_cfg.collections.shortcuts.name,
             "rebuilt_collection": synced.get("flat_collection"),
             "database_name": database_name,
-            "search_compositions_merge": settings.search_config.search_compositions_merge,
+            "search_compositions_merge": bool(synced.get("search_compositions_merge", False)),
         },
     }
-    request.app.state.mappings_path = str(_DEFAULT_MAPPINGS_PATH)
-    request.app.state.ingest_options = {
+    context["mappings_path"] = str(_DEFAULT_MAPPINGS_PATH)
+    context["mappings_content"] = mappings_content
+    context["ingest_options"] = {
         "store_canonical": bool((activation.config or {}).get("store_canonical", False)),
         "canonical_collection": synced.get("canonical_collection"),
         "search_enabled": bool(synced.get("search_enabled", True)),
         "atlas_index_name": synced.get("search_index_name"),
     }
-    request.app.state.strategy_raw = activation.config or {}
-    request.app.state.legacy_openehr_runtime = signature
+    context["strategy_raw"] = activation.config or {}
+    context["legacy_openehr_runtime"] = signature
 
     logger.info(
         "Initialized legacy openEHR ingestion runtime for env_id=%s activation_id=%s",
@@ -490,9 +499,9 @@ async def ensure_active_openehr_dictionaries(
     _mark_dictionary_ready_cached(request, readiness_signature)
 
     # Force the request-scoped flattener/unflattener to reload freshly bootstrapped dictionaries.
-    request.app.state.flattener = None
-    request.app.state.unflattener = None
-    request.app.state.legacy_openehr_runtime = {}
+    context["flattener"] = None
+    context["unflattener"] = None
+    context["legacy_openehr_runtime"] = {}
 
     if context.get("ingestion_ready"):
         await _ensure_legacy_openehr_ingestion_runtime(
@@ -501,6 +510,7 @@ async def ensure_active_openehr_dictionaries(
             target_db=target_db,
             database_name=context["database_name"],
             synced=context["synced"],
+            context=context,
         )
         context["ingestion_ready"] = True
 
@@ -522,6 +532,7 @@ async def resolve_active_openehr_context(
                 target_db=cached["db"],
                 database_name=cached["database_name"],
                 synced=cached["synced"],
+                context=cached,
             )
             cached["ingestion_ready"] = True
         return cached
@@ -559,15 +570,12 @@ async def resolve_active_openehr_context(
             op=f"http:{request.method.lower()}:{request.url.path}",
             context={"activation_config": activation.config or {}},
         )
-        db_cfg = (resolved or {}).get("db") if isinstance(resolved, dict) else None
     elif getattr(activation, "bindings", None):
         logger.debug("Using plaintext bindings for env_id=%s (no bindings_ref).", env_id)
-        db_cfg = activation.bindings.get("db") if isinstance(activation.bindings, dict) else None
-        resolved = {"db": db_cfg} if isinstance(db_cfg, dict) else None
+        resolved = dict(activation.bindings)
     elif getattr(activation, "bindings_meta", None):
         logger.debug("Using bindings_meta for env_id=%s (no bindings_ref).", env_id)
-        db_cfg = activation.bindings_meta.get("db") if isinstance(activation.bindings_meta, dict) else None
-        resolved = {"db": db_cfg} if isinstance(db_cfg, dict) else None
+        resolved = dict(activation.bindings_meta)
     else:
         raise HTTPException(
             status_code=409,
@@ -576,6 +584,28 @@ async def resolve_active_openehr_context(
                 "Re-activate environment with bindings_ref or --allow-plaintext-bindings."
             ),
         )
+    manifest = runtime.registry.get_manifest(activation.strategy_id)
+    if manifest is None:
+        raise HTTPException(
+            status_code=503,
+            detail="The active strategy manifest is not available.",
+        )
+    try:
+        # Keep the legacy openEHR HTTP services on the exact same reviewed
+        # strategy database as StrategyRuntime.dispatch.  In particular, a
+        # database embedded in a secret URI must never redirect OPT loading.
+        resolved = runtime._bind_strategy_database(
+            manifest,
+            activation.config,
+            resolved,
+        )
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="The active strategy database binding is invalid.",
+        ) from exc
+
+    db_cfg = (resolved or {}).get("db") if isinstance(resolved, dict) else None
     provider = (db_cfg or {}).get("provider")
     uri = (db_cfg or {}).get("uri")
     database_name = (db_cfg or {}).get("database")
@@ -587,6 +617,12 @@ async def resolve_active_openehr_context(
 
     client = _get_client_for_uri(str(uri))
     target_db = client[str(database_name)]
+    data_target_digest = resolved_data_target_digest(resolved)
+    if data_target_digest is None:
+        raise HTTPException(
+            status_code=502,
+            detail="The resolved MongoDB target could not be identified safely.",
+        )
     synced = _sync_legacy_openehr_settings(activation, str(database_name))
 
     context = {
@@ -596,10 +632,14 @@ async def resolve_active_openehr_context(
         "activation": activation,
         "bindings": resolved,
         "database_name": str(database_name),
+        "data_target_digest": data_target_digest,
         "db": target_db,
         "synced": synced,
         "ingestion_ready": False,
     }
+    # Publish the context to this request before optional runtime construction.
+    # Nothing below is written to app.state or the process-global settings.
+    request.state._openehr_context = context
 
     if ensure_ingestion:
         await _ensure_legacy_openehr_ingestion_runtime(
@@ -608,10 +648,10 @@ async def resolve_active_openehr_context(
             target_db=target_db,
             database_name=str(database_name),
             synced=synced,
+            context=context,
         )
         context["ingestion_ready"] = True
 
-    request.state._openehr_context = context
     return context
 
 
@@ -655,7 +695,7 @@ async def connect_to_mongo(tls_allow_invalid_certificates: bool = False):
         # It sends an ismaster command which let us know if the connections was established correctly
         await db.client.admin.command('ismaster')
         logger.info("Successfully connected to MongoDB!")
-        
+
         # Initialize configuration manager if dynamic config is enabled
         if settings.USE_DYNAMIC_CONFIG:
             logger.info("Initializing configuration manager...")
@@ -668,7 +708,7 @@ async def connect_to_mongo(tls_allow_invalid_certificates: bool = False):
             logger.info("Configuration manager initialized successfully")
         else:
             logger.info("Dynamic configuration disabled, using static configuration")
-            
+
     except ConnectionFailure as e:
         logger.critical(f"Fatal error: Could not connect to MongoDB. Application will shut down. Error: {e}")
 
@@ -684,7 +724,7 @@ async def close_mongo_connection():
             pass
         finally:
             db.clients_by_uri.pop(uri, None)
-    
+
     # Close configuration manager
     if settings.USE_DYNAMIC_CONFIG:
         await close_config_manager()

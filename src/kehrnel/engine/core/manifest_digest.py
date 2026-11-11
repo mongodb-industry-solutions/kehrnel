@@ -1,8 +1,9 @@
-"""Stable manifest digest helpers.
+"""Stable activation and package digest helpers.
 
-The digest intentionally excludes runtime-hydrated fields (default_config,
-config_schema, pack_spec) so activations stay valid across code reloads and
-pack default merges that do not change manifest.json identity.
+``manifest_digest`` is a legacy activation-compatibility fingerprint. It
+intentionally excludes runtime-hydrated fields so current activations keep
+their established semantics. New reproducibility contracts use the separate
+``packageDigest``, which hashes the exact distributable package bytes.
 """
 from __future__ import annotations
 
@@ -12,6 +13,22 @@ from typing import Any, Dict
 
 from .manifest import StrategyManifest
 from .activation import EnvironmentActivation
+from kehrnel.contracts.package_digest import (
+    PackageFileManifest,
+    PackageLayoutError,
+    build_package_file_manifest,
+    compute_package_digest,
+)
+
+__all__ = [
+    "PackageFileManifest",
+    "PackageLayoutError",
+    "activation_version_compatible",
+    "build_package_file_manifest",
+    "compute_manifest_digest",
+    "compute_package_digest",
+    "stable_manifest_payload",
+]
 
 
 def stable_manifest_payload(manifest: StrategyManifest) -> Dict[str, Any]:

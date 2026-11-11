@@ -1,0 +1,988 @@
+{
+  "exportedAt": "2026-10-26T14:15:19+00:00",
+  "generator": "scripts/export_dicom_sample.py",
+  "format": "MongoDB Extended JSON v2 (relaxed), one JSON array per collection",
+  "selection": {
+    "studyBudget": 500,
+    "maxPatientStudies": 60,
+    "rule": "whole center-scoped patients (dm, pi): every live study, every instance of those studies and every complete trash event that snapshots them; deleted studies come only from standalone events (history.historyOnlyEvents), whose snapshots and audit rows are the only records of those studies",
+    "patients": 88,
+    "studies": 500,
+    "series": 518,
+    "instances": 1062,
+    "studiesPerCenter": {
+      "H696969": 43,
+      "Test 3": 26,
+      "Test 5": 76,
+      "Test1": 248,
+      "Test2": 95,
+      "Test4": 12
+    },
+    "seriesPerModality": {
+      "MG": 9,
+      "OT": 508,
+      "SR": 1
+    },
+    "chosenPatients": [
+      {
+        "center": "H696969",
+        "patientId": "PAT0000001-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000002",
+        "studies": 3,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000002-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000003-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000004-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000005-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000006",
+        "studies": 3,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000006-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000007-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000008",
+        "studies": 3,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000008-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000009",
+        "studies": 3,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000009-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000010",
+        "studies": 3,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000010-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000011-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000012-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PAT0000013-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PATIENT003",
+        "studies": 1,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "H696969",
+        "patientId": "PM5644",
+        "studies": 1,
+        "reasons": [
+          "opened in a viewer session"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000001-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000002-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000003-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000004-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000005-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000006-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000007-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000008-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000009-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000010-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000011-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000012-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 3",
+        "patientId": "PAT0000013-integrated-dimse",
+        "studies": 2,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000001",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000002",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000003",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000004",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000005",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000006",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000007",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000008",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000009",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000010",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000134-integrated-dimse",
+        "studies": 6,
+        "reasons": [
+          "studies variant {\"sendingAets\": [\"FLOWSIM\"], \"instancesPerSeries\": [1], \"patientSex\": \"M\"}"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "PAT0000135-integrated-dimse",
+        "studies": 6,
+        "reasons": [
+          "studies variant {\"sendingAets\": [\"FLOWSIM\"], \"instancesPerSeries\": [1]}"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "TST143111601",
+        "studies": 1,
+        "reasons": [
+          "studies variant {\"sendingAets\": [\"RCV3TEST\"], \"instancesPerSeries\": [1], \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"de\"]}, \"seriesKeys\": {\"count\": 11, \"notInMostCommon\": []}, \"patientSex\": \"O\"}"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "TST143115939",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "TST143120127",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test 5",
+        "patientId": "TST143120440",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000001-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000002-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000003-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000004-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000005",
+        "studies": 48,
+        "reasons": [
+          "studies variant {\"sendingAets\": [\"FLOWSIM\"], \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}, \"patientSex\": \"M\"}; studies variant {\"seriesCount\": 2, \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}, \"patientSex\": \"M\"}"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000005-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000006-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000007-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000008-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000009-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000010",
+        "studies": 48,
+        "reasons": [
+          "studies variant {\"sendingAets\": [\"FLOWSIM\"], \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}}; studies variant {\"seriesCount\": 2, \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}}"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000010-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000011-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000012-integrated-dimse",
+        "studies": 8,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000019",
+        "studies": 28,
+        "reasons": [
+          "studies variant {\"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}}; studies variant {\"seriesCenterDiffersFromStudy\": true, \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}}; studies variant {\"instancesPerSeries\": [4], \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}}"
+        ]
+      },
+      {
+        "center": "Test1",
+        "patientId": "PAT0000020",
+        "studies": 28,
+        "reasons": [
+          "studies variant {\"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}, \"patientSex\": \"M\"}; studies variant {\"seriesCenterDiffersFromStudy\": true, \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}, \"patientSex\": \"M\"}; studies variant {\"instancesPerSeries\": [4], \"studyKeys\": {\"count\": 14, \"notInMostCommon\": [\"ia\"]}, \"patientSex\": \"M\"}"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000001",
+        "studies": 10,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000002",
+        "studies": 10,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000003",
+        "studies": 10,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000004",
+        "studies": 10,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000005",
+        "studies": 10,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000006",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000007",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000008",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000009",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000010",
+        "studies": 6,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test2",
+        "patientId": "PAT0000088-integrated-dimse",
+        "studies": 15,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000001-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000002-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000003-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000004-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000005-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000006-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000007-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000008-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000009-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000010-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000011-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      },
+      {
+        "center": "Test4",
+        "patientId": "PAT0000012-09534494",
+        "studies": 1,
+        "reasons": [
+          "center round-robin fill"
+        ]
+      }
+    ]
+  },
+  "history": {
+    "trashEvents": 103,
+    "trashDocumentsByCollectionAndAction": {
+      "instances/DeleteStudy": 38,
+      "studies/DeleteStudy": 11,
+      "studies/FuseStudy": 18,
+      "studies/MoveStudy": 66,
+      "studies/SplitSeries": 17
+    },
+    "historicalStudies": 21,
+    "historicalStudiesNote": "studies that exist only as trash snapshots (deleted, or fused into another study)",
+    "historyOnlyEvents": {
+      "005965302068471298fa42a3182dfee2": "trash variant {\"collection\": \"studies\", \"action\": \"SplitSeries\", \"snapshotKeys\": {\"count\": 14, \"notInMostCommon\": [\"an\", \"ca\", \"dm\", \"dt\", \"ia\", \"pb\", \"pi\", \"pn\", \"ps\", \"se\", \"sg\", \"si\", \"...\"]}}",
+      "0073dd92817944c5bf9eb595d2341696": "lopd_audit variant {\"opType\": \"Open\", \"action\": \"DownloadInstance\", \"callerType\": 1, \"documentKeys\": {\"count\": 12, \"notInMostCommon\": [\"callerName\", \"seriesUID\", \"sopInstanceUID\"]}}",
+      "02e65d9c86244bc2a3ffae6accdd4f56": "deleted study of Test1/PAT0000002, a patient with 48 live studies",
+      "0a193b4a25a741c1813dfa9291fac6b4": "deleted study of Test4/PAT0000002, a patient with 22 live studies",
+      "0bf9d14c007b4d0faa09b93a15fe3f16": "deleted study of Test2/PAT0000001-integrated-stow, a patient with 318 live studies",
+      "119fd670ee0d484fa891edde750ddb53": "deleted study of Test1/PAT0000001, a patient with 48 live studies",
+      "173581ebc999442b8d213bcf5b6c3d79": "deleted study of Test4/PAT0000001-integrated-dimse, a patient with 133 live studies",
+      "1e2c3d13db6f4aea98d5322005845a55": "deleted study of Test1/PAT0000001-integrated-stow, a patient with 272 live studies",
+      "26e4f90bdb2e448c80b2b6afa14c98cd": "deleted study of Test2/PAT0000002-integrated-stow, a patient with 309 live studies",
+      "304c9d64808e4e5cb938b16e71515b90": "deleted study of Test1/PAT0000002-integrated-stow, a patient with 281 live studies",
+      "49f1c113a07445c1a35b228a8412a21f": "deleted study of Test4/PAT0000002-integrated-dimse, a patient with 133 live studies",
+      "692c726139c14baeb57712289a9efa6b": "deleted study of Test4/PAT0000001, a patient with 22 live studies"
+    },
+    "historyOnlyEventsNote": "standalone events on studies that are not exported live (mostly deletions); their snapshots and audit rows are the only records of those studies, and the patient may or may not be exported",
+    "excludedEvents": {}
+  },
+  "documentCounts": {
+    "MedObjects.cfg_anon_profiles": 2,
+    "MedObjects.cfg_anon_templates": 7,
+    "MedObjects.cfg_auth_clients": 20,
+    "MedObjects.cfg_auth_tenants": 1,
+    "MedObjects.cfg_centers": 8,
+    "MedObjects.cfg_hl7_mappings": 5,
+    "MedObjects.cfg_nodes": 11,
+    "MedObjects.cfg_setting_definitions": 35,
+    "MedObjects.cfg_values": 19,
+    "MedObjects.cfg_wl_aet2stations": 12,
+    "MedObjects.component_status": 7,
+    "MedObjects.devices": 6,
+    "MedObjects.instances": 1062,
+    "MedObjects.lopd_audit": 127,
+    "rcloudv3-site.site_roles": 3,
+    "rcloudv3-site.site_users": 2,
+    "rcloudv3-site.site_viewer_sessions": 23,
+    "MedObjects.studies": 500,
+    "MedObjects.trash": 150
+  },
+  "totalDocuments": 2000,
+  "partialCollections": {
+    "MedObjects.lopd_audit": "127 of 3309 rows on exported or historical studies, plus standalone rows chosen for their variant; every Manage row and every row on a historical study kept, the rest round-robin across variants to fit the document cap",
+    "MedObjects.trash": "complete events only: every trash document of each exported event",
+    "MedObjects.component_status": "latest status per (ci, ct) component, plus one document per status variant",
+    "rcloudv3-site.site_viewer_sessions": "only sessions on exported studies"
+  },
+  "variantCoverage": {
+    "instances": {
+      "sourceVariants": 20,
+      "exportedVariants": 20,
+      "missing": []
+    },
+    "studies": {
+      "sourceVariants": 19,
+      "exportedVariants": 17,
+      "missing": [
+        {
+          "variant": {},
+          "sourceDocuments": 120241,
+          "why": "center 'test1' is not in cfg_centers or the patient has no live studies"
+        },
+        {
+          "variant": {
+            "patientSex": "M"
+          },
+          "sourceDocuments": 114618,
+          "why": "center 'test1' is not in cfg_centers or the patient has no live studies"
+        }
+      ]
+    },
+    "lopd_audit": {
+      "sourceVariants": 30,
+      "exportedVariants": 25,
+      "missing": [
+        {
+          "variant": {
+            "opType": "Find",
+            "action": "FindInstances",
+            "callerType": 1,
+            "documentKeys": {
+              "count": 11,
+              "notInMostCommon": [
+                "callerName",
+                "seriesUID"
+              ]
+            }
+          },
+          "sourceDocuments": 5655,
+          "why": "carrying it would exceed the document budget"
+        },
+        {
+          "variant": {
+            "opType": "Open",
+            "action": "DownloadInstance",
+            "callerType": 1,
+            "success": false,
+            "documentKeys": {
+              "count": 12,
+              "notInMostCommon": [
+                "callerName",
+                "seriesUID",
+                "sopInstanceUID"
+              ]
+            }
+          },
+          "sourceDocuments": 5385,
+          "why": "carrying it would exceed the document budget"
+        },
+        {
+          "variant": {
+            "opType": "Open",
+            "action": "DownloadSeries",
+            "callerType": 1,
+            "documentKeys": {
+              "count": 11,
+              "notInMostCommon": [
+                "callerName",
+                "seriesUID"
+              ]
+            }
+          },
+          "sourceDocuments": 4095,
+          "why": "carrying it would exceed the document budget"
+        },
+        {
+          "variant": {
+            "opType": "Find",
+            "action": "FindInstances",
+            "callerType": 1,
+            "documentKeys": {
+              "count": 10,
+              "notInMostCommon": [
+                "callerName"
+              ]
+            }
+          },
+          "sourceDocuments": 200,
+          "why": "carrying it would exceed the document budget"
+        },
+        {
+          "variant": {
+            "opType": "Find",
+            "action": "FindStudies",
+            "callerType": 2
+          },
+          "sourceDocuments": 1,
+          "why": "patient has 279 studies (per-patient cap 60)"
+        }
+      ]
+    },
+    "trash": {
+      "sourceVariants": 9,
+      "exportedVariants": 8,
+      "missing": [
+        {
+          "variant": {
+            "collection": "studies",
+            "action": "FuseStudy",
+            "snapshotKeys": {
+              "count": 14,
+              "notInMostCommon": [
+                "an",
+                "ca",
+                "dm",
+                "dt",
+                "ia",
+                "pb",
+                "pi",
+                "pn",
+                "ps",
+                "se",
+                "sg",
+                "si",
+                "..."
+              ]
+            }
+          },
+          "sourceDocuments": 727,
+          "why": "carrying it would exceed the document budget"
+        }
+      ]
+    },
+    "component_status": {
+      "sourceVariants": 2,
+      "exportedVariants": 2,
+      "missing": []
+    }
+  },
+  "excludedCollections": {
+    "MedObjects.anon_pseudonym_map": "re-identification ciphertext; references no exported study",
+    "MedObjects.anon_export_jobs": "empty in source",
+    "MedObjects.anon_export_checkpoints": "empty in source",
+    "MedObjects.cfg_visibility": "empty in source",
+    "MedObjects.hl7_messages": "empty in source",
+    "MedObjects.patient_xref": "empty in source",
+    "MedObjects.worklist": "empty in source",
+    "rcloudv3-site.site_erasure_requests": "references pseudonyms only, no exported study"
+  },
+  "redactions": {
+    "placeholder": "REDACTED",
+    "paths": [
+      "cfg_values[Anonymization:PseudonymMapKey].value",
+      "cfg_centers[H696969].authTokens[0].secretHash",
+      "cfg_centers[HC3].authTokens[0].secretHash",
+      "cfg_centers[Test1].authTokens[0].secretHash",
+      "cfg_centers[Test2].authTokens[0].secretHash",
+      "site_users[admin].GStrPassword",
+      "site_users[test].GStrPassword"
+    ]
+  },
+  "integrity": {
+    "passed": [
+      "every instance's study and series exist in studies",
+      "every series instance count (se.ni) equals exported instances",
+      "every chosen patient has all of their source studies exported",
+      "every study/series center is in cfg_centers and every series device is in devices, historical snapshots included",
+      "every trash event is exported with all of its documents",
+      "every trash snapshot, audit row and viewer session points to an exported or historical study"
+    ],
+    "sourceDanglingReferences": {
+      "config centerId not in cfg_centers": [
+        "cfg_auth_clients:DimseTest1",
+        "cfg_auth_clients:FBORRELL01",
+        "cfg_auth_clients:H999999",
+        "cfg_auth_clients:Site",
+        "cfg_auth_clients:test1",
+        "cfg_nodes:FBORRELL01",
+        "cfg_nodes:UTCenter",
+        "cfg_wl_aet2stations:dimse-dev"
+      ],
+      "devices ci not in cfg_centers": [
+        "6ab275744166ecd3a81b542b:test1"
+      ],
+      "lopd_audit callerId not in cfg_auth_clients/cfg_nodes": [
+        "05c803a7-5342-47cf-a9b6-fc0ed3944dfc",
+        "4861e946-92c0-402b-a02c-8691fc1e2b71"
+      ],
+      "lopd_audit centerId not in cfg_centers": [
+        "Site"
+      ],
+      "site_users role not in site_roles": [
+        ""
+      ]
+    }
+  }
+}

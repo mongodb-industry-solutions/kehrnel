@@ -1,8 +1,16 @@
 import pytest
+from bson import Binary, ObjectId
 
-from kehrnel.engine.strategies.openehr.rps_dual.config import normalize_config
+from kehrnel.engine.strategies.openehr.rps_dual.config import (
+    build_flattener_config,
+    normalize_config,
+)
+from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import (
+    CompositionFlattener,
+)
 from kehrnel.engine.strategies.openehr.rps_dual.index_definition_builder import (
     build_search_index_definition_from_mappings,
+    flatten_search_index_field_types,
 )
 
 
@@ -13,6 +21,7 @@ SHORTCUTS = {
         "value": "v",
         "defining_code": "df",
         "code_string": "cs",
+        "terminology_id": "tid",
         "context": "cx",
         "start_time": "st",
     }
@@ -72,12 +81,58 @@ async def test_build_search_index_definition_from_legacy_rules_uses_shortcuts_an
         "analyzer": "lucene.keyword",
     }
     assert fields["tid"] == {"type": "token"}
+    assert fields["ehr_id"] == {"type": "token"}
+    assert fields["comp_id"] == {"type": "token"}
     assert fields["sort_time"] == {"type": "date"}
     assert data_fields["ani"] == {"type": "number"}
     assert data_fields["cx"]["fields"]["st"]["fields"]["v"] == {"type": "date"}
     assert data_fields["v"]["fields"]["df"]["fields"]["cs"] == {"type": "token"}
     assert result["definition"]["storedSource"] == {"include": ["sn.p"]}
     assert result["metadata"]["data_field_count"] == 3
+    assert result["metadata"]["sort_fields"] == ["comp_id", "sort_time"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("encoding", "identifier", "expected_python_type", "expected_search_type"),
+    [
+        (
+            "string",
+            "001b7ad3-98da-4d4b-b3c0-7557e97dce22::ehr.example::1",
+            str,
+            "token",
+        ),
+        ("objectid", "64b64c2e5f6270b5c2c2c2c2", ObjectId, "objectId"),
+        ("uuid", "001b7ad3-98da-4d4b-b3c0-7557e97dce22", Binary, "uuid"),
+        ("uuidbin", "001b7ad3-98da-4d4b-b3c0-7557e97dce22", Binary, "uuid"),
+    ],
+)
+async def test_composition_sort_field_type_follows_persisted_id_encoding(
+    encoding,
+    identifier,
+    expected_python_type,
+    expected_search_type,
+):
+    strategy_cfg = normalize_config(
+        {"ids": {"ehr_id": "string", "composition_id": encoding}}
+    )
+
+    result = await build_search_index_definition_from_mappings(
+        strategy_cfg,
+        {"templates": []},
+    )
+    flattener = CompositionFlattener(
+        db=None,
+        config=build_flattener_config(strategy_cfg),
+        mappings_path="",
+        mappings_content={"templates": []},
+    )
+    persisted_identifier = flattener._encode_id(identifier, "composition_id")
+
+    fields = result["definition"]["mappings"]["fields"]
+    assert isinstance(persisted_identifier, expected_python_type)
+    assert fields["comp_id"] == {"type": expected_search_type}
+    assert "comp_id" in result["metadata"]["sort_fields"]
 
 
 @pytest.mark.asyncio
@@ -114,3 +169,42 @@ async def test_build_search_index_definition_from_analytics_template_fields():
     }
     assert result["metadata"]["template_ids"] == ["AddictionAlcoholTemplate"]
     assert result["metadata"]["sources"] == ["analytics_fields"]
+
+
+@pytest.mark.asyncio
+async def test_terminology_identifier_is_indexed_as_an_exact_token():
+    strategy_cfg = normalize_config({})
+    mappings = {
+        "analyticsTemplate": {
+            "templateId": "ClinicalProblems",
+            "fields": [
+                {
+                    "path": (
+                        "/content[openEHR-EHR-SECTION.problem_list.v0]"
+                        "/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1]"
+                        "/data[at0001]/items[at0002]/value/defining_code"
+                        "/terminology_id/value"
+                    ),
+                    "rmType": "DV_CODED_TEXT",
+                }
+            ],
+        }
+    }
+
+    result = await build_search_index_definition_from_mappings(
+        strategy_cfg,
+        mappings,
+        shortcuts=SHORTCUTS,
+    )
+
+    data_fields = result["definition"]["mappings"]["fields"]["sn"]["fields"][
+        "data"
+    ]["fields"]
+    terminology_value = data_fields["v"]["fields"]["df"]["fields"]["tid"][
+        "fields"
+    ]["v"]
+
+    assert terminology_value == {"type": "token"}
+    assert flatten_search_index_field_types(result["definition"])[
+        "sn.data.v.df.tid.v"
+    ] == ["token"]

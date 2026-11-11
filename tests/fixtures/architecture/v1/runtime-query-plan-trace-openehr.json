@@ -1,0 +1,16 @@
+{
+  "contract": "runtime-query-plan-trace/v1",
+  "traceId": "query-trace-0001",
+  "resolvedPlanRef": {"kind": "resolved-architecture-plan", "id": "greenfield-openehr-cdr", "version": "1.0.0", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+  "planFamilyId": "aql-selective-cohort",
+  "interactionId": "query-cohort",
+  "semanticBindingRef": {"kind": "semantic-execution-binding", "id": "openehr.clinical-record.rps-dual", "version": "1.0.0", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "queryFingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "selectedMechanism": "atlas-search-then-authoritative-fetch",
+  "fallbackUsed": false,
+  "observedFreshnessSeconds": 4,
+  "policyDecisionRef": {"kind": "policy-decision", "id": "decision-0001", "version": "1.0.0", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+  "executorRef": {"kind": "component", "id": "openehr.rps_dual.aql-executor", "version": "1.0.0", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"},
+  "traceDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+}

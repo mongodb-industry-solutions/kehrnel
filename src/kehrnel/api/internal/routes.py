@@ -50,9 +50,10 @@ def _extract_env_id(request: Request) -> str:
 
 
 async def _get_flattener(request: Request) -> CompositionFlattener:
-    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
     await ensure_active_openehr_dictionaries(request, context=context)
-    flattener = getattr(request.app.state, "flattener", None)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    flattener = context.get("flattener")
     if flattener is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -211,7 +212,7 @@ async def create_composition(
     )
 
     _, version = _parse_version_uid(composition.uid)
-    contribution_doc = await find_contribution_by_version_uid(composition.uid, db)
+    contribution_doc = await find_contribution_by_version_uid(composition.uid, db, config)
     if not contribution_doc or not contribution_doc.get("_id"):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -256,8 +257,8 @@ async def get_composition(
     )
 
     _, version = _parse_version_uid(composition.uid)
-    contribution_doc = await find_contribution_by_version_uid(composition.uid, db)
-    deleted = await find_deletion_contribution_for_version(composition.uid, db) is not None
+    contribution_doc = await find_contribution_by_version_uid(composition.uid, db, config)
+    deleted = await find_deletion_contribution_for_version(composition.uid, db, config) is not None
     time_committed = (
         ((contribution_doc or {}).get("audit") or {}).get("time_committed")
         or composition.time_created

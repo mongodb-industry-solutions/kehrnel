@@ -1,0 +1,19 @@
+{
+  "contract": "benchmark-evidence/v1",
+  "artifactRef": {"kind": "benchmark-evidence", "id": "openehr-cohort-selective-small", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "observationKind": "measured",
+  "resolvedPlanRef": {"kind": "resolved-architecture-plan", "id": "greenfield-openehr-cdr", "version": "1.0.0", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+  "workloadRef": {"kind": "workload-profile", "id": "cohort-selective", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "dataset": {"recordCount": 1000000, "subjectCount": 100000, "logicalBytes": 1000000000, "physicalBytes": 650000000, "averageRecordBytes": 1000, "cardinalityNotes": [], "skewNotes": []},
+  "conditions": {"runId": "openehr-cohort-20261003", "startedAt": "2026-10-03T09:00:00Z", "durationSeconds": 900, "warmCache": true, "concurrency": 20, "softwareVersions": {"mongodb": "8.0", "kehrnel": "phase0"}, "configurationDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "methodology": "Steady-state selective cohort queries after a five-minute warm-up."},
+  "latencyPercentiles": [{"percentileBasisPoints": 5000, "latencyMicroseconds": 42000}, {"percentileBasisPoints": 9500, "latencyMicroseconds": 88000}, {"percentileBasisPoints": 9900, "latencyMicroseconds": 125000}],
+  "throughputPerSecond": 210,
+  "errorCount": 0,
+  "cpuPeakBasisPoints": 6200,
+  "memoryPeakBytes": 4294967296,
+  "storageBytes": 650000000,
+  "cacheHitBasisPoints": 8700,
+  "visibility": "tenant",
+  "reviewed": true
+}

@@ -138,6 +138,8 @@ def test_rejects_relative_codesystem_path():
 
 @pytest.mark.parametrize("resource_type", sorted(ENRICHERS.keys()))
 def test_enriched_resource_codings_valid(resource_type: str, gen: ResourceGenerator):
+    if resource_type not in gen.schema_registry.all_resources():
+        pytest.skip(f"{resource_type} is not present in the active release schema")
     for dep in ("Patient", "Practitioner", "Organization", "Location", "Encounter"):
         if dep != resource_type:
             try:

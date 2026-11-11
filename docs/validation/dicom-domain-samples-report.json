@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-30",
+  "strategy": "dicom.tiered_store",
+  "strategyVersion": "0.3.0",
+  "strategyDigest": "sha256:79e0bc9a24ae42f7cca4d97f4148317a204721c8e14e63fbf3e0878be985f8a9",
+  "source": {
+    "domain": "dicom",
+    "id": "dicom.synthetic-imaging",
+    "version": "1.0.0",
+    "manifestDigest": "sha256:069af817ab7c9c475d6c61afe6cdebc41b3ea9e4111194636ec848ecd8639f89",
+    "variants": [
+      "mixed",
+      "ct",
+      "mr",
+      "mg",
+      "legacy"
+    ],
+    "containsPixels": false,
+    "sourceFingerprints": {
+      "mixed": "ea70e687feb1e5bdb6d1d66b56d0a2256d0604cb81e8a9318b3e6194ce06dc8a",
+      "ct": "b44e545949fc15421d385176cdfc2d8bc8350d2219570ab72e586882e1c1705c",
+      "mr": "0192d414540a0329f950928b18f41d51d7838c97e5a0ffb3c3fc808b26ff8094",
+      "mg": "5486dde617602dd1ea892365918f69a595d7639cbda6e7a015c37271b775ced6",
+      "legacy": "b509c1949858ea21e8ccf7301f1222852a5c4aef91b66c9a86a916bceaa258c5"
+    }
+  },
+  "validation": {
+    "passed": 61,
+    "skipped": 1,
+    "skippedReason": "HTTP MongoDB execution requires an explicit disposable database URI.",
+    "sourceFingerprintsPreserved": true,
+    "sdkPreviewPassed": true,
+    "catalogDigestCheckPassed": true,
+    "wheelBuild": "not run; setuptools is unavailable in the test runtime."
+  },
+  "limitations": [
+    "Frozen synthetic metadata only; no real public DICOM binaries acquired in this increment.",
+    "No throughput, sharding or historical migration benchmark.",
+    "Database-backed HTTP execution was skipped without an explicit disposable MongoDB URI."
+  ]
+}

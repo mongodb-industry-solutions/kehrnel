@@ -1,0 +1,168 @@
+resource: Organization
+fhir_version: R4
+profile: us-core
+
+# US Core Organization Profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization
+# FHIR R4 Organization search parameters: https://www.hl7.org/fhir/R4/organization.html#search
+
+search_parameters:
+  name:
+    type: string
+    description: "A portion of the organization's name or alias"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "name"
+
+  identifier:
+    type: token
+    description: "Any identifier for the organization (not the accreditation issuer's identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  active:
+    type: token
+    description: "Is the Organization record active"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  address:
+    type: string
+    description: "A server defined search that may match any of the string fields in the Address"
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+
+  address-city:
+    type: string
+    description: "A city specified in an address"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  address-state:
+    type: string
+    description: "A state specified in an address"
+    fields:
+      default:
+        - field: "_search.addressState_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressState"
+
+  address-postalcode:
+    type: string
+    description: "A postal code specified in an address"
+    fields:
+      - field: "_search.addressPostalCode"
+        query_type: exact
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to (e.g. us-core-organization)"
+    fields:
+      - field: "meta.profile"
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  name:
+    source: name
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  address:
+    source: address
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: address[*]
+        target_field: addressFull
+        datatype: array[string]
+      - source_path: address[*]
+        target_field: addressFull_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].city
+        target_field: addressCity
+        datatype: array[string]
+      - source_path: address[*].city
+        target_field: addressCity_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].state
+        target_field: addressState
+        datatype: array[string]
+      - source_path: address[*].state
+        target_field: addressState_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: address[*].postalCode
+        target_field: addressPostalCode
+        datatype: array[string]
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+        comment: "US Core profile URLs from meta.profile (stamped by fhir-gen --profile-pack us-core)"
+
+indexes:
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_r4_org_name_lower
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_r4_org_identifier
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_org_meta_profile
+      sparse: true

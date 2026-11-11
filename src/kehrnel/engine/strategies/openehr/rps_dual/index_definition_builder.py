@@ -9,6 +9,9 @@ from kehrnel.engine.strategies.openehr.rps_dual.config import (
     build_flattener_config,
 )
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
+from kehrnel.engine.strategies.openehr.rps_dual.id_encoding import (
+    atlas_search_type_for_id_encoding,
+)
 
 
 def _normalize_mapping_payload(payload: Any) -> Any:
@@ -80,21 +83,51 @@ def _assign_field(tree: Dict[str, Any], parts: List[str], leaf: Dict[str, Any]) 
         return
 
     node = tree.get(head)
-    if not isinstance(node, dict) or node.get("type") != "document" or not isinstance(node.get("fields"), dict):
-        node = {"type": "document", "fields": {}}
-        tree[head] = node
+    definitions = node if isinstance(node, list) else [node]
+    document = next((entry for entry in definitions if isinstance(entry, dict) and entry.get("type") == "document" and isinstance(entry.get("fields"), dict)), None)
+    if document is None:
+        document = {"type": "document", "fields": {}}
+        tree[head] = _merge_leaf(node, document)
+    node = document
     _assign_field(node["fields"], parts[1:], leaf)
+
+
+def flatten_search_index_field_types(definition: Any) -> Dict[str, List[str]]:
+    """Return every declared Atlas Search path and its mapped field types."""
+    if not isinstance(definition, dict):
+        return {}
+    mappings = definition.get("mappings")
+    fields = mappings.get("fields") if isinstance(mappings, dict) else None
+    if not isinstance(fields, dict):
+        return {}
+
+    flattened: Dict[str, Set[str]] = {}
+
+    def visit(node_fields: Dict[str, Any], prefix: str = "") -> None:
+        for field_name, raw_spec in node_fields.items():
+            path = f"{prefix}.{field_name}" if prefix else str(field_name)
+            specs = raw_spec if isinstance(raw_spec, list) else [raw_spec]
+            for spec in specs:
+                if not isinstance(spec, dict):
+                    continue
+                field_type = spec.get("type")
+                if isinstance(field_type, str) and field_type:
+                    flattened.setdefault(path, set()).add(field_type)
+                children = spec.get("fields")
+                if isinstance(children, dict):
+                    visit(children, path)
+
+    visit(fields)
+    return {path: sorted(types) for path, types in sorted(flattened.items())}
 
 
 def _metadata_id_def(strategy_cfg: RPSDualConfig, field_name: str) -> Dict[str, Any]:
     policy = "string"
     if field_name == strategy_cfg.fields.document.ehr_id:
         policy = str(strategy_cfg.ids.ehr_id or "string").strip().lower()
-    if policy in {"uuid", "uuidbin", "uuid_bin"}:
-        return {"type": "uuid"}
-    if policy == "objectid":
-        return {"type": "objectId"}
-    return {"type": "token"}
+    elif field_name == strategy_cfg.fields.document.comp_id:
+        policy = str(strategy_cfg.ids.composition_id or "string").strip().lower()
+    return {"type": atlas_search_type_for_id_encoding(policy)}
 
 
 def _archetype_id_def(strategy_cfg: RPSDualConfig) -> Dict[str, Any]:
@@ -131,6 +164,13 @@ def _leaf_defs_for_path(path: str, rm_type: Optional[str], strategy_cfg: RPSDual
         return [{"type": "date"}]
 
     if last == "value":
+        # A terminology identifier is an exact namespace discriminator, even
+        # when the enclosing ELEMENT is a DV_CODED_TEXT.  Treating it as
+        # analyzed display text would make code-system correlation unsafe.
+        if parent == "terminology_id":
+            return [{"type": "token"}]
+        if rm_upper == "DV_BOOLEAN":
+            return [{"type": "boolean"}]
         if rm_upper in {"DV_DATE", "DV_DATE_TIME", "DV_TIME"}:
             return [{"type": "date"}]
         if rm_upper in {"DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION"}:
@@ -140,6 +180,8 @@ def _leaf_defs_for_path(path: str, rm_type: Optional[str], strategy_cfg: RPSDual
         if rm_upper in {"DV_CODED_TEXT"}:
             return [{"type": "string", "analyzer": "lucene.standard"}]
         if rm_upper in {"DV_IDENTIFIER"}:
+            return [{"type": "token"}]
+        if rm_upper in {"DV_DURATION", "DV_URI", "DV_EHR_URI"}:
             return [{"type": "token"}]
         if parent in {"start_time", "end_time", "origin", "time"}:
             return [{"type": "date"}]
@@ -152,6 +194,8 @@ def _leaf_defs_for_path(path: str, rm_type: Optional[str], strategy_cfg: RPSDual
     if last == "name":
         return [{"type": "string", "analyzer": "lucene.standard"}]
 
+    if rm_upper == "DV_BOOLEAN":
+        return [{"type": "boolean"}]
     if rm_upper in {"DV_DATE", "DV_DATE_TIME", "DV_TIME"}:
         return [{"type": "date"}]
     if rm_upper in {"DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION"}:
@@ -178,6 +222,8 @@ async def build_search_index_definition_from_mappings(
     db: Any = None,
     shortcuts: Optional[Dict[str, Any]] = None,
     include_stored_source: bool = True,
+    strict: bool = False,
+    archetype_type: Optional[str] = None,
 ) -> Dict[str, Any]:
     payload = _normalize_mapping_payload(mappings_content)
     flattener = CompositionFlattener(
@@ -204,11 +250,12 @@ async def build_search_index_definition_from_mappings(
     sources: Set[str] = set()
 
     data_fields: Dict[str, Any] = {}
+    strict_definitions: Dict[str, Any] = {}
     nodes_field = strategy_cfg.fields.document.sn
     path_field = strategy_cfg.fields.node.p
     data_field = strategy_cfg.fields.node.data
 
-    def register_data_path(data_path: str, *, rm_type: Optional[str], source: str, template_id: Optional[str]) -> None:
+    def register_data_path(data_path: str, *, rm_type: Optional[str], source: str, template_id: Optional[str], logical_path: Optional[str] = None) -> None:
         clean_path = str(data_path or "").strip(".")
         if not clean_path:
             warnings.append(f"Skipped empty data path from {source}")
@@ -218,10 +265,23 @@ async def build_search_index_definition_from_mappings(
         if not leaf_defs:
             warnings.append(f"Could not infer Atlas Search type for {clean_path}")
             return
+        if strict:
+            terminal = clean_path.split(".")[-1]
+            known_terminal = terminal in {"archetype_node_id", "code_string", "id", "units", "system_id", "magnitude", "start_time", "end_time", "origin", "time", "name"}
+            scalar_rm = str(rm_type or "").upper() in {"DV_BOOLEAN", "DV_DATE", "DV_DATE_TIME", "DV_TIME", "DV_DURATION", "DV_URI", "DV_EHR_URI", "DV_QUANTITY", "DV_COUNT", "DV_ORDINAL", "DV_PROPORTION", "DV_TEXT", "DV_PARAGRAPH", "DV_CODED_TEXT", "DV_IDENTIFIER"}
+            if len(leaf_defs) != 1 or not (known_terminal or scalar_rm):
+                raise ValueError(f"Unresolved Atlas Search scalar type for analytics path: {clean_path}")
+            identity = (template_id, logical_path or slim_path)
+            previous = strict_definitions.get(identity)
+            if previous is not None and previous != leaf_defs:
+                raise ValueError(f"Incompatible Atlas Search analytics types for path: {slim_path}")
+            strict_definitions[identity] = leaf_defs
         indexed_data_paths.add(slim_path)
         if template_id:
             template_ids.add(str(template_id))
         sources.add(source)
+        if clean_path == "archetype_node_id" and archetype_type:
+            leaf_defs = [{"type": archetype_type}]
         for leaf in leaf_defs:
             _assign_field(data_fields, slim_path.split("."), leaf)
 
@@ -230,7 +290,7 @@ async def build_search_index_definition_from_mappings(
         for field in fields or []:
             if not isinstance(field, dict):
                 continue
-            extract = field.get("extract") or field.get("valuePath") or flattener._infer_extract_from_path(field.get("path", ""))
+            extract = field.get("extract") or field.get("valuePath") or flattener._infer_extract_from_path(field.get("path", ""), field.get("rmType"))
             normalized = _normalize_copy_expr(f"data.{extract}" if extract else "data")
             if normalized == "data":
                 warnings.append(f"Skipped broad analytics field without leaf extract for template {template_id}")
@@ -241,6 +301,7 @@ async def build_search_index_definition_from_mappings(
                     rm_type=field.get("rmType"),
                     source="analytics_fields",
                     template_id=str(template_id),
+                    logical_path=field.get("path"),
                 )
 
     for rule in _legacy_rules(payload):
@@ -266,6 +327,7 @@ async def build_search_index_definition_from_mappings(
 
     root_fields: Dict[str, Any] = {
         strategy_cfg.fields.document.ehr_id: _metadata_id_def(strategy_cfg, strategy_cfg.fields.document.ehr_id),
+        strategy_cfg.fields.document.comp_id: _metadata_id_def(strategy_cfg, strategy_cfg.fields.document.comp_id),
         strategy_cfg.fields.document.tid: {"type": "token"},
         strategy_cfg.fields.document.sort_time: {"type": "date"},
         nodes_field: {
@@ -303,6 +365,12 @@ async def build_search_index_definition_from_mappings(
             "path_field": path_field,
             "data_field": data_field,
             "sort_field": strategy_cfg.fields.document.sort_time,
+            "sort_fields": sorted(
+                {
+                    strategy_cfg.fields.document.sort_time,
+                    strategy_cfg.fields.document.comp_id,
+                }
+            ),
             "sources": sorted(sources),
             "apply_shortcuts": bool(flattener.apply_shortcuts and flattener.shortcut_keys),
         },

@@ -4,6 +4,8 @@ from typing import Optional
 from email.utils import formatdate
 
 from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
 from kehrnel.api.domains.openehr.ehr_status.models import EHRStatus, VersionedEHRStatus
 from kehrnel.api.common.models import RevisionHistory, OriginalVersionResponse
 
@@ -44,18 +46,20 @@ router = APIRouter(
 )
 async def get_versioned_ehr_status_endpoint(
     ehr_id: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
-    Retrieves metadata about a VERSIONED_EHR_STATUS, which is the container 
+    Retrieves metadata about a VERSIONED_EHR_STATUS, which is the container
     for all versions of a single EHR's status.
 
-    This includes its unique identifier (the base versioned_object_uid), the EHR 
+    This includes its unique identifier (the base versioned_object_uid), the EHR
     that owns it, and the time the very first version was created.
     """
     versioned_ehr_status = await retrieve_versioned_ehr_status(
         ehr_id=ehr_id,
-        db=db
+        db=db,
+        config=config,
     )
 
     return versioned_ehr_status
@@ -70,7 +74,8 @@ async def get_versioned_ehr_status_endpoint(
 )
 async def get_ehr_status_revision_history_endpoint(
     ehr_id: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves the revision history of the VERSIONED_EHR_STATUS, which provides
@@ -82,7 +87,8 @@ async def get_ehr_status_revision_history_endpoint(
     """
     revision_history = await retrieve_ehr_status_revision_history(
         ehr_id=ehr_id,
-        db=db
+        db=db,
+        config=config,
     )
 
     return revision_history
@@ -100,7 +106,8 @@ async def get_ehr_status_version_endpoint(
     ehr_id: str,
     response: Response,
     version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a version from the VERSIONED_EHR_STATUS identified by `ehr_id`
@@ -114,7 +121,8 @@ async def get_ehr_status_version_endpoint(
     version_response = await retrieve_ehr_status_version(
         ehr_id=ehr_id,
         version_at_time=version_at_time,
-        db=db
+        db=db,
+        config=config,
     )
 
     version_uid = version_response.uid.value
@@ -138,7 +146,8 @@ async def get_ehr_status_version_endpoint(
 async def get_ehr_status_version_by_id_endpoint(
     ehr_id: str,
     version_uid: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a specific VERSION of the EHR_STATUS identified by `version_uid`.
@@ -149,7 +158,8 @@ async def get_ehr_status_version_by_id_endpoint(
     version_response = await retrieve_ehr_status_version_by_uid(
         ehr_id=ehr_id,
         version_uid=version_uid,
-        db=db
+        db=db,
+        config=config,
     )
     return version_response
 
@@ -163,10 +173,11 @@ async def get_ehr_status_version_by_id_endpoint(
     responses=get_ehr_status_by_version_id_responses
 )
 async def get_ehr_status_by_version_id_endpoint(
-    ehr_id: str, 
+    ehr_id: str,
     version_uid: str,
     response: Response,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a specific version of the `EHR_STATUS` for a given EHR
@@ -178,10 +189,11 @@ async def get_ehr_status_by_version_id_endpoint(
     ehr_status, time_committed = await retrieve_ehr_status_by_version_uid(
         ehr_id=ehr_id,
         version_uid=version_uid,
-        db=db
+        db=db,
+        config=config,
     )
 
-    # Set the response headers 
+    # Set the response headers
     response.headers["ETag"] = f'"{version_uid}"'
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/ehr_status/{version_uid}"
 
@@ -203,7 +215,8 @@ async def get_ehr_status_endpoint(
     ehr_id: str,
     response: Response,
     version_at_time: Optional[str] = Query(None, alias="version_at_time", description="A given time in the extended ISO 8601 format"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a version of the `EHR_STATUS` for a given EHR.
@@ -217,7 +230,8 @@ async def get_ehr_status_endpoint(
     ehr_status, time_committed = await retrieve_ehr_status_by_ehr_id(
         ehr_id = ehr_id,
         db = db,
-        version_at_time=version_at_time
+        version_at_time=version_at_time,
+        config=config,
     )
 
     version_uid = ehr_status.uid.value
@@ -246,7 +260,8 @@ async def update_ehr_status_endpoint(
     status_update: EHRStatus,
     # The If-Match header is mandatory for safe, concurrent updates
     if_match: str = Header(..., alias = "If-Match", description = "The ETag of the concurrent EHR_STATUS version. Required for optimistic locking"),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Updates the mutable status of a specific EHR (e.g., to make it no longer modifiable).
@@ -262,7 +277,8 @@ async def update_ehr_status_endpoint(
         ehr_id = ehr_id,
         status_update_request = status_update,
         if_match = if_match,
-        db = db
+        db=db,
+        config=config,
     )
 
     # Set the response headers with the new version's details

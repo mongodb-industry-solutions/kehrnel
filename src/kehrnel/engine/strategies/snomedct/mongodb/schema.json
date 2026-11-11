@@ -6,50 +6,122 @@
   "properties": {
     "database": {
       "type": "string",
-      "description": "Logical MongoDB database name. The actual database is supplied by activation bindings."
+      "description": "Separate tenant storage for reviews, ValueSets and telemetry. Hosted concepts and terms are read through the server authority; they are never copied here.",
+      "title": "Tenant terminology workspace",
+      "default": "snomed-ct-mongodb",
+      "x-ui": {
+        "useAsActivationDefault": false
+      }
     },
     "release": {
       "type": "object",
       "properties": {
-        "id": { "type": "string" },
-        "label": { "type": "string" }
+        "id": {
+          "type": "string",
+          "title": "Release ID",
+          "description": "Identifier of the active terminology release. Hosted mode uses the operator-pinned release; customer-owned mode uses the release the customer has ingested."
+        },
+        "label": {
+          "type": "string",
+          "title": "Release label",
+          "description": "A readable dataset name, not a code or a database name. It must describe the loaded release."
+        }
       },
-      "required": ["id"],
+      "required": [
+        "id"
+      ],
       "additionalProperties": false
     },
     "source": {
       "type": "object",
-      "description": "Local location where the customer places the licensed official SNOMED CT JSON release.",
+      "description": "Use a server-owned hosted authority, or ingest an authorized distribution into customer-owned storage. Credentials never belong to this configuration.",
       "properties": {
-        "local_dir": { "type": "string" },
-        "file_name": { "type": "string" },
-        "file_pattern": { "type": "string" }
+        "local_dir": {
+          "type": "string"
+        },
+        "file_name": {
+          "type": "string"
+        },
+        "file_pattern": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "hosted_reference",
+            "customer_owned"
+          ],
+          "default": "hosted_reference",
+          "title": "Terminology source mode"
+        },
+        "id": {
+          "type": "string",
+          "default": "healthcaredatalab",
+          "title": "Hosted authority identifier"
+        }
       },
       "additionalProperties": false
     },
     "collections": {
       "type": "object",
       "properties": {
-        "concepts": { "type": "string" },
-        "terms": { "type": "string" },
-        "sidecar_enabled": { "type": "boolean" }
+        "concepts": {
+          "type": "string"
+        },
+        "terms": {
+          "type": "string"
+        },
+        "value_sets": {
+          "type": "string"
+        },
+        "grounding_reviews": {
+          "type": "string"
+        },
+        "gold_notes": {
+          "type": "string"
+        },
+        "usage_events": {
+          "type": "string"
+        },
+        "sidecar_enabled": {
+          "type": "boolean"
+        }
       },
-      "required": ["concepts", "terms", "sidecar_enabled"],
+      "required": [
+        "concepts",
+        "terms",
+        "value_sets",
+        "grounding_reviews",
+        "sidecar_enabled"
+      ],
       "additionalProperties": false
     },
     "languages": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "minItems": 1
     },
     "ingest": {
       "type": "object",
       "properties": {
-        "batch_size": { "type": "integer", "minimum": 1 },
-        "include_descendants": { "type": "boolean" },
-        "drop_before_ingest": { "type": "boolean" },
-        "rebuild_sidecar": { "type": "boolean" },
-        "create_indexes_before_ingest": { "type": "boolean" }
+        "batch_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "include_descendants": {
+          "type": "boolean"
+        },
+        "drop_before_ingest": {
+          "type": "boolean"
+        },
+        "rebuild_sidecar": {
+          "type": "boolean"
+        },
+        "create_indexes_before_ingest": {
+          "type": "boolean"
+        }
       },
       "additionalProperties": false
     },
@@ -57,25 +129,178 @@
       "type": "object",
       "description": "Index families managed by snomed_ensure_indexes.",
       "properties": {
-        "canonical": { "type": "boolean" },
-        "sidecar": { "type": "boolean" },
-        "text": { "type": "boolean" },
-        "atlas_search": { "type": "boolean" }
+        "canonical": {
+          "type": "boolean"
+        },
+        "sidecar": {
+          "type": "boolean"
+        },
+        "text": {
+          "type": "boolean"
+        },
+        "atlas_search": {
+          "type": "boolean"
+        }
       },
       "additionalProperties": false
     },
     "search": {
       "type": "object",
       "properties": {
-        "default_limit": { "type": "integer", "minimum": 1 },
-        "max_limit": { "type": "integer", "minimum": 1 },
-        "default_language": { "type": "string" },
-        "use_sidecar": { "type": "boolean" },
-        "lexical_strategy": { "type": "string", "enum": ["normalized_regex"] }
+        "default_limit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_limit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "default_language": {
+          "type": "string"
+        },
+        "use_sidecar": {
+          "type": "boolean"
+        },
+        "lexical_strategy": {
+          "type": "string",
+          "enum": [
+            "normalized_regex",
+            "atlas_search"
+          ]
+        },
+        "scope_max_ids": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 250000
+        },
+        "scope_cache_ttl_seconds": {
+          "type": "integer",
+          "minimum": 10
+        },
+        "scope_cache_max_entries": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "atlas_index": {
+          "type": "string"
+        },
+        "expansion_max_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20000
+        }
+      },
+      "additionalProperties": false
+    },
+    "retrieval": {
+      "type": "object",
+      "description": "Optional vector branch and rank-fusion tuning. Lexical retrieval never depends on these.",
+      "properties": {
+        "vector_index": {
+          "type": "string"
+        },
+        "vector_path": {
+          "type": "string"
+        },
+        "candidate_pool": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 200
+        },
+        "rrf_k": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "rerank_pool": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 200
+        },
+        "vector_mode": {
+          "type": "string",
+          "enum": [
+            "autoEmbed",
+            "manual"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "clinical": {
+      "type": "object",
+      "description": "Bounds for clinical note mapping.",
+      "properties": {
+        "max_phrases": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 40
+        },
+        "per_phrase_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 25
+        },
+        "llm_extraction": {
+          "type": "boolean"
+        },
+        "accept_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "grounding": {
+      "type": "object",
+      "description": "Governance controls for reviewer-confirmed clinical grounding artifacts.",
+      "properties": {
+        "store_source_text": {
+          "type": "boolean",
+          "default": false
+        },
+        "max_codings_per_review": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250
+        }
       },
       "additionalProperties": false
     }
   },
-  "required": ["database", "release", "collections", "languages"],
-  "additionalProperties": false
+  "required": [
+    "database",
+    "release",
+    "collections",
+    "languages"
+  ],
+  "additionalProperties": false,
+  "x-ui": {
+    "activationFields": [
+      "database",
+      "source.mode",
+      "source.id"
+    ],
+    "activeFields": [],
+    "activationMessage": "Choose tenant workspace storage and the terminology source. Hosted mode serves the operator authority without distributing its catalog. Customer-owned mode imports your authorized distribution.",
+    "activeMessage": "Hosted authority configuration is controlled by the operator. Customer-owned releases are managed through Release operations.",
+    "readOnlyFields": [
+      {
+        "path": "release.id",
+        "title": "Release ID",
+        "description": "The release pinned by the authority or your own imported distribution."
+      },
+      {
+        "path": "release.label",
+        "title": "Release label",
+        "description": "Name of the terminology release. Hosted activation does not copy a sample database."
+      },
+      {
+        "path": "languages",
+        "title": "Dataset languages",
+        "description": "Languages supplied by the release and its term projections. Query language can be selected in the workbench."
+      }
+    ]
+  }
 }

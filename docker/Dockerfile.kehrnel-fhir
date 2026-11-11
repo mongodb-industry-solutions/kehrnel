@@ -4,7 +4,12 @@ WORKDIR /kehrnel
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY src/kehrnel/engine/domains/fhir/libs ./src/kehrnel/engine/domains/fhir/libs
-RUN pip install --no-cache-dir -e ".[api,mongo,fhir]"
+# pip ignores [tool.uv.sources], so the vendored libs must be installed before
+# .[fhir] asks for fhir-gen and fhir-search-to-mql (as Dockerfile.kehrnel-api does).
+RUN pip install --no-cache-dir \
+      -e ./src/kehrnel/engine/domains/fhir/libs/fhir-data-generation \
+      -e ./src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql \
+    && pip install --no-cache-dir -e ".[api,mongo,fhir]"
 ENV KEHRNEL_API_PORT=8080
 ENV KEHRNEL_API_RELOAD=false
 EXPOSE 8080

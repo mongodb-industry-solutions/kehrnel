@@ -44,14 +44,28 @@ kehrnel setup --runtime-url "$RUNTIME_URL" --env dev --domain openehr --strategy
 kehrnel core env create --env dev --name "Development"
 kehrnel core env show --env dev
 
-kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db hc_openEHRCDR --collection samples
-kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db hdl_user_test --collection compositions_rps
+kehrnel resource add src --type mongo --uri "$MONGODB_URI" --db openehr_source --collection samples
+kehrnel resource add dst --type mongo --uri "$MONGODB_URI" --db openehr_cdr --collection compositions_rps
 kehrnel resource use --source src --sink dst
 
 kehrnel op capabilities --env dev
 kehrnel run ensure_dictionaries --env dev --domain openehr
 kehrnel strategy build-search-index --env dev --domain openehr --strategy openehr.rps_dual --out .kehrnel/search-index.json
+
+# Compile and execute AQL from a file
+kehrnel core env compile-query --env dev --domain openehr --aql query.aql --debug
+kehrnel core env query --env dev --domain openehr --aql query.aql
+
+# Or execute a short AQL statement directly
+kehrnel core env query \
+  --env dev \
+  --domain openehr \
+  --aql-text "SELECT e/ehr_id/value AS ehr_id FROM EHR e LIMIT 5"
 ```
+
+`kehrnel op capabilities --env dev` lists both the standard runtime
+capabilities and strategy-specific operations. Each row includes a copy-ready
+CLI command, so the capability inventory is also an execution guide.
 
 ## Getting Help
 

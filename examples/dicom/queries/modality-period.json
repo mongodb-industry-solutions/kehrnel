@@ -1,0 +1,10 @@
+{
+  "version": "dicom-query/v1",
+  "resource": "studies",
+  "filter": {
+    "modality": "MG",
+    "fromDay": "2026-01-01",
+    "toDay": "2027-01-01"
+  },
+  "limit": 100
+}

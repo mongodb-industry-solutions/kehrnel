@@ -1,0 +1,21 @@
+{
+  "contract": "context-object-definition-catalog/v1",
+  "definitions": [
+    {
+      "artifactRef": {
+        "kind": "context-object-definition",
+        "id": "healthcare.cross-standard-clinical-cohort",
+        "version": "0.1.0",
+        "digest": "sha256:dae3f0d30f70ae248bdfa4bc944766f644525da88aff3b273f907730f454183d"
+      },
+      "name": "Cross-standard clinical cohort",
+      "summary": "Composes patient-level cohort membership from native openEHR and FHIR authorities while retaining source evidence and terminology lineage.",
+      "subject": "patient",
+      "resultShape": "patient_set",
+      "supportedAuthorityKinds": ["openehr", "fhir"],
+      "outputFamilies": ["patient_set", "evidence_bundle"],
+      "status": "guided",
+      "runtimeBinding": "design_only"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+resource: Immunization
+fhir_version: R4
+
+# R4 note: occurrence[x] uses occurrenceDateTime or occurrenceString (not occurrence)
+
+search_parameters:
+  status:
+    type: token
+    description: "completed | entered-in-error | not-done"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  vaccine-code:
+    type: token
+    description: "Vaccine Product Administered"
+    fields:
+      - field: "_search.vaccineCode"
+        tokenType: code
+      - field: "_search.vaccineSystemCode"
+        tokenType: systemCode
+
+  patient:
+    type: reference
+    description: "The patient for the vaccination record"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  date:
+    type: date
+    description: "Vaccination (non)-Administration Date"
+    fields:
+      - field: "_search.occurrenceDate"
+        type: date
+
+  identifier:
+    type: token
+    description: "Business identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  vaccineCode:
+    source: vaccineCode
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: vaccineCode.coding[*].code
+        target_field: vaccineCode
+        datatype: array[string]
+      - source_path: vaccineCode
+        target_field: vaccineSystemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  # R4: occurrenceDateTime (not occurrence)
+  occurrence:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: occurrenceDateTime
+        target_field: occurrenceDate
+        datatype: date
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_imm_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_imm_status
+  - fields:
+      - "_search.vaccineCode": 1
+    options:
+      name: idx_r4_imm_vaccine_code

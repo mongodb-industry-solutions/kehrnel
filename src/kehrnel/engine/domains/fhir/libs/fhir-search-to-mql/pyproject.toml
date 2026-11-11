@@ -65,6 +65,8 @@ exclude = ["tests*"]
 fhir_search_to_mql = [
     "configs/*.yaml",
     "configs/*.yml",
+    "configs/*/*.yaml",
+    "configs/*/*.yml",
     "compartments/definitions/*.json",
 ]
 

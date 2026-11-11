@@ -1,0 +1,12 @@
+{
+  "domain": "dicom",
+  "strategy_id": "dicom.tiered_store",
+  "version": "0.5.0",
+  "config": {
+    "database": "dicom_demo",
+    "projections": {
+      "enabled": true
+    }
+  },
+  "bindings": {}
+}

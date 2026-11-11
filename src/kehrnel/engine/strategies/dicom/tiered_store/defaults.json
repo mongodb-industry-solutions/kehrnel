@@ -1,0 +1,49 @@
+{
+  "database": "dicom_preview",
+  "tenant_id": "demo",
+  "allowed_centers": [
+    "DEMO_A",
+    "DEMO_B"
+  ],
+  "collections": {
+    "studies": "dicom_studies",
+    "series": "dicom_series",
+    "instances": "dicom_instances",
+    "research": "dicom_research"
+  },
+  "headers": {
+    "mode": "inline",
+    "bundle_max_bytes": 4194304,
+    "max_response_bytes": 4194304
+  },
+  "ingest": {
+    "max_documents": 500,
+    "max_bytes": 12582912,
+    "max_series_per_study": 1000,
+    "write_concurrency": 16
+  },
+  "query": {
+    "default_limit": 100,
+    "max_limit": 500
+  },
+  "projections": {
+    "enabled": false,
+    "tags": [
+      {
+        "tag": "00080070",
+        "type": "string"
+      },
+      {
+        "tag": "00180050",
+        "type": "number"
+      }
+    ],
+    "modalities": [
+      "MG"
+    ],
+    "max_values_per_instance": 64,
+    "search_enabled": false,
+    "search_index": "dicom_research_v1",
+    "refresh_on_ingest": false
+  }
+}

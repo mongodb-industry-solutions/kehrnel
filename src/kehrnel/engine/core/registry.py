@@ -10,6 +10,8 @@ from typing import Dict, Optional, List, Any
 from .manifest import StrategyManifest
 from .activation import EnvironmentActivation
 from .environment import EnvironmentRecord
+from .strategy_identity import registration_identity
+from .errors import KehrnelError
 
 
 class ActivationRegistry:
@@ -75,6 +77,7 @@ class FileActivationRegistry(ActivationRegistry):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.manifests: Dict[str, StrategyManifest] = {}
+        self.manifest_identities: Dict[str, dict] = {}
         self.activations: Dict[str, Dict[str, EnvironmentActivation]] = {}
         self.history: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
         self.environments: Dict[str, EnvironmentRecord] = {}
@@ -87,6 +90,8 @@ class FileActivationRegistry(ActivationRegistry):
             data = json.loads(self.path.read_text(encoding="utf-8"))
             for mid, m in (data.get("manifests") or {}).items():
                 self.manifests[mid] = StrategyManifest(**m)
+                self.manifests[mid].pack_root = (data.get("manifest_roots") or {}).get(mid)
+            self.manifest_identities = data.get("manifest_identities") or {}
             for env_id, env_data in (data.get("environments") or {}).items():
                 if isinstance(env_data, dict):
                     self.environments[env_id] = EnvironmentRecord(**env_data)
@@ -105,6 +110,8 @@ class FileActivationRegistry(ActivationRegistry):
     def _save(self):
         data = {
             "manifests": {mid: m.model_dump() for mid, m in self.manifests.items()},
+            "manifest_identities": self.manifest_identities,
+            "manifest_roots": {mid: m.pack_root for mid, m in self.manifests.items() if m.pack_root},
             "environments": {env_id: env.snapshot() for env_id, env in self.environments.items()},
             "activations": {env_id: {domain: act.__dict__ for domain, act in acts.items()} for env_id, acts in self.activations.items()},
             "history": self.history,
@@ -167,10 +174,24 @@ class FileActivationRegistry(ActivationRegistry):
     def clear_manifests(self) -> None:
         """Clear all cached manifests to prepare for fresh registration from disk."""
         self.manifests.clear()
+        self.manifest_identities.clear()
         # Note: we don't save here; caller will register fresh manifests and save
 
+    def validate_manifest_registration(self, manifest: StrategyManifest) -> dict:
+        identity = registration_identity(manifest)
+        existing = self.manifests.get(manifest.id)
+        if existing:
+            old = self.manifest_identities.get(manifest.id) or registration_identity(existing)
+            if old != identity:
+                raise KehrnelError("STRATEGY_REGISTRATION_CONFLICT", 409, "Installed strategy id has a different immutable identity")
+        return identity
+
     def register_manifest(self, manifest: StrategyManifest) -> None:
+        identity = self.validate_manifest_registration(manifest)
+        if manifest.id in self.manifests and self.manifest_identities.get(manifest.id) == identity:
+            return
         self.manifests[manifest.id] = manifest
+        self.manifest_identities[manifest.id] = identity
         self._save()
 
     def list_manifests(self):

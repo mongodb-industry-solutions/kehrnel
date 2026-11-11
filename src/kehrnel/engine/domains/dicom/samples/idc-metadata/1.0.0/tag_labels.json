@@ -1,0 +1,4558 @@
+{
+  "00080005": {
+    "keyword": "SpecificCharacterSet",
+    "name": "Specific Character Set"
+  },
+  "00080008": {
+    "keyword": "ImageType",
+    "name": "Image Type"
+  },
+  "00080016": {
+    "keyword": "SOPClassUID",
+    "name": "SOP Class UID"
+  },
+  "00080018": {
+    "keyword": "SOPInstanceUID",
+    "name": "SOP Instance UID"
+  },
+  "00080020": {
+    "keyword": "StudyDate",
+    "name": "Study Date"
+  },
+  "00080030": {
+    "keyword": "StudyTime",
+    "name": "Study Time"
+  },
+  "00080050": {
+    "keyword": "AccessionNumber",
+    "name": "Accession Number"
+  },
+  "00080060": {
+    "keyword": "Modality",
+    "name": "Modality"
+  },
+  "00080070": {
+    "keyword": "Manufacturer",
+    "name": "Manufacturer"
+  },
+  "00080090": {
+    "keyword": "ReferringPhysicianName",
+    "name": "Referring Physician's Name"
+  },
+  "00081010": {
+    "keyword": "StationName",
+    "name": "Station Name"
+  },
+  "00081030": {
+    "keyword": "StudyDescription",
+    "name": "Study Description"
+  },
+  "0008103E": {
+    "keyword": "SeriesDescription",
+    "name": "Series Description"
+  },
+  "00081090": {
+    "keyword": "ManufacturerModelName",
+    "name": "Manufacturer's Model Name"
+  },
+  "00100010": {
+    "keyword": "PatientName",
+    "name": "Patient's Name"
+  },
+  "00100020": {
+    "keyword": "PatientID",
+    "name": "Patient ID"
+  },
+  "00100030": {
+    "keyword": "PatientBirthDate",
+    "name": "Patient's Birth Date"
+  },
+  "00100040": {
+    "keyword": "PatientSex",
+    "name": "Patient's Sex"
+  },
+  "00101000": {
+    "keyword": "OtherPatientIDs",
+    "name": "Other Patient IDs"
+  },
+  "00120010": {
+    "keyword": "ClinicalTrialSponsorName",
+    "name": "Clinical Trial Sponsor Name"
+  },
+  "00120020": {
+    "keyword": "ClinicalTrialProtocolID",
+    "name": "Clinical Trial Protocol ID"
+  },
+  "00120021": {
+    "keyword": "ClinicalTrialProtocolName",
+    "name": "Clinical Trial Protocol Name"
+  },
+  "00120030": {
+    "keyword": "ClinicalTrialSiteID",
+    "name": "Clinical Trial Site ID"
+  },
+  "00120031": {
+    "keyword": "ClinicalTrialSiteName",
+    "name": "Clinical Trial Site Name"
+  },
+  "00120040": {
+    "keyword": "ClinicalTrialSubjectID",
+    "name": "Clinical Trial Subject ID"
+  },
+  "00120050": {
+    "keyword": "ClinicalTrialTimePointID",
+    "name": "Clinical Trial Time Point ID"
+  },
+  "00120060": {
+    "keyword": "ClinicalTrialCoordinatingCenterName",
+    "name": "Clinical Trial Coordinating Center Name"
+  },
+  "00120062": {
+    "keyword": "PatientIdentityRemoved",
+    "name": "Patient Identity Removed"
+  },
+  "00120063": {
+    "keyword": "DeidentificationMethod",
+    "name": "De-identification Method"
+  },
+  "00120064": {
+    "keyword": "DeidentificationMethodCodeSequence",
+    "name": "De-identification Method Code Sequence"
+  },
+  "00080100": {
+    "keyword": "CodeValue",
+    "name": "Code Value"
+  },
+  "00080102": {
+    "keyword": "CodingSchemeDesignator",
+    "name": "Coding Scheme Designator"
+  },
+  "00080104": {
+    "keyword": "CodeMeaning",
+    "name": "Code Meaning"
+  },
+  "00130010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00131010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00131011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00131012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00131013": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00180015": {
+    "keyword": "BodyPartExamined",
+    "name": "Body Part Examined"
+  },
+  "00180050": {
+    "keyword": "SliceThickness",
+    "name": "Slice Thickness"
+  },
+  "00180060": {
+    "keyword": "KVP",
+    "name": "KVP"
+  },
+  "00180090": {
+    "keyword": "DataCollectionDiameter",
+    "name": "Data Collection Diameter"
+  },
+  "00181020": {
+    "keyword": "SoftwareVersions",
+    "name": "Software Versions"
+  },
+  "00181100": {
+    "keyword": "ReconstructionDiameter",
+    "name": "Reconstruction Diameter"
+  },
+  "00181110": {
+    "keyword": "DistanceSourceToDetector",
+    "name": "Distance Source to Detector"
+  },
+  "00181111": {
+    "keyword": "DistanceSourceToPatient",
+    "name": "Distance Source to Patient"
+  },
+  "00181120": {
+    "keyword": "GantryDetectorTilt",
+    "name": "Gantry/Detector Tilt"
+  },
+  "00181130": {
+    "keyword": "TableHeight",
+    "name": "Table Height"
+  },
+  "00181140": {
+    "keyword": "RotationDirection",
+    "name": "Rotation Direction"
+  },
+  "00181150": {
+    "keyword": "ExposureTime",
+    "name": "Exposure Time"
+  },
+  "00181151": {
+    "keyword": "XRayTubeCurrent",
+    "name": "X-Ray Tube Current"
+  },
+  "00181152": {
+    "keyword": "Exposure",
+    "name": "Exposure"
+  },
+  "00181160": {
+    "keyword": "FilterType",
+    "name": "Filter Type"
+  },
+  "00181170": {
+    "keyword": "GeneratorPower",
+    "name": "Generator Power"
+  },
+  "00181190": {
+    "keyword": "FocalSpots",
+    "name": "Focal Spot(s)"
+  },
+  "00181210": {
+    "keyword": "ConvolutionKernel",
+    "name": "Convolution Kernel"
+  },
+  "00189311": {
+    "keyword": "SpiralPitchFactor",
+    "name": "Spiral Pitch Factor"
+  },
+  "0020000D": {
+    "keyword": "StudyInstanceUID",
+    "name": "Study Instance UID"
+  },
+  "0020000E": {
+    "keyword": "SeriesInstanceUID",
+    "name": "Series Instance UID"
+  },
+  "00200010": {
+    "keyword": "StudyID",
+    "name": "Study ID"
+  },
+  "00200011": {
+    "keyword": "SeriesNumber",
+    "name": "Series Number"
+  },
+  "00200012": {
+    "keyword": "AcquisitionNumber",
+    "name": "Acquisition Number"
+  },
+  "00200013": {
+    "keyword": "InstanceNumber",
+    "name": "Instance Number"
+  },
+  "00200020": {
+    "keyword": "PatientOrientation",
+    "name": "Patient Orientation"
+  },
+  "00200032": {
+    "keyword": "ImagePositionPatient",
+    "name": "Image Position (Patient)"
+  },
+  "00200037": {
+    "keyword": "ImageOrientationPatient",
+    "name": "Image Orientation (Patient)"
+  },
+  "00200052": {
+    "keyword": "FrameOfReferenceUID",
+    "name": "Frame of Reference UID"
+  },
+  "00201040": {
+    "keyword": "PositionReferenceIndicator",
+    "name": "Position Reference Indicator"
+  },
+  "00201041": {
+    "keyword": "SliceLocation",
+    "name": "Slice Location"
+  },
+  "00280002": {
+    "keyword": "SamplesPerPixel",
+    "name": "Samples per Pixel"
+  },
+  "00280004": {
+    "keyword": "PhotometricInterpretation",
+    "name": "Photometric Interpretation"
+  },
+  "00280010": {
+    "keyword": "Rows",
+    "name": "Rows"
+  },
+  "00280011": {
+    "keyword": "Columns",
+    "name": "Columns"
+  },
+  "00280030": {
+    "keyword": "PixelSpacing",
+    "name": "Pixel Spacing"
+  },
+  "00280100": {
+    "keyword": "BitsAllocated",
+    "name": "Bits Allocated"
+  },
+  "00280101": {
+    "keyword": "BitsStored",
+    "name": "Bits Stored"
+  },
+  "00280102": {
+    "keyword": "HighBit",
+    "name": "High Bit"
+  },
+  "00280103": {
+    "keyword": "PixelRepresentation",
+    "name": "Pixel Representation"
+  },
+  "00280120": {
+    "keyword": "PixelPaddingValue",
+    "name": "Pixel Padding Value"
+  },
+  "00281050": {
+    "keyword": "WindowCenter",
+    "name": "Window Center"
+  },
+  "00281051": {
+    "keyword": "WindowWidth",
+    "name": "Window Width"
+  },
+  "00281052": {
+    "keyword": "RescaleIntercept",
+    "name": "Rescale Intercept"
+  },
+  "00281053": {
+    "keyword": "RescaleSlope",
+    "name": "Rescale Slope"
+  },
+  "00080012": {
+    "keyword": "InstanceCreationDate",
+    "name": "Instance Creation Date"
+  },
+  "00080013": {
+    "keyword": "InstanceCreationTime",
+    "name": "Instance Creation Time"
+  },
+  "00080021": {
+    "keyword": "SeriesDate",
+    "name": "Series Date"
+  },
+  "00080022": {
+    "keyword": "AcquisitionDate",
+    "name": "Acquisition Date"
+  },
+  "00080023": {
+    "keyword": "ContentDate",
+    "name": "Content Date"
+  },
+  "00080031": {
+    "keyword": "SeriesTime",
+    "name": "Series Time"
+  },
+  "00080032": {
+    "keyword": "AcquisitionTime",
+    "name": "Acquisition Time"
+  },
+  "00080033": {
+    "keyword": "ContentTime",
+    "name": "Content Time"
+  },
+  "00090010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091001": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091004": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091027": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "000910E3": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00101010": {
+    "keyword": "PatientAge",
+    "name": "Patient's Age"
+  },
+  "001021B0": {
+    "keyword": "AdditionalPatientHistory",
+    "name": "Additional Patient History"
+  },
+  "00104000": {
+    "keyword": "PatientComments",
+    "name": "Patient Comments"
+  },
+  "00120051": {
+    "keyword": "ClinicalTrialTimePointDescription",
+    "name": "Clinical Trial Time Point Description"
+  },
+  "00120052": {
+    "keyword": "LongitudinalTemporalOffsetFromEvent",
+    "name": "Longitudinal Temporal Offset from Event"
+  },
+  "00120053": {
+    "keyword": "LongitudinalTemporalEventType",
+    "name": "Longitudinal Temporal Event Type"
+  },
+  "00131051": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00180010": {
+    "keyword": "ContrastBolusAgent",
+    "name": "Contrast/Bolus Agent"
+  },
+  "00180022": {
+    "keyword": "ScanOptions",
+    "name": "Scan Options"
+  },
+  "00180088": {
+    "keyword": "SpacingBetweenSlices",
+    "name": "Spacing Between Slices"
+  },
+  "00181000": {
+    "keyword": "DeviceSerialNumber",
+    "name": "Device Serial Number"
+  },
+  "00181040": {
+    "keyword": "ContrastBolusRoute",
+    "name": "Contrast/Bolus Route"
+  },
+  "00185100": {
+    "keyword": "PatientPosition",
+    "name": "Patient Position"
+  },
+  "00189305": {
+    "keyword": "RevolutionTime",
+    "name": "Revolution Time"
+  },
+  "00189306": {
+    "keyword": "SingleCollimationWidth",
+    "name": "Single Collimation Width"
+  },
+  "00189307": {
+    "keyword": "TotalCollimationWidth",
+    "name": "Total Collimation Width"
+  },
+  "00189309": {
+    "keyword": "TableSpeed",
+    "name": "Table Speed"
+  },
+  "00189310": {
+    "keyword": "TableFeedPerRotation",
+    "name": "Table Feed per Rotation"
+  },
+  "00190010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191002": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191003": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191004": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019100F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191018": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019101A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191023": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191024": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191025": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191026": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191027": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019102C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019102E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019102F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191039": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191042": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191043": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191047": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191052": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019106A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00210010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211036": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211091": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211092": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211093": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00230010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00231070": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00270010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0027101C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0027101E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0027101F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271020": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271035": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271042": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271043": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271044": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271045": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271046": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271047": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271050": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271051": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00280303": {
+    "keyword": "LongitudinalTemporalInformationModified",
+    "name": "Longitudinal Temporal Information Modified"
+  },
+  "00281054": {
+    "keyword": "RescaleType",
+    "name": "Rescale Type"
+  },
+  "00290010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00310010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00310011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00310012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0032000A": {
+    "keyword": "StudyStatusID",
+    "name": "Study Status ID"
+  },
+  "00330010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00400244": {
+    "keyword": "PerformedProcedureStepStartDate",
+    "name": "Performed Procedure Step Start Date"
+  },
+  "00400245": {
+    "keyword": "PerformedProcedureStepStartTime",
+    "name": "Performed Procedure Step Start Time"
+  },
+  "00400254": {
+    "keyword": "PerformedProcedureStepDescription",
+    "name": "Performed Procedure Step Description"
+  },
+  "00430010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00430011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431016": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043101E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043101F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431021": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431025": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431026": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431027": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043102B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431031": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431040": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431041": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431042": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431043": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431044": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431045": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431046": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043104D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043104E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00450010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451001": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451002": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451003": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451004": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451006": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451007": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451008": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451009": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045100A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045100B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045100C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045100D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045100E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045100F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451013": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451014": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451015": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451016": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451017": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451018": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451021": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451022": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00451032": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0045103B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00530010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531020": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531040": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531041": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531042": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531043": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531061": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531062": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531064": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531065": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531066": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00531067": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "7FD90010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0008002A": {
+    "keyword": "AcquisitionDateTime",
+    "name": "Acquisition DateTime"
+  },
+  "00081032": {
+    "keyword": "ProcedureCodeSequence",
+    "name": "Procedure Code Sequence"
+  },
+  "00081140": {
+    "keyword": "ReferencedImageSequence",
+    "name": "Referenced Image Sequence"
+  },
+  "00081150": {
+    "keyword": "ReferencedSOPClassUID",
+    "name": "Referenced SOP Class UID"
+  },
+  "00081155": {
+    "keyword": "ReferencedSOPInstanceUID",
+    "name": "Referenced SOP Instance UID"
+  },
+  "00082111": {
+    "keyword": "DerivationDescription",
+    "name": "Derivation Description"
+  },
+  "00082112": {
+    "keyword": "SourceImageSequence",
+    "name": "Source Image Sequence"
+  },
+  "00083010": {
+    "keyword": "IrradiationEventUID",
+    "name": "Irradiation Event UID"
+  },
+  "00090011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00101020": {
+    "keyword": "PatientSize",
+    "name": "Patient's Size"
+  },
+  "00101030": {
+    "keyword": "PatientWeight",
+    "name": "Patient's Weight"
+  },
+  "001021C0": {
+    "keyword": "PregnancyStatus",
+    "name": "Pregnancy Status"
+  },
+  "00181030": {
+    "keyword": "ProtocolName",
+    "name": "Protocol Name"
+  },
+  "00181200": {
+    "keyword": "DateOfLastCalibration",
+    "name": "Date of Last Calibration"
+  },
+  "00181201": {
+    "keyword": "TimeOfLastCalibration",
+    "name": "Time of Last Calibration"
+  },
+  "00189313": {
+    "keyword": "DataCollectionCenterPatient",
+    "name": "Data Collection Center (Patient)"
+  },
+  "00189318": {
+    "keyword": "ReconstructionTargetCenterPatient",
+    "name": "Reconstruction Target Center (Patient)"
+  },
+  "00189323": {
+    "keyword": "ExposureModulationType",
+    "name": "Exposure Modulation Type"
+  },
+  "00189324": {
+    "keyword": "EstimatedDoseSaving",
+    "name": "Estimated Dose Saving"
+  },
+  "00189345": {
+    "keyword": "CTDIvol",
+    "name": "CTDIvol"
+  },
+  "00189346": {
+    "keyword": "CTDIPhantomTypeCodeSequence",
+    "name": "CTDI Phantom Type Code Sequence"
+  },
+  "00189352": {
+    "keyword": "CalciumScoringMassFactorDevice",
+    "name": "Calcium Scoring Mass Factor Device"
+  },
+  "00191090": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191092": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191093": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191096": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B0": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00204000": {
+    "keyword": "ImageComments",
+    "name": "Image Comments"
+  },
+  "00211011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00280106": {
+    "keyword": "SmallestImagePixelValue",
+    "name": "Smallest Image Pixel Value"
+  },
+  "00280107": {
+    "keyword": "LargestImagePixelValue",
+    "name": "Largest Image Pixel Value"
+  },
+  "00281055": {
+    "keyword": "WindowCenterWidthExplanation",
+    "name": "Window Center & Width Explanation"
+  },
+  "00290011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00321060": {
+    "keyword": "RequestedProcedureDescription",
+    "name": "Requested Procedure Description"
+  },
+  "00321064": {
+    "keyword": "RequestedProcedureCodeSequence",
+    "name": "Requested Procedure Code Sequence"
+  },
+  "00402017": {
+    "keyword": "FillerOrderNumberImagingServiceRequest",
+    "name": "Filler Order Number / Imaging Service Request"
+  },
+  "09030010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "09031010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "09031011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "09031012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "09050010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "7FD10010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "7FD11010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00181016": {
+    "keyword": "SecondaryCaptureDeviceManufacturer",
+    "name": "Secondary Capture Device Manufacturer"
+  },
+  "00181018": {
+    "keyword": "SecondaryCaptureDeviceManufacturerModelName",
+    "name": "Secondary Capture Device Manufacturer's Model Name"
+  },
+  "00282110": {
+    "keyword": "LossyImageCompression",
+    "name": "Lossy Image Compression"
+  },
+  "00282112": {
+    "keyword": "LossyImageCompressionRatio",
+    "name": "Lossy Image Compression Ratio"
+  },
+  "00E10010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00E11022": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00E11023": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "07A10010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "37110010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00080068": {
+    "keyword": "PresentationIntentType",
+    "name": "Presentation Intent Type"
+  },
+  "00081110": {
+    "keyword": "ReferencedStudySequence",
+    "name": "Referenced Study Sequence"
+  },
+  "00081111": {
+    "keyword": "ReferencedPerformedProcedureStepSequence",
+    "name": "Referenced Performed Procedure Step Sequence"
+  },
+  "0028135A": {
+    "keyword": "SpatialLocationsPreserved",
+    "name": "Spatial Locations Preserved"
+  },
+  "00082218": {
+    "keyword": "AnatomicRegionSequence",
+    "name": "Anatomic Region Sequence"
+  },
+  "00080105": {
+    "keyword": "MappingResource",
+    "name": "Mapping Resource"
+  },
+  "00080106": {
+    "keyword": "ContextGroupVersion",
+    "name": "Context Group Version"
+  },
+  "0008010F": {
+    "keyword": "ContextIdentifier",
+    "name": "Context Identifier"
+  },
+  "00181147": {
+    "keyword": "FieldOfViewShape",
+    "name": "Field of View Shape"
+  },
+  "00181149": {
+    "keyword": "FieldOfViewDimensions",
+    "name": "Field of View Dimension(s)"
+  },
+  "00181153": {
+    "keyword": "ExposureInuAs",
+    "name": "Exposure in uAs"
+  },
+  "00181156": {
+    "keyword": "RectificationType",
+    "name": "Rectification Type"
+  },
+  "00181164": {
+    "keyword": "ImagerPixelSpacing",
+    "name": "Imager Pixel Spacing"
+  },
+  "00181405": {
+    "keyword": "RelativeXRayExposure",
+    "name": "Relative X-Ray Exposure"
+  },
+  "00181411": {
+    "keyword": "ExposureIndex",
+    "name": "Exposure Index"
+  },
+  "00181412": {
+    "keyword": "TargetExposureIndex",
+    "name": "Target Exposure Index"
+  },
+  "00181413": {
+    "keyword": "DeviationIndex",
+    "name": "Deviation Index"
+  },
+  "00181508": {
+    "keyword": "PositionerType",
+    "name": "Positioner Type"
+  },
+  "00181700": {
+    "keyword": "CollimatorShape",
+    "name": "Collimator Shape"
+  },
+  "00181702": {
+    "keyword": "CollimatorLeftVerticalEdge",
+    "name": "Collimator Left Vertical Edge"
+  },
+  "00181704": {
+    "keyword": "CollimatorRightVerticalEdge",
+    "name": "Collimator Right Vertical Edge"
+  },
+  "00181706": {
+    "keyword": "CollimatorUpperHorizontalEdge",
+    "name": "Collimator Upper Horizontal Edge"
+  },
+  "00181708": {
+    "keyword": "CollimatorLowerHorizontalEdge",
+    "name": "Collimator Lower Horizontal Edge"
+  },
+  "00185101": {
+    "keyword": "ViewPosition",
+    "name": "View Position"
+  },
+  "00187001": {
+    "keyword": "DetectorTemperature",
+    "name": "Detector Temperature"
+  },
+  "00187004": {
+    "keyword": "DetectorType",
+    "name": "Detector Type"
+  },
+  "00187005": {
+    "keyword": "DetectorConfiguration",
+    "name": "Detector Configuration"
+  },
+  "00187006": {
+    "keyword": "DetectorDescription",
+    "name": "Detector Description"
+  },
+  "00187008": {
+    "keyword": "DetectorMode",
+    "name": "Detector Mode"
+  },
+  "0018700E": {
+    "keyword": "TimeOfLastDetectorCalibration",
+    "name": "Time of Last Detector Calibration"
+  },
+  "00187011": {
+    "keyword": "ExposuresOnDetectorSinceManufactured",
+    "name": "Exposures on Detector Since Manufactured"
+  },
+  "00187012": {
+    "keyword": "DetectorTimeSinceLastExposure",
+    "name": "Detector Time Since Last Exposure"
+  },
+  "00187014": {
+    "keyword": "DetectorActiveTime",
+    "name": "Detector Active Time"
+  },
+  "00187020": {
+    "keyword": "DetectorElementPhysicalSize",
+    "name": "Detector Element Physical Size"
+  },
+  "00187022": {
+    "keyword": "DetectorElementSpacing",
+    "name": "Detector Element Spacing"
+  },
+  "0018702A": {
+    "keyword": "DetectorManufacturerName",
+    "name": "Detector Manufacturer Name"
+  },
+  "0018702B": {
+    "keyword": "DetectorManufacturerModelName",
+    "name": "Detector Manufacturer's Model Name"
+  },
+  "00188150": {
+    "keyword": "ExposureTimeInuS",
+    "name": "Exposure Time in uS"
+  },
+  "00188151": {
+    "keyword": "XRayTubeCurrentInuA",
+    "name": "X-Ray Tube Current in uA"
+  },
+  "00189332": {
+    "keyword": "ExposureInmAs",
+    "name": "Exposure in mAs"
+  },
+  "00200062": {
+    "keyword": "ImageLaterality",
+    "name": "Image Laterality"
+  },
+  "00201002": {
+    "keyword": "ImagesInAcquisition",
+    "name": "Images in Acquisition"
+  },
+  "00280301": {
+    "keyword": "BurnedInAnnotation",
+    "name": "Burned In Annotation"
+  },
+  "00281040": {
+    "keyword": "PixelIntensityRelationship",
+    "name": "Pixel Intensity Relationship"
+  },
+  "00281041": {
+    "keyword": "PixelIntensityRelationshipSign",
+    "name": "Pixel Intensity Relationship Sign"
+  },
+  "00400302": {
+    "keyword": "EntranceDose",
+    "name": "Entrance Dose"
+  },
+  "00400555": {
+    "keyword": "AcquisitionContextSequence",
+    "name": "Acquisition Context Sequence"
+  },
+  "00540220": {
+    "keyword": "ViewCodeSequence",
+    "name": "View Code Sequence"
+  },
+  "00540410": {
+    "keyword": "PatientOrientationCodeSequence",
+    "name": "Patient Orientation Code Sequence"
+  },
+  "00540412": {
+    "keyword": "PatientOrientationModifierCodeSequence",
+    "name": "Patient Orientation Modifier Code Sequence"
+  },
+  "20500020": {
+    "keyword": "PresentationLUTShape",
+    "name": "Presentation LUT Shape"
+  },
+  "7FD11030": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "7FD11040": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "7FD11050": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "7FD11060": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00080014": {
+    "keyword": "InstanceCreatorUID",
+    "name": "Instance Creator UID"
+  },
+  "00281056": {
+    "keyword": "VOILUTFunction",
+    "name": "VOI LUT Function"
+  },
+  "00400318": {
+    "keyword": "OrganExposed",
+    "name": "Organ Exposed"
+  },
+  "00540222": {
+    "keyword": "ViewModifierCodeSequence",
+    "name": "View Modifier Code Sequence"
+  },
+  "00080061": {
+    "keyword": "ModalitiesInStudy",
+    "name": "Modalities in Study"
+  },
+  "0040A170": {
+    "keyword": "PurposeOfReferenceCodeSequence",
+    "name": "Purpose of Reference Code Sequence"
+  },
+  "00181114": {
+    "keyword": "EstimatedRadiographicMagnificationFactor",
+    "name": "Estimated Radiographic Magnification Factor"
+  },
+  "00181166": {
+    "keyword": "Grid",
+    "name": "Grid"
+  },
+  "00181191": {
+    "keyword": "AnodeTargetMaterial",
+    "name": "Anode Target Material"
+  },
+  "001811A0": {
+    "keyword": "BodyPartThickness",
+    "name": "Body Part Thickness"
+  },
+  "001811A2": {
+    "keyword": "CompressionForce",
+    "name": "Compression Force"
+  },
+  "001811A4": {
+    "keyword": "PaddleDescription",
+    "name": "Paddle Description"
+  },
+  "00181510": {
+    "keyword": "PositionerPrimaryAngle",
+    "name": "Positioner Primary Angle"
+  },
+  "00187000": {
+    "keyword": "DetectorConditionsNominalFlag",
+    "name": "Detector Conditions Nominal Flag"
+  },
+  "0018700C": {
+    "keyword": "DateOfLastDetectorCalibration",
+    "name": "Date of Last Detector Calibration"
+  },
+  "0018701A": {
+    "keyword": "DetectorBinning",
+    "name": "Detector Binning"
+  },
+  "00187030": {
+    "keyword": "FieldOfViewOrigin",
+    "name": "Field of View Origin"
+  },
+  "00187032": {
+    "keyword": "FieldOfViewRotation",
+    "name": "Field of View Rotation"
+  },
+  "00187034": {
+    "keyword": "FieldOfViewHorizontalFlip",
+    "name": "Field of View Horizontal Flip"
+  },
+  "00187050": {
+    "keyword": "FilterMaterial",
+    "name": "Filter Material"
+  },
+  "00187052": {
+    "keyword": "FilterThicknessMinimum",
+    "name": "Filter Thickness Minimum"
+  },
+  "00187054": {
+    "keyword": "FilterThicknessMaximum",
+    "name": "Filter Thickness Maximum"
+  },
+  "00187060": {
+    "keyword": "ExposureControlMode",
+    "name": "Exposure Control Mode"
+  },
+  "00187062": {
+    "keyword": "ExposureControlModeDescription",
+    "name": "Exposure Control Mode Description"
+  },
+  "00189559": {
+    "keyword": "PositionerPrimaryAngleDirection",
+    "name": "Positioner Primary Angle Direction"
+  },
+  "0018A001": {
+    "keyword": "ContributingEquipmentSequence",
+    "name": "Contributing Equipment Sequence"
+  },
+  "00200022": {
+    "keyword": "OverlayNumber",
+    "name": "Overlay Number"
+  },
+  "00200024": {
+    "keyword": "CurveNumber",
+    "name": "Curve Number"
+  },
+  "00200026": {
+    "keyword": "LUTNumber",
+    "name": "LUT Number"
+  },
+  "00280008": {
+    "keyword": "NumberOfFrames",
+    "name": "Number of Frames"
+  },
+  "00280300": {
+    "keyword": "QualityControlImage",
+    "name": "Quality Control Image"
+  },
+  "00281300": {
+    "keyword": "BreastImplantPresent",
+    "name": "Breast Implant Present"
+  },
+  "00400314": {
+    "keyword": "HalfValueLayer",
+    "name": "Half Value Layer"
+  },
+  "00400316": {
+    "keyword": "OrganDose",
+    "name": "Organ Dose"
+  },
+  "00408302": {
+    "keyword": "EntranceDoseInmGy",
+    "name": "Entrance Dose in mGy"
+  },
+  "0040A032": {
+    "keyword": "ObservationDateTime",
+    "name": "Observation DateTime"
+  },
+  "0040A491": {
+    "keyword": "CompletionFlag",
+    "name": "Completion Flag"
+  },
+  "0040A493": {
+    "keyword": "VerificationFlag",
+    "name": "Verification Flag"
+  },
+  "00700080": {
+    "keyword": "ContentLabel",
+    "name": "Content Label"
+  },
+  "00700081": {
+    "keyword": "ContentDescription",
+    "name": "Content Description"
+  },
+  "00700084": {
+    "keyword": "ContentCreatorName",
+    "name": "Content Creator's Name"
+  },
+  "04000500": {
+    "keyword": "EncryptedAttributesSequence",
+    "name": "Encrypted Attributes Sequence"
+  },
+  "40080040": {
+    "keyword": "ResultsID",
+    "name": "Results ID"
+  },
+  "00081115": {
+    "keyword": "ReferencedSeriesSequence",
+    "name": "Referenced Series Sequence"
+  },
+  "00089205": {
+    "keyword": "PixelPresentation",
+    "name": "Pixel Presentation"
+  },
+  "00089206": {
+    "keyword": "VolumetricProperties",
+    "name": "Volumetric Properties"
+  },
+  "00089207": {
+    "keyword": "VolumeBasedCalculationTechnique",
+    "name": "Volume Based Calculation Technique"
+  },
+  "0018700A": {
+    "keyword": "DetectorID",
+    "name": "Detector ID"
+  },
+  "00189004": {
+    "keyword": "ContentQualification",
+    "name": "Content Qualification"
+  },
+  "00189506": {
+    "keyword": "ContributingSourcesSequence",
+    "name": "Contributing Sources Sequence"
+  },
+  "00189423": {
+    "keyword": "AcquisitionProtocolName",
+    "name": "Acquisition Protocol Name"
+  },
+  "00209529": {
+    "keyword": "ContributingSOPInstancesReferenceSequence",
+    "name": "Contributing SOP Instances Reference Sequence"
+  },
+  "0008114A": {
+    "keyword": "ReferencedInstanceSequence",
+    "name": "Referenced Instance Sequence"
+  },
+  "00189507": {
+    "keyword": "XRay3DAcquisitionSequence",
+    "name": "X-Ray 3D Acquisition Sequence"
+  },
+  "00189328": {
+    "keyword": "ExposureTimeInms",
+    "name": "Exposure Time in ms"
+  },
+  "00189330": {
+    "keyword": "XRayTubeCurrentInmA",
+    "name": "X-Ray Tube Current in mA"
+  },
+  "00189420": {
+    "keyword": "XRayReceptorType",
+    "name": "X-Ray Receptor Type"
+  },
+  "00189461": {
+    "keyword": "FieldOfViewDimensionsInFloat",
+    "name": "Field of View Dimension(s) in Float"
+  },
+  "00189508": {
+    "keyword": "PrimaryPositionerScanArc",
+    "name": "Primary Positioner Scan Arc"
+  },
+  "00189510": {
+    "keyword": "PrimaryPositionerScanStartAngle",
+    "name": "Primary Positioner Scan Start Angle"
+  },
+  "00189514": {
+    "keyword": "PrimaryPositionerIncrement",
+    "name": "Primary Positioner Increment"
+  },
+  "00189538": {
+    "keyword": "PerProjectionAcquisitionSequence",
+    "name": "Per Projection Acquisition Sequence"
+  },
+  "00181531": {
+    "keyword": "DetectorSecondaryAngle",
+    "name": "Detector Secondary Angle"
+  },
+  "00187026": {
+    "keyword": "DetectorActiveDimensions",
+    "name": "Detector Active Dimension(s)"
+  },
+  "00189530": {
+    "keyword": "XRay3DReconstructionSequence",
+    "name": "X-Ray 3D Reconstruction Sequence"
+  },
+  "00189524": {
+    "keyword": "ApplicationName",
+    "name": "Application Name"
+  },
+  "00189525": {
+    "keyword": "ApplicationVersion",
+    "name": "Application Version"
+  },
+  "00189526": {
+    "keyword": "ApplicationManufacturer",
+    "name": "Application Manufacturer"
+  },
+  "00189527": {
+    "keyword": "AlgorithmType",
+    "name": "Algorithm Type"
+  },
+  "00189531": {
+    "keyword": "ReconstructionDescription",
+    "name": "Reconstruction Description"
+  },
+  "00209518": {
+    "keyword": "AcquisitionIndex",
+    "name": "Acquisition Index"
+  },
+  "00209111": {
+    "keyword": "FrameContentSequence",
+    "name": "Frame Content Sequence"
+  },
+  "004510A7": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "52009229": {
+    "keyword": "SharedFunctionalGroupsSequence",
+    "name": "Shared Functional Groups Sequence"
+  },
+  "00209071": {
+    "keyword": "FrameAnatomySequence",
+    "name": "Frame Anatomy Sequence"
+  },
+  "00209072": {
+    "keyword": "FrameLaterality",
+    "name": "Frame Laterality"
+  },
+  "00209116": {
+    "keyword": "PlaneOrientationSequence",
+    "name": "Plane Orientation Sequence"
+  },
+  "00289110": {
+    "keyword": "PixelMeasuresSequence",
+    "name": "Pixel Measures Sequence"
+  },
+  "00289132": {
+    "keyword": "FrameVOILUTSequence",
+    "name": "Frame VOI LUT Sequence"
+  },
+  "00289145": {
+    "keyword": "PixelValueTransformationSequence",
+    "name": "Pixel Value Transformation Sequence"
+  },
+  "52009230": {
+    "keyword": "PerFrameFunctionalGroupsSequence",
+    "name": "Per-Frame Functional Groups Sequence"
+  },
+  "00189504": {
+    "keyword": "XRay3DFrameTypeSequence",
+    "name": "X-Ray 3D Frame Type Sequence"
+  },
+  "00089007": {
+    "keyword": "FrameType",
+    "name": "Frame Type"
+  },
+  "00209536": {
+    "keyword": "ReconstructionIndex",
+    "name": "Reconstruction Index"
+  },
+  "00189074": {
+    "keyword": "FrameAcquisitionDateTime",
+    "name": "Frame Acquisition DateTime"
+  },
+  "00189151": {
+    "keyword": "FrameReferenceDateTime",
+    "name": "Frame Reference DateTime"
+  },
+  "00189220": {
+    "keyword": "FrameAcquisitionDuration",
+    "name": "Frame Acquisition Duration"
+  },
+  "00209113": {
+    "keyword": "PlanePositionSequence",
+    "name": "Plane Position Sequence"
+  },
+  "00089124": {
+    "keyword": "DerivationImageSequence",
+    "name": "Derivation Image Sequence"
+  },
+  "00089215": {
+    "keyword": "DerivationCodeSequence",
+    "name": "Derivation Code Sequence"
+  },
+  "00100022": {
+    "keyword": "TypeOfPatientID",
+    "name": "Type of Patient ID"
+  },
+  "00189516": {
+    "keyword": "StartAcquisitionDateTime",
+    "name": "Start Acquisition DateTime"
+  },
+  "00280121": {
+    "keyword": "PixelPaddingRangeLimit",
+    "name": "Pixel Padding Range Limit"
+  },
+  "00080064": {
+    "keyword": "ConversionType",
+    "name": "Conversion Type"
+  },
+  "00080080": {
+    "keyword": "InstitutionName",
+    "name": "Institution Name"
+  },
+  "00081040": {
+    "keyword": "InstitutionalDepartmentName",
+    "name": "Institutional Department Name"
+  },
+  "00120042": {
+    "keyword": "ClinicalTrialSubjectReadingID",
+    "name": "Clinical Trial Subject Reading ID"
+  },
+  "00131015": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00187024": {
+    "keyword": "DetectorActiveShape",
+    "name": "Detector Active Shape"
+  },
+  "00380500": {
+    "keyword": "PatientState",
+    "name": "Patient State"
+  },
+  "00180020": {
+    "keyword": "ScanningSequence",
+    "name": "Scanning Sequence"
+  },
+  "00180021": {
+    "keyword": "SequenceVariant",
+    "name": "Sequence Variant"
+  },
+  "00180023": {
+    "keyword": "MRAcquisitionType",
+    "name": "MR Acquisition Type"
+  },
+  "00180024": {
+    "keyword": "SequenceName",
+    "name": "Sequence Name"
+  },
+  "00180025": {
+    "keyword": "AngioFlag",
+    "name": "Angio Flag"
+  },
+  "00180080": {
+    "keyword": "RepetitionTime",
+    "name": "Repetition Time"
+  },
+  "00180081": {
+    "keyword": "EchoTime",
+    "name": "Echo Time"
+  },
+  "00180083": {
+    "keyword": "NumberOfAverages",
+    "name": "Number of Averages"
+  },
+  "00180084": {
+    "keyword": "ImagingFrequency",
+    "name": "Imaging Frequency"
+  },
+  "00180085": {
+    "keyword": "ImagedNucleus",
+    "name": "Imaged Nucleus"
+  },
+  "00180086": {
+    "keyword": "EchoNumbers",
+    "name": "Echo Number(s)"
+  },
+  "00180087": {
+    "keyword": "MagneticFieldStrength",
+    "name": "Magnetic Field Strength"
+  },
+  "00180089": {
+    "keyword": "NumberOfPhaseEncodingSteps",
+    "name": "Number of Phase Encoding Steps"
+  },
+  "00180091": {
+    "keyword": "EchoTrainLength",
+    "name": "Echo Train Length"
+  },
+  "00180093": {
+    "keyword": "PercentSampling",
+    "name": "Percent Sampling"
+  },
+  "00180094": {
+    "keyword": "PercentPhaseFieldOfView",
+    "name": "Percent Phase Field of View"
+  },
+  "00180095": {
+    "keyword": "PixelBandwidth",
+    "name": "Pixel Bandwidth"
+  },
+  "00181251": {
+    "keyword": "TransmitCoilName",
+    "name": "Transmit Coil Name"
+  },
+  "00181310": {
+    "keyword": "AcquisitionMatrix",
+    "name": "Acquisition Matrix"
+  },
+  "00181312": {
+    "keyword": "InPlanePhaseEncodingDirection",
+    "name": "In-plane Phase Encoding Direction"
+  },
+  "00181314": {
+    "keyword": "FlipAngle",
+    "name": "Flip Angle"
+  },
+  "00181315": {
+    "keyword": "VariableFlipAngleFlag",
+    "name": "Variable Flip Angle Flag"
+  },
+  "00181316": {
+    "keyword": "SAR",
+    "name": "SAR"
+  },
+  "00181318": {
+    "keyword": "dBdt",
+    "name": "dB/dt"
+  },
+  "00102160": {
+    "keyword": "EthnicGroup",
+    "name": "Ethnic Group"
+  },
+  "001021A0": {
+    "keyword": "SmokingStatus",
+    "name": "Smoking Status"
+  },
+  "00181041": {
+    "keyword": "ContrastBolusVolume",
+    "name": "Contrast/Bolus Volume"
+  },
+  "00181044": {
+    "keyword": "ContrastBolusTotalDose",
+    "name": "Contrast/Bolus Total Dose"
+  },
+  "00181048": {
+    "keyword": "ContrastBolusIngredient",
+    "name": "Contrast/Bolus Ingredient"
+  },
+  "00181049": {
+    "keyword": "ContrastBolusIngredientConcentration",
+    "name": "Contrast/Bolus Ingredient Concentration"
+  },
+  "0019100B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191013": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191014": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191015": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191017": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00290012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291260": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00510010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00511008": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00511009": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0051100B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0051100F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00511013": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00880140": {
+    "keyword": "StorageMediaFileSetUID",
+    "name": "Storage Media File-set UID"
+  },
+  "00180082": {
+    "keyword": "InversionTime",
+    "name": "Inversion Time"
+  },
+  "00181060": {
+    "keyword": "TriggerTime",
+    "name": "Trigger Time"
+  },
+  "00181088": {
+    "keyword": "HeartRate",
+    "name": "Heart Rate"
+  },
+  "00181090": {
+    "keyword": "CardiacNumberOfImages",
+    "name": "Cardiac Number of Images"
+  },
+  "00181094": {
+    "keyword": "TriggerWindow",
+    "name": "Trigger Window"
+  },
+  "00181250": {
+    "keyword": "ReceiveCoilName",
+    "name": "Receive Coil Name"
+  },
+  "00200060": {
+    "keyword": "Laterality",
+    "name": "Laterality"
+  },
+  "00200100": {
+    "keyword": "TemporalPositionIdentifier",
+    "name": "Temporal Position Identifier"
+  },
+  "00200105": {
+    "keyword": "NumberOfTemporalPositions",
+    "name": "Number of Temporal Positions"
+  },
+  "00200110": {
+    "keyword": "TemporalResolution",
+    "name": "Temporal Resolution"
+  },
+  "00201208": {
+    "keyword": "NumberOfStudyRelatedInstances",
+    "name": "Number of Study Related Instances"
+  },
+  "00209056": {
+    "keyword": "StackID",
+    "name": "Stack ID"
+  },
+  "00209057": {
+    "keyword": "InStackPositionNumber",
+    "name": "In-Stack Position Number"
+  },
+  "00401008": {
+    "keyword": "ConfidentialityCode",
+    "name": "Confidentiality Code"
+  },
+  "01170010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171012": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171014": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171016": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171019": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0117101A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171018": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171020": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171041": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171042": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171043": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171044": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171045": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171046": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171022": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171050": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171051": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171052": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171053": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171054": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171055": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171056": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171030": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171031": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171033": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171034": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171035": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171036": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0117103A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0117103B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171090": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171091": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171092": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171093": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171094": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171095": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171096": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171097": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171098": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01171099": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0117109A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0117109B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710A1": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710A2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710B0": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710B1": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710B2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710B3": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710B4": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "011710B5": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01190010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01191000": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01191010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01191030": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "01191031": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191019": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019101B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019101E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019105A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019107D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019107E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019107F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191081": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191084": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191087": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191088": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019108A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019108B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019108D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019108F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191091": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191094": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191095": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191097": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019109B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019109C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019109D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019109E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019109F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A0": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A1": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A3": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A4": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A7": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A8": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910A9": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910AA": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910AB": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910AC": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910AD": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910AE": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910AF": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B1": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B3": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B4": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B5": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B6": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B7": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B8": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910B9": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910BA": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910BB": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910BC": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910BD": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910BE": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C0": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C3": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C4": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C5": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C6": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C7": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C8": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910C9": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910CA": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910CB": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910CC": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910CD": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910CE": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910CF": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910D2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910D3": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910D5": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910D7": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910D8": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910D9": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910DF": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910E0": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910E2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910F2": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "001910F9": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021104F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211050": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211051": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211052": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211053": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211056": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211057": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211058": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211059": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021105A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021105B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021105C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021105D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021105E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0021105F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211081": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211082": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211083": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00211084": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00231074": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0023107D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00250010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251006": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251007": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251014": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251017": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251018": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00251019": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271030": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271031": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271032": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271033": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271041": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271060": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271061": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00271062": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291015": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291016": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291017": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291018": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291026": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291034": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00291035": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431001": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431002": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431003": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431004": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431006": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431007": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431008": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431009": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043100A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043100B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043100C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043100D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043100E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043101C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043101D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043102C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043102D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043102E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043102F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431030": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431032": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431033": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431034": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431035": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431036": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431037": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431038": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431039": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043106F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043107D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431081": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431082": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431083": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431084": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431089": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043108A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431090": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431091": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431095": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431096": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431097": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00431098": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0043109A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00180026": {
+    "keyword": "InterventionDrugInformationSequence",
+    "name": "Intervention Drug Information Sequence"
+  },
+  "00180028": {
+    "keyword": "InterventionDrugDose",
+    "name": "Intervention Drug Dose"
+  },
+  "00180034": {
+    "keyword": "InterventionDrugName",
+    "name": "Intervention Drug Name"
+  },
+  "00180035": {
+    "keyword": "InterventionDrugStartTime",
+    "name": "Intervention Drug Start Time"
+  },
+  "00180070": {
+    "keyword": "CountsAccumulated",
+    "name": "Counts Accumulated"
+  },
+  "00180071": {
+    "keyword": "AcquisitionTerminationCondition",
+    "name": "Acquisition Termination Condition"
+  },
+  "00181242": {
+    "keyword": "ActualFrameDuration",
+    "name": "Actual Frame Duration"
+  },
+  "00280009": {
+    "keyword": "FrameIncrementPointer",
+    "name": "Frame Increment Pointer"
+  },
+  "00280051": {
+    "keyword": "CorrectedImage",
+    "name": "Corrected Image"
+  },
+  "00331010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331014": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331015": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331029": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331031": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331032": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00331037": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00350010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00351001": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00540010": {
+    "keyword": "EnergyWindowVector",
+    "name": "Energy Window Vector"
+  },
+  "00540011": {
+    "keyword": "NumberOfEnergyWindows",
+    "name": "Number of Energy Windows"
+  },
+  "00540012": {
+    "keyword": "EnergyWindowInformationSequence",
+    "name": "Energy Window Information Sequence"
+  },
+  "00540013": {
+    "keyword": "EnergyWindowRangeSequence",
+    "name": "Energy Window Range Sequence"
+  },
+  "00540014": {
+    "keyword": "EnergyWindowLowerLimit",
+    "name": "Energy Window Lower Limit"
+  },
+  "00540015": {
+    "keyword": "EnergyWindowUpperLimit",
+    "name": "Energy Window Upper Limit"
+  },
+  "00540018": {
+    "keyword": "EnergyWindowName",
+    "name": "Energy Window Name"
+  },
+  "00540016": {
+    "keyword": "RadiopharmaceuticalInformationSequence",
+    "name": "Radiopharmaceutical Information Sequence"
+  },
+  "00180031": {
+    "keyword": "Radiopharmaceutical",
+    "name": "Radiopharmaceutical"
+  },
+  "00181074": {
+    "keyword": "RadionuclideTotalDose",
+    "name": "Radionuclide Total Dose"
+  },
+  "00540300": {
+    "keyword": "RadionuclideCodeSequence",
+    "name": "Radionuclide Code Sequence"
+  },
+  "00540020": {
+    "keyword": "DetectorVector",
+    "name": "Detector Vector"
+  },
+  "00540021": {
+    "keyword": "NumberOfDetectors",
+    "name": "Number of Detectors"
+  },
+  "00540022": {
+    "keyword": "DetectorInformationSequence",
+    "name": "Detector Information Sequence"
+  },
+  "00181142": {
+    "keyword": "RadialPosition",
+    "name": "Radial Position"
+  },
+  "00181145": {
+    "keyword": "CenterOfRotationOffset",
+    "name": "Center of Rotation Offset"
+  },
+  "00181181": {
+    "keyword": "CollimatorType",
+    "name": "Collimator Type"
+  },
+  "00181182": {
+    "keyword": "FocalDistance",
+    "name": "Focal Distance"
+  },
+  "00181183": {
+    "keyword": "XFocusCenter",
+    "name": "X Focus Center"
+  },
+  "00181184": {
+    "keyword": "YFocusCenter",
+    "name": "Y Focus Center"
+  },
+  "00280031": {
+    "keyword": "ZoomFactor",
+    "name": "Zoom Factor"
+  },
+  "00540200": {
+    "keyword": "StartAngle",
+    "name": "Start Angle"
+  },
+  "00540414": {
+    "keyword": "PatientGantryRelationshipCodeSequence",
+    "name": "Patient Gantry Relationship Code Sequence"
+  },
+  "00550010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0055107E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0055107F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "005510C0": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00610010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0061100B": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0061100C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0061100D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0061100E": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0061100F": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00611010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0061101C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00630010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "3711100C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00120023": {
+    "keyword": "OtherClinicalTrialProtocolIDsSequence",
+    "name": "Other Clinical Trial Protocol IDs Sequence"
+  },
+  "00120022": {
+    "keyword": "IssuerOfClinicalTrialProtocolID",
+    "name": "Issuer of Clinical Trial Protocol ID"
+  },
+  "0018A002": {
+    "keyword": "ContributionDateTime",
+    "name": "Contribution DateTime"
+  },
+  "0018A003": {
+    "keyword": "ContributionDescription",
+    "name": "Contribution Description"
+  },
+  "00209221": {
+    "keyword": "DimensionOrganizationSequence",
+    "name": "Dimension Organization Sequence"
+  },
+  "00209164": {
+    "keyword": "DimensionOrganizationUID",
+    "name": "Dimension Organization UID"
+  },
+  "00209311": {
+    "keyword": "DimensionOrganizationType",
+    "name": "Dimension Organization Type"
+  },
+  "00280302": {
+    "keyword": "RecognizableVisualFeatures",
+    "name": "Recognizable Visual Features"
+  },
+  "00282114": {
+    "keyword": "LossyImageCompressionMethod",
+    "name": "Lossy Image Compression Method"
+  },
+  "00400512": {
+    "keyword": "ContainerIdentifier",
+    "name": "Container Identifier"
+  },
+  "00400513": {
+    "keyword": "IssuerOfTheContainerIdentifierSequence",
+    "name": "Issuer of the Container Identifier Sequence"
+  },
+  "00400518": {
+    "keyword": "ContainerTypeCodeSequence",
+    "name": "Container Type Code Sequence"
+  },
+  "00400560": {
+    "keyword": "SpecimenDescriptionSequence",
+    "name": "Specimen Description Sequence"
+  },
+  "00082228": {
+    "keyword": "PrimaryAnatomicStructureSequence",
+    "name": "Primary Anatomic Structure Sequence"
+  },
+  "00082230": {
+    "keyword": "PrimaryAnatomicStructureModifierSequence",
+    "name": "Primary Anatomic Structure Modifier Sequence"
+  },
+  "00400551": {
+    "keyword": "SpecimenIdentifier",
+    "name": "Specimen Identifier"
+  },
+  "00400554": {
+    "keyword": "SpecimenUID",
+    "name": "Specimen UID"
+  },
+  "00400562": {
+    "keyword": "IssuerOfTheSpecimenIdentifierSequence",
+    "name": "Issuer of the Specimen Identifier Sequence"
+  },
+  "00400600": {
+    "keyword": "SpecimenShortDescription",
+    "name": "Specimen Short Description"
+  },
+  "00400610": {
+    "keyword": "SpecimenPreparationSequence",
+    "name": "Specimen Preparation Sequence"
+  },
+  "00400612": {
+    "keyword": "SpecimenPreparationStepContentItemSequence",
+    "name": "Specimen Preparation Step Content Item Sequence"
+  },
+  "0040A040": {
+    "keyword": "ValueType",
+    "name": "Value Type"
+  },
+  "0040A043": {
+    "keyword": "ConceptNameCodeSequence",
+    "name": "Concept Name Code Sequence"
+  },
+  "0040A160": {
+    "keyword": "TextValue",
+    "name": "Text Value"
+  },
+  "0040A168": {
+    "keyword": "ConceptCodeSequence",
+    "name": "Concept Code Sequence"
+  },
+  "00480006": {
+    "keyword": "TotalPixelMatrixColumns",
+    "name": "Total Pixel Matrix Columns"
+  },
+  "00480007": {
+    "keyword": "TotalPixelMatrixRows",
+    "name": "Total Pixel Matrix Rows"
+  },
+  "00480008": {
+    "keyword": "TotalPixelMatrixOriginSequence",
+    "name": "Total Pixel Matrix Origin Sequence"
+  },
+  "0040072A": {
+    "keyword": "XOffsetInSlideCoordinateSystem",
+    "name": "X Offset in Slide Coordinate System"
+  },
+  "0040073A": {
+    "keyword": "YOffsetInSlideCoordinateSystem",
+    "name": "Y Offset in Slide Coordinate System"
+  },
+  "00480102": {
+    "keyword": "ImageOrientationSlide",
+    "name": "Image Orientation (Slide)"
+  },
+  "00480303": {
+    "keyword": "TotalPixelMatrixFocalPlanes",
+    "name": "Total Pixel Matrix Focal Planes"
+  },
+  "00409092": {
+    "keyword": "ParametricMapFrameTypeSequence",
+    "name": "Parametric Map Frame Type Sequence"
+  },
+  "00409096": {
+    "keyword": "RealWorldValueMappingSequence",
+    "name": "Real World Value Mapping Sequence"
+  },
+  "00283003": {
+    "keyword": "LUTExplanation",
+    "name": "LUT Explanation"
+  },
+  "004008EA": {
+    "keyword": "MeasurementUnitsCodeSequence",
+    "name": "Measurement Units Code Sequence"
+  },
+  "00409210": {
+    "keyword": "LUTLabel",
+    "name": "LUT Label"
+  },
+  "00409213": {
+    "keyword": "DoubleFloatRealWorldValueLastValueMapped",
+    "name": "Double Float Real World Value Last Value Mapped"
+  },
+  "00409214": {
+    "keyword": "DoubleFloatRealWorldValueFirstValueMapped",
+    "name": "Double Float Real World Value First Value Mapped"
+  },
+  "00409220": {
+    "keyword": "QuantityDefinitionSequence",
+    "name": "Quantity Definition Sequence"
+  },
+  "00409224": {
+    "keyword": "RealWorldValueIntercept",
+    "name": "Real World Value Intercept"
+  },
+  "00409225": {
+    "keyword": "RealWorldValueSlope",
+    "name": "Real World Value Slope"
+  },
+  "00283110": {
+    "keyword": "SoftcopyVOILUTSequence",
+    "name": "Softcopy VOI LUT Sequence"
+  },
+  "0070005A": {
+    "keyword": "DisplayedAreaSelectionSequence",
+    "name": "Displayed Area Selection Sequence"
+  },
+  "00700052": {
+    "keyword": "DisplayedAreaTopLeftHandCorner",
+    "name": "Displayed Area Top Left Hand Corner"
+  },
+  "00700053": {
+    "keyword": "DisplayedAreaBottomRightHandCorner",
+    "name": "Displayed Area Bottom Right Hand Corner"
+  },
+  "00700100": {
+    "keyword": "PresentationSizeMode",
+    "name": "Presentation Size Mode"
+  },
+  "00700101": {
+    "keyword": "PresentationPixelSpacing",
+    "name": "Presentation Pixel Spacing"
+  },
+  "00700103": {
+    "keyword": "PresentationPixelMagnificationRatio",
+    "name": "Presentation Pixel Magnification Ratio"
+  },
+  "00700082": {
+    "keyword": "PresentationCreationDate",
+    "name": "Presentation Creation Date"
+  },
+  "00700083": {
+    "keyword": "PresentationCreationTime",
+    "name": "Presentation Creation Time"
+  },
+  "00080201": {
+    "keyword": "TimezoneOffsetFromUTC",
+    "name": "Timezone Offset From UTC"
+  },
+  "00700102": {
+    "keyword": "PresentationPixelAspectRatio",
+    "name": "Presentation Pixel Aspect Ratio"
+  },
+  "00081250": {
+    "keyword": "RelatedSeriesSequence",
+    "name": "Related Series Sequence"
+  },
+  "00181072": {
+    "keyword": "RadiopharmaceuticalStartTime",
+    "name": "Radiopharmaceutical Start Time"
+  },
+  "00181075": {
+    "keyword": "RadionuclideHalfLife",
+    "name": "Radionuclide Half Life"
+  },
+  "00181076": {
+    "keyword": "RadionuclidePositronFraction",
+    "name": "Radionuclide Positron Fraction"
+  },
+  "00181078": {
+    "keyword": "RadiopharmaceuticalStartDateTime",
+    "name": "Radiopharmaceutical Start DateTime"
+  },
+  "00540081": {
+    "keyword": "NumberOfSlices",
+    "name": "Number of Slices"
+  },
+  "00541000": {
+    "keyword": "SeriesType",
+    "name": "Series Type"
+  },
+  "00541001": {
+    "keyword": "Units",
+    "name": "Units"
+  },
+  "00541002": {
+    "keyword": "CountsSource",
+    "name": "Counts Source"
+  },
+  "00541100": {
+    "keyword": "RandomsCorrectionMethod",
+    "name": "Randoms Correction Method"
+  },
+  "00541101": {
+    "keyword": "AttenuationCorrectionMethod",
+    "name": "Attenuation Correction Method"
+  },
+  "00541102": {
+    "keyword": "DecayCorrection",
+    "name": "Decay Correction"
+  },
+  "00541103": {
+    "keyword": "ReconstructionMethod",
+    "name": "Reconstruction Method"
+  },
+  "00541105": {
+    "keyword": "ScatterCorrectionMethod",
+    "name": "Scatter Correction Method"
+  },
+  "00541200": {
+    "keyword": "AxialAcceptance",
+    "name": "Axial Acceptance"
+  },
+  "00541201": {
+    "keyword": "AxialMash",
+    "name": "Axial Mash"
+  },
+  "00541300": {
+    "keyword": "FrameReferenceTime",
+    "name": "Frame Reference Time"
+  },
+  "00541321": {
+    "keyword": "DecayFactor",
+    "name": "Decay Factor"
+  },
+  "00541322": {
+    "keyword": "DoseCalibrationFactor",
+    "name": "Dose Calibration Factor"
+  },
+  "00541323": {
+    "keyword": "ScatterFractionFactor",
+    "name": "Scatter Fraction Factor"
+  },
+  "00541330": {
+    "keyword": "ImageIndex",
+    "name": "Image Index"
+  },
+  "00620002": {
+    "keyword": "SegmentSequence",
+    "name": "Segment Sequence"
+  },
+  "00620021": {
+    "keyword": "TrackingUID",
+    "name": "Tracking UID"
+  },
+  "00710010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00710011": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00890010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00180073": {
+    "keyword": "AcquisitionStartCondition",
+    "name": "Acquisition Start Condition"
+  },
+  "00180074": {
+    "keyword": "AcquisitionStartConditionData",
+    "name": "Acquisition Start Condition Data"
+  },
+  "00180075": {
+    "keyword": "AcquisitionTerminationConditionData",
+    "name": "Acquisition Termination Condition Data"
+  },
+  "00181019": {
+    "keyword": "SecondaryCaptureDeviceSoftwareVersions",
+    "name": "Secondary Capture Device Software Versions"
+  },
+  "00181071": {
+    "keyword": "RadiopharmaceuticalVolume",
+    "name": "Radiopharmaceutical Volume"
+  },
+  "00181073": {
+    "keyword": "RadiopharmaceuticalStopTime",
+    "name": "Radiopharmaceutical Stop Time"
+  },
+  "00181079": {
+    "keyword": "RadiopharmaceuticalStopDateTime",
+    "name": "Radiopharmaceutical Stop DateTime"
+  },
+  "00540304": {
+    "keyword": "RadiopharmaceuticalCodeSequence",
+    "name": "Radiopharmaceutical Code Sequence"
+  },
+  "00540202": {
+    "keyword": "TypeOfDetectorMotion",
+    "name": "Type of Detector Motion"
+  },
+  "00541104": {
+    "keyword": "DetectorLinesOfResponseUsed",
+    "name": "Detector Lines of Response Used"
+  },
+  "00541202": {
+    "keyword": "TransverseMash",
+    "name": "Transverse Mash"
+  },
+  "00541210": {
+    "keyword": "CoincidenceWindowWidth",
+    "name": "Coincidence Window Width"
+  },
+  "70530010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "70531000": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00081200": {
+    "keyword": "StudiesContainingOtherReferencedInstancesSequence",
+    "name": "Studies Containing Other Referenced Instances Sequence"
+  },
+  "00700308": {
+    "keyword": "RegistrationSequence",
+    "name": "Registration Sequence"
+  },
+  "00700309": {
+    "keyword": "MatrixRegistrationSequence",
+    "name": "Matrix Registration Sequence"
+  },
+  "0070030A": {
+    "keyword": "MatrixSequence",
+    "name": "Matrix Sequence"
+  },
+  "0070030C": {
+    "keyword": "FrameOfReferenceTransformationMatrixType",
+    "name": "Frame of Reference Transformation Matrix Type"
+  },
+  "300600C6": {
+    "keyword": "FrameOfReferenceTransformationMatrix",
+    "name": "Frame of Reference Transformation Matrix"
+  },
+  "0070030D": {
+    "keyword": "RegistrationTypeCodeSequence",
+    "name": "Registration Type Code Sequence"
+  },
+  "00081070": {
+    "keyword": "OperatorsName",
+    "name": "Operators' Name"
+  },
+  "00081080": {
+    "keyword": "AdmittingDiagnosesDescription",
+    "name": "Admitting Diagnoses Description"
+  },
+  "00081084": {
+    "keyword": "AdmittingDiagnosesCodeSequence",
+    "name": "Admitting Diagnoses Code Sequence"
+  },
+  "00080103": {
+    "keyword": "CodingSchemeVersion",
+    "name": "Coding Scheme Version"
+  },
+  "30040002": {
+    "keyword": "DoseUnits",
+    "name": "Dose Units"
+  },
+  "30040004": {
+    "keyword": "DoseType",
+    "name": "Dose Type"
+  },
+  "30040006": {
+    "keyword": "DoseComment",
+    "name": "Dose Comment"
+  },
+  "3004000A": {
+    "keyword": "DoseSummationType",
+    "name": "Dose Summation Type"
+  },
+  "3004000C": {
+    "keyword": "GridFrameOffsetVector",
+    "name": "Grid Frame Offset Vector"
+  },
+  "3004000E": {
+    "keyword": "DoseGridScaling",
+    "name": "Dose Grid Scaling"
+  },
+  "300C0002": {
+    "keyword": "ReferencedRTPlanSequence",
+    "name": "Referenced RT Plan Sequence"
+  },
+  "300A0002": {
+    "keyword": "RTPlanLabel",
+    "name": "RT Plan Label"
+  },
+  "300A0003": {
+    "keyword": "RTPlanName",
+    "name": "RT Plan Name"
+  },
+  "300A0004": {
+    "keyword": "RTPlanDescription",
+    "name": "RT Plan Description"
+  },
+  "300A0006": {
+    "keyword": "RTPlanDate",
+    "name": "RT Plan Date"
+  },
+  "300A0007": {
+    "keyword": "RTPlanTime",
+    "name": "RT Plan Time"
+  },
+  "300A000C": {
+    "keyword": "RTPlanGeometry",
+    "name": "RT Plan Geometry"
+  },
+  "300A0010": {
+    "keyword": "DoseReferenceSequence",
+    "name": "Dose Reference Sequence"
+  },
+  "00091020": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091021": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091022": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091023": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091024": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091025": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00091026": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "300A0012": {
+    "keyword": "DoseReferenceNumber",
+    "name": "Dose Reference Number"
+  },
+  "300A0014": {
+    "keyword": "DoseReferenceStructureType",
+    "name": "Dose Reference Structure Type"
+  },
+  "300A0016": {
+    "keyword": "DoseReferenceDescription",
+    "name": "Dose Reference Description"
+  },
+  "300A0020": {
+    "keyword": "DoseReferenceType",
+    "name": "Dose Reference Type"
+  },
+  "300A0026": {
+    "keyword": "TargetPrescriptionDose",
+    "name": "Target Prescription Dose"
+  },
+  "300A0070": {
+    "keyword": "FractionGroupSequence",
+    "name": "Fraction Group Sequence"
+  },
+  "300A0071": {
+    "keyword": "FractionGroupNumber",
+    "name": "Fraction Group Number"
+  },
+  "300A0078": {
+    "keyword": "NumberOfFractionsPlanned",
+    "name": "Number of Fractions Planned"
+  },
+  "300A0080": {
+    "keyword": "NumberOfBeams",
+    "name": "Number of Beams"
+  },
+  "300A00A0": {
+    "keyword": "NumberOfBrachyApplicationSetups",
+    "name": "Number of Brachy Application Setups"
+  },
+  "300C0004": {
+    "keyword": "ReferencedBeamSequence",
+    "name": "Referenced Beam Sequence"
+  },
+  "300A0082": {
+    "keyword": "BeamDoseSpecificationPoint",
+    "name": "Beam Dose Specification Point"
+  },
+  "300A0084": {
+    "keyword": "BeamDose",
+    "name": "Beam Dose"
+  },
+  "300A0086": {
+    "keyword": "BeamMeterset",
+    "name": "Beam Meterset"
+  },
+  "300C0006": {
+    "keyword": "ReferencedBeamNumber",
+    "name": "Referenced Beam Number"
+  },
+  "300C0050": {
+    "keyword": "ReferencedDoseReferenceSequence",
+    "name": "Referenced Dose Reference Sequence"
+  },
+  "300C0051": {
+    "keyword": "ReferencedDoseReferenceNumber",
+    "name": "Referenced Dose Reference Number"
+  },
+  "300A00B0": {
+    "keyword": "BeamSequence",
+    "name": "Beam Sequence"
+  },
+  "300A00B2": {
+    "keyword": "TreatmentMachineName",
+    "name": "Treatment Machine Name"
+  },
+  "300A00B3": {
+    "keyword": "PrimaryDosimeterUnit",
+    "name": "Primary Dosimeter Unit"
+  },
+  "300A00B6": {
+    "keyword": "BeamLimitingDeviceSequence",
+    "name": "Beam Limiting Device Sequence"
+  },
+  "300A00B8": {
+    "keyword": "RTBeamLimitingDeviceType",
+    "name": "RT Beam Limiting Device Type"
+  },
+  "300A00BC": {
+    "keyword": "NumberOfLeafJawPairs",
+    "name": "Number of Leaf/Jaw Pairs"
+  },
+  "300A00C0": {
+    "keyword": "BeamNumber",
+    "name": "Beam Number"
+  },
+  "300A00C2": {
+    "keyword": "BeamName",
+    "name": "Beam Name"
+  },
+  "300A00C3": {
+    "keyword": "BeamDescription",
+    "name": "Beam Description"
+  },
+  "300A00C4": {
+    "keyword": "BeamType",
+    "name": "Beam Type"
+  },
+  "300A00C6": {
+    "keyword": "RadiationType",
+    "name": "Radiation Type"
+  },
+  "300A00CE": {
+    "keyword": "TreatmentDeliveryType",
+    "name": "Treatment Delivery Type"
+  },
+  "300A00D0": {
+    "keyword": "NumberOfWedges",
+    "name": "Number of Wedges"
+  },
+  "300A00E0": {
+    "keyword": "NumberOfCompensators",
+    "name": "Number of Compensators"
+  },
+  "300A00ED": {
+    "keyword": "NumberOfBoli",
+    "name": "Number of Boli"
+  },
+  "300A00F0": {
+    "keyword": "NumberOfBlocks",
+    "name": "Number of Blocks"
+  },
+  "300A010E": {
+    "keyword": "FinalCumulativeMetersetWeight",
+    "name": "Final Cumulative Meterset Weight"
+  },
+  "300A0110": {
+    "keyword": "NumberOfControlPoints",
+    "name": "Number of Control Points"
+  },
+  "300A0111": {
+    "keyword": "ControlPointSequence",
+    "name": "Control Point Sequence"
+  },
+  "300A0112": {
+    "keyword": "ControlPointIndex",
+    "name": "Control Point Index"
+  },
+  "300A0114": {
+    "keyword": "NominalBeamEnergy",
+    "name": "Nominal Beam Energy"
+  },
+  "300A0115": {
+    "keyword": "DoseRateSet",
+    "name": "Dose Rate Set"
+  },
+  "300A011A": {
+    "keyword": "BeamLimitingDevicePositionSequence",
+    "name": "Beam Limiting Device Position Sequence"
+  },
+  "300A011C": {
+    "keyword": "LeafJawPositions",
+    "name": "Leaf/Jaw Positions"
+  },
+  "300A011E": {
+    "keyword": "GantryAngle",
+    "name": "Gantry Angle"
+  },
+  "300A011F": {
+    "keyword": "GantryRotationDirection",
+    "name": "Gantry Rotation Direction"
+  },
+  "300A0120": {
+    "keyword": "BeamLimitingDeviceAngle",
+    "name": "Beam Limiting Device Angle"
+  },
+  "300A0121": {
+    "keyword": "BeamLimitingDeviceRotationDirection",
+    "name": "Beam Limiting Device Rotation Direction"
+  },
+  "300A0122": {
+    "keyword": "PatientSupportAngle",
+    "name": "Patient Support Angle"
+  },
+  "300A0123": {
+    "keyword": "PatientSupportRotationDirection",
+    "name": "Patient Support Rotation Direction"
+  },
+  "300A0125": {
+    "keyword": "TableTopEccentricAngle",
+    "name": "Table Top Eccentric Angle"
+  },
+  "300A0126": {
+    "keyword": "TableTopEccentricRotationDirection",
+    "name": "Table Top Eccentric Rotation Direction"
+  },
+  "300A0128": {
+    "keyword": "TableTopVerticalPosition",
+    "name": "Table Top Vertical Position"
+  },
+  "300A0129": {
+    "keyword": "TableTopLongitudinalPosition",
+    "name": "Table Top Longitudinal Position"
+  },
+  "300A012A": {
+    "keyword": "TableTopLateralPosition",
+    "name": "Table Top Lateral Position"
+  },
+  "300A012C": {
+    "keyword": "IsocenterPosition",
+    "name": "Isocenter Position"
+  },
+  "300A0134": {
+    "keyword": "CumulativeMetersetWeight",
+    "name": "Cumulative Meterset Weight"
+  },
+  "300A0140": {
+    "keyword": "TableTopPitchAngle",
+    "name": "Table Top Pitch Angle"
+  },
+  "300A0142": {
+    "keyword": "TableTopPitchRotationDirection",
+    "name": "Table Top Pitch Rotation Direction"
+  },
+  "300A0144": {
+    "keyword": "TableTopRollAngle",
+    "name": "Table Top Roll Angle"
+  },
+  "300A0146": {
+    "keyword": "TableTopRollRotationDirection",
+    "name": "Table Top Roll Rotation Direction"
+  },
+  "300A010C": {
+    "keyword": "CumulativeDoseReferenceCoefficient",
+    "name": "Cumulative Dose Reference Coefficient"
+  },
+  "300C006A": {
+    "keyword": "ReferencedPatientSetupNumber",
+    "name": "Referenced Patient Setup Number"
+  },
+  "300A0180": {
+    "keyword": "PatientSetupSequence",
+    "name": "Patient Setup Sequence"
+  },
+  "300A0182": {
+    "keyword": "PatientSetupNumber",
+    "name": "Patient Setup Number"
+  },
+  "300A0190": {
+    "keyword": "FixationDeviceSequence",
+    "name": "Fixation Device Sequence"
+  },
+  "300A0192": {
+    "keyword": "FixationDeviceType",
+    "name": "Fixation Device Type"
+  },
+  "300A0194": {
+    "keyword": "FixationDeviceLabel",
+    "name": "Fixation Device Label"
+  },
+  "300A0199": {
+    "keyword": "FixationDevicePitchAngle",
+    "name": "Fixation Device Pitch Angle"
+  },
+  "300A01B0": {
+    "keyword": "SetupTechnique",
+    "name": "Setup Technique"
+  },
+  "300C0060": {
+    "keyword": "ReferencedStructureSetSequence",
+    "name": "Referenced Structure Set Sequence"
+  },
+  "300E0002": {
+    "keyword": "ApprovalStatus",
+    "name": "Approval Status"
+  },
+  "300E0004": {
+    "keyword": "ReviewDate",
+    "name": "Review Date"
+  },
+  "300E0005": {
+    "keyword": "ReviewTime",
+    "name": "Review Time"
+  },
+  "300E0008": {
+    "keyword": "ReviewerName",
+    "name": "Reviewer Name"
+  },
+  "00080110": {
+    "keyword": "CodingSchemeIdentificationSequence",
+    "name": "Coding Scheme Identification Sequence"
+  },
+  "0008010C": {
+    "keyword": "CodingSchemeUID",
+    "name": "Coding Scheme UID"
+  },
+  "00080115": {
+    "keyword": "CodingSchemeName",
+    "name": "Coding Scheme Name"
+  },
+  "00080116": {
+    "keyword": "CodingSchemeResponsibleOrganization",
+    "name": "Coding Scheme Responsible Organization"
+  },
+  "30060002": {
+    "keyword": "StructureSetLabel",
+    "name": "Structure Set Label"
+  },
+  "30060008": {
+    "keyword": "StructureSetDate",
+    "name": "Structure Set Date"
+  },
+  "30060009": {
+    "keyword": "StructureSetTime",
+    "name": "Structure Set Time"
+  },
+  "30060010": {
+    "keyword": "ReferencedFrameOfReferenceSequence",
+    "name": "Referenced Frame of Reference Sequence"
+  },
+  "30060012": {
+    "keyword": "RTReferencedStudySequence",
+    "name": "RT Referenced Study Sequence"
+  },
+  "30060014": {
+    "keyword": "RTReferencedSeriesSequence",
+    "name": "RT Referenced Series Sequence"
+  },
+  "30060016": {
+    "keyword": "ContourImageSequence",
+    "name": "Contour Image Sequence"
+  },
+  "30060020": {
+    "keyword": "StructureSetROISequence",
+    "name": "Structure Set ROI Sequence"
+  },
+  "00620020": {
+    "keyword": "TrackingID",
+    "name": "Tracking ID"
+  },
+  "30060022": {
+    "keyword": "ROINumber",
+    "name": "ROI Number"
+  },
+  "30060024": {
+    "keyword": "ReferencedFrameOfReferenceUID",
+    "name": "Referenced Frame of Reference UID"
+  },
+  "30060026": {
+    "keyword": "ROIName",
+    "name": "ROI Name"
+  },
+  "3006002C": {
+    "keyword": "ROIVolume",
+    "name": "ROI Volume"
+  },
+  "30060036": {
+    "keyword": "ROIGenerationAlgorithm",
+    "name": "ROI Generation Algorithm"
+  },
+  "30060039": {
+    "keyword": "ROIContourSequence",
+    "name": "ROI Contour Sequence"
+  },
+  "3006002A": {
+    "keyword": "ROIDisplayColor",
+    "name": "ROI Display Color"
+  },
+  "30060040": {
+    "keyword": "ContourSequence",
+    "name": "Contour Sequence"
+  },
+  "30060042": {
+    "keyword": "ContourGeometricType",
+    "name": "Contour Geometric Type"
+  },
+  "30060046": {
+    "keyword": "NumberOfContourPoints",
+    "name": "Number of Contour Points"
+  },
+  "30060048": {
+    "keyword": "ContourNumber",
+    "name": "Contour Number"
+  },
+  "30060050": {
+    "keyword": "ContourData",
+    "name": "Contour Data"
+  },
+  "30060084": {
+    "keyword": "ReferencedROINumber",
+    "name": "Referenced ROI Number"
+  },
+  "30060080": {
+    "keyword": "RTROIObservationsSequence",
+    "name": "RT ROI Observations Sequence"
+  },
+  "00620003": {
+    "keyword": "SegmentedPropertyCategoryCodeSequence",
+    "name": "Segmented Property Category Code Sequence"
+  },
+  "30060082": {
+    "keyword": "ObservationNumber",
+    "name": "Observation Number"
+  },
+  "30060085": {
+    "keyword": "ROIObservationLabel",
+    "name": "ROI Observation Label"
+  },
+  "30060086": {
+    "keyword": "RTROIIdentificationCodeSequence",
+    "name": "RT ROI Identification Code Sequence"
+  },
+  "300600A4": {
+    "keyword": "RTROIInterpretedType",
+    "name": "RT ROI Interpreted Type"
+  },
+  "300600A6": {
+    "keyword": "ROIInterpreter",
+    "name": "ROI Interpreter"
+  },
+  "00081160": {
+    "keyword": "ReferencedFrameNumber",
+    "name": "Referenced Frame Number"
+  },
+  "00409094": {
+    "keyword": "ReferencedImageRealWorldValueMappingSequence",
+    "name": "Referenced Image Real World Value Mapping Sequence"
+  },
+  "00409211": {
+    "keyword": "RealWorldValueLastValueMapped",
+    "name": "Real World Value Last Value Mapped"
+  },
+  "00409216": {
+    "keyword": "RealWorldValueFirstValueMapped",
+    "name": "Real World Value First Value Mapped"
+  },
+  "00120071": {
+    "keyword": "ClinicalTrialSeriesID",
+    "name": "Clinical Trial Series ID"
+  },
+  "00209222": {
+    "keyword": "DimensionIndexSequence",
+    "name": "Dimension Index Sequence"
+  },
+  "00209165": {
+    "keyword": "DimensionIndexPointer",
+    "name": "Dimension Index Pointer"
+  },
+  "00209167": {
+    "keyword": "FunctionalGroupPointer",
+    "name": "Functional Group Pointer"
+  },
+  "00209421": {
+    "keyword": "DimensionDescriptionLabel",
+    "name": "Dimension Description Label"
+  },
+  "00620001": {
+    "keyword": "SegmentationType",
+    "name": "Segmentation Type"
+  },
+  "00620004": {
+    "keyword": "SegmentNumber",
+    "name": "Segment Number"
+  },
+  "00620005": {
+    "keyword": "SegmentLabel",
+    "name": "Segment Label"
+  },
+  "00620006": {
+    "keyword": "SegmentDescription",
+    "name": "Segment Description"
+  },
+  "00620008": {
+    "keyword": "SegmentAlgorithmType",
+    "name": "Segment Algorithm Type"
+  },
+  "00620009": {
+    "keyword": "SegmentAlgorithmName",
+    "name": "Segment Algorithm Name"
+  },
+  "0062000D": {
+    "keyword": "RecommendedDisplayCIELabValue",
+    "name": "Recommended Display CIELab Value"
+  },
+  "0062000F": {
+    "keyword": "SegmentedPropertyTypeCodeSequence",
+    "name": "Segmented Property Type Code Sequence"
+  },
+  "00620011": {
+    "keyword": "SegmentedPropertyTypeModifierCodeSequence",
+    "name": "Segmented Property Type Modifier Code Sequence"
+  },
+  "00620013": {
+    "keyword": "SegmentsOverlap",
+    "name": "Segments Overlap"
+  },
+  "00209157": {
+    "keyword": "DimensionIndexValues",
+    "name": "Dimension Index Values"
+  },
+  "0062000A": {
+    "keyword": "SegmentIdentificationSequence",
+    "name": "Segment Identification Sequence"
+  },
+  "0062000B": {
+    "keyword": "ReferencedSegmentNumber",
+    "name": "Referenced Segment Number"
+  },
+  "00080019": {
+    "keyword": "PyramidUID",
+    "name": "Pyramid UID"
+  },
+  "00620007": {
+    "keyword": "SegmentationAlgorithmIdentificationSequence",
+    "name": "Segmentation Algorithm Identification Sequence"
+  },
+  "00240202": {
+    "keyword": "AlgorithmSource",
+    "name": "Algorithm Source"
+  },
+  "0066002F": {
+    "keyword": "AlgorithmFamilyCodeSequence",
+    "name": "Algorithm Family Code Sequence"
+  },
+  "00660031": {
+    "keyword": "AlgorithmVersion",
+    "name": "Algorithm Version"
+  },
+  "00660036": {
+    "keyword": "AlgorithmName",
+    "name": "Algorithm Name"
+  },
+  "0040074A": {
+    "keyword": "ZOffsetInSlideCoordinateSystem",
+    "name": "Z Offset in Slide Coordinate System"
+  },
+  "00660032": {
+    "keyword": "AlgorithmParameters",
+    "name": "Algorithm Parameters"
+  },
+  "00080017": {
+    "keyword": "AcquisitionUID",
+    "name": "Acquisition UID"
+  },
+  "00080112": {
+    "keyword": "CodingSchemeRegistry",
+    "name": "Coding Scheme Registry"
+  },
+  "00091002": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00080081": {
+    "keyword": "InstitutionAddress",
+    "name": "Institution Address"
+  },
+  "00280006": {
+    "keyword": "PlanarConfiguration",
+    "name": "Planar Configuration"
+  },
+  "00480001": {
+    "keyword": "ImagedVolumeWidth",
+    "name": "Imaged Volume Width"
+  },
+  "00480002": {
+    "keyword": "ImagedVolumeHeight",
+    "name": "Imaged Volume Height"
+  },
+  "00480003": {
+    "keyword": "ImagedVolumeDepth",
+    "name": "Imaged Volume Depth"
+  },
+  "00480010": {
+    "keyword": "SpecimenLabelInImage",
+    "name": "Specimen Label in Image"
+  },
+  "00480011": {
+    "keyword": "FocusMethod",
+    "name": "Focus Method"
+  },
+  "00480012": {
+    "keyword": "ExtendedDepthOfField",
+    "name": "Extended Depth of Field"
+  },
+  "00480015": {
+    "keyword": "RecommendedAbsentPixelCIELabValue",
+    "name": "Recommended Absent Pixel CIELab Value"
+  },
+  "00480105": {
+    "keyword": "OpticalPathSequence",
+    "name": "Optical Path Sequence"
+  },
+  "00220016": {
+    "keyword": "IlluminationTypeCodeSequence",
+    "name": "Illumination Type Code Sequence"
+  },
+  "00282000": {
+    "keyword": "ICCProfile",
+    "name": "ICC Profile"
+  },
+  "00480106": {
+    "keyword": "OpticalPathIdentifier",
+    "name": "Optical Path Identifier"
+  },
+  "00480108": {
+    "keyword": "IlluminationColorCodeSequence",
+    "name": "Illumination Color Code Sequence"
+  },
+  "00480112": {
+    "keyword": "ObjectiveLensPower",
+    "name": "Objective Lens Power"
+  },
+  "00480302": {
+    "keyword": "NumberOfOpticalPaths",
+    "name": "Number of Optical Paths"
+  },
+  "00400710": {
+    "keyword": "WholeSlideMicroscopyImageFrameTypeSequence",
+    "name": "Whole Slide Microscopy Image Frame Type Sequence"
+  },
+  "00091003": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00102161": {
+    "keyword": "EthnicGroupCodeSequence",
+    "name": "Ethnic Group Code Sequence"
+  },
+  "0040A050": {
+    "keyword": "ContinuityOfContent",
+    "name": "Continuity Of Content"
+  },
+  "0040A073": {
+    "keyword": "VerifyingObserverSequence",
+    "name": "Verifying Observer Sequence"
+  },
+  "0040A027": {
+    "keyword": "VerifyingOrganization",
+    "name": "Verifying Organization"
+  },
+  "0040A030": {
+    "keyword": "VerificationDateTime",
+    "name": "Verification DateTime"
+  },
+  "0040A075": {
+    "keyword": "VerifyingObserverName",
+    "name": "Verifying Observer Name"
+  },
+  "0040A088": {
+    "keyword": "VerifyingObserverIdentificationCodeSequence",
+    "name": "Verifying Observer Identification Code Sequence"
+  },
+  "0040A372": {
+    "keyword": "PerformedProcedureCodeSequence",
+    "name": "Performed Procedure Code Sequence"
+  },
+  "0040A375": {
+    "keyword": "CurrentRequestedProcedureEvidenceSequence",
+    "name": "Current Requested Procedure Evidence Sequence"
+  },
+  "00081199": {
+    "keyword": "ReferencedSOPSequence",
+    "name": "Referenced SOP Sequence"
+  },
+  "0040A504": {
+    "keyword": "ContentTemplateSequence",
+    "name": "Content Template Sequence"
+  },
+  "00080118": {
+    "keyword": "MappingResourceUID",
+    "name": "Mapping Resource UID"
+  },
+  "0040DB00": {
+    "keyword": "TemplateIdentifier",
+    "name": "Template Identifier"
+  },
+  "0040A730": {
+    "keyword": "ContentSequence",
+    "name": "Content Sequence"
+  },
+  "0040A010": {
+    "keyword": "RelationshipType",
+    "name": "Relationship Type"
+  },
+  "0040A123": {
+    "keyword": "PersonName",
+    "name": "Person Name"
+  },
+  "0040A121": {
+    "keyword": "Date",
+    "name": "Date"
+  },
+  "0040A122": {
+    "keyword": "Time",
+    "name": "Time"
+  },
+  "0040A124": {
+    "keyword": "UID",
+    "name": "UID"
+  },
+  "0040A300": {
+    "keyword": "MeasuredValueSequence",
+    "name": "Measured Value Sequence"
+  },
+  "0040A30A": {
+    "keyword": "NumericValue",
+    "name": "Numeric Value"
+  },
+  "0040A496": {
+    "keyword": "PreliminaryFlag",
+    "name": "Preliminary Flag"
+  },
+  "00700022": {
+    "keyword": "GraphicData",
+    "name": "Graphic Data"
+  },
+  "00700023": {
+    "keyword": "GraphicType",
+    "name": "Graphic Type"
+  },
+  "00102180": {
+    "keyword": "Occupation",
+    "name": "Occupation"
+  },
+  "00390010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0040A492": {
+    "keyword": "CompletionFlagDescription",
+    "name": "Completion Flag Description"
+  },
+  "0040A120": {
+    "keyword": "DateTime",
+    "name": "DateTime"
+  },
+  "00181010": {
+    "keyword": "SecondaryCaptureDeviceID",
+    "name": "Secondary Capture Device ID"
+  },
+  "00181012": {
+    "keyword": "DateOfSecondaryCapture",
+    "name": "Date of Secondary Capture"
+  },
+  "00181014": {
+    "keyword": "TimeOfSecondaryCapture",
+    "name": "Time of Secondary Capture"
+  },
+  "0018106A": {
+    "keyword": "SynchronizationTrigger",
+    "name": "Synchronization Trigger"
+  },
+  "00181800": {
+    "keyword": "AcquisitionTimeSynchronized",
+    "name": "Acquisition Time Synchronized"
+  },
+  "00185010": {
+    "keyword": "TransducerData",
+    "name": "Transducer Data"
+  },
+  "00200200": {
+    "keyword": "SynchronizationFrameOfReferenceUID",
+    "name": "Synchronization Frame of Reference UID"
+  },
+  "00280034": {
+    "keyword": "PixelAspectRatio",
+    "name": "Pixel Aspect Ratio"
+  },
+  "11290010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "11291008": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "11291016": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "11291017": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "11291027": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00185022": {
+    "keyword": "MechanicalIndex",
+    "name": "Mechanical Index"
+  },
+  "00186011": {
+    "keyword": "SequenceOfUltrasoundRegions",
+    "name": "Sequence of Ultrasound Regions"
+  },
+  "00186012": {
+    "keyword": "RegionSpatialFormat",
+    "name": "Region Spatial Format"
+  },
+  "00186014": {
+    "keyword": "RegionDataType",
+    "name": "Region Data Type"
+  },
+  "00186016": {
+    "keyword": "RegionFlags",
+    "name": "Region Flags"
+  },
+  "00186018": {
+    "keyword": "RegionLocationMinX0",
+    "name": "Region Location Min X0"
+  },
+  "0018601A": {
+    "keyword": "RegionLocationMinY0",
+    "name": "Region Location Min Y0"
+  },
+  "0018601C": {
+    "keyword": "RegionLocationMaxX1",
+    "name": "Region Location Max X1"
+  },
+  "0018601E": {
+    "keyword": "RegionLocationMaxY1",
+    "name": "Region Location Max Y1"
+  },
+  "00186020": {
+    "keyword": "ReferencePixelX0",
+    "name": "Reference Pixel X0"
+  },
+  "00186022": {
+    "keyword": "ReferencePixelY0",
+    "name": "Reference Pixel Y0"
+  },
+  "00186024": {
+    "keyword": "PhysicalUnitsXDirection",
+    "name": "Physical Units X Direction"
+  },
+  "00186026": {
+    "keyword": "PhysicalUnitsYDirection",
+    "name": "Physical Units Y Direction"
+  },
+  "00186028": {
+    "keyword": "ReferencePixelPhysicalValueX",
+    "name": "Reference Pixel Physical Value X"
+  },
+  "0018602A": {
+    "keyword": "ReferencePixelPhysicalValueY",
+    "name": "Reference Pixel Physical Value Y"
+  },
+  "0018602C": {
+    "keyword": "PhysicalDeltaX",
+    "name": "Physical Delta X"
+  },
+  "0018602E": {
+    "keyword": "PhysicalDeltaY",
+    "name": "Physical Delta Y"
+  },
+  "00186030": {
+    "keyword": "TransducerFrequency",
+    "name": "Transducer Frequency"
+  },
+  "00186031": {
+    "keyword": "TransducerType",
+    "name": "Transducer Type"
+  },
+  "00191000": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019100C": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019100D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191020": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191021": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00191022": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019102A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019102D": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0019103A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00280014": {
+    "keyword": "UltrasoundColorDataPresent",
+    "name": "Ultrasound Color Data Present"
+  },
+  "0032000C": {
+    "keyword": "StudyPriorityID",
+    "name": "Study Priority ID"
+  },
+  "00321030": {
+    "keyword": "ReasonForStudy",
+    "name": "Reason for Study"
+  },
+  "00324000": {
+    "keyword": "StudyComments",
+    "name": "Study Comments"
+  },
+  "00730010": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "0099000A": {
+    "keyword": "PrivateElement",
+    "name": "Private or unknown element"
+  },
+  "00181154": {
+    "keyword": "AveragePulseWidth",
+    "name": "Average Pulse Width"
+  },
+  "00181155": {
+    "keyword": "RadiationSetting",
+    "name": "Radiation Setting"
+  },
+  "0018115A": {
+    "keyword": "RadiationMode",
+    "name": "Radiation Mode"
+  },
+  "0018115E": {
+    "keyword": "ImageAndFluoroscopyAreaDoseProduct",
+    "name": "Image and Fluoroscopy Area Dose Product"
+  },
+  "00181162": {
+    "keyword": "IntensifierSize",
+    "name": "Intensifier Size"
+  },
+  "00181511": {
+    "keyword": "PositionerSecondaryAngle",
+    "name": "Positioner Secondary Angle"
+  },
+  "00286010": {
+    "keyword": "RepresentativeFrameNumber",
+    "name": "Representative Frame Number"
+  }
+}

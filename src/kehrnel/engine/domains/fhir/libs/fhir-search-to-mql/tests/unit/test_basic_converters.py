@@ -63,9 +63,9 @@ class TestStringConverter:
     def test_contains_modifier(self, converter):
         """Test :contains modifier for substring match."""
         query = converter.convert("mit", modifier='contains')
-        
+
         assert 'name_tokens' in query
-        assert query['name_tokens'] == 'mit'
+        assert query['name_tokens'] == {'$regex': 'mit', '$options': 'i'}
     
     def test_missing_true(self, converter):
         """Test :missing=true for missing fields."""

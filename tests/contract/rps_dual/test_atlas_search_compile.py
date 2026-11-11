@@ -12,7 +12,6 @@ def strategy_with_config():
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Compatibility search pipeline parity pending ($search compound filter shape)", strict=False)
 async def test_cross_patient_embedded_document_pipeline():
     strat, cfg = strategy_with_config()
     ctx = StrategyContext(environment_id="env", config=cfg)
@@ -25,31 +24,34 @@ async def test_cross_patient_embedded_document_pipeline():
     pipeline = plan.plan.get("pipeline", [])
     assert pipeline, "Pipeline should not be empty"
     assert list(pipeline[0].keys())[0] == "$search"
-    filters = pipeline[0]["$search"]["compound"]["filter"]
-    assert any("embeddedDocument" in f for f in filters)
-    embedded = next(f for f in filters if "embeddedDocument" in f)
-    wildcard_filter = embedded["embeddedDocument"]["operator"]["compound"]["filter"][0]["wildcard"]
-    assert wildcard_filter["path"].endswith(".p")
+    search = pipeline[0]["$search"]
+    assert search["index"] == "search_nodes_index"
+    assert search["text"] == {"query": "abc", "path": "data.path"}
+    assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
+    assert plan.explain["builder"]["reason"] == "scope_cross_patient"
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Compatibility lookup behavior parity pending", strict=False)
-async def test_lookup_appended_when_configured():
+async def test_lookup_is_automatically_added_for_full_composition_projection():
     strat, cfg = strategy_with_config()
-    cfg.setdefault("query_engine", {})["lookup_full_composition"] = True
     ctx = StrategyContext(environment_id="env", config=cfg)
     ir = AqlQueryIR(
         scope="cross_patient",
-        predicates=[{"path": "ehr_id", "op": "eq", "value": "p1"}],
-        select=[{"path": "ehr_id", "alias": "ehr_id"}],
+        predicates=[{"path": "med_ac/time/value", "op": "gt", "value": "2020-01-01T00:00:00"}],
+        select=[
+            {
+                "path": "admin_salut/items[at0007]/items[at0014]/value/defining_code/code_string",
+                "alias": "Centro",
+            }
+        ],
     )
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert any("$lookup" in stage for stage in pipeline), "lookup should be present after $search when configured"
+    assert "$search" in pipeline[0]
+    assert any("$lookup" in stage for stage in pipeline), "lookup should be inferred from the projection"
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Compatibility post-filter behavior parity pending", strict=False)
 async def test_post_match_added_for_unsupported_predicate():
     strat, cfg = strategy_with_config()
     ctx = StrategyContext(environment_id="env", config=cfg)

@@ -1,0 +1,123 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-deployment-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approval": {
+      "const": "approved",
+      "title": "Approval",
+      "type": "string"
+    },
+    "changeRef": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Changeref"
+    },
+    "contract": {
+      "const": "implementation-package-deployment-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deploymentNotes": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deploymentnotes"
+    },
+    "deploymentOwnerRef": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Deploymentownerref",
+      "type": "string"
+    },
+    "deploymentRequestId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Deploymentrequestid",
+      "type": "string"
+    },
+    "expectedCurrentDeploymentRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "expectedPackageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "readinessRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "deploymentRequestId",
+    "readinessRef",
+    "expectedPackageRef",
+    "deploymentOwnerRef",
+    "approval"
+  ],
+  "title": "ImplementationPackageDeploymentRequest",
+  "type": "object"
+}

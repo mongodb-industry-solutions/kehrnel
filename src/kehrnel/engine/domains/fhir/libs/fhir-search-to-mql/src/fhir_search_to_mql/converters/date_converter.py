@@ -18,6 +18,7 @@ from dateutil import parser as date_parser
 from fhir_search_to_mql.converters.base_converter import BaseConverter
 from fhir_search_to_mql.core.exceptions import ConversionError
 from fhir_search_to_mql.core.constants import PREFIXES
+from fhir_search_to_mql.temporal import date_projection_field, parse_fhir_temporal_range
 
 
 class DateConverter(BaseConverter):
@@ -62,6 +63,25 @@ class DateConverter(BaseConverter):
         # Validate prefix
         self._validate_prefix(prefix, self.ALLOWED_PREFIXES)
         
+        # Normal FHIRSearchConverter calls carry the search-parameter name.
+        # Query the BSON-date interval shadow rather than the canonical FHIR
+        # string, deriving the range from the same helper denormalization uses
+        # so FHIR precision (date → whole day, second-precision dateTime →
+        # whole second, …) is honored on both sides. Direct DateConverter
+        # users retain legacy field behavior.
+        parameter_name = self.param_config.get('_parameter_name')
+        if parameter_name:
+            try:
+                start, end = parse_fhir_temporal_range(value)
+            except (TypeError, ValueError, OverflowError) as e:
+                raise ConversionError(f"Invalid date format '{value}': {str(e)}")
+            return self._build_interval_query(
+                date_projection_field(str(parameter_name)),
+                start,
+                end,
+                prefix or 'eq',
+            )
+
         # Parse date value
         try:
             date_range = self._parse_date_range(value)
@@ -100,6 +120,48 @@ class DateConverter(BaseConverter):
         
         # Combine with OR if multiple fields
         return self._create_or_query(field_queries)
+
+    def _build_interval_query(
+        self,
+        field_name: str,
+        start: datetime,
+        end: datetime,
+        prefix: str,
+    ) -> Dict[str, Any]:
+        """Build a query over half-open BSON date intervals.
+
+        ``start`` and ``end`` come from ``parse_fhir_temporal_range``, whose
+        ``end`` is already exclusive — no extra widening is applied here.
+        """
+
+        overlap = {
+            "$elemMatch": {
+                "start": {"$lt": end},
+                "end": {"$gt": start},
+            }
+        }
+        if prefix == 'eq':
+            return {field_name: overlap}
+        if prefix == 'ne':
+            return {field_name: {"$not": overlap}}
+        if prefix in ('gt', 'sa'):
+            return {field_name: {"$elemMatch": {"start": {"$gte": end}}}}
+        if prefix == 'ge':
+            return {field_name: {"$elemMatch": {"end": {"$gt": start}}}}
+        if prefix in ('lt', 'eb'):
+            return {field_name: {"$elemMatch": {"end": {"$lte": start}}}}
+        if prefix == 'le':
+            return {field_name: {"$elemMatch": {"start": {"$lt": end}}}}
+        if prefix == 'ap':
+            return {
+                field_name: {
+                    "$elemMatch": {
+                        "start": {"$lt": end + timedelta(days=1)},
+                        "end": {"$gt": start - timedelta(days=1)},
+                    }
+                }
+            }
+        return {field_name: overlap}
     
     def _parse_date_range(self, value: str) -> Dict[str, datetime]:
         """

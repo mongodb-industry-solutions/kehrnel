@@ -1,0 +1,343 @@
+{
+  "meta": {
+    "strategyId": "fhir.resource_store",
+    "specVersion": "1.8",
+    "title": "FHIR Resource Store",
+    "summary": "A portable FHIR resource-store model that preserves canonical resources, makes MongoDB operational projections explicit, and translates supported FHIR Search parameters to inspectable MQL.",
+    "domain": "FHIR",
+    "tags": ["FHIR", "R4", "R5", "R6", "resource-store", "migration", "fhir-mql", "fhir-gen", "search", "semantic"],
+    "owners": [],
+    "compat": {
+      "packFormat": "strategy-pack/v1",
+      "requires": ["storage.mongo"],
+      "optional": ["search.atlas_vector"],
+      "minRuntime": "0.1.0"
+    }
+  },
+
+  "glossary": {
+    "fhir_resource": {
+      "term": "FHIR Resource<T>",
+      "definition": "A canonical FHIR JSON resource whose concrete shape T is selected by the `resourceType` discriminator and activated release. R4 currently exposes a minimal Patient/Observation contract; R5/R6 are package-backed."
+    },
+    "logical_identity": {
+      "term": "Logical identity",
+      "definition": "FHIR ids are unique within a resource type. The store therefore identifies a resource by `(resourceType, id)` and enforces `id` uniqueness inside each per-type collection."
+    },
+    "choice_element": {
+      "term": "Choice element [x]",
+      "definition": "A polymorphic FHIR element represented by one type-specific JSON property, such as `Observation.valueQuantity` or `Observation.valueCodeableConcept`. The model displays the abstract form as `value[x]`."
+    },
+    "reference": {
+      "term": "Reference<TargetUnion>",
+      "definition": "A FHIR reference whose permitted target types are defined by the resource specification or profile. It is a domain relationship, not an automatic MongoDB join."
+    },
+    "extension": {
+      "term": "Extension and primitive extension",
+      "definition": "FHIR extension content remains canonical JSON. Primitive-extension properties such as `_birthDate` are preserved; only the accelerator's documented operational fields are removed from FHIR-facing responses."
+    },
+    "profile": {
+      "term": "Profile",
+      "definition": "A StructureDefinition that constrains a base FHIR resource. Profile/invariant enforcement is optional and fail-closed through the configured validation adapter; terminology validation is a separate tenant-routed policy."
+    },
+    "search_parameter": {
+      "term": "Search Parameter",
+      "definition": "A named FHIR query parameter with a type and extraction expression. Support is resolved per resource type from the active fhir-mql configuration rather than inferred from the JSON shape alone."
+    },
+    "operational_projection": {
+      "term": "Operational projection",
+      "definition": "Mandatory MongoDB-only `_search` and `_compartments` projections plus versioned persistence metadata grouped under `_kehrnel`. These fields are never returned as FHIR content."
+    },
+    "collection_family": {
+      "term": "Collection<ResourceType>",
+      "definition": "An abstract family of MongoDB collections. A concrete collection is created or used when a supported resource type is persisted, with an optional configured prefix followed by the exact `resourceType`."
+    },
+    "cohort_blueprint": {
+      "term": "Synthetic cohort blueprint",
+      "definition": "A versioned, portable intent document that defines patient demographics, resource-count distributions, longitudinal scope, and named clinical rules. The runtime compiles it into a deterministic plan before any data is generated; curated-demo does not claim epidemiological or clinical validity."
+    }
+  },
+
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "type.fhir_resource",
+          "title": "FHIR Resource<T>",
+          "kind": "polymorphic-document",
+          "description": "The common FHIR resource metamodel. T is a concrete resource shape from the activated release support tier.",
+          "discriminator": "resourceType",
+          "identity": ["resourceType", "id"],
+          "fields": {
+            "resourceType": { "type": "string", "role": ["discriminator", "routing"], "description": "Selects the concrete resource shape and MongoDB collection." },
+            "id": { "type": "id", "role": ["identity"], "description": "Logical id, unique only within the concrete resource type." },
+            "meta": { "type": "Meta", "description": "FHIR metadata including version, lastUpdated, profile, security, and tags when present." },
+            "extension[]": { "type": "Extension[]", "role": ["extensibility"], "description": "Standard FHIR extension mechanism retained in canonical form." },
+            "primitiveExtension": { "type": "_<primitiveName>", "role": ["extensibility"], "description": "FHIR primitive extensions such as `_birthDate`; these are not MongoDB operational fields." },
+            "choice[x]": { "type": "FHIR choice", "role": ["polymorphism"], "description": "Exactly the type-specific JSON property allowed by the concrete resource/profile, for example `valueQuantity`." },
+            "reference": { "type": "Reference<TargetUnion>", "role": ["relationship", "polymorphism"], "description": "A reference to one of the target types allowed by the concrete resource/profile." },
+            "payload<T>": { "type": "object", "role": ["canonical-data"], "description": "All remaining fields defined for concrete resource type T." }
+          }
+        }
+      ]
+    },
+    "concepts": [
+      { "id": "concept.resource_polymorphism", "title": "Discriminated resource polymorphism", "kind": "metamodel", "meaning": "One common Resource metamodel expands to many concrete JSON shapes. `resourceType` is both the FHIR discriminator and the collection-routing key." },
+      { "id": "concept.choice_polymorphism", "title": "Choice elements", "kind": "metamodel", "meaning": "FHIR `[x]` elements become mutually exclusive, type-specific JSON properties. MongoDB preserves the selected property without flattening it into a generic value column." },
+      { "id": "concept.reference_polymorphism", "title": "Polymorphic references", "kind": "relationship", "meaning": "Fields such as `Observation.subject` may target several resource types. Search projections may accelerate reference filters, but they do not change reference semantics or imply joins." },
+      { "id": "concept.canonical_operational_boundary", "title": "Canonical / operational boundary", "kind": "storage-contract", "meaning": "Canonical FHIR fields stay readable at the document root. MongoDB-only projections are explicitly denylisted and removed from FHIR serialization." },
+      { "id": "concept.search_compilation", "title": "FHIR Search compilation", "kind": "query-contract", "meaning": "The active resource configuration maps supported FHIR Search parameters to typed MongoDB filters and index definitions. Unknown parameters fail closed in strict mode." }
+    ],
+    "destinations": {
+      "description": "One abstract collection family expands to N concrete MongoDB collections, where N is the number of storable resource types in the active capability contract. This metamodel intentionally avoids enumerating a release-specific list.",
+      "collectionTemplate": {
+        "id": "fhir.resource_store.collection.v1",
+        "title": "FHIR resource collection family",
+        "collectionName": "config.collection_prefix + resourceType",
+        "cardinality": "N = runtime.fhir_capabilities.storable_resource_types.length",
+        "materialization": "lazy, on first write for each supported resource type",
+        "identity": ["resourceType", "id"],
+        "payload": "FHIR Resource<ResourceType> + operational projection"
+      },
+      "types": [
+        {
+          "id": "fhir.resource_store.collection_family.v1",
+          "title": "Resource collection family",
+          "kind": "collection-family",
+          "collection": "<ResourceType>",
+          "cardinality": "N",
+          "cardinalitySource": "runtime.fhir_capabilities.storable_resource_types",
+          "description": "Each active storable resource type receives an independent collection with the same canonical/operational document boundary."
+        }
+      ]
+    }
+  },
+
+  "physicalProfiles": {
+    "encodingProfiles": [
+      {
+        "id": "profile.canonical_fhir_json",
+        "title": "Canonical FHIR JSON at document root",
+        "description": "FHIR property names, nesting, arrays, choice elements, extensions, and primitive extensions remain recognizable. Activation selects the R4, R5, or R6 support tier.",
+        "payload": { "mode": "full", "location": "document-root" },
+        "keys": { "mode": "verbatim" },
+        "ids": { "fhir": ["resourceType", "id"], "mongo": "_id" },
+        "isDefault": true
+      }
+    ],
+    "operationalProjection": {
+      "description": "Implementation fields stored atomically with the canonical resource and removed from FHIR-facing responses.",
+      "fields": {
+        "_search": "Typed search-parameter projections generated from the active fhir-mql resource configuration.",
+        "_compartments": "Resolved compartment memberships such as `_compartments.Patient` when configured.",
+        "_kehrnel": "Accelerator-owned metadata: stored-document schema version, global and per-resource projection versions, FHIR release, and persistence/projection timestamps.",
+        "_custom": "Customer-owned non-FHIR data preserved across canonical resource updates.",
+        "_enrichments": "Partner or accelerator enrichment data preserved across canonical resource updates."
+      },
+      "serializationDenylist": ["_id", "_search", "_compartments", "_kehrnel", "_stored_at", "_fhir_resource_type", "_custom", "_enrichments"]
+    }
+  },
+
+  "storageModel": {
+    "indexContract": {
+      "description": "Identity and search indexes have different sources of truth. The storage adapter enforces logical-id uniqueness; fhir-mql supplies ordinary MongoDB index definitions for the resource types supported by the active configuration. Standard FHIR Search does not require Atlas Search.",
+      "configResolved": true,
+      "identity": { "name": "id_unique", "type": "unique", "fields": ["id"], "scope": "each materialized per-resource-type collection", "source": "MongoFHIRStorageAdapter" },
+      "search": { "source": "active fhir-mql resource configuration", "planner": "fhir_ensure_indexes", "note": "Use the runtime dry-run result to review exact collection names, fields, and options before applying indexes. Index use remains query- and selectivity-dependent." },
+      "fieldConfigPaths": {
+        "collectionPrefix": "config.collection_prefix",
+        "searchEnabled": "config.search.enabled",
+        "autoIndex": "mandatory"
+      }
+    },
+    "stores": [
+      {
+        "id": "store:<ResourceType>",
+        "title": "FHIR resource collection family",
+        "engine": "mongodb",
+        "destinationType": "collection-family",
+        "collectionNameFromConfig": "config.collection_prefix + resourceType",
+        "cardinality": "N = active storable resource types",
+        "cardinalitySource": "runtime.fhir_capabilities.storable_resource_types",
+        "purpose": "Abstract storage family for every resource type admitted by the active release and capability contract.",
+        "indexes": [
+          {
+            "id": "idx.<resourceType>.id",
+            "name": "id_unique",
+            "type": "unique",
+            "fields": ["id"],
+            "requirement": "required",
+            "purpose": "FHIR logical-id uniqueness inside each concrete resource collection."
+          }
+        ],
+        "searchIndexes": { "source": "runtime.fhir-mql", "kind": "standard_mongodb" }
+      }
+    ],
+    "storePattern": {
+      "title": "Collection<ResourceType>",
+      "description": "A concrete collection follows this pattern when a supported resource type is persisted. The runtime capability response is authoritative for storable, searchable, and generatable resource sets.",
+      "collectionName": "config.collection_prefix + resourceType",
+      "canonicalFields": ["resourceType", "id", "meta", "extension", "_<primitiveName>", "<resource-specific fields>"],
+      "operationalFields": ["_id", "_search", "_compartments", "_kehrnel"],
+      "identityIndex": "id_unique",
+      "searchIndexes": "resolved from the active fhir-mql configuration"
+    }
+  },
+
+  "transformModel": {
+    "pipeline": [
+      { "id": "step.receive", "op": "fhir.receive", "title": "Receive FHIR payload", "in": "artifact.fhir_payload", "out": "artifact.resource_batch", "visual": { "group": "Ingest", "icon": "FileJson", "notes": "Accept one resource, a Bundle, an array, or NDJSON and normalize it to bounded resource batches." } },
+      { "id": "step.validate", "op": "fhir.validate", "title": "Validate at the selected level", "in": "artifact.resource_batch", "out": "artifact.validated_resources", "visual": { "group": "Ingest", "icon": "CheckCircle", "notes": "Enforces safe routing and identity invariants. R5/R6 can use bundled base-schema validation; the provisional R4 tier is structural only. Profile conformance is not claimed." } },
+      { "id": "step.project", "op": "fhir.project_search", "title": "Build operational projections", "in": "artifact.validated_resources", "out": "artifact.projected_resources", "visual": { "group": "Transform", "icon": "Layers", "notes": "fhir-mql extracts configured typed search values and compartment memberships into `_search` and `_compartments`." } },
+      { "id": "step.route", "op": "fhir.route", "title": "Route by resourceType", "in": "artifact.projected_resources", "out": "artifact.collection_batches", "visual": { "group": "Transform", "icon": "Route", "notes": "Resolve `config.collection_prefix + resourceType`; the discriminator is never inferred from another field." } },
+      { "id": "step.persist", "op": "fhir.persist", "title": "Persist canonical + operational document", "in": "artifact.collection_batches", "toStore": "store:<resourceType>", "visual": { "group": "Materialize", "icon": "Database", "notes": "Create or replace by logical id through the storage adapter. The search projection is written atomically with the canonical fields." } }
+    ],
+    "invariants": [
+      "Every persisted resource has a valid non-empty `resourceType` and FHIR logical `id`.",
+      "Logical identity is `(resourceType, id)`; `id` is unique inside each per-type collection.",
+      "MongoDB-unsafe property names are rejected at the import boundary.",
+      "Client-supplied operational fields are removed before validation and projection.",
+      "FHIR serialization removes only the explicit operational denylist and preserves primitive-extension fields.",
+      "The validation level and resource type must be supported by the activated release tier."
+    ]
+  },
+
+  "queryModel": {
+    "summary": "FHIR REST interactions and FHIR Search remain the user-facing contract. The compiler makes their ordinary MongoDB filter, sort, pagination, and index plan visible. Atlas Search is not used for standard FHIR Search; optional semantic retrieval uses Atlas Vector Search as a separate capability.",
+    "modes": [
+      { "id": "resource_read", "title": "Read by type and logical id", "uses": ["store:<ResourceType>"], "pattern": "findOne", "primaryFilters": ["id"], "filter": "{ id: <logical-id> }", "index": "id_unique", "notes": "Returns canonical FHIR JSON after removing documented operational fields." },
+      { "id": "type_search", "title": "Resource-type search", "uses": ["store:<ResourceType>", "runtime:fhir-mql"], "pattern": "FHIR Search → MQL find", "primaryFilters": ["configured search parameters"], "pathPredicate": { "field": "_search.<resolved-field>", "operator": "typed by search parameter" }, "filter": "Compiled from the URL/query tuple by the active resource configuration", "index": "resource-specific runtime index when the query shape matches", "notes": "Strict handling fails closed on unknown or unsupported parameters. Index use is verified with the generated MQL and MongoDB explain, not guaranteed by the model alone." },
+      { "id": "compartment_search", "title": "Compartment search", "uses": ["store:<ResourceType>", "runtime:fhir-mql", "_compartments"], "pattern": "FHIR compartment URL → MQL", "primaryFilters": ["compartment type", "compartment id", "configured search parameters"], "pathPredicate": { "field": "_compartments.<CompartmentType>", "operator": "membership" }, "notes": "Available when the active resolver supports the requested compartment/resource combination. It does not assume every patient-related resource uses one generic `_search.patient` field." },
+      { "id": "compile_explain", "title": "Compile and inspect", "uses": ["runtime:fhir-mql"], "pattern": "compile-only", "primaryFilters": ["resource type", "FHIR Search expression"], "notes": "Returns the target collection, MongoDB filter, result controls, and ignored parameters without executing the query. This is the primary learning and migration-debugging workflow in Healthcare Data Lab." }
+    ],
+    "resultControls": {
+      "supported": ["_count", "_offset", "_sort"],
+      "rejected": ["_total", "_summary", "_elements", "_contained", "_include", "_revinclude"]
+    },
+    "unsupportedBoundaries": [
+      "Chaining beyond the runtime-advertised hop limit",
+      "_include and _revinclude",
+      "History interactions",
+      "Transactions and batches with transactional semantics",
+      "Conditional create/update/delete",
+      "Unconfigured profile, invariant, reference, or terminology conformance",
+      "Automatic extraction of terminology binding policy from implementation guides"
+    ],
+    "runtimeEvidence": "Use `fhir_capabilities` for the active storable, searchable, and generatable resource sets, search-parameter names/types, result controls, validation levels, chaining limits, profile validation, and terminology validation policy."
+  },
+
+  "visualization": {
+    "canvas": {
+      "defaultView": "architecture",
+      "views": [
+        { "id": "architecture", "title": "Architecture", "shows": ["logicalModel", "collectionModel"], "layout": { "type": "grid", "columns": 2 } },
+        { "id": "collections", "title": "Collections", "shows": ["collectionModel"], "layout": { "type": "free" } },
+        { "id": "transform", "title": "Transform", "shows": ["transformGraph"], "layout": { "type": "dag", "direction": "LR" } }
+      ]
+    },
+    "colors": { "source": "#3b82f6", "intermediate": "#8b5cf6", "sink": "#10b981" },
+    "grouping": {
+      "Ingest": { "label": "Ingest", "color": "#3b82f6" },
+      "Transform": { "label": "Transform", "color": "#8b5cf6" },
+      "Materialize": { "label": "Materialize", "color": "#10b981" }
+    },
+    "legends": {
+      "canonical": { "label": "Canonical FHIR fields", "color": "#10b981" },
+      "operational": { "label": "MongoDB operational projection", "color": "#06b6d4" },
+      "collection-family": { "label": "One collection per active resource type", "color": "#3b82f6" },
+      "pathLegend": {
+        "entries": [
+          { "label": "resourceType", "meaning": "FHIR discriminator and collection-routing key", "example": "Observation" },
+          { "label": "id", "meaning": "logical id unique inside one resource type", "example": "obs-123" },
+          { "label": "choice[x]", "meaning": "abstract choice element rendered as one concrete type-specific property", "example": "valueQuantity" },
+          { "label": "Reference<T>", "meaning": "FHIR relationship to one of the allowed target types; not an implicit join", "example": "Patient/123" },
+          { "label": "_<primitiveName>", "meaning": "canonical FHIR primitive extension, preserved during serialization", "example": "_birthDate" },
+          { "label": "_search", "meaning": "typed operational search projections generated by fhir-mql", "example": "resource-configuration dependent" },
+          { "label": "_compartments", "meaning": "operational compartment memberships", "example": { "Patient": ["123"] } },
+          { "label": "_kehrnel", "meaning": "stored shape and projection versions plus operational timestamps", "example": "storage_schema_version: 2" },
+          { "label": "_custom / _enrichments", "meaning": "reserved partner and customer namespaces preserved atomically across canonical FHIR updates and never returned by the FHIR API", "example": "customer-owned extension data" }
+        ]
+      }
+    },
+    "collectionModel": {
+      "summary": "One MongoDB collection is used for each enabled FHIR resource type. The active capability contract determines how many types are available, while collections are created only when that type is first written.",
+      "examples": ["Patient", "Observation", "Encounter", "…"],
+      "materialization": "Lazy: only resource types containing data have physical collections and indexes.",
+      "template": {
+        "id": "coll.resource_template",
+        "label": "FHIR resource collection family",
+        "cardinality": "N = active storable resource types",
+        "cardinalitySource": "runtime.fhir_capabilities.storable_resource_types",
+        "fields": ["_id", "resourceType", "id", "meta", "extension[]", "_<primitiveName>", "choice[x]", "Reference<T>", "<resource-specific fields>", "_search", "_compartments", "_kehrnel"]
+      },
+      "entities": [
+        {
+          "id": "coll.resource_template",
+          "kind": "collection-family",
+          "store": "store:<ResourceType>",
+          "label": "FHIR resource collection family",
+          "description": "One collection per enabled resource type, such as Patient, Observation, or Encounter. Each collection and its indexes materialize on first write.",
+          "fields": ["_id", "resourceType", "id", "meta", "extension[]", "_<primitiveName>", "choice[x]", "Reference<T>", "<resource-specific fields>", "_search", "_compartments", "_kehrnel", "_custom", "_enrichments"],
+          "expand": {
+            "resourceType": ["selects the concrete FHIR shape and collection"],
+            "choice[x]": ["one concrete type-specific property"],
+            "Reference<T>": ["one of the targets allowed by the active base definition or profile"],
+            "_search": ["typed projections defined by the active fhir-mql resource configuration"],
+            "_compartments": ["runtime-resolved compartment memberships"],
+            "_kehrnel": ["stored-shape and projection versions plus operational timestamps"]
+          },
+          "fieldGroups": [
+            {
+              "label": "Canonical FHIR JSON",
+              "description": "Preserved at the document root and returned through the FHIR API.",
+              "fields": ["resourceType", "id", "meta", "extension[]", "_<primitiveName>", "choice[x]", "Reference<T>", "<resource-specific fields>"]
+            },
+            {
+              "label": "Mandatory search projections",
+              "description": "Generated before persistence and used by ordinary MongoDB indexes.",
+              "fields": ["_search", "_compartments"]
+            },
+            {
+              "label": "Operational metadata",
+              "description": "Accelerator-owned versioning and lifecycle information, excluded from FHIR responses.",
+              "fields": ["_id", "_kehrnel"]
+            },
+            {
+              "label": "Optional extensions",
+              "description": "Reserved customer and enrichment namespaces, also excluded from FHIR responses.",
+              "fields": ["_custom", "_enrichments"]
+            }
+          ],
+          "badges": ["canonical", "operational", "collection-family"],
+          "links": []
+        }
+      ]
+    },
+    "transformGraph": {
+      "layout": "LR",
+      "nodes": [
+        { "id": "src.fhir_payload", "kind": "source", "label": "FHIR JSON / Bundle / NDJSON" },
+        { "id": "src.cohort_blueprint", "kind": "source", "label": "Cohort blueprint + overrides" },
+        { "id": "op.plan_cohort", "kind": "transform", "label": "Compile deterministic cohort plan", "group": "Transform" },
+        { "id": "op.generate_cohort", "kind": "transform", "label": "Generate patient graphs + quality evidence", "group": "Transform" },
+        { "id": "op.validate", "kind": "transform", "label": "release-tier validation", "group": "Ingest" },
+        { "id": "op.project", "kind": "transform", "label": "Build _search + _compartments", "group": "Transform" },
+        { "id": "op.route", "kind": "transform", "label": "Route by resourceType", "group": "Transform" },
+        { "id": "sink.resource_collection", "kind": "sink", "label": "Collection<ResourceType>", "entityRef": "coll.resource_template" }
+      ],
+      "edges": [
+        { "from": "src.fhir_payload", "to": "op.validate" },
+        { "from": "src.cohort_blueprint", "to": "op.plan_cohort" },
+        { "from": "op.plan_cohort", "to": "op.generate_cohort" },
+        { "from": "op.generate_cohort", "to": "op.validate" },
+        { "from": "op.validate", "to": "op.project" },
+        { "from": "op.project", "to": "op.route" },
+        { "from": "op.route", "to": "sink.resource_collection" }
+      ]
+    },
+    "indexOverlay": {
+      "enabled": true,
+      "note": "The identity index is fixed by the storage contract. Ordinary MongoDB search indexes are shown from the active fhir-mql configuration and should be verified against real query plans. Atlas Vector Search applies only to separately configured semantic sidecars."
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "dicom-source-samples/v1",
+  "domain": "dicom",
+  "id": "dicom.public-imaging",
+  "version": "1.0.0",
+  "kind": "public",
+  "containsPixels": false,
+  "sourceContract": "customer study se[] + instance header/ContentIndex",
+  "encoding": "mongodb-extended-json/v2",
+  "provenance": {
+    "type": "licensed-public-dicom",
+    "retrievedOn": "2026-10-30",
+    "source": "NCI Imaging Data Commons / The Cancer Imaging Archive",
+    "collections": [
+      {
+        "id": "lidc_idri",
+        "doi": "10.7937/k9/tcia.2015.lo9ql9sx",
+        "license": "CC BY 3.0"
+      },
+      {
+        "id": "prostatex",
+        "doi": "10.7937/k9tcia.2017.murs5cl",
+        "license": "CC BY 3.0"
+      },
+      {
+        "id": "lung_pet_ct_dx",
+        "doi": "10.7937/tcia.2020.nnc2-0461",
+        "license": "CC BY 4.0"
+      },
+      {
+        "id": "cbis_ddsm",
+        "doi": "10.7937/k9/tcia.2016.7o02s9cy",
+        "license": "CC BY 3.0"
+      }
+    ]
+  },
+  "rights": {
+    "policy": "per-collection attribution",
+    "notes": "Retain source DOI and CC BY attribution. Metadata sample files contain no pixel bytes; each binaryRef resolves to public S3.",
+    "identityMapping": "In this public sample activation, centerId namespaces map to source collections; they do not identify clinical facilities."
+  },
+  "intendedUse": [
+    "public_showcase",
+    "developer_playground"
+  ],
+  "limitations": [
+    "De-identified source dates.",
+    "Public source PatientID is collection-scoped; no cross-collection clinical identity links.",
+    "Preview images are display transformations, not a clinical viewer.",
+    "PET values are not SUV and images are not registered/fused."
+  ],
+  "recommendedActivation": {
+    "tenant_id": "public_demo",
+    "allowed_centers": [
+      "PUBLIC_CBIS_DDSM",
+      "PUBLIC_LIDC_IDRI",
+      "PUBLIC_LUNG_PET_CT_DX",
+      "PUBLIC_PROSTATEX"
+    ]
+  },
+  "variants": {
+    "ct": {
+      "assets": {
+        "studies": {
+          "path": "ct/studies.json",
+          "sha256": "sha256:f1c152540b54cad6964dca2286bb39635283701189ae15153dc8cfd1c7deba02",
+          "bytes": 528
+        },
+        "instances": {
+          "path": "ct/instances.json",
+          "sha256": "sha256:c53ffec1846084cbe2103b7be3c7dd55551cf5295fcc0525aa1404860fd67069",
+          "bytes": 832041
+        }
+      },
+      "counts": {
+        "studies": 1,
+        "instances": 87
+      }
+    },
+    "mr": {
+      "assets": {
+        "studies": {
+          "path": "mr/studies.json",
+          "sha256": "sha256:9328bc9df70f7a39ae613ca5cc633209f88c974eba9597fef5a7ef7d408e6b3b",
+          "bytes": 609
+        },
+        "instances": {
+          "path": "mr/instances.json",
+          "sha256": "sha256:69bc5a4a89506dc7dcb4611eff94113ffefa9b0f473b44e24ee48ef85cbafc4d",
+          "bytes": 416881
+        }
+      },
+      "counts": {
+        "studies": 1,
+        "instances": 19
+      }
+    },
+    "mg": {
+      "assets": {
+        "studies": {
+          "path": "mg/studies.json",
+          "sha256": "sha256:8d924952bdac0b2eb75fb050163a50fa9dcd92b080cd2f678ceebb18039ba791",
+          "bytes": 587
+        },
+        "instances": {
+          "path": "mg/instances.json",
+          "sha256": "sha256:35734c3315d444423e32c81dd9b268dd619e77c009379f2dbb8c8e87bce370cb",
+          "bytes": 4967
+        }
+      },
+      "counts": {
+        "studies": 1,
+        "instances": 1
+      }
+    },
+    "linked-ct-pet": {
+      "assets": {
+        "studies": {
+          "path": "linked-ct-pet/studies.json",
+          "sha256": "sha256:7bec3cc281cca8d74b360d8f49770565ee1cb34e8fdebe9d61bbdc67fcbe2087",
+          "bytes": 846
+        },
+        "instances": {
+          "path": "linked-ct-pet/instances.json",
+          "sha256": "sha256:e514d379dc5668563e9603120f7d887122f5cb249ac175e310059b669db13a5e",
+          "bytes": 7739548
+        }
+      },
+      "counts": {
+        "studies": 1,
+        "instances": 406
+      }
+    }
+  }
+}

@@ -1,13 +1,13 @@
 # fhir-gen
 
-**FHIR R5 synthetic healthcare data generator** — schema-driven, interlinked, terminology-aware synthetic FHIR resources with optional MongoDB persistence and a full CLI.
+**FHIR R5/R6 synthetic healthcare data generator** — schema-driven, interlinked, terminology-aware synthetic FHIR resources with optional MongoDB persistence and a full CLI.
 
-Designed to pair with **[fhir-search-to-mql](../fhir-search-to-mql/)** for the same **84** resource types: generate interlinked data here, then denormalize and run FHIR search queries there.
+Designed to pair with **[fhir-search-to-mql](../fhir-search-to-mql/)** for its release-specific searchable resource set: generate interlinked data here, then denormalize and run FHIR search queries there.
 
 | Capability | Details |
 |------------|---------|
-| **Schema coverage** | **158** FHIR R5 resource types (`fhir_gen/schema/fhir.schema.v5.json`) |
-| **MQL-aligned enrichers** | **84** shipped types with YAML terminology + realistic fields (`MQL_SHIPPED_RESOURCES`) |
+| **Schema coverage** | **158** R5 and **127** R6 resource types from their bundled JSON schemas |
+| **MQL-aligned enrichers** | Shared enrichers with release-aware field shapes; persistence remains limited to the active search/projection capability set |
 | **Terminology** | `healthcare_codes.yaml` (**146** sections); `pick_code` / `codeable_from_section` helpers |
 | **Scenarios** | Named Patient/Practitioner/Person lifecycle + schema `poly_*` choice coverage (~49 types) |
 | **Dependencies** | `CORE_DEPENDENCIES` + topological `resolve_order()` for referential integrity |
@@ -92,7 +92,8 @@ Custom schema (INSTRUCTIONS #6):
 ```python
 from pathlib import Path
 
-gen.generate("Patient", count=1, schema_version="R6")
+gen = ResourceGenerator(seed=42, schema_version="R6")
+gen.generate("Patient", count=1)
 ```
 
 ---
@@ -232,7 +233,8 @@ fhir-gen db-stats
 
 ## Supported resources
 
-All **158** resources in `fhir_gen/schema/fhir.schema.v5.json` can be generated via the schema engine:
+All **158** R5 resources and all **127** R6 resources in their bundled schemas
+can be generated via the schema engine. R5 remains the CLI default:
 
 ```bash
 fhir-gen list-resources

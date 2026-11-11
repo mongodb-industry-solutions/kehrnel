@@ -6,7 +6,7 @@ from typing import Optional, List, Union, Dict, Any
 from pydantic import ValidationError
 
 from kehrnel.api.domains.openehr.ehr.service import (
-    create_ehr, retrieve_ehr_by_id, 
+    create_ehr, retrieve_ehr_by_id,
     retrieve_ehr_list,
     create_ehr_with_id,
     retrieve_ehr_by_subject,
@@ -17,10 +17,12 @@ from kehrnel.api.domains.openehr.ehr_status.models import EHRStatusCreate
 from kehrnel.api.domains.openehr.ehr.models import EHRCreationResponse, EHR
 
 from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
 from kehrnel.api.domains.openehr.ehr.api_responses import (
     get_ehr_by_id_responses,
     create_ehr_api_responses,
-    ehr_status_example, 
+    ehr_status_example,
     get_ehr_list_responses,
     get_ehr_by_subject_responses,
     delete_ehr_responses,
@@ -43,7 +45,8 @@ async def create_ehr_with_id_endpoint(
     response: Response,
     prefer: str = Header("return=minimal", alias="Prefer"),
     payload: Optional[Dict[str, Any]] = Body(default=None),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Creates a new EHR with a client-specified `ehr_id`.
@@ -59,7 +62,7 @@ async def create_ehr_with_id_endpoint(
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=e.errors())
 
     ehr_response = await create_ehr_with_id(
-        ehr_id=ehr_id, db=db, initial_status=initial_status
+        ehr_id=ehr_id, db=db, initial_status=initial_status, config=config
     )
 
     response.headers["Location"] = f"/v1/ehr/{ehr_response.ehr_id.value}"
@@ -81,14 +84,15 @@ async def create_ehr_with_id_endpoint(
 async def get_ehr_by_subject_or_list(
     subject_id: Optional[str] = Query(None, description="The EHR subject id."),
     subject_namespace: Optional[str] = Query(None, description="The EHR subject id namespace."),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves EHR resources. This endpoint has dual functionality:
 
     - **Find by Subject:** If `subject_id` and `subject_namespace` query parameters
       are provided, it returns the single EHR matching that subject.
-    
+
     - **List EHRs:** If no query parameters are provided, it retrieves a list
       of the 50 most recently created EHRs.
     """
@@ -98,12 +102,13 @@ async def get_ehr_by_subject_or_list(
         ehr_data = await retrieve_ehr_by_subject(
             subject_id=subject_id,
             subject_namespace=subject_namespace,
-            db=db
+            db=db,
+            config=config,
         )
         return ehr_data
-    
+
     # Otherwise, fall back to the original list functionality
-    ehr_list_data = await retrieve_ehr_list(db=db, limit=50)
+    ehr_list_data = await retrieve_ehr_list(db=db, limit=50, config=config)
     return ehr_list_data
 
 
@@ -116,7 +121,8 @@ async def get_ehr_by_subject_or_list(
 )
 async def get_ehr_by_id(
     ehr_id: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a single EHR resource based on its unique identifier (`ehr_id`).
@@ -126,7 +132,7 @@ async def get_ehr_by_id(
 
     If no EHR with the given `ehr_id` exists, a 404 Not Found error is returned.
     """
-    ehr_data = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db)
+    ehr_data = await retrieve_ehr_by_id(ehr_id=ehr_id, db=db, config=config)
     return ehr_data
 
 
@@ -138,7 +144,8 @@ async def get_ehr_by_id(
 )
 async def delete_ehr_endpoint(
     ehr_id: str,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Deletes an EHR and its related sandbox data from the active environment.
@@ -147,7 +154,7 @@ async def delete_ehr_endpoint(
     It removes the EHR resource together with its associated contributions and
     composition records stored in the active strategy collections.
     """
-    await delete_ehr(ehr_id=ehr_id, db=db)
+    await delete_ehr(ehr_id=ehr_id, db=db, config=config)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -162,11 +169,12 @@ async def create_ehr_endpoint(
     response: Response,
     prefer: str = Header("return=minimal", alias="Prefer"),
     payload: Optional[Dict[str, Any]] = Body(
-        default=None, 
+        default=None,
         description="Optional initial EHR_STATUS.",
         examples=ehr_status_example,
     ),
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Creates a new EHR with a server-generated `ehr_id`.
@@ -183,7 +191,8 @@ async def create_ehr_endpoint(
 
     ehr_response = await create_ehr(
         db=db,
-        initial_status=initial_status
+        initial_status=initial_status,
+        config=config,
     )
 
     # Set the response headers using the data from the service layer

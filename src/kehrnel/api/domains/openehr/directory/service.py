@@ -18,13 +18,15 @@ from kehrnel.api.domains.openehr.directory.repository import (
 from kehrnel.api.domains.openehr.ehr.repository import find_ehr_by_id
 from kehrnel.api.common.models import ObjectRef, HierObjectID, ObjectVersionID
 from kehrnel.api.bridge.app.core.models import Contribution, AuditDetails
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 
 async def retrieve_directory_by_version_id(
     ehr_id: str,
     version_uid: str,
     path: Optional[str],
-    db: AsyncIOMotorDatabase
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ) -> Tuple[Folder, Optional[datetime]]:
     """
     Retrieves a specific version of a directory for an EHR, optionally at a sub-path.
@@ -41,9 +43,9 @@ async def retrieve_directory_by_version_id(
     Raises:
         HTTPException: For various not-found scenarios.
     """
-    
+
     # 1. Validate that the EHR exists.
-    ehr_document = await find_ehr_by_id(ehr_id, db)
+    ehr_document = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -51,7 +53,7 @@ async def retrieve_directory_by_version_id(
         )
 
     # 2. Find the specific folder version within that EHR.
-    folder_result = await find_folder_in_contribution_by_uid(ehr_id, version_uid, db)
+    folder_result = await find_folder_in_contribution_by_uid(ehr_id, version_uid, db, config)
 
     if not folder_result:
         raise HTTPException(
@@ -72,7 +74,8 @@ async def create_directory(
     ehr_id: str,
     directory_payload: FolderCreate,
     db: AsyncIOMotorDatabase,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    config: CompositionCollectionNames | None = None,
 ) -> Tuple[Folder, datetime]:
     """
     Creates a directory for a given EHR
@@ -90,20 +93,20 @@ async def create_directory(
         HTTPException: 404 if EHR not found, 409 if directory exists, 500 on DB error.
     """
     # 1. Check if EHR exists
-    ehr_document = await find_ehr_by_id(ehr_id, db)
+    ehr_document = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id}' not foudn"
         )
-    
+
     # 2. Check if a directory already exists for this EHR
     if ehr_document.get("directory"):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"EHR with id '{ehr_id}' already has a directory."
         )
-    
+
     system_id = ehr_document["system_id"]["value"]
     time_created = datetime.now(timezone.utc)
 
@@ -137,7 +140,7 @@ async def create_directory(
         namespace="local",
         type="FOLDER"
     )
-    
+
     contribution_ref = ObjectRef(
         id=HierObjectID(value=contribution_id),
         namespace="local",
@@ -151,7 +154,8 @@ async def create_directory(
             directory_ref=directory_ref.model_dump(by_alias=True),
             contribution_doc=contribution.model_dump(by_alias=True),
             contribution_ref=contribution_ref.model_dump(by_alias=True),
-            db=db
+            db=db,
+            config=config,
         )
     except PyMongoError as e:
         raise HTTPException(
@@ -181,7 +185,7 @@ def _parse_and_increment_version_uid(version_uid: str) -> Tuple[str, str]:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Invalid version_uid format: {version_uid}. Error: {e}"
         )
-    
+
 
 async def update_directory(
     ehr_id: str,
@@ -189,6 +193,7 @@ async def update_directory(
     directory_payload: FolderCreate,
     db: AsyncIOMotorDatabase,
     committer_name: str = "System",
+    config: CompositionCollectionNames | None = None,
 ) -> Tuple[Folder, datetime]:
     """
     Updates the directory for a given EHR.
@@ -208,20 +213,20 @@ async def update_directory(
     """
 
     # 1. Check if EHR exists
-    ehr_document = await find_ehr_by_id(ehr_id, db)
+    ehr_document = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id}' not found",
         )
-    
+
     # 2. Check if a directory exists for this EHR
     if "directory" not in ehr_document or ehr_document["directory"] is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id}' does not have a directory to update.",
         )
-    
+
     # 3. Optimistic Locking: Validate the If-Match header
     current_version_uid = ehr_document["directory"]["id"]["value"]
     if if_match_uid != current_version_uid:
@@ -234,7 +239,7 @@ async def update_directory(
             detail=f"If-Match header '{if_match_uid}' does not match current version '{current_version_uid}'.",
             headers=headers
         )
-    
+
     # 4. Create the new version of the Folder
     new_version_uid, folder_uuid = _parse_and_increment_version_uid(current_version_uid)
 
@@ -280,7 +285,8 @@ async def update_directory(
             directory_ref=directory_ref.model_dump(by_alias=True),
             contribution_doc=contribution.model_dump(by_alias=True),
             contribution_ref=contribution_ref.model_dump(by_alias=True),
-            db=db
+            db=db,
+            config=config,
         )
     except PyMongoError as e:
         raise HTTPException(
@@ -311,7 +317,7 @@ def _find_subfolder_by_path(root_folder: Folder, path: str) -> Folder:
 
     if not path_parts:
         return root_folder
-    
+
     current_folder = root_folder
     for i, part in enumerate(path_parts):
         found_folder = next(
@@ -327,7 +333,7 @@ def _find_subfolder_by_path(root_folder: Folder, path: str) -> Folder:
                 detail=f"Path path '{part}' not found in folder '{found_path}/'. Full path '{path}' is invalid."
             )
         current_folder = found_folder
-    
+
     return current_folder
 
 
@@ -336,6 +342,7 @@ async def retrieve_directory(
     version_at_time: Optional[str],
     path: Optional[str],
     db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
 ) -> Tuple[Folder, str, Optional[datetime]]:
     """
     Retrieves a directory for an EHR, optionally at a specific time and sub-path.
@@ -354,13 +361,13 @@ async def retrieve_directory(
     """
 
     # 1. Check if EHR exists
-    ehr_document = await find_ehr_by_id(ehr_id, db)
+    ehr_document = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"EHR with id '{ehr_id}' not found"
         )
-    
+
     folder_dict = None
     time_committed: Optional[datetime] = None
     # 2. Decide how to fetch the directory (latest vs at_time)
@@ -372,7 +379,7 @@ async def retrieve_directory(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid 'version_at_time' format: '{version_at_time}'. Please use ISO 8601 format."
             )
-        folder_result = await find_folder_in_contribution_at_time(ehr_id, timestamp, db)
+        folder_result = await find_folder_in_contribution_at_time(ehr_id, timestamp, db, config)
     # Retrieve the latest version
     else:
         if "directory" not in ehr_document or ehr_document["directory"] is None:
@@ -381,7 +388,7 @@ async def retrieve_directory(
                 detail=f"EHR with id '{ehr_id}' does not have a directory.",
             )
         latest_version_uid = ehr_document["directory"]["id"]["value"]
-        folder_result = await find_folder_in_contribution_by_uid(ehr_id, latest_version_uid, db)
+        folder_result = await find_folder_in_contribution_by_uid(ehr_id, latest_version_uid, db, config)
 
     if folder_result:
         folder_dict, time_committed = folder_result
@@ -390,12 +397,12 @@ async def retrieve_directory(
     if not folder_dict:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No directory version found for EHR '{ehr_id}' at the specified time." 
+            detail=f"No directory version found for EHR '{ehr_id}' at the specified time."
                    if version_at_time else f"Directory for EHR '{ehr_id}' could not be found."
         )
 
     root_folder = Folder.model_validate(folder_dict)
-    
+
     root_version_uid = root_folder.uid.value
 
     # 4. If a path is provided, traverse the folder structure
@@ -410,7 +417,8 @@ async def delete_directory(
     ehr_id: str,
     preceding_version_uid: str,
     db: AsyncIOMotorDatabase,
-    committer_name: str = "System"
+    committer_name: str = "System",
+    config: CompositionCollectionNames | None = None,
 ):
     """
     Performs a logical deletion of an EHR's directory.
@@ -425,7 +433,7 @@ async def delete_directory(
         HTTPException: For not found, precondition failed, or database errors.
     """
     # 1. Check if EHR exists
-    ehr_document = await find_ehr_by_id(ehr_id, db)
+    ehr_document = await find_ehr_by_id(ehr_id, db, config)
     if not ehr_document:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -483,7 +491,8 @@ async def delete_directory(
             ehr_id=ehr_id,
             contribution_doc=contribution.model_dump(by_alias=True),
             contribution_ref=contribution_ref.model_dump(by_alias=True),
-            db=db
+            db=db,
+            config=config,
         )
     except PyMongoError as e:
         raise HTTPException(

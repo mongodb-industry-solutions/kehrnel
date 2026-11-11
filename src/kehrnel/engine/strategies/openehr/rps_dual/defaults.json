@@ -1,4 +1,5 @@
 {
+  "database": "openehr_cdr",
   "collections": {
     "compositions": {
       "name": "compositions_rps",
@@ -24,7 +25,7 @@
   },
   "ids": {
     "ehr_id": "string",
-    "composition_id": "objectid"
+    "composition_id": "string"
   },
   "paths": {
     "separator": ":"

@@ -17,6 +17,10 @@
     },
     {
       "templateId": "sample_laboratory_v0.4",
+      "provenance": {
+        "templateSourceDigest": "sha256:efb766020840e164f368fe35c77c512cc534d3b2a3f55115509e93a692941f0c",
+        "catalogDigest": "sha256:c742828e955a6adff737b0950ff59f5648deffbc0d4cc0458a7bf4830ee76cff"
+      },
       "fields": [
         {
           "name": "Start_time (Value)",
@@ -42,6 +46,26 @@
           "name": "Test result (Magnitude)",
           "path": "/content[openEHR-EHR-SECTION.diagnostic_reports.v0,'Laboratory test results list']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/magnitude",
           "rmType": "DV_QUANTITY"
+        },
+        {
+          "name": "Diagnosis archetype anchor",
+          "path": "/content[openEHR-EHR-SECTION.problem_list.v0]/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1]/archetype_node_id",
+          "rmType": "EVALUATION"
+        },
+        {
+          "name": "Diagnosis (Code)",
+          "path": "/content[openEHR-EHR-SECTION.problem_list.v0]/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1]/data[at0001]/items[at0002]/value/defining_code/code_string",
+          "rmType": "DV_CODED_TEXT"
+        },
+        {
+          "name": "Diagnosis (Terminology identifier)",
+          "path": "/content[openEHR-EHR-SECTION.problem_list.v0]/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1]/data[at0001]/items[at0002]/value/defining_code/terminology_id/value",
+          "rmType": "DV_CODED_TEXT"
+        },
+        {
+          "name": "Date/time clinically recognised (Value)",
+          "path": "/content[openEHR-EHR-SECTION.problem_list.v0]/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1]/data[at0001]/items[at0003]/value/value",
+          "rmType": "DV_DATE_TIME"
         }
       ]
     }

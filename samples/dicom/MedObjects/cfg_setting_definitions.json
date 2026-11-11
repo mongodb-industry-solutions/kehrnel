@@ -1,0 +1,621 @@
+[
+  {
+    "_id": "API:LogRawBody",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Bool",
+    "description": "Whether the raw request body is included in diagnostic logs (never enable with real patient data in a shared log sink).",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.883Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.883Z"
+    }
+  },
+  {
+    "_id": "Anonymization:ExportCheckpointKey",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": null,
+    "description": "Master value protecting the resume checkpoint of a batch de-identified export. A batch job records which new UID it gave each original one, so that a job which dies halfway can carry on giving the remaining studies identifiers that still line up with the ones already written. The ORIGINAL UIDs are never stored: they are keyed-hashed with a subkey derived from this value, because an original StudyInstanceUID looks up in `studies` and returns a PatientID. Any long random value; 32 characters minimum. NOTHING TO DO WITH RE-IDENTIFICATION: it is not a profile salt and it is not Anonymization:PseudonymMapKey, and it must not be set to the same value as either. Rotating it makes in-flight checkpoints unreadable, so a job running at that moment restarts from the beginning; it does not affect the pseudonym registry at all.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "String"
+  },
+  {
+    "_id": "Anonymization:ExportJobLeaseMinutes",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": "10",
+    "description": "Minutes a worker's claim on an export job survives without being renewed. Progress on each study renews it, so this is really 'how long a single study may take before another replica assumes this one died'. Too short and two workers fight over one job; too long and a crashed job sits idle before anything resumes it.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "Int"
+  },
+  {
+    "_id": "Anonymization:ExportJobMaxAttempts",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": "3",
+    "description": "How many times an export job may be handed back after an unclassified failure before it is given up on and marked failed. Counts ABANDONMENTS, not claims: a healthy but slow batch that legitimately changes hands when its lease lapses does not consume the budget. Reaching the limit deletes everything the job had written.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "Int"
+  },
+  {
+    "_id": "Anonymization:ExportJobPollSeconds",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": "10",
+    "description": "Seconds the export worker waits between polls. Also the base of the retry backoff applied when a job is handed back after an unclassified failure. Floored at 2 seconds: a shorter interval turns a repeatedly failing job into a hot loop against MongoDB for no benefit.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "Int"
+  },
+  {
+    "_id": "Anonymization:ExportProfileId",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "description": "Id of the anonymization profile offered by default when studies from this center are exported (a research batch, a DICOMDIR, a download). A default, not a ceiling: the person launching the export picks the profile and may choose another one. Non destructive - the stored study is never modified.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-09-09T06:04:10.047Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-09T06:04:10.047Z"
+    }
+  },
+  {
+    "_id": "Anonymization:ExportResumeWindowHours",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": "24",
+    "description": "Hours that the working state of an unfinished batch export waits to be resumed before the job is given up on and everything it wrote is deleted: the loose anonymised instances and the resume checkpoint. Deliberately separate from Anonymization:ExportRetentionHours and much shorter — that one is how long a finished DELIVERY stays downloadable, this is how long unfinished WORK waits for someone to come back for it. Sharing one number left a job that died with its instances and its instance-level UID inventory sitting in storage for a week. Floored at 1 hour.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "Int"
+  },
+  {
+    "_id": "Anonymization:ExportRetentionHours",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": "168",
+    "description": "Hours a finished export job, its resume checkpoints and its sealed artefact stay available before they are removed. A delivery that stays downloadable forever is a copy of patient-derived data nobody decided to keep. The job document is reaped by a MongoDB TTL index; the artefact blob is removed separately by the worker's reaper sweep, which deletes any job prefix in the 'deid' container with no job document behind it — Mongo cannot reach a blob. Floored at 1 hour.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "Int"
+  },
+  {
+    "_id": "Anonymization:ExportWorkerEnabled",
+    "allowedValues": null,
+    "createdAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "defaultValue": "true",
+    "description": "Master switch for the batch de-identified export worker. Set to false to stop this deployment claiming export jobs at all — useful when a replica is being drained, or in an environment that must never produce research deliveries. Jobs already queued are left untouched and are picked up again as soon as it is re-enabled.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "templateParams": null,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:53.937Z"
+    },
+    "valueKind": "Bool"
+  },
+  {
+    "_id": "Anonymization:IngestProfileId",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "description": "Id of the anonymization profile applied to everything this center ingests, before it is persisted. Leave unset for no anonymization at ingestion, which is the right default: anonymizing on the way in is destructive and leaves the archive unreadable for clinical use. Only set it for a center that feeds research only, or to a profile of kind 'identified' that just cleans context and keeps the patient.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-09-09T06:04:09.954Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-09T06:04:09.954Z"
+    }
+  },
+  {
+    "_id": "Anonymization:PseudonymMapKey",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:33.264Z"
+    },
+    "defaultValue": null,
+    "description": "Master key protecting the pseudonym registry (anon_pseudonym_map): it seals each stored PatientID with AES-GCM and keys the blind index used to find a patient's rows without decrypting them. Must be a long random value (32 characters minimum) and must NOT be the same value as any profile's HMAC salt — the two protect against different attackers, and sharing them means rotating one to contain a leak breaks the other. Never readable back through the configuration API. Rotating it requires re-encrypting every registry row and recomputing every blind index; rotating a salt, by contrast, leaves the registry untouched.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "sensitive": true,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:33.264Z"
+    },
+    "valueKind": "String"
+  },
+  {
+    "_id": "Anonymization:ReidentifyMaxCandidates",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:49.106Z"
+    },
+    "defaultValue": "500000",
+    "description": "Maximum number of patients one authorised re-identification may examine before it stops and reports the attempt as inconclusive (CFG054). Absent or non-positive means the built-in default of 500000. It is a protection against a single reveal holding a request open on a very large archive, not a permission: narrowing 'centerIds' is the normal way to come back under it.",
+    "schemaVersion": 1,
+    "scopes": [
+      "Global"
+    ],
+    "sensitive": false,
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:49.106Z"
+    },
+    "valueKind": "Int"
+  },
+  {
+    "_id": "Anonymization:ResearchSalt",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "String",
+    "description": "Sal HMAC dun perfil pseudonim. El perfil hi apunta pel NOM, mai pel valor.",
+    "sensitive": true,
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-09-14T07:31:32.588Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:49.106Z"
+    }
+  },
+  {
+    "_id": "ApplicationInsights:TrackMongoDependencies",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Bool",
+    "description": "Whether MongoDB commands are instrumented as Application Insights dependency telemetry.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.800Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.800Z"
+    }
+  },
+  {
+    "_id": "HL7:AckSendingApp",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "defaultValue": "RAIMCLOUD",
+    "description": "MSH-3 (Sending Application) value stamped on outgoing HL7 ACK messages.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:27.763Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:27.763Z"
+    }
+  },
+  {
+    "_id": "HL7:AckSendingFacility",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "description": "MSH-4 (Sending Facility) value stamped on outgoing HL7 ACK messages.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:27.843Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:27.843Z"
+    }
+  },
+  {
+    "_id": "Identity:BridgeSystems:{system}:description",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "description": "Human-readable description of this identity bridge system, shown in admin UIs.",
+    "templateParams": [
+      {
+        "name": "system",
+        "label": "Bridge system code"
+      }
+    ],
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.164Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.164Z"
+    }
+  },
+  {
+    "_id": "Identity:BridgeSystems:{system}:enabled",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "Bool",
+    "defaultValue": "true",
+    "description": "Whether this identity bridge system currently accepts new cross-reference registrations.",
+    "templateParams": [
+      {
+        "name": "system",
+        "label": "Bridge system code"
+      }
+    ],
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.244Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.244Z"
+    }
+  },
+  {
+    "_id": "Identity:BridgeSystems:{system}:normalize",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "Enum",
+    "allowedValues": [
+      "upper",
+      "lower",
+      "none"
+    ],
+    "defaultValue": "upper",
+    "description": "Case normalization applied to a bridge value before it is persisted/matched for this system.",
+    "templateParams": [
+      {
+        "name": "system",
+        "label": "Bridge system code"
+      }
+    ],
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.323Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.323Z"
+    }
+  },
+  {
+    "_id": "Identity:BridgeSystems:{system}:pattern",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "description": "Regex a bridge value must match to be accepted for this identity bridge system.",
+    "templateParams": [
+      {
+        "name": "system",
+        "label": "Bridge system code (CIP, DNI, NIE, passport…)"
+      }
+    ],
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.085Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.085Z"
+    }
+  },
+  {
+    "_id": "MongoConfig:RefreshIntervalSeconds",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Int",
+    "defaultValue": "10",
+    "description": "Seconds between MongoConfigRefreshBackgroundService ticks that poll the App:Sentinel for config changes.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.960Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.960Z"
+    }
+  },
+  {
+    "_id": "QIDO:DefaultLimit",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Int",
+    "defaultValue": "65536",
+    "description": "QIDO-RS page size used when the client sends no explicit limit.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.400Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.400Z"
+    }
+  },
+  {
+    "_id": "QIDO:ForbiddenIncludeFields",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Csv",
+    "description": "Comma-separated list of DICOM tags QIDO-RS refuses to accept in ?includefield=.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.721Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.721Z"
+    }
+  },
+  {
+    "_id": "QIDO:MaxLimitInstances",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Int",
+    "defaultValue": "32768",
+    "description": "QIDO-RS max page size cap for instance-level queries.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.638Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.638Z"
+    }
+  },
+  {
+    "_id": "QIDO:MaxLimitSeries",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Int",
+    "defaultValue": "8192",
+    "description": "QIDO-RS max page size cap for series-level queries.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.561Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.561Z"
+    }
+  },
+  {
+    "_id": "QIDO:MaxLimitStudies",
+    "scopes": [
+      "Global"
+    ],
+    "valueKind": "Int",
+    "defaultValue": "4096",
+    "description": "QIDO-RS max page size cap for studies-level queries.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.481Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.481Z"
+    }
+  },
+  {
+    "_id": "Wado:RedirectThresholdBytes",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "Long",
+    "defaultValue": "1048576",
+    "description": "Instance size (bytes) above which WADO-RS redirects to blob storage instead of streaming the response inline.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:27.921Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:27.921Z"
+    }
+  },
+  {
+    "_id": "Wado:SasExpirationMinutes",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "Int",
+    "description": "Lifetime (minutes) of the SAS token issued for a WADO-RS blob-storage redirect.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:28.003Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:28.003Z"
+    }
+  },
+  {
+    "_id": "Worklist:ByAet:{aet}:SyntheticAccessionPrefix",
+    "scopes": [
+      "Center"
+    ],
+    "valueKind": "String",
+    "description": "Per-AET override of Worklist:SyntheticAccessionPrefix.",
+    "templateParams": [
+      {
+        "name": "aet",
+        "label": "AET (Application Entity Title)"
+      }
+    ],
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:29.130Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:29.130Z"
+    }
+  },
+  {
+    "_id": "Worklist:ByAet:{aet}:ValidationEnabled",
+    "scopes": [
+      "Center"
+    ],
+    "valueKind": "Bool",
+    "description": "Per-AET override of Worklist:ValidationEnabled — validates only traffic from this AET.",
+    "templateParams": [
+      {
+        "name": "aet",
+        "label": "AET (Application Entity Title)"
+      }
+    ],
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:29.050Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:29.050Z"
+    }
+  },
+  {
+    "_id": "Worklist:MatchMarginMinutes",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "Int",
+    "description": "Time window (minutes) around a scheduled procedure step used when matching an incoming study to a worklist item.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:27.605Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:27.605Z"
+    }
+  },
+  {
+    "_id": "Worklist:SyntheticAccessionPrefix",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "String",
+    "defaultValue": "SYN",
+    "description": "Prefix used when synthesizing an AccessionNumber for a study that arrives without a worklist match.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:27.685Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:27.685Z"
+    }
+  },
+  {
+    "_id": "Worklist:ValidationEnabled",
+    "scopes": [
+      "Global",
+      "Center"
+    ],
+    "valueKind": "Bool",
+    "defaultValue": "true",
+    "description": "Whether inbound HL7/DICOM traffic is matched against the worklist before ingestion.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:27.523Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:27.523Z"
+    }
+  },
+  {
+    "_id": "heartbeatSeconds",
+    "scopes": [
+      "Node"
+    ],
+    "valueKind": "Int",
+    "defaultValue": "30",
+    "description": "Interval (seconds) at which a DIMSE node sends its POST /Status heartbeat.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:29.211Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:29.211Z"
+    }
+  },
+  {
+    "_id": "receptionFolder",
+    "scopes": [
+      "Node"
+    ],
+    "valueKind": "String",
+    "description": "Filesystem path where the DIMSE node stages incoming files before ingestion.",
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-08-26T19:35:29.294Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T19:35:29.294Z"
+    }
+  }
+]

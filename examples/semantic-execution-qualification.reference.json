@@ -1,0 +1,81 @@
+{
+  "contract": "semantic-execution-qualification-spec/v1",
+  "qualificationId": "healthcare-semantic-reference",
+  "environmentId": "replace-with-environment-id",
+  "baseUrl": "http://127.0.0.1:8080",
+  "probes": [
+    {
+      "probeId": "openehr-heart-failure",
+      "kind": "openehr-terminology-query",
+      "templateId": "sample_laboratory_v0.4",
+      "request": {
+        "contract": "openehr-terminology-query-plan-request/v1",
+        "query": {
+          "contract": "openehr-semantic-query/v1",
+          "scope": "cross_patient",
+          "templateRef": {
+            "templateId": "sample_laboratory_v0.4",
+            "sourceDigest": "sha256:efb766020840e164f368fe35c77c512cc534d3b2a3f55115509e93a692941f0c",
+            "catalogDigest": "sha256:c742828e955a6adff737b0950ff59f5648deffbc0d4cc0458a7bf4830ee76cff"
+          },
+          "select": [
+            "ehr_id",
+            "composition_uid"
+          ],
+          "predicates": [
+            {
+              "semanticUnitId": "openehr-field:sha256:31a8f9a99073278a4402673c2d03e4cf2f1168f80ed2a5f83a6cb34f15007cdc",
+              "facet": "code",
+              "operator": "matches",
+              "terminologyExpansionRef": "snomed-heart-failure-20260601",
+              "correlationGroup": "problem-instance"
+            },
+            {
+              "semanticUnitId": "openehr-field:sha256:8bffa2a0d60fe521d5d14e816032c15cb46bb664ffa7d87db1bd86160a2304fc",
+              "facet": "value",
+              "operator": "gte",
+              "value": "2025-01-01",
+              "correlationGroup": "problem-instance"
+            }
+          ],
+          "terminologyExpansions": [],
+          "limit": 50
+        },
+        "expansionRequests": [
+          {
+            "expansionId": "snomed-heart-failure-20260601",
+            "providerId": "snomed-local",
+            "systemUri": "http://snomed.info/sct",
+            "terminologyId": "SNOMED-CT",
+            "version": "http://snomed.info/sct/version/20260601",
+            "expression": "<< 84114007",
+            "maxCodes": 128
+          }
+        ]
+      }
+    },
+    {
+      "probeId": "fhir-heart-failure",
+      "kind": "fhir-terminology-cohort",
+      "request": {
+        "contract": "fhir-terminology-cohort-query-request/v1",
+        "resourceType": "Condition",
+        "codeSearchParameter": "code",
+        "criteria": {
+          "clinical-status": "active"
+        },
+        "sort": "_id",
+        "limit": 50,
+        "offset": 0,
+        "expansionRequest": {
+          "expansionId": "snomed-heart-failure-20260601",
+          "providerId": "snomed-local",
+          "systemUri": "http://snomed.info/sct",
+          "version": "http://snomed.info/sct/version/20260601",
+          "expression": "<< 84114007",
+          "maxCodes": 128
+        }
+      }
+    }
+  ]
+}

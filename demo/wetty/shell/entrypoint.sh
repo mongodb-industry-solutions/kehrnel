@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DEMO_USER="${DEMO_USER:-demo}"
+# The image provisions a single `demo` user (useradd and AllowUsers in the
+# Dockerfile), so the user is fixed; only the password is configurable.
+DEMO_USER=demo
 DEMO_PASSWORD="${DEMO_PASSWORD:-demo}"
 
 echo "${DEMO_USER}:${DEMO_PASSWORD}" | chpasswd

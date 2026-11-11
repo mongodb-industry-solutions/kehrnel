@@ -1,0 +1,46 @@
+[
+  {
+    "_id": "admin",
+    "GStrFullName": "Administrador",
+    "GStrEmail": "",
+    "GStrPassword": "REDACTED",
+    "GStrRole": "admin",
+    "GBolActive": true,
+    "GStrLanguage": "es",
+    "GStrCreated": "",
+    "GStrLastLogin": "15/10/2026 12:09",
+    "GLstStrCentreIds": [],
+    "GLstStrRoles": [
+      "admin"
+    ],
+    "GBolPendingAssignment": false,
+    "GStrAuthProvider": "local",
+    "GStrTenantId": "",
+    "GStrLandingPage": "",
+    "GIntFailedLoginAttempts": 0,
+    "GDtmLockedUntilUtc": null,
+    "GBolHasSeenOnboardingTour": true
+  },
+  {
+    "_id": "test",
+    "GStrFullName": "test",
+    "GStrEmail": "test@tesaaaaaaaat.com",
+    "GStrPassword": "REDACTED",
+    "GStrRole": "",
+    "GBolActive": true,
+    "GStrLanguage": "ca-ES",
+    "GStrCreated": "06/10/2026",
+    "GStrLastLogin": "06/10/2026 07:57",
+    "GLstStrCentreIds": [],
+    "GLstStrRoles": [
+      "manager"
+    ],
+    "GBolPendingAssignment": false,
+    "GStrAuthProvider": "local",
+    "GStrTenantId": "",
+    "GStrLandingPage": "",
+    "GIntFailedLoginAttempts": 0,
+    "GDtmLockedUntilUtc": null,
+    "GBolHasSeenOnboardingTour": true
+  }
+]

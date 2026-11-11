@@ -6,9 +6,20 @@ sidebar_position: 2
 
 ## Current state
 
+The four official strategies and the maturity each one declares in its manifest:
+
+| Strategy | Version | Maturity |
+|----------|---------|----------|
+| `openehr.rps_dual` | 0.2.0 | published |
+| `fhir.resource_store` | 0.13.1 | published |
+| `cdisc.sdr` | 0.2.0 | preview |
+| `snomedct.mongodb` | 0.6.0 | preview |
+
 `openehr.rps_dual` is the current production-grade reference strategy.
 
-`fhir.clinical_cdr` is an implemented reference strategy for native FHIR R5 persistence, synthetic generation, denormalization, and FHIR Search.
+`fhir.resource_store` is an implemented reference strategy for native FHIR persistence (R5 and R6 with the bundled release schemas, R4 as a minimal Patient/Observation tier), synthetic generation, denormalization, and FHIR Search.
+
+`cdisc.sdr` is a preview strategy for governed CDISC study snapshots (SEND, SDTM, ADaM and TIG): Dataset-JSON and SAS XPORT exchange, typed facets and lineage, and governed study queries.
 
 `snomedct.mongodb` is an implemented preview strategy for SNOMED CT terminology persistence. It includes pack discovery, manifest/spec/schema/defaults, canonical transform, local release discovery, inspect/diff/ingest ops, sidecar rebuild, index creation, lookup, basic ECL, lexical search, grounding, domain API routes, and contract tests.
 
@@ -40,3 +51,4 @@ Readiness criteria for "functional" strategies include:
 \{kehrnel\} strategy packs are designed as a learning and execution model for formal persistence strategy definition (`manifest.json`, `spec.json`, schema contracts).
 
 Roadmap exploration includes stronger formal modeling, including potential LinkML-aligned specifications.
+
