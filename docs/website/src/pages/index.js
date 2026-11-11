@@ -43,7 +43,7 @@ export default function Home() {
           <article className="kehrnel-card">
             <h2>Data Sampling</h2>
             <p>Sampling and synthetic job APIs support fast validation, dry runs, and quality checks.</p>
-            <Link to={useBaseUrl('/docs/concepts/data-sampling')}>Sampling model</Link>
+            <Link to={useBaseUrl('/docs/domains/openehr/concepts/data-sampling')}>Sampling model</Link>
           </article>
           <article className="kehrnel-card">
             <h2>Platform Vision</h2>

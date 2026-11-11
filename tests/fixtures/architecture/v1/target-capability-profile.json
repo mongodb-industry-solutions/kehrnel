@@ -1,0 +1,12 @@
+{
+  "contract": "target-capability-profile/v1",
+  "artifactRef": {"kind": "target-capability-profile", "id": "atlas-production", "version": "1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "deploymentId": "tenant-atlas-production",
+  "mongodbVersion": "8.0",
+  "topology": {"deploymentModel": "atlas-dedicated", "regions": ["eu-west-1"], "shardCount": 1, "searchNodeCount": 2},
+  "capabilities": [
+    {"capabilityId": "mongodb.transactions", "availability": "available", "version": "8.0", "constraints": {}},
+    {"capabilityId": "atlas.search", "availability": "available", "version": "current", "constraints": {"dedicatedNodes": true}},
+    {"capabilityId": "change.streams", "availability": "available", "version": "8.0", "constraints": {}}
+  ]
+}

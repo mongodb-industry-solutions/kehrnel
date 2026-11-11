@@ -1,0 +1,46 @@
+{
+  "$id": "urn:mongodb:data-lab:contracts:v1:operational-observation-check",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checkId": {
+      "enum": [
+        "active_release_present",
+        "expected_deployment_active",
+        "expected_package_active",
+        "deployment_artifact_integrity",
+        "readiness_artifact_integrity",
+        "preparation_artifact_integrity",
+        "runtime_evidence_integrity",
+        "strategy_runtime_health",
+        "schema_index_drift",
+        "data_freshness",
+        "reconciliation_integrity"
+      ],
+      "title": "Checkid",
+      "type": "string"
+    },
+    "detail": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Detail",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "passed",
+        "failed",
+        "unavailable"
+      ],
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "checkId",
+    "state",
+    "detail"
+  ],
+  "title": "OperationalObservationCheck",
+  "type": "object"
+}

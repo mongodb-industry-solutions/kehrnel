@@ -1,0 +1,11 @@
+{
+  "version": "dicom-query/v1",
+  "resource": "studies",
+  "filter": {
+    "patientId": "SYNTHETIC_PATIENT_1"
+  },
+  "limit": 100,
+  "centers": [
+    "DEMO_A"
+  ]
+}

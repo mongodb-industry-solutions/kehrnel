@@ -20,7 +20,13 @@ from kehrnel.api.strategies.openehr.rps_dual.synthetic.api_responses import (
     get_synthetic_stats_responses
 )
 from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import CompositionFlattener
-from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db, resolve_active_openehr_context
+from kehrnel.api.bridge.app.core.database import (
+    ensure_active_openehr_dictionaries,
+    get_mongodb_ehr_db,
+    resolve_active_openehr_context,
+)
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
 
 
 router = APIRouter(
@@ -31,10 +37,12 @@ router = APIRouter(
 
 async def get_flattener(request: Request) -> CompositionFlattener:
     """
-    Dependency to retrieve the globally initialized CompositionFlattener
+    Resolve the flattener owned by this request's active environment.
     """
-    await resolve_active_openehr_context(request, ensure_ingestion=True)
-    flattener = getattr(request.app.state, "flattener", None)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+    await ensure_active_openehr_dictionaries(request, context=context)
+    context = await resolve_active_openehr_context(request, ensure_ingestion=True)
+    flattener = context.get("flattener")
     if flattener is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -109,26 +117,27 @@ async def generate_synthetic_data_endpoint(
         }
     ),
     db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
-    flattener: CompositionFlattener = Depends(get_flattener)
+    flattener: CompositionFlattener = Depends(get_flattener),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Generate synthetic EHR data with compositions.
-    
+
     This endpoint creates synthetic clinical data for testing and development purposes.
     For each requested record, it will:
-    
+
     1. Create a new EHR with a synthetic patient subject
     2. Generate a randomized composition based on the provided template
     3. Link the composition to the EHR
     4. Store both canonical and flattened versions of the composition
-    
+
     **Features:**
     - Randomizes dates, identifiers, and clinical data
     - Creates realistic variations of the base template
     - Supports custom composition templates
     - Provides detailed response with creation statistics
     - Handles partial failures gracefully
-    
+
     **Default Template:**
     If no base_composition is provided, uses the packaged sample immunization template
     which includes vaccination data with randomized:
@@ -138,21 +147,17 @@ async def generate_synthetic_data_endpoint(
     - Healthcare provider information
     - Document metadata
     """
-    
+
     start_time = time.time()
-    
+
     # Use default vaccination composition if none provided
     base_composition = synthetic_request.base_composition
     if not base_composition:
         base_composition = get_default_vaccination_composition()
-    
-    # Get merge_search_docs configuration
-    target_search = request.app.state.config.get("target", {})
-    merge_search = target_search.get("search_compositions_merge", False)
 
-    # Use runtime target DB if available
-    db = getattr(request.app.state, "target_db", db)
-    
+    # Get merge_search_docs configuration
+    merge_search = config.merge_search_docs
+
     try:
         # Generate the synthetic data
         created_records = await generate_synthetic_data(
@@ -160,19 +165,20 @@ async def generate_synthetic_data_endpoint(
             base_composition=base_composition,
             count=synthetic_request.count,
             flattener=flattener,
-            merge_search_docs=merge_search
+            merge_search_docs=merge_search,
+            config=config,
         )
-        
+
         end_time = time.time()
         generation_time = end_time - start_time
-        
+
         # Convert to response models
         record_models = [SyntheticDataRecord(**record) for record in created_records]
-        
+
         # Calculate statistics
         successful_records = [r for r in record_models if r.error is None]
         failed_records = [r for r in record_models if r.error is not None]
-        
+
         response = SyntheticDataResponse(
             total_requested=synthetic_request.count,
             total_created=len(successful_records),
@@ -180,9 +186,9 @@ async def generate_synthetic_data_endpoint(
             generation_time_seconds=round(generation_time, 3),
             records=record_models
         )
-        
+
         return response
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -202,7 +208,7 @@ async def generate_synthetic_data_endpoint(
 async def get_synthetic_data_stats():
     """
     Get statistics about synthetic data generation.
-    
+
     Note: This is a placeholder endpoint. In a production system, you might want to:
     - Store statistics in the database
     - Track historical generation runs

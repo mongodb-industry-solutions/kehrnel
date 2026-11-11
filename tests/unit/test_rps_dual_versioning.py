@@ -107,6 +107,8 @@ def test_transform_composition_materializes_commit_time_for_base_and_search(monk
 
     assert base_doc["tid"] == "test-template"
     assert list(base_doc.keys())[:5] == ["ehr_id", "comp_id", "v", "time_c", "tid"]
+    assert base_doc["comp_id"] == "comp-1::my-openehr-server::1"
+    assert isinstance(base_doc["comp_id"], str)
     assert base_doc["time_c"] == committed_at
     assert all("ap" not in node for node in base_doc["cn"])
     assert search_doc is not None
@@ -117,7 +119,12 @@ def test_transform_composition_materializes_commit_time_for_base_and_search(monk
 
 
 def test_transform_composition_uses_configured_search_comp_id_field_name(monkeypatch):
-    flattener = _build_flattener({"fields": {"document": {"comp_id": "composition_uid"}}})
+    flattener = _build_flattener(
+        {
+            "ids": {"composition_id": "objectid"},
+            "fields": {"document": {"comp_id": "composition_uid"}},
+        }
+    )
 
     monkeypatch.setattr(
         flattener,
@@ -355,7 +362,7 @@ async def test_build_query_pipeline_treats_commit_time_as_implicit_value_path():
 
 @pytest.mark.asyncio
 async def test_build_query_pipeline_coerces_top_level_comp_id_to_objectid():
-    cfg = normalize_config({})
+    cfg = normalize_config({"ids": {"composition_id": "objectid"}})
     oid = "64b64c2e5f6270b5c2c2c2c2"
     ast = {
         "select": {
@@ -395,7 +402,7 @@ async def test_build_query_pipeline_coerces_top_level_comp_id_to_objectid():
 
 @pytest.mark.asyncio
 async def test_search_pipeline_builder_coerces_top_level_comp_id_to_objectid():
-    cfg = normalize_config({})
+    cfg = normalize_config({"ids": {"composition_id": "objectid"}})
     schema_cfg = build_schema_config(cfg)
     builder = SearchPipelineBuilder(
         "e",

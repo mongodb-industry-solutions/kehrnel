@@ -13,7 +13,7 @@ def client(tmp_path):
 def test_domain_routing_requires_domain_param(client):
     client.post(
         "/v1/environments/env-domains/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.2.0", "config": {"database": "kehrnel_contract_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     res = client.post("/v1/environments/env-domains/compile_query", json={"query": {"scope": "patient"}})
     assert res.status_code == 400
@@ -23,7 +23,7 @@ def test_domain_routing_requires_domain_param(client):
 def test_activate_stores_domain_keyed_activation(client):
     res = client.post(
         "/v1/environments/envA/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.2.0", "config": {"database": "kehrnel_contract_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     assert res.status_code == 200
     acts = client.get("/v1/environments/envA/activations").json()["activations"]
@@ -36,7 +36,7 @@ def test_activate_stores_domain_keyed_activation(client):
 def test_compile_query_domain_dispatch_stage0_strict(client):
     client.post(
         "/v1/environments/envB/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.2.0", "config": {"database": "kehrnel_contract_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     payload = {
         "domain": "openEHR",
@@ -57,7 +57,7 @@ def test_compile_query_domain_dispatch_stage0_strict(client):
 def test_endpoints_introspection_contains_expected_urls(client):
     client.post(
         "/v1/environments/envC/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.2.0", "config": {"database": "kehrnel_contract_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     res = client.get("/v1/environments/envC/endpoints")
     assert res.status_code == 200

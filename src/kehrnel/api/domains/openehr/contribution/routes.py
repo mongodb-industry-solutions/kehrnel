@@ -5,6 +5,8 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db
 from kehrnel.api.bridge.app.core.models import Contribution
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
 from kehrnel.api.domains.openehr.contribution.service import retrieve_contribution
 from kehrnel.api.domains.openehr.contribution.api_responses import get_contribution_responses
 
@@ -26,7 +28,8 @@ async def get_contribution_endpoint(
     ehr_id: str,
     contribution_uid: str,
     response: Response,
-    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db)
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
 ):
     """
     Retrieves a contribution by its unique identifier for a specific EHR.
@@ -36,7 +39,7 @@ async def get_contribution_endpoint(
     the committer, the time, and what versions were created.
     """
     contribution = await retrieve_contribution(
-        ehr_id=ehr_id, contribution_uid=contribution_uid, db=db
+        ehr_id=ehr_id, contribution_uid=contribution_uid, db=db, config=config
     )
 
     response.headers["Location"] = f"/v1/ehr/{ehr_id}/contribution/{contribution_uid}"

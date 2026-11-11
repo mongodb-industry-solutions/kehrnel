@@ -4,6 +4,7 @@ from copy import deepcopy
 
 import pytest
 
+from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.openehr.rps_dual.query.transformers.archetype_resolver import (
     ArchetypeResolver,
@@ -977,6 +978,46 @@ async def test_compile_query_raw_aql_rejects_order_by_projection_alias():
 
 
 @pytest.mark.asyncio
+async def test_compile_query_raw_aql_rejects_unmapped_order_by_path():
+    db = _build_fake_lab_db()
+    ctx = StrategyContext(
+        environment_id="env-1",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    raw_aql = """
+    SELECT
+        c/uid/value AS compositionId
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report_result.v1]
+    WHERE
+        c/name/value = 'Report'
+    ORDER BY
+        c/context/start_time/value DESC
+    """
+
+    with pytest.raises(KehrnelError) as caught:
+        await RPSDualStrategy().compile_query(
+            ctx,
+            "openEHR",
+            {
+                "raw_aql": raw_aql,
+                "debug": True,
+            },
+        )
+
+    assert caught.value.code == "AQL_ORDER_BY_UNSUPPORTED"
+    assert caught.value.status == 400
+    assert caught.value.details == {
+        "aqlPath": "c/context/start_time/value",
+        "alias": None,
+    }
+
+
+@pytest.mark.asyncio
 async def test_compile_query_raw_aql_resolves_content_paths_and_order_by_for_match_pipeline():
     db = _FakeDb(
         {
@@ -1363,6 +1404,40 @@ async def test_compile_query_raw_aql_supports_min_aggregate_on_standard_pipeline
 
 
 @pytest.mark.asyncio
+async def test_compile_query_raw_aql_never_drops_order_by_from_aggregate_pipeline():
+    db = _build_fake_lab_db()
+    ctx = StrategyContext(
+        environment_id="env-aggregate-order",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    raw_aql = """
+    SELECT
+        MIN(c/context/start_time/value) AS minStartTime
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+    WHERE
+        e/ehr_id/value = 'ehr-1'
+        AND c/archetype_details/template_id/value = 'sample_laboratory_v0.4'
+    ORDER BY
+        c/context/start_time/value DESC
+    """
+
+    with pytest.raises(KehrnelError) as caught:
+        await RPSDualStrategy().compile_query(
+            ctx,
+            "openEHR",
+            {"raw_aql": raw_aql, "debug": True},
+        )
+
+    assert caught.value.code == "AQL_ORDER_BY_UNSUPPORTED"
+    assert caught.value.status == 400
+
+
+@pytest.mark.asyncio
 async def test_compile_query_raw_aql_supports_avg_aggregate_on_cross_patient_pipeline():
     db = _build_fake_lab_db()
 
@@ -1540,3 +1615,149 @@ async def test_compile_query_raw_aql_supports_deterministic_function_projections
             0,
         ]
     }
+
+
+@pytest.mark.asyncio
+async def test_cross_patient_search_correlates_each_aql_path_with_its_value_predicate():
+    db = _build_fake_lab_db()
+    db["_codes"].docs["ar_code"]["openEHR-EHR-EVALUATION"] = {
+        "problem_diagnosis": {"v1": 4}
+    }
+    db["_shortcuts"].docs["shortcuts"]["items"].update(
+        {
+            "defining_code": "df",
+            "code_string": "cs",
+            "terminology_id": "ti",
+        }
+    )
+    ctx = StrategyContext(
+        environment_id="env-search-path-correlation",
+        config=MANIFEST.default_config,
+        adapters={"storage": _FakeStorage(db)},
+        manifest=MANIFEST.model_copy(deep=True),
+        meta={},
+    )
+    raw_aql = """
+    SELECT
+        e/ehr_id/value AS ehr_id,
+        c/uid/value AS composition_uid
+    FROM
+        EHR e
+            CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report_result.v1]
+                CONTAINS EVALUATION a0[openEHR-EHR-EVALUATION.problem_diagnosis.v1]
+    WHERE
+        c/archetype_details/template_id/value = $templateId
+        AND (
+            a0/data[at0001]/items[at0002]/value/defining_code/terminology_id/value = $terminology0
+            AND a0/data[at0001]/items[at0002]/value/defining_code/code_string
+                MATCHES {'195111005', '84114007'}
+        )
+        AND a0/data[at0001]/items[at0003]/value/value >= $p1
+    LIMIT 50
+    """
+
+    plan = await RPSDualStrategy().compile_query(
+        ctx,
+        "openEHR",
+        {
+            "raw_aql": raw_aql,
+            "params": {
+                "templateId": "sample_laboratory_v0.4",
+                "terminology0": "SNOMED-CT",
+                "p1": "2025-01-01",
+            },
+            "debug": True,
+            "require_exact_path_correlation": True,
+        },
+    )
+
+    assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
+    assert plan.explain["builder"]["exact_path_correlation_required"] is True
+    pipeline = plan.plan["pipeline"]
+    embedded_clauses = []
+
+    def collect_embedded(value):
+        if isinstance(value, dict):
+            if "embeddedDocument" in value:
+                embedded_clauses.append(value["embeddedDocument"])
+                return
+            for child in value.values():
+                collect_embedded(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect_embedded(child)
+
+    collect_embedded(pipeline[0]["$search"])
+    assert len(embedded_clauses) == 3
+    correlated = [clause["operator"]["compound"]["must"] for clause in embedded_clauses]
+    assert all(parts[0]["regex"]["path"] == "sn.p" for parts in correlated)
+    code_clause = next(
+        parts[1]
+        for parts in correlated
+        if parts[1].get("in", {}).get("path") == "sn.data.v.df.cs"
+    )
+    assert code_clause == {
+        "in": {
+            "path": "sn.data.v.df.cs",
+            "value": ["195111005", "84114007"],
+        }
+    }
+    terminology_clause = next(
+        parts[1]
+        for parts in correlated
+        if parts[1].get("equals", {}).get("path") == "sn.data.v.df.ti.v"
+    )
+    assert terminology_clause == {
+        "equals": {
+            "path": "sn.data.v.df.ti.v",
+            "value": "SNOMED-CT",
+        }
+    }
+    onset_clause = next(parts[1] for parts in correlated if "range" in parts[1])
+    assert onset_clause["range"]["path"] == "sn.data.v.v"
+    path_patterns = {parts[0]["regex"]["query"] for parts in correlated}
+    assert len(path_patterns) == 2
+    assert all(not pattern.startswith("^") for pattern in path_patterns)
+    assert all(not pattern.endswith("$") for pattern in path_patterns)
+    assert all("(?:" not in pattern for pattern in path_patterns)
+
+    exact_match = next(
+        stage["$match"]["$expr"]
+        for stage in pipeline[1:]
+        if "$expr" in stage.get("$match", {})
+    )
+    rendered_exact_match = repr(exact_match)
+    assert "$$node.pi" in rendered_exact_match
+    assert "$$anchor.pi" in rendered_exact_match
+    assert "$$candidate1.pi" in rendered_exact_match
+    assert "$$candidate2.pi" in rendered_exact_match
+    assert "195111005" in rendered_exact_match
+    assert "84114007" in rendered_exact_match
+    assert "datetime.datetime(2025, 1, 1" in rendered_exact_match
+
+    def collect_equalities(value):
+        equalities = []
+        if isinstance(value, dict):
+            if "$eq" in value:
+                equalities.append(value["$eq"])
+            for child in value.values():
+                equalities.extend(collect_equalities(child))
+        elif isinstance(value, list):
+            for child in value:
+                equalities.extend(collect_equalities(child))
+        return equalities
+
+    equality_text = [repr(equality) for equality in collect_equalities(exact_match)]
+    for candidate in ("candidate1", "candidate2"):
+        # Each leaf candidate is accepted only when both its archetype path
+        # suffix and its aligned path-instance (pi) suffix equal the anchor's.
+        assert any(
+            "$$anchor.p" in equality
+            and f"$${candidate}.p" in equality
+            for equality in equality_text
+        )
+        assert any(
+            "$$anchor.pi" in equality
+            and f"$${candidate}.pi" in equality
+            for equality in equality_text
+        )

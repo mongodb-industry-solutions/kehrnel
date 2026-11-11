@@ -1,0 +1,341 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "BenchmarkRunConditions": {
+      "additionalProperties": false,
+      "properties": {
+        "concurrency": {
+          "minimum": 1,
+          "title": "Concurrency",
+          "type": "integer"
+        },
+        "configurationDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Configurationdigest",
+          "type": "string"
+        },
+        "durationSeconds": {
+          "exclusiveMinimum": 0,
+          "title": "Durationseconds",
+          "type": "integer"
+        },
+        "methodology": {
+          "minLength": 1,
+          "title": "Methodology",
+          "type": "string"
+        },
+        "runId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Runid",
+          "type": "string"
+        },
+        "softwareVersions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Softwareversions",
+          "type": "object"
+        },
+        "startedAt": {
+          "minLength": 1,
+          "title": "Startedat",
+          "type": "string"
+        },
+        "warmCache": {
+          "title": "Warmcache",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "runId",
+        "startedAt",
+        "durationSeconds",
+        "warmCache",
+        "concurrency",
+        "configurationDigest",
+        "methodology"
+      ],
+      "title": "BenchmarkRunConditions",
+      "type": "object"
+    },
+    "DatasetCharacteristics": {
+      "additionalProperties": false,
+      "properties": {
+        "averageRecordBytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Averagerecordbytes"
+        },
+        "cardinalityNotes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Cardinalitynotes",
+          "type": "array"
+        },
+        "logicalBytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logicalbytes"
+        },
+        "physicalBytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Physicalbytes"
+        },
+        "recordCount": {
+          "minimum": 0,
+          "title": "Recordcount",
+          "type": "integer"
+        },
+        "skewNotes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Skewnotes",
+          "type": "array"
+        },
+        "subjectCount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subjectcount"
+        }
+      },
+      "required": [
+        "recordCount"
+      ],
+      "title": "DatasetCharacteristics",
+      "type": "object"
+    },
+    "LatencyPercentileMeasurement": {
+      "additionalProperties": false,
+      "properties": {
+        "latencyMicroseconds": {
+          "minimum": 0,
+          "title": "Latencymicroseconds",
+          "type": "integer"
+        },
+        "percentileBasisPoints": {
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Percentilebasispoints",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "percentileBasisPoints",
+        "latencyMicroseconds"
+      ],
+      "title": "LatencyPercentileMeasurement",
+      "type": "object"
+    },
+    "Visibility": {
+      "enum": [
+        "private",
+        "tenant",
+        "organization",
+        "public"
+      ],
+      "title": "Visibility",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:benchmark-evidence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "cacheHitBasisPoints": {
+      "anyOf": [
+        {
+          "maximum": 10000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cachehitbasispoints"
+    },
+    "conditions": {
+      "$ref": "#/$defs/BenchmarkRunConditions"
+    },
+    "contract": {
+      "const": "benchmark-evidence/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "cpuPeakBasisPoints": {
+      "anyOf": [
+        {
+          "maximum": 10000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cpupeakbasispoints"
+    },
+    "dataset": {
+      "$ref": "#/$defs/DatasetCharacteristics"
+    },
+    "errorCount": {
+      "minimum": 0,
+      "title": "Errorcount",
+      "type": "integer"
+    },
+    "latencyPercentiles": {
+      "items": {
+        "$ref": "#/$defs/LatencyPercentileMeasurement"
+      },
+      "minItems": 2,
+      "title": "Latencypercentiles",
+      "type": "array"
+    },
+    "memoryPeakBytes": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Memorypeakbytes"
+    },
+    "observationKind": {
+      "const": "measured",
+      "title": "Observationkind",
+      "type": "string"
+    },
+    "resolvedPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "reviewed": {
+      "title": "Reviewed",
+      "type": "boolean"
+    },
+    "storageBytes": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Storagebytes"
+    },
+    "targetCapabilityProfileRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "throughputPerSecond": {
+      "minimum": 0,
+      "title": "Throughputpersecond",
+      "type": "integer"
+    },
+    "visibility": {
+      "$ref": "#/$defs/Visibility"
+    },
+    "workloadRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "observationKind",
+    "resolvedPlanRef",
+    "workloadRef",
+    "targetCapabilityProfileRef",
+    "dataset",
+    "conditions",
+    "latencyPercentiles",
+    "throughputPerSecond",
+    "errorCount",
+    "visibility",
+    "reviewed"
+  ],
+  "title": "BenchmarkEvidence",
+  "type": "object"
+}

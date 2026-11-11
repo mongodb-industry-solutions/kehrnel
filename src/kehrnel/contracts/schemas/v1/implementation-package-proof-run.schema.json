@@ -1,0 +1,111 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-proof-run",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "containsRuntimeMeasurements": {
+      "const": false,
+      "default": false,
+      "title": "Containsruntimemeasurements",
+      "type": "boolean"
+    },
+    "contract": {
+      "const": "implementation-package-proof-run/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "evidencePersistence": {
+      "enum": [
+        "ephemeral",
+        "durable"
+      ],
+      "title": "Evidencepersistence",
+      "type": "string"
+    },
+    "evidenceRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "proofId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Proofid",
+      "type": "string"
+    },
+    "proofKind": {
+      "const": "static_package_qualification",
+      "title": "Proofkind",
+      "type": "string"
+    },
+    "runDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Rundigest",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "executed",
+        "failed"
+      ],
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "proofId",
+    "packageRef",
+    "evidenceRef",
+    "state",
+    "proofKind",
+    "evidencePersistence",
+    "runDigest"
+  ],
+  "title": "ImplementationPackageProofRun",
+  "type": "object"
+}

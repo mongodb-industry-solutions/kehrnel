@@ -1,0 +1,1832 @@
+[
+  {
+    "_id": "2.25.100001",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.100001"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1001"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2001"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "0.5"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "R"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "CC"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.100002",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.100002"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1001"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2001"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "2"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "1.0"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "L"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.100003",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.100003"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1001"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2001"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "3"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_VENDOR_B"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "1.5"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          1024
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "RGB"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "R"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 1024,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 3,
+            "photometric": "RGB"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.100004",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.100004"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1001"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2001"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "4"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "2.0"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "L"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "CC"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.100005",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.100005"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1001"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2001"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "5"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "2.5"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "R"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.100006",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.100006"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1001"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2001"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "6"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "3.0"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "L"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.200001",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.200001"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1002"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2002"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "0.5"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "R"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "CC"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.200002",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.200002"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1002"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2002"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "2"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "1.0"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "L"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.200003",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.200003"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1002"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2002"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "3"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "1.5"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "R"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.200004",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.200004"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1002"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2002"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "4"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "2.0"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "L"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "CC"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.200005",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.200005"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1002"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2002"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "5"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "2.5"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "R"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "_id": "2.25.200006",
+    "header": {
+      "00080018": {
+        "vr": "UI",
+        "Value": [
+          "2.25.200006"
+        ]
+      },
+      "0020000D": {
+        "vr": "UI",
+        "Value": [
+          "2.25.1002"
+        ]
+      },
+      "0020000E": {
+        "vr": "UI",
+        "Value": [
+          "2.25.2002"
+        ]
+      },
+      "00200013": {
+        "vr": "IS",
+        "Value": [
+          "6"
+        ]
+      },
+      "00080060": {
+        "vr": "CS",
+        "Value": [
+          "MR"
+        ]
+      },
+      "00080070": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MANUFACTURER"
+        ]
+      },
+      "00180050": {
+        "vr": "DS",
+        "Value": [
+          "3.0"
+        ]
+      },
+      "00080016": {
+        "vr": "UI",
+        "Value": [
+          "1.2.840.10008.5.1.4.1.1.4"
+        ]
+      },
+      "00081090": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_MODEL"
+        ]
+      },
+      "00181020": {
+        "vr": "LO",
+        "Value": [
+          "SYNTHETIC_SOFTWARE_1"
+        ]
+      },
+      "00280010": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280011": {
+        "vr": "US",
+        "Value": [
+          512
+        ]
+      },
+      "00280008": {
+        "vr": "IS",
+        "Value": [
+          "1"
+        ]
+      },
+      "00280004": {
+        "vr": "CS",
+        "Value": [
+          "MONOCHROME2"
+        ]
+      },
+      "00180080": {
+        "vr": "DS",
+        "Value": [
+          "2000"
+        ]
+      },
+      "00180081": {
+        "vr": "DS",
+        "Value": [
+          "30"
+        ]
+      },
+      "00181210": {
+        "vr": "SH",
+        "Value": [
+          "SYNTHETIC_KERNEL"
+        ]
+      },
+      "00180060": {
+        "vr": "DS",
+        "Value": [
+          "120"
+        ]
+      },
+      "00200062": {
+        "vr": "CS",
+        "Value": [
+          "L"
+        ]
+      },
+      "00185101": {
+        "vr": "CS",
+        "Value": [
+          "MLO"
+        ]
+      }
+    },
+    "sz": 0,
+    "ContentIndex": {
+      "v": 1,
+      "ts": "1.2.840.10008.1.2.1",
+      "encapsulated": false,
+      "parts": [
+        {
+          "kind": "image",
+          "tag": "7FE00010",
+          "compressed": false,
+          "enc": {
+            "rows": 512,
+            "cols": 512,
+            "numberOfFrames": 1,
+            "bitsAllocated": 16,
+            "samplesPerPixel": 1,
+            "photometric": "MONOCHROME2"
+          },
+          "frames": [
+            {
+              "n": 0,
+              "offset": 1024,
+              "length": 524288
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

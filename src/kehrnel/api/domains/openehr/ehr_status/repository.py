@@ -2,18 +2,25 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from pymongo.errors import PyMongoError
 import logging
 from kehrnel.api.bridge.app.core.config import settings
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 
 logger = logging.getLogger(__name__)
 
-def _ehr_coll() -> str:
-    return settings.EHR_COLL_NAME
+def _ehr_coll(config: CompositionCollectionNames | None = None) -> str:
+    return config.ehr if config is not None else settings.EHR_COLL_NAME
 
 
-def _contrib_coll() -> str:
-    return settings.EHR_CONTRIBUTIONS_COLL
+def _contrib_coll(config: CompositionCollectionNames | None = None) -> str:
+    return config.contributions if config is not None else settings.EHR_CONTRIBUTIONS_COLL
 
 
-async def update_ehr_status_in_transaction(ehr_id: str, new_status_doc: dict, contribution_doc: dict, db: AsyncIOMotorDatabase):
+async def update_ehr_status_in_transaction(
+    ehr_id: str,
+    new_status_doc: dict,
+    contribution_doc: dict,
+    db: AsyncIOMotorDatabase,
+    config: CompositionCollectionNames | None = None,
+):
     """
     Atomically updates the EHR document's status and pushes the new contribution ID.
     """
@@ -38,10 +45,10 @@ async def update_ehr_status_in_transaction(ehr_id: str, new_status_doc: dict, co
                 }
 
                 # 1. Insert the new contribution document
-                await db[_contrib_coll()].insert_one(contribution_doc, session=session)
+                await db[_contrib_coll(config)].insert_one(contribution_doc, session=session)
 
                 # 2. Update the main EHR document
-                await db[_ehr_coll()].update_one(
+                await db[_ehr_coll(config)].update_one(
                     ehr_update_criteria,
                     ehr_update_doc,
                     session=session

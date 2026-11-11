@@ -1,0 +1,152 @@
+[
+  {
+    "_id": "Anonymization:PseudonymMapKey",
+    "updatedAt": {
+      "$date": "2026-09-23T06:14:35.482Z"
+    },
+    "value": "REDACTED"
+  },
+  {
+    "_id": "App:Sentinel",
+    "updatedAt": {
+      "$date": "2026-10-15T08:33:24.094Z"
+    },
+    "value": "2026-10-15T08:33:24.0946616Z",
+    "name": "Pivote de recarga de configuración dinámica"
+  },
+  {
+    "_id": "DimseNode:Image",
+    "updatedAt": {
+      "$date": "2026-10-15T08:33:24.073Z"
+    },
+    "value": "acridilzplatformdev01.azurecr.io/rcv3-dimse:0.0.2-c208479\n"
+  },
+  {
+    "_id": "Identity:BridgeSystems:cip:description",
+    "name": "CIP: descripción",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "CIP Catalunya"
+  },
+  {
+    "_id": "Identity:BridgeSystems:cip:normalize",
+    "name": "CIP: normalización del valor",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "upper"
+  },
+  {
+    "_id": "Identity:BridgeSystems:cip:pattern",
+    "name": "CIP: 4 letras + 10 dígitos",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "^[A-Za-z]{4}\\d{10}$"
+  },
+  {
+    "_id": "Identity:BridgeSystems:dni:description",
+    "name": "DNI: descripción",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "DNI España"
+  },
+  {
+    "_id": "Identity:BridgeSystems:dni:normalize",
+    "name": "DNI: normalización del valor",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "upper"
+  },
+  {
+    "_id": "Identity:BridgeSystems:dni:pattern",
+    "name": "DNI: 8 dígitos + letra",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "^\\d{8}[A-Za-z]$"
+  },
+  {
+    "_id": "Identity:BridgeSystems:nie:description",
+    "name": "NIE: descripción",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "NIE España"
+  },
+  {
+    "_id": "Identity:BridgeSystems:nie:normalize",
+    "name": "NIE: normalización del valor",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "upper"
+  },
+  {
+    "_id": "Identity:BridgeSystems:nie:pattern",
+    "name": "NIE: XYZ + 7 dígitos + letra",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "^[XYZxyz]\\d{7}[A-Za-z]$"
+  },
+  {
+    "_id": "Identity:BridgeSystems:passport:description",
+    "name": "Pasaporte: descripción",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "Pasaporte"
+  },
+  {
+    "_id": "Identity:BridgeSystems:passport:normalize",
+    "name": "Pasaporte: normalización del valor",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": "upper"
+  },
+  {
+    "_id": "Identity:BridgeSystems:passport:pattern",
+    "name": "Pasaporte: sin validación de formato",
+    "updatedAt": {
+      "$date": "2026-09-22T12:13:58.264Z"
+    },
+    "value": ""
+  },
+  {
+    "_id": "QIDO:DefaultLimit",
+    "name": "QIDO default page size when client sends no limit",
+    "updatedAt": {
+      "$date": "2026-06-05T09:30:19.938Z"
+    },
+    "value": "65536"
+  },
+  {
+    "_id": "QIDO:MaxLimitInstances",
+    "name": "QIDO max page size cap for instance queries",
+    "updatedAt": {
+      "$date": "2026-06-05T09:30:19.938Z"
+    },
+    "value": "32768"
+  },
+  {
+    "_id": "QIDO:MaxLimitSeries",
+    "name": "QIDO max page size cap for series queries",
+    "updatedAt": {
+      "$date": "2026-06-05T09:30:19.938Z"
+    },
+    "value": "8192"
+  },
+  {
+    "_id": "QIDO:MaxLimitStudies",
+    "name": "QIDO max page size cap for studies queries",
+    "updatedAt": {
+      "$date": "2026-06-05T09:30:19.938Z"
+    },
+    "value": "4096"
+  }
+]

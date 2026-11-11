@@ -1,0 +1,171 @@
+{
+  "_type": "COMPOSITION",
+  "name": {
+    "_type": "DV_TEXT",
+    "value": "Sample clinical problem list"
+  },
+  "archetype_details": {
+    "archetype_id": {
+      "value": "openEHR-EHR-COMPOSITION.report-result.v1"
+    },
+    "template_id": {
+      "value": "sample_laboratory_v0.4"
+    },
+    "rm_version": "1.0.4"
+  },
+  "language": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_639-1"
+    },
+    "code_string": "en"
+  },
+  "territory": {
+    "_type": "CODE_PHRASE",
+    "terminology_id": {
+      "_type": "TERMINOLOGY_ID",
+      "value": "ISO_3166-1"
+    },
+    "code_string": "ES"
+  },
+  "category": {
+    "_type": "DV_CODED_TEXT",
+    "value": "event",
+    "defining_code": {
+      "_type": "CODE_PHRASE",
+      "terminology_id": {
+        "_type": "TERMINOLOGY_ID",
+        "value": "openehr"
+      },
+      "code_string": "433"
+    }
+  },
+  "composer": {
+    "_type": "PARTY_IDENTIFIED",
+    "name": "Synthetic clinician"
+  },
+  "context": {
+    "_type": "EVENT_CONTEXT",
+    "start_time": {
+      "_type": "DV_DATE_TIME",
+      "value": "2025-02-12T09:00:00Z"
+    },
+    "setting": {
+      "_type": "DV_CODED_TEXT",
+      "value": "other care",
+      "defining_code": {
+        "_type": "CODE_PHRASE",
+        "terminology_id": {
+          "_type": "TERMINOLOGY_ID",
+          "value": "openehr"
+        },
+        "code_string": "238"
+      }
+    }
+  },
+  "content": [
+    {
+      "_type": "SECTION",
+      "name": {
+        "_type": "DV_TEXT",
+        "value": "Diagnosis"
+      },
+      "archetype_details": {
+        "archetype_id": {
+          "value": "openEHR-EHR-SECTION.problem_list.v0"
+        },
+        "template_id": {
+          "value": "sample_laboratory_v0.4"
+        },
+        "rm_version": "1.0.4"
+      },
+      "items": [
+        {
+          "_type": "EVALUATION",
+          "name": {
+            "_type": "DV_TEXT",
+            "value": "Diagnosis"
+          },
+          "archetype_details": {
+            "archetype_id": {
+              "value": "openEHR-EHR-EVALUATION.problem_diagnosis.v1"
+            },
+            "template_id": {
+              "value": "sample_laboratory_v0.4"
+            },
+            "rm_version": "1.0.4"
+          },
+          "language": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "ISO_639-1"
+            },
+            "code_string": "en"
+          },
+          "encoding": {
+            "_type": "CODE_PHRASE",
+            "terminology_id": {
+              "_type": "TERMINOLOGY_ID",
+              "value": "IANA_character-sets"
+            },
+            "code_string": "UTF-8"
+          },
+          "subject": {
+            "_type": "PARTY_SELF"
+          },
+          "data": {
+            "_type": "ITEM_TREE",
+            "name": {
+              "_type": "DV_TEXT",
+              "value": "Structure"
+            },
+            "items": [
+              {
+                "_type": "ELEMENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Diagnosis"
+                },
+                "value": {
+                  "_type": "DV_CODED_TEXT",
+                  "value": "Heart failure",
+                  "defining_code": {
+                    "_type": "CODE_PHRASE",
+                    "terminology_id": {
+                      "_type": "TERMINOLOGY_ID",
+                      "value": "SNOMED-CT"
+                    },
+                    "code_string": "84114007"
+                  }
+                },
+                "archetype_node_id": "at0002"
+              },
+              {
+                "_type": "ELEMENT",
+                "name": {
+                  "_type": "DV_TEXT",
+                  "value": "Date/time clinically recognised"
+                },
+                "value": {
+                  "_type": "DV_DATE_TIME",
+                  "value": "2025-02-12T09:00:00Z"
+                },
+                "archetype_node_id": "at0003"
+              }
+            ],
+            "archetype_node_id": "at0001"
+          },
+          "archetype_node_id": "openEHR-EHR-EVALUATION.problem_diagnosis.v1"
+        }
+      ],
+      "archetype_node_id": "openEHR-EHR-SECTION.problem_list.v0"
+    }
+  ],
+  "archetype_node_id": "openEHR-EHR-COMPOSITION.report-result.v1",
+  "uid": {
+    "_type": "OBJECT_VERSION_ID",
+    "value": "676f5251-a22b-5c0a-9658-af174b557969::sample.kehrnel::1"
+  }
+}

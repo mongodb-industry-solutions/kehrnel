@@ -1,0 +1,2 @@
+id	effectiveTime	active	moduleId	refsetId	referencedComponentId	mapGroup	mapPriority	mapRule	mapAdvice	mapTarget	correlationId	mapCategoryId
+8001	20261001	1	900000000000207008	447562003	200	1	1	TRUE	SYNTHETIC TEST ONLY	TEST-200	0	0

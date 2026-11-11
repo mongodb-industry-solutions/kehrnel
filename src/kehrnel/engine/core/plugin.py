@@ -34,6 +34,19 @@ class StrategyPlugin:
     async def execute_query(self, ctx: StrategyContext, plan: QueryPlan) -> QueryResult:
         raise NotImplementedError
 
+    async def execute_authoritative_write(
+        self,
+        ctx: StrategyContext,
+        request: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Execute one governed record write through the strategy's native boundary.
+
+        This is deliberately separate from ``ingest``: ingestion prepares or
+        imports data, while an authoritative write must preserve the domain's
+        version, concurrency, provenance and acknowledgement semantics.
+        """
+        raise NotImplementedError
+
     async def run_op(self, ctx: StrategyContext, op: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         """
         Strategy-specific operation dispatcher. Default: not supported.

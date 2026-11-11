@@ -1,0 +1,2329 @@
+{
+  "version": "2.0.0-preview.2",
+  "dictionary": "pydicom 3.0.2",
+  "fields": [
+    {
+      "key": "studyDescription",
+      "keyword": "StudyDescription",
+      "tag": "00081030",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Study Description"
+    },
+    {
+      "key": "seriesDescription",
+      "keyword": "SeriesDescription",
+      "tag": "0008103E",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Series Description"
+    },
+    {
+      "key": "protocolName",
+      "keyword": "ProtocolName",
+      "tag": "00181030",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Protocol Name"
+    },
+    {
+      "key": "bodyPartExamined",
+      "keyword": "BodyPartExamined",
+      "tag": "00180015",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Body Part Examined"
+    },
+    {
+      "key": "patientSex",
+      "keyword": "PatientSex",
+      "tag": "00100040",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Patient's Sex"
+    },
+    {
+      "key": "patientAge",
+      "keyword": "PatientAge",
+      "tag": "00101010",
+      "vr": "AS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Patient's Age"
+    },
+    {
+      "key": "patientSize",
+      "keyword": "PatientSize",
+      "tag": "00101020",
+      "vr": "DS",
+      "type": "number",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "m",
+      "name": "Patient's Size"
+    },
+    {
+      "key": "patientWeight",
+      "keyword": "PatientWeight",
+      "tag": "00101030",
+      "vr": "DS",
+      "type": "number",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "kg",
+      "name": "Patient's Weight"
+    },
+    {
+      "key": "patientPosition",
+      "keyword": "PatientPosition",
+      "tag": "00185100",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Patient Position"
+    },
+    {
+      "key": "laterality",
+      "keyword": "Laterality",
+      "tag": "00200060",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Laterality"
+    },
+    {
+      "key": "imageLaterality",
+      "keyword": "ImageLaterality",
+      "tag": "00200062",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Image Laterality"
+    },
+    {
+      "key": "imageType",
+      "keyword": "ImageType",
+      "tag": "00080008",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Image Type"
+    },
+    {
+      "key": "acquisitionDate",
+      "keyword": "AcquisitionDate",
+      "tag": "00080022",
+      "vr": "DA",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Acquisition Date"
+    },
+    {
+      "key": "acquisitionTime",
+      "keyword": "AcquisitionTime",
+      "tag": "00080032",
+      "vr": "TM",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Acquisition Time"
+    },
+    {
+      "key": "acquisitionDateTime",
+      "keyword": "AcquisitionDateTime",
+      "tag": "0008002A",
+      "vr": "DT",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Acquisition DateTime"
+    },
+    {
+      "key": "contentDate",
+      "keyword": "ContentDate",
+      "tag": "00080023",
+      "vr": "DA",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Content Date"
+    },
+    {
+      "key": "contentTime",
+      "keyword": "ContentTime",
+      "tag": "00080033",
+      "vr": "TM",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Content Time"
+    },
+    {
+      "key": "clinicalTrialSponsorName",
+      "keyword": "ClinicalTrialSponsorName",
+      "tag": "00120010",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Clinical Trial Sponsor Name"
+    },
+    {
+      "key": "clinicalTrialProtocolID",
+      "keyword": "ClinicalTrialProtocolID",
+      "tag": "00120020",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Clinical Trial Protocol ID"
+    },
+    {
+      "key": "clinicalTrialProtocolName",
+      "keyword": "ClinicalTrialProtocolName",
+      "tag": "00120021",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Clinical Trial Protocol Name"
+    },
+    {
+      "key": "clinicalTrialSiteID",
+      "keyword": "ClinicalTrialSiteID",
+      "tag": "00120030",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Clinical Trial Site ID"
+    },
+    {
+      "key": "clinicalTrialSubjectID",
+      "keyword": "ClinicalTrialSubjectID",
+      "tag": "00120040",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Clinical Trial Subject ID"
+    },
+    {
+      "key": "clinicalTrialTimePointID",
+      "keyword": "ClinicalTrialTimePointID",
+      "tag": "00120050",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Clinical Trial Time Point ID"
+    },
+    {
+      "key": "longitudinalTemporalOffsetFromEvent",
+      "keyword": "LongitudinalTemporalOffsetFromEvent",
+      "tag": "00120052",
+      "vr": "FD",
+      "type": "number",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Longitudinal Temporal Offset from Event"
+    },
+    {
+      "key": "longitudinalTemporalEventType",
+      "keyword": "LongitudinalTemporalEventType",
+      "tag": "00120053",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Longitudinal Temporal Event Type"
+    },
+    {
+      "key": "patientIdentityRemoved",
+      "keyword": "PatientIdentityRemoved",
+      "tag": "00120062",
+      "vr": "CS",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Patient Identity Removed"
+    },
+    {
+      "key": "deidentificationMethod",
+      "keyword": "DeidentificationMethod",
+      "tag": "00120063",
+      "vr": "LO",
+      "type": "string",
+      "category": "cohort",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "De-identification Method"
+    },
+    {
+      "key": "manufacturer",
+      "keyword": "Manufacturer",
+      "tag": "00080070",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Manufacturer"
+    },
+    {
+      "key": "manufacturerModelName",
+      "keyword": "ManufacturerModelName",
+      "tag": "00081090",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Manufacturer's Model Name"
+    },
+    {
+      "key": "deviceSerialNumber",
+      "keyword": "DeviceSerialNumber",
+      "tag": "00181000",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Device Serial Number"
+    },
+    {
+      "key": "softwareVersions",
+      "keyword": "SoftwareVersions",
+      "tag": "00181020",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Software Versions"
+    },
+    {
+      "key": "stationName",
+      "keyword": "StationName",
+      "tag": "00081010",
+      "vr": "SH",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Station Name"
+    },
+    {
+      "key": "institutionName",
+      "keyword": "InstitutionName",
+      "tag": "00080080",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Institution Name"
+    },
+    {
+      "key": "institutionalDepartmentName",
+      "keyword": "InstitutionalDepartmentName",
+      "tag": "00081040",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Institutional Department Name"
+    },
+    {
+      "key": "deviceUID",
+      "keyword": "DeviceUID",
+      "tag": "00181002",
+      "vr": "UI",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Device UID"
+    },
+    {
+      "key": "gantryID",
+      "keyword": "GantryID",
+      "tag": "00181008",
+      "vr": "LO",
+      "type": "string",
+      "category": "device",
+      "appliesTo": [
+        "ALL"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Gantry ID"
+    },
+    {
+      "key": "rows",
+      "keyword": "Rows",
+      "tag": "00280010",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Rows"
+    },
+    {
+      "key": "columns",
+      "keyword": "Columns",
+      "tag": "00280011",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Columns"
+    },
+    {
+      "key": "numberOfFrames",
+      "keyword": "NumberOfFrames",
+      "tag": "00280008",
+      "vr": "IS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Number of Frames"
+    },
+    {
+      "key": "pixelSpacing",
+      "keyword": "PixelSpacing",
+      "tag": "00280030",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Pixel Spacing"
+    },
+    {
+      "key": "imagerPixelSpacing",
+      "keyword": "ImagerPixelSpacing",
+      "tag": "00181164",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Imager Pixel Spacing"
+    },
+    {
+      "key": "nominalScannedPixelSpacing",
+      "keyword": "NominalScannedPixelSpacing",
+      "tag": "00182010",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Nominal Scanned Pixel Spacing"
+    },
+    {
+      "key": "sliceThickness",
+      "keyword": "SliceThickness",
+      "tag": "00180050",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Slice Thickness"
+    },
+    {
+      "key": "spacingBetweenSlices",
+      "keyword": "SpacingBetweenSlices",
+      "tag": "00180088",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Spacing Between Slices"
+    },
+    {
+      "key": "imageOrientationPatient",
+      "keyword": "ImageOrientationPatient",
+      "tag": "00200037",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Image Orientation (Patient)",
+      "reason": "High cardinality geometry or ordering; retain source and promote only for a defined question."
+    },
+    {
+      "key": "imagePositionPatient",
+      "keyword": "ImagePositionPatient",
+      "tag": "00200032",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": false,
+      "unit": "mm",
+      "name": "Image Position (Patient)",
+      "reason": "High cardinality geometry or ordering; retain source and promote only for a defined question."
+    },
+    {
+      "key": "frameOfReferenceUID",
+      "keyword": "FrameOfReferenceUID",
+      "tag": "00200052",
+      "vr": "UI",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Frame of Reference UID"
+    },
+    {
+      "key": "photometricInterpretation",
+      "keyword": "PhotometricInterpretation",
+      "tag": "00280004",
+      "vr": "CS",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Photometric Interpretation"
+    },
+    {
+      "key": "samplesPerPixel",
+      "keyword": "SamplesPerPixel",
+      "tag": "00280002",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Samples per Pixel"
+    },
+    {
+      "key": "bitsAllocated",
+      "keyword": "BitsAllocated",
+      "tag": "00280100",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Bits Allocated"
+    },
+    {
+      "key": "bitsStored",
+      "keyword": "BitsStored",
+      "tag": "00280101",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Bits Stored"
+    },
+    {
+      "key": "highBit",
+      "keyword": "HighBit",
+      "tag": "00280102",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "High Bit"
+    },
+    {
+      "key": "pixelRepresentation",
+      "keyword": "PixelRepresentation",
+      "tag": "00280103",
+      "vr": "US",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Pixel Representation"
+    },
+    {
+      "key": "lossyImageCompression",
+      "keyword": "LossyImageCompression",
+      "tag": "00282110",
+      "vr": "CS",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Lossy Image Compression"
+    },
+    {
+      "key": "lossyImageCompressionRatio",
+      "keyword": "LossyImageCompressionRatio",
+      "tag": "00282112",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Lossy Image Compression Ratio"
+    },
+    {
+      "key": "lossyImageCompressionMethod",
+      "keyword": "LossyImageCompressionMethod",
+      "tag": "00282114",
+      "vr": "CS",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Lossy Image Compression Method"
+    },
+    {
+      "key": "burnedInAnnotation",
+      "keyword": "BurnedInAnnotation",
+      "tag": "00280301",
+      "vr": "CS",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Burned In Annotation"
+    },
+    {
+      "key": "recognizableVisualFeatures",
+      "keyword": "RecognizableVisualFeatures",
+      "tag": "00280302",
+      "vr": "CS",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Recognizable Visual Features"
+    },
+    {
+      "key": "rescaleIntercept",
+      "keyword": "RescaleIntercept",
+      "tag": "00281052",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Rescale Intercept"
+    },
+    {
+      "key": "rescaleSlope",
+      "keyword": "RescaleSlope",
+      "tag": "00281053",
+      "vr": "DS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Rescale Slope"
+    },
+    {
+      "key": "rescaleType",
+      "keyword": "RescaleType",
+      "tag": "00281054",
+      "vr": "LO",
+      "type": "string",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Rescale Type"
+    },
+    {
+      "key": "acquisitionNumber",
+      "keyword": "AcquisitionNumber",
+      "tag": "00200012",
+      "vr": "IS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Acquisition Number"
+    },
+    {
+      "key": "instanceNumber",
+      "keyword": "InstanceNumber",
+      "tag": "00200013",
+      "vr": "IS",
+      "type": "number",
+      "category": "image",
+      "appliesTo": [
+        "IMAGE"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Instance Number",
+      "reason": "High cardinality geometry or ordering; retain source and promote only for a defined question."
+    },
+    {
+      "key": "kVP",
+      "keyword": "KVP",
+      "tag": "00180060",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "kV",
+      "name": "KVP"
+    },
+    {
+      "key": "exposureTime",
+      "keyword": "ExposureTime",
+      "tag": "00181150",
+      "vr": "IS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Exposure Time"
+    },
+    {
+      "key": "xRayTubeCurrent",
+      "keyword": "XRayTubeCurrent",
+      "tag": "00181151",
+      "vr": "IS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mA",
+      "name": "X-Ray Tube Current"
+    },
+    {
+      "key": "exposure",
+      "keyword": "Exposure",
+      "tag": "00181152",
+      "vr": "IS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mAs",
+      "name": "Exposure"
+    },
+    {
+      "key": "exposureInuAs",
+      "keyword": "ExposureInuAs",
+      "tag": "00181153",
+      "vr": "IS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "uAs",
+      "name": "Exposure in uAs"
+    },
+    {
+      "key": "convolutionKernel",
+      "keyword": "ConvolutionKernel",
+      "tag": "00181210",
+      "vr": "SH",
+      "type": "string",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Convolution Kernel"
+    },
+    {
+      "key": "reconstructionDiameter",
+      "keyword": "ReconstructionDiameter",
+      "tag": "00181100",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Reconstruction Diameter"
+    },
+    {
+      "key": "dataCollectionDiameter",
+      "keyword": "DataCollectionDiameter",
+      "tag": "00180090",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Data Collection Diameter"
+    },
+    {
+      "key": "distanceSourceToDetector",
+      "keyword": "DistanceSourceToDetector",
+      "tag": "00181110",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Distance Source to Detector"
+    },
+    {
+      "key": "distanceSourceToPatient",
+      "keyword": "DistanceSourceToPatient",
+      "tag": "00181111",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Distance Source to Patient"
+    },
+    {
+      "key": "gantryDetectorTilt",
+      "keyword": "GantryDetectorTilt",
+      "tag": "00181120",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Gantry/Detector Tilt"
+    },
+    {
+      "key": "tableHeight",
+      "keyword": "TableHeight",
+      "tag": "00181130",
+      "vr": "DS",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Table Height"
+    },
+    {
+      "key": "spiralPitchFactor",
+      "keyword": "SpiralPitchFactor",
+      "tag": "00189311",
+      "vr": "FD",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Spiral Pitch Factor"
+    },
+    {
+      "key": "cTDIvol",
+      "keyword": "CTDIvol",
+      "tag": "00189345",
+      "vr": "FD",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mGy",
+      "name": "CTDIvol"
+    },
+    {
+      "key": "reconstructionAlgorithm",
+      "keyword": "ReconstructionAlgorithm",
+      "tag": "00189315",
+      "vr": "CS",
+      "type": "string",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Reconstruction Algorithm"
+    },
+    {
+      "key": "revolutionTime",
+      "keyword": "RevolutionTime",
+      "tag": "00189305",
+      "vr": "FD",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Revolution Time"
+    },
+    {
+      "key": "singleCollimationWidth",
+      "keyword": "SingleCollimationWidth",
+      "tag": "00189306",
+      "vr": "FD",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Single Collimation Width"
+    },
+    {
+      "key": "totalCollimationWidth",
+      "keyword": "TotalCollimationWidth",
+      "tag": "00189307",
+      "vr": "FD",
+      "type": "number",
+      "category": "ct",
+      "appliesTo": [
+        "CT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Total Collimation Width"
+    },
+    {
+      "key": "magneticFieldStrength",
+      "keyword": "MagneticFieldStrength",
+      "tag": "00180087",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "T",
+      "name": "Magnetic Field Strength"
+    },
+    {
+      "key": "repetitionTime",
+      "keyword": "RepetitionTime",
+      "tag": "00180080",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Repetition Time"
+    },
+    {
+      "key": "echoTime",
+      "keyword": "EchoTime",
+      "tag": "00180081",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Echo Time"
+    },
+    {
+      "key": "echoTrainLength",
+      "keyword": "EchoTrainLength",
+      "tag": "00180091",
+      "vr": "IS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Echo Train Length"
+    },
+    {
+      "key": "inversionTime",
+      "keyword": "InversionTime",
+      "tag": "00180082",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Inversion Time"
+    },
+    {
+      "key": "flipAngle",
+      "keyword": "FlipAngle",
+      "tag": "00181314",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "deg",
+      "name": "Flip Angle"
+    },
+    {
+      "key": "scanningSequence",
+      "keyword": "ScanningSequence",
+      "tag": "00180020",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Scanning Sequence"
+    },
+    {
+      "key": "sequenceVariant",
+      "keyword": "SequenceVariant",
+      "tag": "00180021",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Sequence Variant"
+    },
+    {
+      "key": "scanOptions",
+      "keyword": "ScanOptions",
+      "tag": "00180022",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Scan Options"
+    },
+    {
+      "key": "mRAcquisitionType",
+      "keyword": "MRAcquisitionType",
+      "tag": "00180023",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "MR Acquisition Type"
+    },
+    {
+      "key": "sequenceName",
+      "keyword": "SequenceName",
+      "tag": "00180024",
+      "vr": "SH",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Sequence Name"
+    },
+    {
+      "key": "receiveCoilName",
+      "keyword": "ReceiveCoilName",
+      "tag": "00181250",
+      "vr": "SH",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Receive Coil Name"
+    },
+    {
+      "key": "transmitCoilName",
+      "keyword": "TransmitCoilName",
+      "tag": "00181251",
+      "vr": "SH",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Transmit Coil Name"
+    },
+    {
+      "key": "numberOfAverages",
+      "keyword": "NumberOfAverages",
+      "tag": "00180083",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Number of Averages"
+    },
+    {
+      "key": "pixelBandwidth",
+      "keyword": "PixelBandwidth",
+      "tag": "00180095",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "Hz",
+      "name": "Pixel Bandwidth"
+    },
+    {
+      "key": "acquisitionMatrix",
+      "keyword": "AcquisitionMatrix",
+      "tag": "00181310",
+      "vr": "US",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Acquisition Matrix"
+    },
+    {
+      "key": "inPlanePhaseEncodingDirection",
+      "keyword": "InPlanePhaseEncodingDirection",
+      "tag": "00181312",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "In-plane Phase Encoding Direction"
+    },
+    {
+      "key": "percentSampling",
+      "keyword": "PercentSampling",
+      "tag": "00180093",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Percent Sampling"
+    },
+    {
+      "key": "percentPhaseFieldOfView",
+      "keyword": "PercentPhaseFieldOfView",
+      "tag": "00180094",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Percent Phase Field of View"
+    },
+    {
+      "key": "sAR",
+      "keyword": "SAR",
+      "tag": "00181316",
+      "vr": "DS",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "W/kg",
+      "name": "SAR"
+    },
+    {
+      "key": "diffusionBValue",
+      "keyword": "DiffusionBValue",
+      "tag": "00189087",
+      "vr": "FD",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "s/mm2",
+      "name": "Diffusion b-value"
+    },
+    {
+      "key": "effectiveEchoTime",
+      "keyword": "EffectiveEchoTime",
+      "tag": "00189082",
+      "vr": "FD",
+      "type": "number",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Effective Echo Time"
+    },
+    {
+      "key": "parallelAcquisition",
+      "keyword": "ParallelAcquisition",
+      "tag": "00189077",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Parallel Acquisition"
+    },
+    {
+      "key": "parallelAcquisitionTechnique",
+      "keyword": "ParallelAcquisitionTechnique",
+      "tag": "00189078",
+      "vr": "CS",
+      "type": "string",
+      "category": "mr",
+      "appliesTo": [
+        "MR"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Parallel Acquisition Technique"
+    },
+    {
+      "key": "viewPosition",
+      "keyword": "ViewPosition",
+      "tag": "00185101",
+      "vr": "CS",
+      "type": "string",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "View Position"
+    },
+    {
+      "key": "bodyPartThickness",
+      "keyword": "BodyPartThickness",
+      "tag": "001811A0",
+      "vr": "DS",
+      "type": "number",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Body Part Thickness"
+    },
+    {
+      "key": "compressionForce",
+      "keyword": "CompressionForce",
+      "tag": "001811A2",
+      "vr": "DS",
+      "type": "number",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "N",
+      "name": "Compression Force"
+    },
+    {
+      "key": "compressionPressure",
+      "keyword": "CompressionPressure",
+      "tag": "001811A3",
+      "vr": "DS",
+      "type": "number",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "kPa",
+      "name": "Compression Pressure"
+    },
+    {
+      "key": "anodeTargetMaterial",
+      "keyword": "AnodeTargetMaterial",
+      "tag": "00181191",
+      "vr": "CS",
+      "type": "string",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Anode Target Material"
+    },
+    {
+      "key": "filterMaterial",
+      "keyword": "FilterMaterial",
+      "tag": "00187050",
+      "vr": "CS",
+      "type": "string",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Filter Material"
+    },
+    {
+      "key": "filterType",
+      "keyword": "FilterType",
+      "tag": "00181160",
+      "vr": "SH",
+      "type": "string",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Filter Type"
+    },
+    {
+      "key": "organDose",
+      "keyword": "OrganDose",
+      "tag": "00400316",
+      "vr": "DS",
+      "type": "number",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "dGy",
+      "name": "Organ Dose"
+    },
+    {
+      "key": "entranceDose",
+      "keyword": "EntranceDose",
+      "tag": "00400302",
+      "vr": "US",
+      "type": "number",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "dGy",
+      "name": "Entrance Dose"
+    },
+    {
+      "key": "entranceDoseInmGy",
+      "keyword": "EntranceDoseInmGy",
+      "tag": "00408302",
+      "vr": "DS",
+      "type": "number",
+      "category": "mg",
+      "appliesTo": [
+        "MG"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mGy",
+      "name": "Entrance Dose in mGy"
+    },
+    {
+      "key": "units",
+      "keyword": "Units",
+      "tag": "00541001",
+      "vr": "CS",
+      "type": "string",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Units"
+    },
+    {
+      "key": "correctedImage",
+      "keyword": "CorrectedImage",
+      "tag": "00280051",
+      "vr": "CS",
+      "type": "string",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Corrected Image"
+    },
+    {
+      "key": "decayCorrection",
+      "keyword": "DecayCorrection",
+      "tag": "00541102",
+      "vr": "CS",
+      "type": "string",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Decay Correction"
+    },
+    {
+      "key": "decayFactor",
+      "keyword": "DecayFactor",
+      "tag": "00541321",
+      "vr": "DS",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Decay Factor"
+    },
+    {
+      "key": "doseCalibrationFactor",
+      "keyword": "DoseCalibrationFactor",
+      "tag": "00541322",
+      "vr": "DS",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Dose Calibration Factor"
+    },
+    {
+      "key": "reconstructionMethod",
+      "keyword": "ReconstructionMethod",
+      "tag": "00541103",
+      "vr": "LO",
+      "type": "string",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Reconstruction Method"
+    },
+    {
+      "key": "collimatorType",
+      "keyword": "CollimatorType",
+      "tag": "00181181",
+      "vr": "CS",
+      "type": "string",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Collimator Type"
+    },
+    {
+      "key": "actualFrameDuration",
+      "keyword": "ActualFrameDuration",
+      "tag": "00181242",
+      "vr": "IS",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Actual Frame Duration"
+    },
+    {
+      "key": "frameReferenceTime",
+      "keyword": "FrameReferenceTime",
+      "tag": "00541300",
+      "vr": "DS",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Frame Reference Time"
+    },
+    {
+      "key": "numberOfSlices",
+      "keyword": "NumberOfSlices",
+      "tag": "00540081",
+      "vr": "US",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Number of Slices"
+    },
+    {
+      "key": "numberOfTimeSlices",
+      "keyword": "NumberOfTimeSlices",
+      "tag": "00540101",
+      "vr": "US",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Number of Time Slices"
+    },
+    {
+      "key": "energyWindowVector",
+      "keyword": "EnergyWindowVector",
+      "tag": "00540010",
+      "vr": "US",
+      "type": "number",
+      "category": "pet",
+      "appliesTo": [
+        "PT",
+        "NM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Energy Window Vector"
+    },
+    {
+      "key": "transducerData",
+      "keyword": "TransducerData",
+      "tag": "00185010",
+      "vr": "LO",
+      "type": "string",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Transducer Data"
+    },
+    {
+      "key": "transducerType",
+      "keyword": "TransducerType",
+      "tag": "00186031",
+      "vr": "CS",
+      "type": "string",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Transducer Type"
+    },
+    {
+      "key": "transducerFrequency",
+      "keyword": "TransducerFrequency",
+      "tag": "00186030",
+      "vr": "UL",
+      "type": "number",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Transducer Frequency"
+    },
+    {
+      "key": "depthOfScanField",
+      "keyword": "DepthOfScanField",
+      "tag": "00185050",
+      "vr": "IS",
+      "type": "number",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Depth of Scan Field"
+    },
+    {
+      "key": "frameTime",
+      "keyword": "FrameTime",
+      "tag": "00181063",
+      "vr": "DS",
+      "type": "number",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "ms",
+      "name": "Frame Time"
+    },
+    {
+      "key": "frameTimeVector",
+      "keyword": "FrameTimeVector",
+      "tag": "00181065",
+      "vr": "DS",
+      "type": "number",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": false,
+      "unit": "ms",
+      "name": "Frame Time Vector",
+      "reason": "High cardinality geometry or ordering; retain source and promote only for a defined question."
+    },
+    {
+      "key": "cineRate",
+      "keyword": "CineRate",
+      "tag": "00180040",
+      "vr": "IS",
+      "type": "number",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Cine Rate"
+    },
+    {
+      "key": "effectiveDuration",
+      "keyword": "EffectiveDuration",
+      "tag": "00180072",
+      "vr": "DS",
+      "type": "number",
+      "category": "us",
+      "appliesTo": [
+        "US"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Effective Duration"
+    },
+    {
+      "key": "totalPixelMatrixColumns",
+      "keyword": "TotalPixelMatrixColumns",
+      "tag": "00480006",
+      "vr": "UL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Total Pixel Matrix Columns"
+    },
+    {
+      "key": "totalPixelMatrixRows",
+      "keyword": "TotalPixelMatrixRows",
+      "tag": "00480007",
+      "vr": "UL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Total Pixel Matrix Rows"
+    },
+    {
+      "key": "totalPixelMatrixFocalPlanes",
+      "keyword": "TotalPixelMatrixFocalPlanes",
+      "tag": "00480303",
+      "vr": "UL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Total Pixel Matrix Focal Planes"
+    },
+    {
+      "key": "numberOfOpticalPaths",
+      "keyword": "NumberOfOpticalPaths",
+      "tag": "00480302",
+      "vr": "UL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Number of Optical Paths"
+    },
+    {
+      "key": "imagedVolumeWidth",
+      "keyword": "ImagedVolumeWidth",
+      "tag": "00480001",
+      "vr": "FL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Imaged Volume Width"
+    },
+    {
+      "key": "imagedVolumeHeight",
+      "keyword": "ImagedVolumeHeight",
+      "tag": "00480002",
+      "vr": "FL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Imaged Volume Height"
+    },
+    {
+      "key": "imagedVolumeDepth",
+      "keyword": "ImagedVolumeDepth",
+      "tag": "00480003",
+      "vr": "FL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "unit": "mm",
+      "name": "Imaged Volume Depth"
+    },
+    {
+      "key": "focusMethod",
+      "keyword": "FocusMethod",
+      "tag": "00480011",
+      "vr": "CS",
+      "type": "string",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Focus Method"
+    },
+    {
+      "key": "extendedDepthOfField",
+      "keyword": "ExtendedDepthOfField",
+      "tag": "00480012",
+      "vr": "CS",
+      "type": "string",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Extended Depth of Field"
+    },
+    {
+      "key": "numberOfFocalPlanes",
+      "keyword": "NumberOfFocalPlanes",
+      "tag": "00480013",
+      "vr": "US",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Number of Focal Planes"
+    },
+    {
+      "key": "distanceBetweenFocalPlanes",
+      "keyword": "DistanceBetweenFocalPlanes",
+      "tag": "00480014",
+      "vr": "FL",
+      "type": "number",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Distance Between Focal Planes"
+    },
+    {
+      "key": "containerIdentifier",
+      "keyword": "ContainerIdentifier",
+      "tag": "00400512",
+      "vr": "LO",
+      "type": "string",
+      "category": "wsi",
+      "appliesTo": [
+        "SM"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Container Identifier"
+    },
+    {
+      "key": "doseUnits",
+      "keyword": "DoseUnits",
+      "tag": "30040002",
+      "vr": "CS",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Dose Units"
+    },
+    {
+      "key": "doseType",
+      "keyword": "DoseType",
+      "tag": "30040004",
+      "vr": "CS",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Dose Type"
+    },
+    {
+      "key": "doseSummationType",
+      "keyword": "DoseSummationType",
+      "tag": "3004000A",
+      "vr": "CS",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Dose Summation Type"
+    },
+    {
+      "key": "doseGridScaling",
+      "keyword": "DoseGridScaling",
+      "tag": "3004000E",
+      "vr": "DS",
+      "type": "number",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Dose Grid Scaling"
+    },
+    {
+      "key": "gridFrameOffsetVector",
+      "keyword": "GridFrameOffsetVector",
+      "tag": "3004000C",
+      "vr": "DS",
+      "type": "number",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": false,
+      "name": "Grid Frame Offset Vector",
+      "reason": "High cardinality geometry or ordering; retain source and promote only for a defined question."
+    },
+    {
+      "key": "rTPlanLabel",
+      "keyword": "RTPlanLabel",
+      "tag": "300A0002",
+      "vr": "SH",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "RT Plan Label"
+    },
+    {
+      "key": "rTPlanName",
+      "keyword": "RTPlanName",
+      "tag": "300A0003",
+      "vr": "LO",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "RT Plan Name"
+    },
+    {
+      "key": "rTPlanDescription",
+      "keyword": "RTPlanDescription",
+      "tag": "300A0004",
+      "vr": "ST",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "RT Plan Description"
+    },
+    {
+      "key": "rTPlanGeometry",
+      "keyword": "RTPlanGeometry",
+      "tag": "300A000C",
+      "vr": "CS",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "RT Plan Geometry"
+    },
+    {
+      "key": "structureSetLabel",
+      "keyword": "StructureSetLabel",
+      "tag": "30060002",
+      "vr": "SH",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Structure Set Label"
+    },
+    {
+      "key": "structureSetName",
+      "keyword": "StructureSetName",
+      "tag": "30060004",
+      "vr": "LO",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Structure Set Name"
+    },
+    {
+      "key": "structureSetDescription",
+      "keyword": "StructureSetDescription",
+      "tag": "30060006",
+      "vr": "ST",
+      "type": "string",
+      "category": "rt",
+      "appliesTo": [
+        "RTDOSE",
+        "RTPLAN",
+        "RTSTRUCT"
+      ],
+      "context": "instance",
+      "default": true,
+      "name": "Structure Set Description"
+    }
+  ],
+  "unresolvedKeywords": [],
+  "semanticExtractors": [
+    "functionalGroups",
+    "radiopharmaceutical",
+    "ultrasoundRegions",
+    "structuredReport",
+    "segments",
+    "presentationText",
+    "roiLabels",
+    "annotationGroups",
+    "opticalPaths",
+    "specimens"
+  ],
+  "limits": {
+    "maxGroups": 64,
+    "maxFacts": 128,
+    "maxSummaryBytes": 98304,
+    "maxExampleSources": 3
+  },
+  "policy": "Typed correlated groups and facts; unsupported or excess detail remains in immutable header source. Coverage is explicit."
+}

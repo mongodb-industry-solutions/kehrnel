@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-30",
+  "strategy": "dicom.tiered_store",
+  "version": "0.3.0",
+  "strategyDigest": "sha256:38fcc34047bae268b046633a56813cefb223df49ab829d870816af8a8f13a8a6",
+  "maturity": "preview",
+  "scope": "bounded source-to-query evaluation; not production-scale qualification",
+  "verification": {
+    "dicomAndPackTests": {"passed": 124, "failed": 0, "skipped": 0},
+    "hdlPublicBoundaryAndBuilderTests": {"passed": 21, "failed": 0},
+    "hdlNativeRuntimeBrowserJourneys": {"passed": 2, "failed": 0},
+    "hdlTargetedLint": "passed",
+    "catalogDigestCheck": "passed; no changes required",
+    "sdkRuleJourney": "executed synthetic preview; same-instance query returned zero false matches",
+    "database": "isolated localhost MongoDB 8.0.16; disposable test databases",
+    "visualInspection": "gallery, architecture, source, rules and mobile query layouts inspected"
+  },
+  "verifiedBehaviors": [
+    "Cumulative unique-SOP consolidation across reception batches",
+    "Exact batch replay preserves the original generation",
+    "Conflicting source bytes or centre relinking are rejected",
+    "Publication failure stays hidden and is retryable",
+    "Full metadata retained inline or outside inventory in artifact bundles",
+    "Profile changes create new immutable generations; stale profile queries fail",
+    "Missing metadata and partial source counts remain explicit",
+    "Same-instance tuples and same-attribute-value range bounds prevent false matches",
+    "Regular MongoDB query execution, generated Search mappings and query plans",
+    "Public gallery reaches reference architecture and rule/query playground",
+    "Public route rejects imported sources, arbitrary runtimes and ingestion actions"
+  ],
+  "notQualified": [
+    "Large-series streaming beyond the 500-document playground bound",
+    "Archive-wide resumable backfill and full-project publication",
+    "Automatic current-head promotion and retention/garbage collection",
+    "Actual Atlas Search execution or readiness polling",
+    "15-billion-instance sharding, throughput, latency or cost",
+    "Enhanced-frame and sequence-item clinical correlation",
+    "Issuer-aware CDR clinical joins and general medical natural-language interpretation",
+    "Canonical Builder package activation or pixel viewer delivery"
+  ]
+}

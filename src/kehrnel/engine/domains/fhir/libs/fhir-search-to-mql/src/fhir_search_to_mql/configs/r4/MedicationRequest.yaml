@@ -1,0 +1,188 @@
+resource: MedicationRequest
+fhir_version: R4
+
+# R4 note: uses medicationCodeableConcept or medicationReference (not medication CodeableReference)
+
+search_parameters:
+  status:
+    type: token
+    description: "active | on-hold | cancelled | completed | entered-in-error | stopped | draft | unknown"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  intent:
+    type: token
+    description: "proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option"
+    fields:
+      - field: "intent"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "Returns prescriptions for a specific patient"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The identity of a patient to list orders for"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Return prescriptions with this encounter identifier"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  medication:
+    type: reference
+    description: "Return prescriptions for this medication reference"
+    fields:
+      - field: "_search.medicationId"
+        referenceType: id
+      - field: "medicationReference.reference"
+        referenceType: full
+
+  code:
+    type: token
+    description: "Return prescriptions of this medication code"
+    fields:
+      - field: "_search.medicationCode"
+        tokenType: code
+
+  date:
+    type: date
+    description: "Returns medication request to be administered on a specific date"
+    fields:
+      - field: "_search.authoredOn"
+        type: date
+
+  identifier:
+    type: token
+    description: "Return prescriptions with this external identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  # R4: medicationReference (not medication CodeableReference)
+  medicationReference:
+    source: medicationReference
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: medicationReference.reference
+        target_field: medicationId
+        datatype: string
+        extractType: id
+
+  # R4: medicationCodeableConcept
+  medicationCodeableConcept:
+    source: medicationCodeableConcept
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: medicationCodeableConcept.coding[*].code
+        target_field: medicationCode
+        datatype: array[string]
+
+  authoredOn:
+    source: authoredOn
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: authoredOn
+        target_field: authoredOn
+        datatype: date
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_medr_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_medr_status
+  - fields:
+      - "_search.authoredOn": -1
+    options:
+      name: idx_r4_medr_authored_on

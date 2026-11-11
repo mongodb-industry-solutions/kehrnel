@@ -1,0 +1,96 @@
+resource: Medication
+fhir_version: R4
+profile: us-core
+
+search_parameters:
+  status:
+    type: token
+    description: "active | inactive | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  code:
+    type: token
+    description: "Returns medications for a specific code"
+    fields:
+      - field: "_search.codeCode"
+        tokenType: code
+      - field: "_search.codeSystemCode"
+        tokenType: systemCode
+
+  identifier:
+    type: token
+    description: "Returns medications with this external identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+  _profile:
+    type: uri
+    description: "US Core profile URL this resource conforms to"
+    fields:
+      - field: "meta.profile"
+
+denormalization:
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: code
+        target_field: codeSystemCode
+        datatype: array[string]
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  meta_profile:
+    source: meta
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: profile
+        target_field: meta_profile
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_med_status
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r4_med_code
+  - fields:
+      - "meta.profile": 1
+    options:
+      name: idx_r4_us_med_meta_profile
+      sparse: true

@@ -114,7 +114,7 @@ async def _detect_collection_format_for(
             return "shortened"
     except Exception as exc:
         logger.info("Falling back to legacy collection format detection: %s", exc)
-    return await detect_collection_format(db)
+    return await detect_collection_format(db, collection_name)
 
 
 async def _resolve_transformer_inputs(
@@ -123,18 +123,59 @@ async def _resolve_transformer_inputs(
 ) -> Tuple[str, Dict[str, Any], Dict[str, Any], Dict[str, str], Any]:
     raw_cfg: Dict[str, Any] = {}
     strategy_cfg = normalize_config({})
-    try:
-        if request is not None:
-            context = await resolve_active_openehr_context(request, ensure_ingestion=False)
-            raw_cfg = getattr(context.get("activation"), "config", {}) or {}
-    except Exception as exc:
-        logger.info("Falling back to default AQL transformer configuration: %s", exc)
+    request_scoped = request is not None
+    synced: Dict[str, Any] = {}
+    if request is not None:
+        # Request execution must fail closed when its activation cannot be
+        # resolved. Falling back to mutable process settings could select a
+        # different tenant's collections.
+        context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+        raw_cfg = getattr(context.get("activation"), "config", {}) or {}
+        synced = context.get("synced") or {}
 
-    if raw_cfg:
+    if raw_cfg or request_scoped:
         strategy_cfg = normalize_config(raw_cfg)
         schema_cfgs = build_schema_config(strategy_cfg)
         schema_config = dict(schema_cfgs["composition"])
         search_schema_config = dict(schema_cfgs["search"])
+        search_schema_config["enabled"] = strategy_cfg.collections.search.enabled
+        if request_scoped:
+            request_collections = {
+                "composition": synced.get("flat_collection"),
+                "search": synced.get("search_collection"),
+                "codes": synced.get("codes_collection"),
+                "shortcuts": synced.get("shortcuts_collection"),
+            }
+            missing = [
+                name
+                for name, value in request_collections.items()
+                if not isinstance(value, str) or not value.strip()
+            ]
+            if missing:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=(
+                        "Resolved openEHR request context is incomplete; refusing process-global "
+                        f"AQL collection fallback for: {', '.join(sorted(missing))}."
+                    ),
+                )
+            schema_config.update(
+                {
+                    "collection": request_collections["composition"],
+                    "codes_collection": request_collections["codes"],
+                    "shortcuts_collection": request_collections["shortcuts"],
+                }
+            )
+            search_schema_config.update(
+                {
+                    "collection": request_collections["search"],
+                    "lookup_from": request_collections["composition"],
+                    "codes_collection": request_collections["codes"],
+                    "shortcuts_collection": request_collections["shortcuts"],
+                    "index_name": synced.get("search_index_name"),
+                    "enabled": bool(synced.get("search_enabled", True)),
+                }
+            )
     else:
         schema_config = {
             "composition_array": "cn",
@@ -172,18 +213,39 @@ async def _resolve_transformer_inputs(
             "separator": ".",
         }
 
-    collection_format = await _detect_collection_format_for(
-        db,
-        schema_config.get("collection") or settings.search_config.flatten_collection,
-    )
+    collection_name = schema_config.get("collection")
+    if not collection_name:
+        if request_scoped:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Resolved openEHR request context has no AQL composition collection.",
+            )
+        collection_name = settings.search_config.flatten_collection
+    collection_format = await _detect_collection_format_for(db, collection_name)
     schema_config["format"] = collection_format
     search_schema_config["format"] = collection_format
     schema_config.setdefault("archetype_path", "ap")
     search_schema_config.setdefault("archetype_path", "ap")
-    schema_config.setdefault("codes_collection", settings.search_config.codes_collection)
-    schema_config.setdefault("shortcuts_collection", settings.search_config.shortcuts_collection)
-    search_schema_config.setdefault("codes_collection", settings.search_config.codes_collection)
-    search_schema_config.setdefault("shortcuts_collection", settings.search_config.shortcuts_collection)
+    if request_scoped:
+        for schema_name, candidate in (
+            ("composition", schema_config),
+            ("search", search_schema_config),
+        ):
+            for key in ("codes_collection", "shortcuts_collection"):
+                value = candidate.get(key)
+                if not isinstance(value, str) or not value.strip():
+                    raise HTTPException(
+                        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        detail=(
+                            "Resolved openEHR request context has no "
+                            f"{schema_name} {key.replace('_', ' ')}."
+                        ),
+                    )
+    else:
+        schema_config.setdefault("codes_collection", settings.search_config.codes_collection)
+        schema_config.setdefault("shortcuts_collection", settings.search_config.shortcuts_collection)
+        search_schema_config.setdefault("codes_collection", settings.search_config.codes_collection)
+        search_schema_config.setdefault("shortcuts_collection", settings.search_config.shortcuts_collection)
 
     codes_doc_id = _dictionary_doc_id(raw_cfg, "codes", schema_config.get("codes_doc_id", "ar_code"))
     shortcuts_doc_id = _dictionary_doc_id(raw_cfg, "shortcuts", schema_config.get("shortcuts_doc_id", "shortcuts"))
@@ -207,6 +269,7 @@ async def build_aql_pipeline(
     ehr_id: str = None,
     request: Optional[Request] = None,
     feature_mode: Optional[str] = None,
+    force_search: bool = False,
 ) -> List[Dict[str, Any]]:
     """
     Builds the MongoDB aggregation pipeline from an AST query.
@@ -218,24 +281,37 @@ async def build_aql_pipeline(
         db,
         request=request,
     )
-    
+
     transformer = AQLtoMQLTransformer(
-        ast_query, 
-        ehr_id=ehr_id, 
-        schema_config=schema_config, 
+        ast_query,
+        ehr_id=ehr_id,
+        schema_config=schema_config,
         search_schema_config=search_schema_config,
         db=db,
-        search_index_name=settings.search_config.search_index_name,
+        search_index_name=(
+            search_schema_config.get("index_name")
+            or ("search_compositions_index" if request is not None else settings.search_config.search_index_name)
+        ),
         strategy=runtime_strategy,
         shortcut_map=shortcut_map,
     )
-    
+
     # Determine which pipeline to build based on strategy
-    if settings.search_config.enable_dual_strategy and transformer.should_use_search_strategy(ehr_id, settings.search_config.force_search_strategy):
+    dual_strategy = bool(
+        search_schema_config.get(
+            "enabled",
+            True if request is not None else settings.search_config.enable_dual_strategy,
+        )
+    )
+    effective_force_search = bool(
+        force_search
+        or (False if request is not None else settings.search_config.force_search_strategy)
+    )
+    if dual_strategy and transformer.should_use_search_strategy(ehr_id, effective_force_search):
         pipeline = await transformer.build_search_pipeline()
     else:
         pipeline = await transformer.build_pipeline()
-    
+
     return pipeline
 
 
@@ -403,6 +479,7 @@ async def execute_aql_query_payload(
     offset: Optional[int] = None,
     timeout_ms: Optional[int] = None,
     feature_mode: Optional[str] = None,
+    force_search: bool = False,
 ) -> Dict[str, Any]:
     collection_format, schema_config, search_schema_config, shortcut_map, runtime_strategy = await _resolve_transformer_inputs(
         db,
@@ -423,30 +500,43 @@ async def execute_aql_query_payload(
         schema_config=schema_config,
         search_schema_config=search_schema_config,
         db=db,
-        search_index_name=settings.search_config.search_index_name,
+        search_index_name=(
+            search_schema_config.get("index_name")
+            or ("search_compositions_index" if request is not None else settings.search_config.search_index_name)
+        ),
         strategy=runtime_strategy,
         shortcut_map=shortcut_map,
     )
 
-    use_search_strategy = (
-        settings.search_config.enable_dual_strategy
-        and transformer.should_use_search_strategy(ehr_id, settings.search_config.force_search_strategy)
+    dual_strategy = bool(
+        search_schema_config.get(
+            "enabled",
+            True if request is not None else settings.search_config.enable_dual_strategy,
+        )
+    )
+    effective_force_search = bool(
+        force_search
+        or (False if request is not None else settings.search_config.force_search_strategy)
+    )
+    use_search_strategy = dual_strategy and transformer.should_use_search_strategy(
+        ehr_id,
+        effective_force_search,
     )
 
     logger.info(
         "AQL strategy decision: %s (ehr_id=%s, dual_strategy=%s, force_search=%s)",
         "SEARCH" if use_search_strategy else "MATCH",
         "provided" if ehr_id else "none",
-        settings.search_config.enable_dual_strategy,
-        settings.search_config.force_search_strategy,
+        dual_strategy,
+        effective_force_search,
     )
 
     if use_search_strategy:
         pipeline = await transformer.build_search_pipeline()
-        target_collection = settings.search_config.search_collection
+        target_collection = search_schema_config["collection"]
     else:
         pipeline = await transformer.build_pipeline()
-        target_collection = settings.search_config.flatten_collection
+        target_collection = schema_config["collection"]
 
     logger.info(
         "Built %s pipeline with %s stages, targeting collection: %s",
@@ -461,6 +551,7 @@ async def execute_aql_query_payload(
             db=db,
             collection_format=collection_format,
             use_search_collection=use_search_strategy,
+            collection_name=target_collection,
         )
     except PyMongoError as exc:
         if use_search_strategy and _is_atlas_search_unavailable(exc):
@@ -468,13 +559,14 @@ async def execute_aql_query_payload(
                 "Atlas Search is unavailable for this MongoDB target; retrying AQL with the standard match pipeline."
             )
             pipeline = await transformer.build_pipeline()
-            target_collection = settings.search_config.flatten_collection
+            target_collection = schema_config["collection"]
             use_search_strategy = False
             results = await execute_aql_query(
                 pipeline=pipeline,
                 db=db,
                 collection_format=collection_format,
                 use_search_collection=False,
+                collection_name=target_collection,
             )
         else:
             raise
@@ -576,6 +668,7 @@ async def process_aql_query(
     include_explain: bool = False,
     timeout_ms: Optional[int] = None,
     feature_mode: Optional[str] = None,
+    force_search: bool = False,
 ) -> QueryResponse:
     """
     Handles the full lifecycle of executing an AQL query.
@@ -603,6 +696,7 @@ async def process_aql_query(
             offset=offset,
             timeout_ms=timeout_ms,
             feature_mode=feature_mode,
+            force_search=force_search,
         )
 
         meta = MetaData(
@@ -610,7 +704,7 @@ async def process_aql_query(
             executed_aql=aql_query
         )
         return QueryResponse(meta=meta, q=aql_query, columns=payload["columns"], rows=payload["rows"])
-    
+
     except PyMongoError:
         logger.error("AQL query execution failed", exc_info=False)
         raise HTTPException(

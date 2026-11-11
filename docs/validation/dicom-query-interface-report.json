@@ -1,0 +1,64 @@
+{
+  "strategyId": "dicom.tiered_store",
+  "strategyVersion": "0.2.0",
+  "queryContract": "dicom-query/v1",
+  "catalogContract": "dicom-query-catalog/v1",
+  "suite": [
+    "tests/unit/test_dicom_tiered_store.py",
+    "tests/integration/test_dicom_tiered_store_mongo.py",
+    "tests/contract/test_dicom_runtime_surfaces.py",
+    "tests/contract/test_strategy_sdk_conformance.py",
+    "tests/contract/test_strategy_packs_portable.py",
+    "tests/contract/test_strategy_portfolio.py",
+    "tests/contract/test_manifest_discovery_failfast.py",
+    "tests/contract/test_strategy_defaults_schema.py",
+    "tests/contract/test_strategy_pack_loader.py",
+    "tests/contract/test_strategy_pack_validation.py",
+    "tests/contract/test_compile_explain_keys_all_strategies.py",
+    "tests/unit/test_unified_cli_run.py",
+    "tests/unit/test_catalog_maintenance.py",
+    "tests/contract/test_outcome_catalog.py",
+    "tests/contract/test_source_aware_strategy_compiler.py",
+    "tests/contract/test_solution_blueprint_canonicalization.py",
+    "tests/contract/test_solution_blueprint_instantiation_contracts.py",
+    "tests/contract/test_package_digest.py"
+  ],
+  "results": {
+    "tests": 196,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "passed": 196,
+  "backend": "Disposable localhost MongoDB 8.0.16; unique test databases removed by fixtures",
+  "evidence": [
+    "same-instance multi-tag and same-value numeric bounds",
+    "scope and request-schema enforcement",
+    "selected header VR fidelity and missing state",
+    "response BSON byte bound and explicit deferral",
+    "inline and bundle storage",
+    "all nine default synthetic examples through SDK and HTTP",
+    "CLI dispatch through real HTTP and MongoDB",
+    "native manifest, portfolio, compiler and package contracts"
+  ],
+  "limitations": {
+    "scaleValidated": false,
+    "azureTransfersValidated": false,
+    "atlasSearchExecutionValidated": false,
+    "publishedCohorts": false,
+    "pixelDelivery": false
+  },
+  "supplementalDiscoveryValidation": {
+    "suite": [
+      "tests/contract/test_manifest_convergence.py",
+      "tests/contract/test_industry_outcome_catalog_runtime.py"
+    ],
+    "results": {
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "totalPassed": 222
+}

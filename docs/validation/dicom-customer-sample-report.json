@@ -1,0 +1,263 @@
+{
+  "contract": "dicom-validation/v1",
+  "serverVersion": "8.0.16",
+  "sampleProfile": {
+    "studies": 500,
+    "series": 518,
+    "instances": 1062,
+    "centers": 6,
+    "modalities": {
+      "MG": 9,
+      "SR": 1,
+      "OT": 508
+    },
+    "series_center_differs_from_study": 66,
+    "scalar_series_uid_values": 64,
+    "orphan_series": 0,
+    "distinct_header_tags": 220,
+    "missing_content_index": 1,
+    "source_instance_logical_bson_bytes": 2650804,
+    "source_study_logical_bson_bytes": 249672
+  },
+  "containsSourceIdentifiers": false,
+  "scaleBenchmark": false,
+  "physicalStatisticsCheckpointed": true,
+  "modes": {
+    "inline": {
+      "metadataRoundtripsVerified": 1062,
+      "seriesBrowseQueriesVerified": 518,
+      "studyBrowseVerified": true,
+      "patientDayBrowseVerified": true,
+      "modalityBrowseVerified": true,
+      "studySeriesBrowseVerified": true,
+      "progressiveImportVerified": true,
+      "collectionsBeforeResearch": {
+        "studies": {
+          "count": 500,
+          "size": 590145,
+          "storageSize": 200704,
+          "totalIndexSize": 208896,
+          "nindexes": 5
+        },
+        "series": {
+          "count": 518,
+          "size": 542522,
+          "storageSize": 208896,
+          "totalIndexSize": 258048,
+          "nindexes": 5
+        },
+        "instances": {
+          "count": 1062,
+          "size": 3312525,
+          "storageSize": 598016,
+          "totalIndexSize": 172032,
+          "nindexes": 2
+        }
+      },
+      "viewerPlan": {
+        "indexes": [
+          "idx_dicom_instance_series_order"
+        ],
+        "collectionScan": false,
+        "blockingSort": false,
+        "totalDocsExamined": 12,
+        "totalKeysExamined": 12,
+        "nReturned": 12
+      },
+      "instanceIngestCatalogWrites": 0,
+      "asynchronousSeriesSummaryVerified": true,
+      "descriptionBrowseVerified": true,
+      "catalogPlans": {
+        "patientDay": {
+          "indexes": [
+            "idx_dicom_study_patient_day"
+          ],
+          "collectionScan": false,
+          "blockingSort": false,
+          "totalDocsExamined": 1,
+          "totalKeysExamined": 1,
+          "nReturned": 1
+        },
+        "modality": {
+          "indexes": [
+            "idx_dicom_study_modality_day"
+          ],
+          "collectionScan": false,
+          "blockingSort": false,
+          "totalDocsExamined": 1,
+          "totalKeysExamined": 1,
+          "nReturned": 1
+        },
+        "studySeries": {
+          "indexes": [
+            "idx_dicom_series_study"
+          ],
+          "collectionScan": false,
+          "blockingSort": false,
+          "totalDocsExamined": 10,
+          "totalKeysExamined": 10,
+          "nReturned": 10
+        }
+      },
+      "selectiveResearchDocuments": 9,
+      "researchCoverage": "partial",
+      "collectionsAfterResearch": {
+        "studies": {
+          "count": 500,
+          "size": 590145,
+          "storageSize": 405504,
+          "totalIndexSize": 397312,
+          "nindexes": 5
+        },
+        "series": {
+          "count": 518,
+          "size": 542740,
+          "storageSize": 413696,
+          "totalIndexSize": 495616,
+          "nindexes": 5
+        },
+        "instances": {
+          "count": 1062,
+          "size": 3312525,
+          "storageSize": 1191936,
+          "totalIndexSize": 335872,
+          "nindexes": 2
+        },
+        "research": {
+          "count": 9,
+          "size": 9981,
+          "storageSize": 20480,
+          "totalIndexSize": 81920,
+          "nindexes": 4
+        }
+      },
+      "retainedBundleObjects": 0,
+      "retainedBundleBytes": 0
+    },
+    "bundle": {
+      "metadataRoundtripsVerified": 1062,
+      "seriesBrowseQueriesVerified": 518,
+      "studyBrowseVerified": true,
+      "patientDayBrowseVerified": true,
+      "modalityBrowseVerified": true,
+      "studySeriesBrowseVerified": true,
+      "progressiveImportVerified": true,
+      "collectionsBeforeResearch": {
+        "studies": {
+          "count": 500,
+          "size": 590145,
+          "storageSize": 200704,
+          "totalIndexSize": 208896,
+          "nindexes": 5
+        },
+        "series": {
+          "count": 518,
+          "size": 542522,
+          "storageSize": 208896,
+          "totalIndexSize": 258048,
+          "nindexes": 5
+        },
+        "instances": {
+          "count": 1062,
+          "size": 1015312,
+          "storageSize": 299008,
+          "totalIndexSize": 172032,
+          "nindexes": 2
+        }
+      },
+      "viewerPlan": {
+        "indexes": [
+          "idx_dicom_instance_series_order"
+        ],
+        "collectionScan": false,
+        "blockingSort": false,
+        "totalDocsExamined": 12,
+        "totalKeysExamined": 12,
+        "nReturned": 12
+      },
+      "instanceIngestCatalogWrites": 0,
+      "asynchronousSeriesSummaryVerified": true,
+      "descriptionBrowseVerified": true,
+      "catalogPlans": {
+        "patientDay": {
+          "indexes": [
+            "idx_dicom_study_patient_day"
+          ],
+          "collectionScan": false,
+          "blockingSort": false,
+          "totalDocsExamined": 1,
+          "totalKeysExamined": 1,
+          "nReturned": 1
+        },
+        "modality": {
+          "indexes": [
+            "idx_dicom_study_modality_day"
+          ],
+          "collectionScan": false,
+          "blockingSort": false,
+          "totalDocsExamined": 1,
+          "totalKeysExamined": 1,
+          "nReturned": 1
+        },
+        "studySeries": {
+          "indexes": [
+            "idx_dicom_series_study"
+          ],
+          "collectionScan": false,
+          "blockingSort": false,
+          "totalDocsExamined": 10,
+          "totalKeysExamined": 10,
+          "nReturned": 10
+        }
+      },
+      "selectiveResearchDocuments": 9,
+      "researchCoverage": "partial",
+      "collectionsAfterResearch": {
+        "studies": {
+          "count": 500,
+          "size": 590145,
+          "storageSize": 405504,
+          "totalIndexSize": 397312,
+          "nindexes": 5
+        },
+        "series": {
+          "count": 518,
+          "size": 542740,
+          "storageSize": 413696,
+          "totalIndexSize": 495616,
+          "nindexes": 5
+        },
+        "instances": {
+          "count": 1062,
+          "size": 1015312,
+          "storageSize": 593920,
+          "totalIndexSize": 335872,
+          "nindexes": 2
+        },
+        "research": {
+          "count": 9,
+          "size": 9981,
+          "storageSize": 20480,
+          "totalIndexSize": 81920,
+          "nindexes": 4
+        }
+      },
+      "retainedBundleObjects": 11,
+      "retainedBundleBytes": 2655173
+    }
+  },
+  "baselineInstanceCollection": {
+    "count": 1062,
+    "size": 2650804,
+    "storageSize": 405504,
+    "totalIndexSize": 348160,
+    "nindexes": 5
+  },
+  "elapsedSecondsDiagnosticOnly": 7.327,
+  "limitations": [
+    "Mostly synthetic OT; no CT/MR sizing conclusion.",
+    "Logical BSON bytes and local index/storage sizes are not Atlas prices.",
+    "Local unsharded correctness validation is not a 15-billion-instance benchmark.",
+    "Azure transfers, Search builds, archive scans, pixel rendering, and condition cohorts were not exercised."
+  ]
+}

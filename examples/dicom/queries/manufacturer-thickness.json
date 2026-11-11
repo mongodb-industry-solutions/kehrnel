@@ -1,0 +1,22 @@
+{
+  "version": "dicom-query/v1",
+  "resource": "research",
+  "filter": {
+    "modality": "MG",
+    "fromDay": "2026-01-01",
+    "toDay": "2027-01-01",
+    "tags": [
+      {
+        "path": "00080070",
+        "equals": "SYNTHETIC_MANUFACTURER"
+      },
+      {
+        "path": "00180050",
+        "gte": 1,
+        "lt": 2
+      }
+    ]
+  },
+  "limit": 100,
+  "allowPartial": true
+}

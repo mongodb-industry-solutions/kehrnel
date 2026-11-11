@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import logging
 import secrets
@@ -14,6 +15,7 @@ from pathlib import Path
 from typing import Optional
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI, Request, HTTPException, Security
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, RedirectResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,8 +23,28 @@ from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 
+
+def _load_local_environment() -> None:
+    """Load developer-local settings unless the caller requests isolation.
+
+    Test and CI processes set ``KEHRNEL_SKIP_DOTENV=true`` so collection can
+    never discover workstation credentials implicitly. Production deployments
+    should provide their configuration through the process environment.
+    """
+    if os.getenv("KEHRNEL_SKIP_DOTENV", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }:
+        return
+    dotenv_path = find_dotenv(".env.local", usecwd=True)
+    if dotenv_path:
+        load_dotenv(dotenv_path, override=False)
+
+
 # Load environment before importing modules that instantiate settings at import time.
-load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+_load_local_environment()
 
 from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.engine.core.manifest import StrategyManifest
@@ -30,10 +52,51 @@ from kehrnel.engine.core.registry import FileActivationRegistry
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.bundle_store import BundleStore
 from kehrnel.engine.core.pack_validator import StrategyPackValidator
+from kehrnel.engine.core.pack_loader import (
+    iter_strategy_manifest_paths,
+    load_strategy_manifest,
+    strategy_pack_root,
+)
+
+from kehrnel.engine.core.pack_loader import validate_installed_pack, contained_package_file
 from kehrnel.engine.core.bindings_resolver import load_bindings_resolver_from_env
 from kehrnel.engine.core.synthetic_jobs import SyntheticJobManager
 from kehrnel.engine.core.synthetic_jobs_store import MongoSyntheticJobStore
 from kehrnel.engine.core.redaction import redact_sensitive
+from kehrnel.engine.core.implementation_artifact_store import (
+    FileImplementationArtifactStore,
+)
+
+
+def _json_safe_validation_value(value):
+    """Normalize Pydantic validation context without leaking unserializable errors.
+
+    Pydantic v2 may retain the original ``ValueError`` under ``ctx.error``.
+    Passing that object directly to ``JSONResponse`` turns an intended 422 into
+    a 500 while Starlette serializes the response.  Keep the useful validation
+    message, but reduce every value to JSON-native data first.
+    """
+
+    if isinstance(value, BaseException):
+        return redact_sensitive(str(value)) or "invalid"
+    if isinstance(value, dict):
+        return {
+            str(key): _json_safe_validation_value(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_json_safe_validation_value(item) for item in value]
+    if isinstance(value, float):
+        return value if math.isfinite(value) else str(value)
+    if value is None or isinstance(value, (str, int, bool)):
+        return value
+    return redact_sensitive(str(value)) or type(value).__name__
+
+from kehrnel.engine.core.strategy_access import StrategyAccessPolicy
+from kehrnel.api.common.delegated_principal import (
+    bind_request_authority, enforce_delegator_route, load_authority_configuration,
+    require_package, request_authority,
+)
 
 
 # ============================================================================
@@ -43,21 +106,40 @@ from kehrnel.engine.core.redaction import redact_sensitive
 # API Key Authentication
 API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
 
-# Paths that don't require authentication
-PUBLIC_PATHS = {"/", "/health", "/openapi.json", "/favicon.ico"}
-PUBLIC_PATH_PREFIXES = ("/docs", "/redoc", "/openapi/", "/guide")
+# Anonymous access reaches the same package policy as authenticated access.
+PUBLIC_PATHS = {"/health", "/openapi.json", "/favicon.ico", "/strategies"}
+PUBLIC_PATH_PREFIXES = ("/docs", "/redoc", "/openapi", "/guide")
 PUBLIC_PATH_PATTERNS = (
-    # Strategy static assets referenced from docs/specs.
-    re.compile(r"^/strategies/[^/]+/assets/.+"),
+    re.compile(r"^/strategies/[^/]+(?:/(?:spec|endpoints|assets/.+))?$"),
+    re.compile(r"^/api/persistence-strategies/[^/]+$"),
 )
 
 
 def _is_public_path(path: str) -> bool:
-    return (
-        path in PUBLIC_PATHS
-        or any(path.startswith(prefix) for prefix in PUBLIC_PATH_PREFIXES)
-        or any(pattern.match(path) for pattern in PUBLIC_PATH_PATTERNS)
-    )
+    path = path[3:] if path.startswith("/v1/") else path
+    if path in {"/strategies/installed", "/strategies/diagnostics", "/strategies/load"}:
+        return False
+    return (path in PUBLIC_PATHS or any(path == p or path.startswith(p + "/") for p in PUBLIC_PATH_PREFIXES)
+            or any(pattern.fullmatch(path) for pattern in PUBLIC_PATH_PATTERNS))
+
+
+# The FHIR router is mounted both at the root and behind /v1.
+FHIR_ROUTE_PREFIXES = ("/api/domains/fhir", "/v1/api/domains/fhir")
+
+
+
+
+# The FHIR router is mounted both at the root and behind /v1.
+FHIR_ROUTE_PREFIXES = ("/api/domains/fhir", "/v1/api/domains/fhir")
+
+
+def _is_fhir_route(path: str) -> bool:
+    """True only for the FHIR router and its routes.
+
+    Matching on segment boundaries (rather than a substring) keeps unrelated
+    paths that merely contain the prefix on the default error shape.
+    """
+    return any(path == prefix or path.startswith(f"{prefix}/") for prefix in FHIR_ROUTE_PREFIXES)
 
 
 def _get_api_keys() -> set[str]:
@@ -91,10 +173,10 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         path = request.url.path or ""
-        # Skip auth for public paths
-        if _is_public_path(path):
-            return await call_next(request)
-
+        catalog_headers = {
+            "Cache-Control": "private, no-store",
+            "Vary": "X-API-Key, X-HDL-Principal-Assertion",
+        } if path in {"/v1/source-profiles", "/v1/architecture-resolution-inputs"} else {}
         # Skip if auth is disabled
         if not _is_auth_enabled():
             return await call_next(request)
@@ -102,6 +184,17 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
         # Get API key from header
         api_key = request.headers.get("X-API-Key")
         valid_keys = _get_api_keys()
+
+        if not api_key and request.method == "GET" and _is_public_path(path):
+            try:
+                bind_request_authority(request)
+                enforce_delegator_route(request)
+            except KehrnelError as exc:
+                return JSONResponse(status_code=exc.status, content={"error": {"code": exc.code, "message": str(exc), "details": {}}}, headers=catalog_headers)
+            response = await call_next(request)
+            response.headers["Cache-Control"] = "private, no-store"
+            response.headers["Vary"] = "X-API-Key, X-HDL-Principal-Assertion"
+            return response
 
         if not valid_keys:
             # Fail closed: auth is enabled but no keys are configured.
@@ -111,12 +204,14 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=503,
                 content={"error": {"code": "AUTH_MISCONFIGURED", "message": "Authentication is enabled but not configured"}},
+                headers=catalog_headers,
             )
 
         if not api_key:
             return JSONResponse(
                 status_code=401,
                 content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
+                headers=catalog_headers,
             )
         # Check if key is valid using constant-time comparison
         key_valid = any(secrets.compare_digest(api_key, k) for k in valid_keys)
@@ -124,13 +219,26 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=401,
                 content={"error": {"code": "UNAUTHORIZED", "message": "Invalid or missing API key"}},
+                headers=catalog_headers,
             )
         # Avoid using attacker-controlled headers directly for other controls.
         key_fingerprint = _api_key_fingerprint(api_key)
         request.state.authenticated_api_key = key_fingerprint
         request.state.rate_limit_key = f"key:{key_fingerprint}"
-
-        return await call_next(request)
+        try:
+            bind_request_authority(request)
+            enforce_delegator_route(request)
+            normalized = path[3:] if path.startswith("/v1/") else path
+            match = re.match(r"^/api/strategies/([^/]+)/([^/]+)(?:/|$)", normalized)
+            if match:
+                require_package(request, f"{match[1]}.{match[2]}")
+        except KehrnelError as exc:
+            return JSONResponse(status_code=exc.status, content={"error": {"code": exc.code, "message": str(exc), "details": {}}}, headers=catalog_headers)
+        response = await call_next(request)
+        if request.method == "GET" and (_is_public_path(path) or path in {"/v1/source-profiles", "/v1/architecture-resolution-inputs"}):
+            response.headers["Cache-Control"] = "private, no-store"
+            response.headers["Vary"] = "X-API-Key, X-HDL-Principal-Assertion"
+        return response
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
@@ -241,7 +349,7 @@ def _strategy_paths() -> list[Path]:
 
 def validate_strategy_pack(manifest_data: dict, base_path: Path) -> list[str]:
     """Validate that a strategy pack has required assets and fields."""
-    return StrategyPackValidator(manifest_data, base_path).validate()
+    return validate_installed_pack(manifest_data, base_path)
 
 
 def _seed_default_bundles(store: BundleStore):
@@ -262,39 +370,60 @@ def _seed_default_bundles(store: BundleStore):
 
 
 def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], dict[str, str]]:
-    manifests: list[StrategyManifest] = []
     diagnostics: list[dict[str, object]] = []
     log = logging.getLogger("kehrnel.strategy.discovery")
-    manifest_records: list[dict[str, object]] = []
+    seen: set[str] = set()
+    manifests: list[StrategyManifest] = []
+    asset_dirs: dict[str, str] = {}
     for base in _strategy_paths():
         if not base.exists():
             continue
-        for manifest_path in base.glob("**/manifest.json"):
-            # Skip disabled strategy folders staged outside active discovery.
-            if any(part.startswith("_disabled") for part in manifest_path.parts):
-                continue
+        for manifest_path in iter_strategy_manifest_paths(base):
             try:
-                data = json.loads(manifest_path.read_text(encoding="utf-8"))
-                base_dir = manifest_path.parent
-                defaults_path = base_dir / "defaults.json"
-                schema_path = base_dir / "schema.json"
-                spec_field = data.get("spec")
-                if isinstance(spec_field, dict):
-                    spec_path = base_dir / (spec_field.get("path") or "spec.json")
-                elif isinstance(spec_field, str):
-                    spec_path = base_dir / spec_field
-                else:
-                    spec_path = base_dir / "spec.json"
-                if defaults_path.exists():
-                    data["default_config"] = json.loads(defaults_path.read_text(encoding="utf-8"))
-                if schema_path.exists():
-                    data["config_schema"] = json.loads(schema_path.read_text(encoding="utf-8"))
-                if data.get("pack_format") == "strategy-pack/v1" and spec_path.exists():
-                    try:
-                        data["pack_spec"] = json.loads(spec_path.read_text(encoding="utf-8"))
-                    except Exception:
-                        pass
-                manifest_records.append({"data": data, "manifest_path": manifest_path})
+                manifest = load_strategy_manifest(manifest_path)
+                errors: list[str] = []
+                if manifest.id in seen:
+                    errors.append(f"Duplicate strategy id detected during discovery: {manifest.id}")
+                if not errors:
+                    seen.add(manifest.id)
+                    manifest.pack_root = str(strategy_pack_root(manifest_path).resolve())
+                    manifests.append(manifest)
+                    asset_dirs[manifest.id] = str(strategy_pack_root(manifest_path))
+                diagnostics.append(
+                    {
+                        "id": manifest.id,
+                        "domain": manifest.domain,
+                        "version": manifest.version,
+                        "entrypoint": manifest.entrypoint,
+                        "is_valid": not errors,
+                        "validation_errors": errors,
+                        "structured_diagnostics": [],
+                        "paths": {
+                            "manifest_path": str(manifest_path),
+                            "base_dir": str(strategy_pack_root(manifest_path)),
+                        },
+                    }
+                )
+            except KehrnelError as exc:
+                details = exc.details or {}
+                identity = details.get("manifest") or {}
+                errors = list(details.get("errors") or [str(exc)])
+                log.error("Failed to load manifest %s: %s", manifest_path, exc)
+                diagnostics.append(
+                    {
+                        "id": identity.get("id"),
+                        "domain": identity.get("domain"),
+                        "version": identity.get("version"),
+                        "entrypoint": identity.get("entrypoint"),
+                        "is_valid": False,
+                        "validation_errors": errors,
+                        "structured_diagnostics": details.get("diagnostics") or [],
+                        "paths": {
+                            "manifest_path": str(manifest_path),
+                            "base_dir": str(strategy_pack_root(manifest_path)),
+                        },
+                    }
+                )
             except Exception as exc:
                 log.error("Failed to load manifest %s: %s", manifest_path, exc)
                 diagnostics.append(
@@ -305,54 +434,28 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
                         "entrypoint": None,
                         "is_valid": False,
                         "validation_errors": [f"{manifest_path}: {exc}"],
-                        "paths": {"manifest_path": str(manifest_path), "base_dir": str(manifest_path.parent)},
+                        "structured_diagnostics": [],
+                        "paths": {
+                            "manifest_path": str(manifest_path),
+                            "base_dir": str(strategy_pack_root(manifest_path)),
+                        },
                     }
                 )
-    # validate and collect diagnostics
-    for rec in manifest_records:
-        data = rec["data"]
-        manifest_path: Path = rec["manifest_path"]
-        errors = validate_strategy_pack(data, manifest_path.parent)
-        rec["errors"] = errors
-    # enforce unique IDs
-    seen = set()
-    unique: list[StrategyManifest] = []
-    asset_dirs: dict[str, str] = {}
-    for rec in manifest_records:
-        data = rec["data"]
-        manifest_path: Path = rec["manifest_path"]
-        errors = list(rec.get("errors") or [])
-        mid = data.get("id")
-        if not errors and mid in seen:
-            errors.append(f"Duplicate strategy id detected during discovery: {mid}")
-        if not errors:
-            seen.add(mid)
-            unique.append(StrategyManifest(**data))
-            if mid:
-                asset_dirs[mid] = str(manifest_path.parent)
-        diagnostics.append(
-            {
-                "id": data.get("id"),
-                "domain": data.get("domain"),
-                "version": data.get("version"),
-                "entrypoint": data.get("entrypoint"),
-                "is_valid": len(errors) == 0,
-                "validation_errors": errors,
-                "paths": {"manifest_path": str(manifest_path), "base_dir": str(manifest_path.parent)},
-            }
-        )
-    return unique, diagnostics, asset_dirs
+    return manifests, diagnostics, asset_dirs
 
 
 def create_app(registry_path: str | None = None, bundle_path: str | None = None) -> FastAPI:
-    load_dotenv(find_dotenv(".env.local", usecwd=True), override=False)
+    _load_local_environment()
     from kehrnel.api.core.admin.activation_routes import router as activation_router
     from kehrnel.api.core.admin.ops_by_domain import router as ops_domain_router
     from kehrnel.api.core.admin.routes import router as admin_router
+    from kehrnel.api.core.blueprints import router as blueprint_router
+    from kehrnel.api.core.design_catalogs import router as design_catalog_router
     from kehrnel.api.domains.fhir.routes import router as fhir_domain_router
     from kehrnel.api.internal.routes import router as internal_runtime_router
     from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
     from kehrnel.api.domains.snomedct.routes import router as snomedct_domain_router
+    from kehrnel.api.terminology.routes import router as terminology_router
     from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
@@ -362,6 +465,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         version="0.0.0",
         docs_url=None,
         redoc_url=None,
+        openapi_url=None,
         swagger_ui_parameters={"favicon_url": "/favicon.ico"},
     )
 
@@ -401,6 +505,13 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
 
     reg_path = registry_path or os.getenv("KEHRNEL_REGISTRY_PATH") or str(Path(".kehrnel_registry.json").resolve())
     bundle_dir = Path(bundle_path) if bundle_path else Path(".kehrnel/bundles")
+    implementation_artifact_root = Path(
+        os.getenv("KEHRNEL_IMPLEMENTATION_ARTIFACT_STORE_PATH")
+        or (Path(reg_path).parent / ".kehrnel-artifacts")
+    )
+    app.state.implementation_artifact_store = FileImplementationArtifactStore(
+        implementation_artifact_root
+    )
     bundle_store = BundleStore(bundle_dir)
     _seed_default_bundles(bundle_store)
     bindings_resolver = load_bindings_resolver_from_env()
@@ -410,7 +521,17 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         bindings_resolver=bindings_resolver,
     )
     manifests, diagnostics, asset_dirs = _load_manifests()
-    # Clear stale manifests from registry before registering fresh ones from disk
+    # Validate the entire discovery batch before changing registry state.
+    for manifest in manifests:
+        runtime.registry.validate_manifest_registration(manifest)
+    policy_path = os.getenv("KEHRNEL_STRATEGY_ACCESS_FILE")
+    if policy_path:
+        resolved_policy = Path(policy_path).resolve()
+        if any(Path(m.pack_root).resolve() == resolved_policy or Path(m.pack_root).resolve() in resolved_policy.parents for m in manifests):
+            raise ValueError("Strategy access sidecar must be outside package roots")
+    app.state.architecture_input_package_roots = tuple(m.pack_root for m in manifests if m.pack_root)
+    app.state.strategy_access_policy = StrategyAccessPolicy.from_file(policy_path)
+    app.state.api_key_authorities = load_authority_configuration()
     runtime.registry.clear_manifests()
     for manifest in manifests:
         runtime.register_manifest(manifest)
@@ -460,6 +581,19 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     app.state.allowed_strategy_paths = [p.resolve() for p in _strategy_paths()]
 
     @app.on_event("startup")
+    async def _recover_persisted_strategy_jobs() -> None:
+        manager = getattr(app.state, "synthetic_job_manager", None)
+        if manager is None:
+            return
+        mode = (os.getenv("KEHRNEL_JOBS_RECOVERY") or "fail").strip().lower()
+        try:
+            recovered = await manager.recover_incomplete_jobs(retry=mode == "retry")
+            if recovered.get("found"):
+                logging.getLogger("kehrnel.jobs").info("Recovered persisted jobs: %s", recovered)
+        except Exception as exc:
+            logging.getLogger("kehrnel.jobs").warning("Persisted job recovery failed: %s", exc)
+
+    @app.on_event("startup")
     async def _init_default_ingestion_runtime() -> None:
         """
         Best-effort bootstrap for domain composition/synthetic endpoints that
@@ -501,18 +635,78 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
                 "Could not initialize default ingestion runtime: %s", exc
             )
 
-    def _strategy_openapi(domain: str, strategy: str) -> dict:
+    def _filtered_openapi(request: Request) -> dict:
+        schema = deepcopy(app.openapi())
+        visible = set()
+        for manifest in runtime.list_strategies():
+            try:
+                require_package(request, manifest.id)
+                visible.add(manifest.id)
+            except KehrnelError:
+                pass
+        domains = {m.domain.lower() for m in runtime.list_strategies() if m.id in visible}
+        paths = {}
+        for path, item in schema.get("paths", {}).items():
+            normalized = path[3:] if path.startswith("/v1/") else path
+            parts = normalized.strip("/").split("/")
+            if parts[:2] == ["api", "strategies"] and len(parts) >= 4 and f"{parts[2]}.{parts[3]}" not in visible:
+                continue
+            if parts[:2] == ["api", "domains"] and len(parts) >= 3 and parts[2] not in domains:
+                continue
+            paths[path] = item
+        schema["paths"] = paths
+        return _prune_components(schema)
+
+    def _prune_components(schema):
+        # Retain only components transitively referenced by admitted paths.
+        components = schema.get("components", {})
+        seen = set()
+        pending = []
+        def references(value):
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    if key == "$ref" and isinstance(child, str) and child.startswith("#/components/"):
+                        pending.append(child)
+                    else:
+                        references(child)
+            elif isinstance(value, list):
+                for child in value:
+                    references(child)
+        references(schema.get("paths", {}))
+        references(schema.get("security", []))
+        # Security requirement objects name schemes without a $ref.
+        for name in components.get("securitySchemes", {}):
+            pending.append("#/components/securitySchemes/" + name)
+        kept = {}
+        while pending:
+            ref = pending.pop()
+            if ref in seen:
+                continue
+            seen.add(ref)
+            parts = ref.split("/")
+            if len(parts) == 4:
+                category, name = parts[2:]
+                value = components.get(category, {}).get(name)
+                if value is not None:
+                    kept.setdefault(category, {})[name] = value
+                    references(value)
+        schema["components"] = kept
+        return schema
+
+    @app.get("/openapi.json", include_in_schema=False)
+    async def scoped_openapi(request: Request):
+        return JSONResponse(content=_filtered_openapi(request), headers={"Cache-Control": "private, no-store"})
+
+    def _strategy_openapi(domain: str, strategy: str, request: Request) -> dict:
         domain_norm = (domain or "").strip().lower()
         strategy_norm = (strategy or "").strip().lower()
         if not domain_norm or not strategy_norm:
             raise HTTPException(status_code=400, detail="domain and strategy are required")
         full_strategy_id = f"{domain_norm}.{strategy_norm}"
-        manifest = runtime.registry.get_manifest(full_strategy_id)
-        if not manifest:
-            raise HTTPException(status_code=404, detail=f"Unknown strategy: {full_strategy_id}")
+        require_package(request, full_strategy_id)
 
         prefix = f"/api/strategies/{domain_norm}/{strategy_norm}/"
-        schema = deepcopy(app.openapi())
+        schema = _filtered_openapi(request)
         paths = schema.get("paths", {}) or {}
         strategy_paths = {path: spec for path, spec in paths.items() if path.startswith(prefix)}
         if not strategy_paths:
@@ -523,10 +717,10 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             "title": f"Kehrnel Strategy API - {full_strategy_id}",
             "description": f"Strategy-specific API documentation for {full_strategy_id}.",
         }
-        return schema
+        return _prune_components(schema)
 
-    def _core_openapi() -> dict:
-        schema = deepcopy(app.openapi())
+    def _core_openapi(request: Request) -> dict:
+        schema = _filtered_openapi(request)
         paths = schema.get("paths", {}) or {}
         core_paths = {
             path: spec
@@ -539,7 +733,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             "title": "Kehrnel Core API",
             "description": "Core/runtime API documentation (non-domain, non-strategy).",
         }
-        return schema
+        return _prune_components(schema)
 
     @app.get("/docs", include_in_schema=False)
     async def docs_root():
@@ -557,12 +751,12 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             redoc_favicon_url="/favicon.ico",
         )
 
-    def _domain_openapi(domain: str) -> dict:
+    def _domain_openapi(domain: str, request: Request) -> dict:
         domain_norm = (domain or "").strip().lower()
         if not domain_norm:
             raise HTTPException(status_code=400, detail="domain is required")
         prefix = f"/api/domains/{domain_norm}/"
-        schema = deepcopy(app.openapi())
+        schema = _filtered_openapi(request)
         paths = schema.get("paths", {}) or {}
         domain_paths = {path: spec for path, spec in paths.items() if path.startswith(prefix)}
         if not domain_paths:
@@ -573,14 +767,14 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
             "title": f"Kehrnel Domain API - {domain_norm}",
             "description": f"Domain API documentation for {domain_norm}.",
         }
-        return schema
+        return _prune_components(schema)
 
     @app.get("/openapi/strategies/{domain}/{strategy}.json", include_in_schema=False)
-    async def strategy_openapi(domain: str, strategy: str):
-        return JSONResponse(content=_strategy_openapi(domain, strategy))
+    async def strategy_openapi(domain: str, strategy: str, request: Request):
+        return JSONResponse(content=_strategy_openapi(domain, strategy, request))
 
     @app.get("/openapi/strategies/{strategy_id}.json", include_in_schema=False)
-    async def strategy_openapi_by_id(strategy_id: str):
+    async def strategy_openapi_by_id(strategy_id: str, request: Request):
         strategy_id_norm = (strategy_id or "").strip().lower()
         if "." not in strategy_id_norm:
             raise HTTPException(
@@ -588,13 +782,13 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
                 detail="strategy_id must be in '<domain>.<strategy>' format",
             )
         domain_norm, strategy_norm = strategy_id_norm.split(".", 1)
-        return JSONResponse(content=_strategy_openapi(domain_norm, strategy_norm))
+        return JSONResponse(content=_strategy_openapi(domain_norm, strategy_norm, request))
 
     @app.get("/docs/strategies/{domain}/{strategy}", include_in_schema=False)
-    async def strategy_docs(domain: str, strategy: str):
+    async def strategy_docs(domain: str, strategy: str, request: Request):
         domain_norm = (domain or "").strip().lower()
         strategy_norm = (strategy or "").strip().lower()
-        _strategy_openapi(domain_norm, strategy_norm)
+        _strategy_openapi(domain_norm, strategy_norm, request)
         full_strategy_id = f"{domain_norm}.{strategy_norm}"
         return get_swagger_ui_html(
             openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
@@ -603,17 +797,17 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         )
 
     @app.get("/openapi/core.json", include_in_schema=False)
-    async def core_openapi():
-        return JSONResponse(content=_core_openapi())
+    async def core_openapi(request: Request):
+        return JSONResponse(content=_core_openapi(request))
 
     @app.get("/openapi/domains/{domain}.json", include_in_schema=False)
-    async def domain_openapi(domain: str):
-        return JSONResponse(content=_domain_openapi(domain))
+    async def domain_openapi(domain: str, request: Request):
+        return JSONResponse(content=_domain_openapi(domain, request))
 
     @app.get("/docs/domains/{domain}", include_in_schema=False)
-    async def domain_docs(domain: str):
+    async def domain_docs(domain: str, request: Request):
         domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
+        _domain_openapi(domain_norm, request)
         return get_swagger_ui_html(
             openapi_url=f"/openapi/domains/{domain_norm}.json",
             title=f"Kehrnel Docs - domain {domain_norm}",
@@ -621,8 +815,8 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         )
 
     @app.get("/docs/core", include_in_schema=False)
-    async def core_docs():
-        _core_openapi()
+    async def core_docs(request: Request):
+        _core_openapi(request)
         return get_swagger_ui_html(
             openapi_url="/openapi/core.json",
             title="Kehrnel Docs - Core",
@@ -630,8 +824,8 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         )
 
     @app.get("/redoc/core", include_in_schema=False)
-    async def core_redoc():
-        _core_openapi()
+    async def core_redoc(request: Request):
+        _core_openapi(request)
         return get_redoc_html(
             openapi_url="/openapi/core.json",
             title="Kehrnel ReDoc - Core",
@@ -639,10 +833,10 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         )
 
     @app.get("/redoc/strategies/{domain}/{strategy}", include_in_schema=False)
-    async def strategy_redoc(domain: str, strategy: str):
+    async def strategy_redoc(domain: str, strategy: str, request: Request):
         domain_norm = (domain or "").strip().lower()
         strategy_norm = (strategy or "").strip().lower()
-        _strategy_openapi(domain_norm, strategy_norm)
+        _strategy_openapi(domain_norm, strategy_norm, request)
         full_strategy_id = f"{domain_norm}.{strategy_norm}"
         return get_redoc_html(
             openapi_url=f"/openapi/strategies/{domain_norm}/{strategy_norm}.json",
@@ -651,14 +845,18 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         )
 
     @app.get("/redoc/domains/{domain}", include_in_schema=False)
-    async def domain_redoc(domain: str):
+    async def domain_redoc(domain: str, request: Request):
         domain_norm = (domain or "").strip().lower()
-        _domain_openapi(domain_norm)
+        _domain_openapi(domain_norm, request)
         return get_redoc_html(
             openapi_url=f"/openapi/domains/{domain_norm}.json",
             title=f"Kehrnel ReDoc - domain {domain_norm}",
             redoc_favicon_url="/favicon.ico",
         )
+
+    @app.exception_handler(KehrnelError)
+    async def policy_error(request: Request, exc: KehrnelError):
+        return JSONResponse(status_code=exc.status, content={"error": {"code": exc.code, "message": str(exc), "details": exc.details}})
 
     @app.exception_handler(Exception)
     async def global_exception_handler(request: Request, exc: Exception):
@@ -681,6 +879,29 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         # Defense-in-depth: avoid leaking credentials / filesystem internals in exception messages.
         message = redact_sensitive(message) or message
         return JSONResponse(status_code=status, content={"error": {"code": code, "message": message, "details": details}})
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+        # FHIR endpoints must return OperationOutcome (application/fhir+json), even
+        # for request-body validation errors that fire before the route handler.
+        if _is_fhir_route(request.url.path):
+            from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
+                operation_outcome,
+            )
+            detail = "; ".join(
+                f"{'.'.join(str(p) for p in e.get('loc', []))}: {e.get('msg', 'invalid')}"
+                for e in exc.errors()
+            ) or "Invalid request body"
+            return JSONResponse(
+                status_code=422,
+                media_type="application/fhir+json",
+                content=operation_outcome(code="INVALID_INPUT", message=detail),
+            )
+        # Default behavior for non-FHIR routes.
+        return JSONResponse(
+            status_code=422,
+            content={"detail": _json_safe_validation_value(exc.errors())},
+        )
+
     runtime_routers = [
         admin_router,
         ops_domain_router,
@@ -688,6 +909,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         fhir_domain_router,
         openehr_domain_router,
         snomedct_domain_router,
+        terminology_router,
         openehr_rps_dual_router,
     ]
 
@@ -696,7 +918,9 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     # - newer clients call versioned paths (e.g. /v1/environments/{env}/...)
     for router in runtime_routers:
         app.include_router(router)
-        app.include_router(router, prefix="/v1")
+        # HTTP aliases remain available; document the shared contract once so
+        # explicit operation IDs identify a single OpenAPI operation.
+        app.include_router(router, prefix="/v1", include_in_schema=False)
 
     # Internal runtime paths use explicit versioning in the router prefix to avoid
     # duplicate /v1 prefixes and keep the service-to-service contract stable.
@@ -705,6 +929,9 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     @app.get("/", include_in_schema=False)
     async def root_redirect():
         return RedirectResponse(url="/guide/", status_code=307)
+
+    app.include_router(blueprint_router, prefix="/v1")
+    app.include_router(design_catalog_router, prefix="/v1")
 
     # Mount Docusaurus documentation if build exists
     docs_build_path = Path(__file__).resolve().parents[3] / "docs" / "website" / "build"

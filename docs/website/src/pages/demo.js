@@ -34,7 +34,7 @@ export default function DemoPage() {
             <Link className="button button--primary button--lg" to={useBaseUrl('/docs/strategies/openehr/rps-dual/cli-workflows')}>
               Open Guided Workflow
             </Link>
-            <Link className="button button--outline button--primary button--lg" to={useBaseUrl('/docs/getting-started/full-workflow-test')}>
+            <Link className="button button--outline button--primary button--lg" to={useBaseUrl('/docs/operate/full-workflow-test')}>
               Open Full Workflow Test
             </Link>
           </div>
@@ -115,7 +115,7 @@ export default function DemoPage() {
                 scope in one place.
               </div>
               <div className="apiCtaActions">
-                <Link className="button button--primary" to={useBaseUrl('/docs/getting-started/full-workflow-test')}>
+                <Link className="button button--primary" to={useBaseUrl('/docs/operate/full-workflow-test')}>
                   Open Full Workflow Test
                 </Link>
               </div>

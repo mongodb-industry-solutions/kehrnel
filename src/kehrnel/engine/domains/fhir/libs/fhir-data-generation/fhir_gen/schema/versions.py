@@ -4,9 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fhir_gen.config import SCHEMA_PATH, V6_SCHEMA_PATH
+from fhir_gen.config import SCHEMA_PATH, V4_SCHEMA_PATH, V6_SCHEMA_PATH
 
 _VERSION_ALIASES: dict[str, str] = {
+    "R4": "R4",
+    "4": "R4",
+    "V4": "R4",
+    "FHIR4": "R4",
     "R5": "R5",
     "5": "R5",
     "V5": "R5",
@@ -18,6 +22,7 @@ _VERSION_ALIASES: dict[str, str] = {
 }
 
 _SCHEMA_BY_VERSION: dict[str, Path] = {
+    "R4": V4_SCHEMA_PATH,
     "R5": SCHEMA_PATH,
     "R6": V6_SCHEMA_PATH,
 }
@@ -27,7 +32,7 @@ def normalize_schema_version(version: str) -> str:
     key = version.strip().upper().replace("FHIR", "")
     normalized = _VERSION_ALIASES.get(key)
     if normalized is None:
-        supported = ", ".join(sorted({"R5", "R6"}))
+        supported = ", ".join(sorted({"R4", "R5", "R6"}))
         raise ValueError(
             f"Unknown FHIR schema version {version!r}. Supported: {supported}"
         )
@@ -55,4 +60,4 @@ def resolve_schema_path(
 
 
 def supported_schema_versions() -> tuple[str, ...]:
-    return ("R5", "R6")
+    return ("R4", "R5", "R6")

@@ -94,20 +94,24 @@ def apply_patient_scenario(
         resource["active"] = False
 
     elif scenario_id == "multiple_birth_boolean":
+        _clear_deceased(resource)
         _clear_multiple_birth(resource)
         resource["multipleBirthBoolean"] = True
         resource.setdefault("active", True)
 
     elif scenario_id == "multiple_birth_integer":
+        _clear_deceased(resource)
         _clear_multiple_birth(resource)
         resource["multipleBirthInteger"] = rng.randint(2, 4)
         resource.setdefault("active", True)
 
     elif scenario_id == "with_photo":
+        _clear_deceased(resource)
         resource.setdefault("active", True)
         resource["photo"] = [t.gen_Attachment()]
 
     elif scenario_id == "with_link":
+        _clear_deceased(resource)
         resource.setdefault("active", True)
         if store.has("Patient"):
             from .field_fill import backbone_filler_for
@@ -119,6 +123,7 @@ def apply_patient_scenario(
                     resource["link"] = [link]
 
     elif scenario_id == "with_communication":
+        _clear_deceased(resource)
         from ..codes.loader import get_system, random_code
 
         lang = random_code("languages", rng)

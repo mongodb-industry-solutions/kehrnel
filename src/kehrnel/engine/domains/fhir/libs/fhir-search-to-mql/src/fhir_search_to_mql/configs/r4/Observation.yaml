@@ -1,0 +1,291 @@
+resource: Observation
+fhir_version: R4
+
+# US Core Observation profiles: us-core-observation-lab, us-core-vital-signs, us-core-simple-observation
+# FHIR R4 Observation search parameters: https://www.hl7.org/fhir/R4/observation.html#search
+# R4 note: no CodeableReference; subject/performer are plain Reference
+
+search_parameters:
+  status:
+    type: token
+    description: "The status of the observation"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  category:
+    type: token
+    description: "The classification of the type of observation"
+    fields:
+      - field: "_search.categoryCode"
+        tokenType: code
+      - field: "_search.categorySystemCode"
+        tokenType: systemCode
+
+  code:
+    type: token
+    description: "The code of the observation type"
+    fields:
+      - field: "_search.codeCode"
+        tokenType: code
+      - field: "_search.codeSystemCode"
+        tokenType: systemCode
+
+  date:
+    type: date
+    description: "Obtained date/time. If the obtained element is a period, a date that falls in the period"
+    fields:
+      - field: "_search.effectiveDate"
+        type: date
+
+  patient:
+    type: reference
+    description: "The subject that the observation is about (if patient)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The subject that the observation is about"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Encounter related to the observation"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  performer:
+    type: reference
+    description: "Who performed the observation"
+    fields:
+      - field: "_search.performerId"
+        referenceType: id
+      - field: "_search.performerType"
+        referenceType: type
+
+  identifier:
+    type: token
+    description: "The unique id for a particular observation"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  value-quantity:
+    type: quantity
+    description: "The value of the observation, if the value is a Quantity"
+    fields:
+      - field: "_search.valueQuantity_value"
+      - field: "_search.valueQuantity_unit"
+
+  value-concept:
+    type: token
+    description: "The value of the observation, if the value is a CodeableConcept"
+    fields:
+      - field: "_search.valueCode"
+        tokenType: code
+      - field: "_search.valueSystemCode"
+        tokenType: systemCode
+
+  component-code:
+    type: token
+    description: "The component code of the observation type"
+    fields:
+      - field: "_search.componentCode"
+        tokenType: code
+
+  has-member:
+    type: reference
+    description: "Related resource that belongs to the Observation group"
+    fields:
+      - field: "_search.hasMemberId"
+        referenceType: id
+
+  derived-from:
+    type: reference
+    description: "Related measurements the observation is made from"
+    fields:
+      - field: "_search.derivedFromId"
+        referenceType: id
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: categoryCode
+        datatype: array[string]
+      - source_path: category[*]
+        target_field: categorySystemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: code
+        target_field: codeSystemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  performer:
+    source: performer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: performer[*].reference
+        target_field: performerId
+        datatype: array[string]
+        extractType: id
+      - source_path: performer[*].reference
+        target_field: performerType
+        datatype: array[string]
+        extractType: type
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  effective:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: effectiveDateTime
+        target_field: effectiveDate
+        datatype: date
+      - source_path: effectiveInstant
+        target_field: effectiveDate
+        datatype: date
+
+  valueQuantity:
+    source: valueQuantity
+    target: _search
+    extractor: QuantityExtractor
+    field_mappings:
+      - source_path: valueQuantity.value
+        target_field: valueQuantity_value
+        datatype: number
+      - source_path: valueQuantity.unit
+        target_field: valueQuantity_unit
+        datatype: string
+
+  valueCodeableConcept:
+    source: valueCodeableConcept
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: valueCodeableConcept.coding[*].code
+        target_field: valueCode
+        datatype: array[string]
+      - source_path: valueCodeableConcept
+        target_field: valueSystemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+      - target_field: Practitioner
+        source_paths:
+          - performer
+        reference_type: Practitioner
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_obs_compartment_patient
+      sparse: true
+  - fields:
+      - "_search.categoryCode": 1
+    options:
+      name: idx_r4_obs_category
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r4_obs_code
+  - fields:
+      - "_search.effectiveDate": -1
+    options:
+      name: idx_r4_obs_effective_date
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_obs_status

@@ -1,0 +1,189 @@
+[
+  {
+    "_id": "H696969",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Hospital de Pruebas H696969",
+    "description": "fgdfgdasfgertert",
+    "role": "Provider",
+    "active": true,
+    "settings": {
+      "Worklist": {
+        "MatchMarginMinutes": "45"
+      }
+    },
+    "createdAt": {
+      "$date": "2026-06-02T16:42:19.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-01T08:51:58.325Z"
+    },
+    "authTokens": [
+      {
+        "_id": "tok-xCDEJMwS7c5w4YHo",
+        "secretHash": "REDACTED",
+        "label": "Basic Unit Test Token",
+        "status": "active",
+        "createdAt": {
+          "$date": "2026-10-01T08:48:54.623Z"
+        }
+      }
+    ]
+  },
+  {
+    "_id": "HC3",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Centro Consumidor de Pruebas (HC3)",
+    "description": null,
+    "role": "Consumer",
+    "active": true,
+    "settings": {
+      "Branding": {
+        "DisplayName": "C424242 — consumidor de pruebas"
+      }
+    },
+    "createdAt": {
+      "$date": "2026-06-29T13:07:05.934Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T07:27:50.603Z"
+    },
+    "authTokens": [
+      {
+        "_id": "tok-sKtuCpOioJjiaLpu",
+        "secretHash": "REDACTED",
+        "label": "Basic Unit Test Token",
+        "status": "active",
+        "createdAt": {
+          "$date": "2026-06-29T13:08:23.134Z"
+        }
+      }
+    ]
+  },
+  {
+    "_id": "Test 3",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Centre test 3 Xesk",
+    "description": null,
+    "role": "Provider",
+    "active": true,
+    "settings": {},
+    "createdAt": {
+      "$date": "2026-08-03T09:38:41.484Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:46:23.107Z"
+    }
+  },
+  {
+    "_id": "Test 5",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Centre test 5",
+    "description": null,
+    "role": "Provider",
+    "active": true,
+    "settings": {},
+    "createdAt": {
+      "$date": "2026-08-03T10:01:07.751Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-03T10:01:07.751Z"
+    }
+  },
+  {
+    "_id": "Test1",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Centre Test 1 Ramon",
+    "description": "descripció de centre test",
+    "role": "Provider",
+    "active": true,
+    "settings": {
+      "Worklist": {
+        "MatchMarginMinutes": "",
+        "SyntheticAccessionPrefix": ""
+      }
+    },
+    "createdAt": {
+      "$date": "2026-08-03T09:38:23.645Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:47:18.552Z"
+    },
+    "authTokens": [
+      {
+        "_id": "tok-7NFxF9z_Id_ANN-A",
+        "secretHash": "REDACTED",
+        "label": "RCV3-113 flowtestsimulator",
+        "status": "active",
+        "createdAt": {
+          "$date": "2026-09-01T10:20:05.667Z"
+        }
+      }
+    ]
+  },
+  {
+    "_id": "Test2",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Centre Test 2",
+    "description": "descripció test 2",
+    "role": "Provider",
+    "active": true,
+    "settings": {},
+    "createdAt": {
+      "$date": "2026-08-03T09:38:33.739Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-01T10:20:06.144Z"
+    },
+    "authTokens": [
+      {
+        "_id": "tok-zf1jGQPQJ1hg2hZI",
+        "secretHash": "REDACTED",
+        "label": "RCV3-113 flowtestsimulator",
+        "status": "active",
+        "createdAt": {
+          "$date": "2026-09-01T10:20:06.144Z"
+        }
+      }
+    ]
+  },
+  {
+    "_id": "Test4",
+    "kind": "Center",
+    "parent": "_root",
+    "name": "Centre test 4",
+    "description": null,
+    "role": "Provider",
+    "active": true,
+    "settings": {},
+    "createdAt": {
+      "$date": "2026-10-07T08:46:16.236Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:46:16.236Z"
+    }
+  },
+  {
+    "_id": "_root",
+    "kind": "CenterType",
+    "name": "Root",
+    "description": "Universal root — common settings shared by every center",
+    "active": true,
+    "settings": {
+      "Worklist": {
+        "ValidationEnabled": "false"
+      }
+    },
+    "createdAt": {
+      "$date": "2026-06-11T06:29:04.730Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-14T06:55:46.092Z"
+    }
+  }
+]

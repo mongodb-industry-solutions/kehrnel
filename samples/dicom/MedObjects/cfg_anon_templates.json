@@ -1,0 +1,431 @@
+[
+  {
+    "_id": "anonimitza-tot",
+    "appliesTo": [
+      "export",
+      "autorouting"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "Marca TOTS els grups: els 216 atributs que la taula de PS3.15 governa. Màxima protecció i mínima utilitat científica — perd dates, edat, sexe, equip, institució i totes les descripcions. És l'única plantilla equivalent al perfil Basic de l'estàndard i, per tant, l'única que pot declarar conformitat literal amb PS3.15 dins de l'objecte exportat.",
+    "kind": "anonymous",
+    "name": "Màxim — anonimitza-ho tot",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "patientIdentity"
+      },
+      {
+        "id": "people"
+      },
+      {
+        "id": "orderAndVisit"
+      },
+      {
+        "id": "freeContent"
+      },
+      {
+        "id": "patientCharacteristics"
+      },
+      {
+        "id": "dates"
+      },
+      {
+        "id": "deviceIdentity"
+      },
+      {
+        "id": "institutionIdentity"
+      },
+      {
+        "id": "descriptors"
+      }
+    ],
+    "rules": [],
+    "schemaVersion": 1,
+    "sequencePolicy": "recurse",
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      }
+    ],
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  },
+  {
+    "_id": "ingest-safe-harbor",
+    "appliesTo": [
+      "ingest"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "ATENCIÓ: aquest perfil NO anonimitza el pacient. És l'únic candidat raonable per a INGESTA, perquè anonimitzar en ingesta destrueix la utilitat clínica de l'arxiu: un radiòleg no pot llegir un estudi sense pacient. Manté pacient, dates, equip i institució, i només treu els noms de les persones que hi han intervingut i els atributs privats. Les seqüències no es reescriuen, per tocar el mínim possible en el camí d'entrada, que és l'únic irreversible.",
+    "kind": "identified",
+    "name": "Neteja d'ingesta",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "people"
+      }
+    ],
+    "rules": [],
+    "schemaVersion": 1,
+    "sequencePolicy": "keepAsIs",
+    "seriesFilters": [],
+    "uidPolicy": {
+      "mode": "keep"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  },
+  {
+    "_id": "nomes-identitat",
+    "appliesTo": [
+      "export"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "El mínim: treu el nom, els identificadors, la data de naixement, l'adreça i la resta de dades que designen la persona. NO toca res més — ni metges, ni dates, ni descripcions, ni institució. Punt de partida per anar afegint grups i veure què passa.",
+    "kind": "anonymous",
+    "name": "Només la identitat del pacient",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "patientIdentity"
+      }
+    ],
+    "rules": [],
+    "schemaVersion": 1,
+    "sequencePolicy": "recurse",
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      }
+    ],
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  },
+  {
+    "_id": "pseudonymous-trial",
+    "appliesTo": [
+      "export"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "Per a un projecte o assaig amb subjectes re-identificables pel responsable de les dades. Treu la identitat del pacient, les persones i el contingut lliure; manté les dates senceres i l'equip, que sovint formen part del protocol. El pseudònim es replica al ClinicalTrialSubjectID perquè la cohort segueixi lligada. Cal informar 'hashSaltRef' amb la clau de configuració que guarda la sal del projecte.",
+    "kind": "pseudonymous",
+    "name": "Pseudonimització de projecte",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "patientIdentity"
+      },
+      {
+        "id": "people"
+      },
+      {
+        "id": "orderAndVisit"
+      },
+      {
+        "id": "freeContent"
+      },
+      {
+        "id": "descriptors"
+      }
+    ],
+    "rules": [
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100020"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "SUBJ-",
+          "length": "16"
+        },
+        "note": null
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100010"
+        },
+        "transform": "Constant",
+        "params": {
+          "text": "SUBJECT"
+        },
+        "note": null
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00120040"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "SUBJ-",
+          "length": "16"
+        },
+        "note": "same pseudonym as PatientID, so the trial linkage survives"
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100030"
+        },
+        "transform": "TruncateToMonth",
+        "params": null,
+        "note": "trials usually need a finer age than a year alone"
+      }
+    ],
+    "schemaVersion": 1,
+    "sequencePolicy": "recurse",
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      }
+    ],
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  },
+  {
+    "_id": "recerca-basica",
+    "appliesTo": [
+      "export"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "Treu la identitat del pacient, les persones que hi han intervingut i el contingut lliure. Manté dates senceres, edat i sexe, equip, institució i descripcions: tot el context clínic i tècnic es conserva. L'identificador de pacient passa a ser un pseudònim determinista, així que els estudis d'un mateix pacient segueixen agrupats.",
+    "kind": "pseudonymous",
+    "name": "Recerca — bàsica",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "patientIdentity"
+      },
+      {
+        "id": "people"
+      },
+      {
+        "id": "freeContent"
+      }
+    ],
+    "rules": [
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100020"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "RES-",
+          "length": "16"
+        },
+        "note": "stable pseudonym so a patient's studies stay grouped"
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100010"
+        },
+        "transform": "Constant",
+        "params": {
+          "text": "ANONYMOUS"
+        },
+        "note": null
+      }
+    ],
+    "schemaVersion": 1,
+    "sequencePolicy": "recurse",
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      }
+    ],
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  },
+  {
+    "_id": "recerca-longitudinal",
+    "appliesTo": [
+      "export"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "Per a estudis longitudinals. Anonimitza gairebé tot, però DESPLAÇA les dates amb un offset constant per pacient en comptes d'esborrar-les: es conserven els intervals entre estudis, que és el que dona valor a una cohort. Manté edat, sexe, pes i talla. Cal informar 'hashSaltRef': tant el pseudònim com el desplaçament en depenen.",
+    "kind": "pseudonymous",
+    "name": "Recerca — longitudinal",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "patientIdentity"
+      },
+      {
+        "id": "people"
+      },
+      {
+        "id": "orderAndVisit"
+      },
+      {
+        "id": "freeContent"
+      },
+      {
+        "id": "descriptors"
+      },
+      {
+        "id": "deviceIdentity"
+      },
+      {
+        "id": "institutionIdentity"
+      },
+      {
+        "id": "dates",
+        "mode": "shift"
+      }
+    ],
+    "rules": [
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100020"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "RES-",
+          "length": "16"
+        },
+        "note": "stable pseudonym so a patient's studies stay grouped"
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100010"
+        },
+        "transform": "Constant",
+        "params": {
+          "text": "ANONYMOUS"
+        },
+        "note": null
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100030"
+        },
+        "transform": "TruncateToYear",
+        "params": null,
+        "note": "an exact-tag rule outranks the group, so this survives patientIdentity being removed"
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00101010"
+        },
+        "transform": "Cap",
+        "params": {
+          "maxYears": "89"
+        },
+        "note": "ages above 89 are re-identifying on their own"
+      }
+    ],
+    "schemaVersion": 1,
+    "sequencePolicy": "recurse",
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      },
+      {
+        "kind": "modality",
+        "values": [
+          "SR",
+          "PR",
+          "KO",
+          "DOC"
+        ]
+      }
+    ],
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  },
+  {
+    "_id": "transfer-external",
+    "appliesTo": [
+      "autorouting",
+      "export"
+    ],
+    "basedOn": "DICOM PS3.15 Annex E, Table E.1-1",
+    "createdAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "description": "ATENCIÓ: aquest perfil NO anonimitza el pacient, i no ha de fer-ho. Serveix per reenviar un estudi a un altre centre assistencial, on el pacient ha de seguir identificat per poder-lo atendre. El que es neteja és el context: qui va fer la prova, en quina institució i amb quin equip, més els atributs privats del fabricant. Els UID es mantenen perquè el centre receptor pugui correlacionar l'estudi.",
+    "kind": "identified",
+    "name": "Trasllat entre centres",
+    "privatePolicy": "removeAll",
+    "removeGroups": [
+      {
+        "id": "people"
+      },
+      {
+        "id": "institutionIdentity"
+      },
+      {
+        "id": "deviceIdentity"
+      }
+    ],
+    "rules": [],
+    "schemaVersion": 1,
+    "sequencePolicy": "recurse",
+    "seriesFilters": [],
+    "uidPolicy": {
+      "mode": "keep"
+    },
+    "updatedAt": {
+      "$date": "2026-09-25T08:10:05.227Z"
+    },
+    "version": 2
+  }
+]

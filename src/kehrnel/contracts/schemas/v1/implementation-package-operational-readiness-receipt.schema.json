@@ -1,0 +1,242 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "OperationalReadinessCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "checkId": {
+          "enum": [
+            "promotion_integrity",
+            "runtime_evidence_available",
+            "operational_owner_assigned",
+            "monitoring_owner_assigned",
+            "rollback_owner_assigned",
+            "operational_review_approved"
+          ],
+          "title": "Checkid",
+          "type": "string"
+        },
+        "detail": {
+          "minLength": 1,
+          "title": "Detail",
+          "type": "string"
+        },
+        "evidenceRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "state": {
+          "enum": [
+            "passed",
+            "blocked"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checkId",
+        "state",
+        "detail"
+      ],
+      "title": "OperationalReadinessCheck",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-operational-readiness-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/OperationalReadinessCheck"
+      },
+      "minItems": 1,
+      "title": "Checks",
+      "type": "array"
+    },
+    "contract": {
+      "const": "implementation-package-operational-readiness-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "deploymentState": {
+      "const": "not_deployed",
+      "title": "Deploymentstate",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "evidencePersistence": {
+      "const": "durable",
+      "default": "durable",
+      "title": "Evidencepersistence",
+      "type": "string"
+    },
+    "monitoringOwnerRef": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Monitoringownerref"
+    },
+    "nextRequiredAction": {
+      "enum": [
+        "deploy_release_candidate",
+        "provide_operational_readiness_inputs"
+      ],
+      "title": "Nextrequiredaction",
+      "type": "string"
+    },
+    "operationalOwnerRef": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operationalownerref"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "promotionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "readinessDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Readinessdigest",
+      "type": "string"
+    },
+    "readinessId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Readinessid",
+      "type": "string"
+    },
+    "reviewDecision": {
+      "enum": [
+        "approved",
+        "needs_changes"
+      ],
+      "title": "Reviewdecision",
+      "type": "string"
+    },
+    "reviewNotes": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewnotes"
+    },
+    "rollbackOwnerRef": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rollbackownerref"
+    },
+    "runtimeEvidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "minItems": 1,
+      "title": "Runtimeevidencerefs",
+      "type": "array"
+    },
+    "state": {
+      "enum": [
+        "ready",
+        "blocked"
+      ],
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "readinessId",
+    "environmentId",
+    "promotionRef",
+    "packageRef",
+    "runtimeEvidenceRefs",
+    "reviewDecision",
+    "checks",
+    "state",
+    "deploymentState",
+    "nextRequiredAction",
+    "readinessDigest"
+  ],
+  "title": "ImplementationPackageOperationalReadinessReceipt",
+  "type": "object"
+}

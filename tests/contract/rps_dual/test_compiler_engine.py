@@ -4,6 +4,7 @@ import pytest
 from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.domains.openehr.aql.parse import parse_aql
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import DEFAULTS_PATH, MANIFEST, RPSDualStrategy, load_json
+from kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy import RPSDualIBMStrategy
 from tests.helpers.fixture_storage import FixtureStorage
 
 
@@ -29,7 +30,9 @@ async def test_patient_query_uses_compatibility_transformer_pipeline():
     ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert plan.engine == "pipeline_builder"
+    # ``engine`` names the execution mechanism; the compiler implementation is
+    # retained separately in the explain trace.
+    assert plan.engine == "mongo_pipeline"
     assert plan.explain["engine"] == "query_engine"
     assert pipeline and "$match" in pipeline[0]
     project = next((stage for stage in pipeline if "$project" in stage), None)
@@ -60,7 +63,7 @@ async def test_cross_patient_query_uses_compatibility_search_transformer():
     ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
-    assert plan.engine == "search_pipeline_builder"
+    assert plan.engine == "text_search_dual"
     assert plan.explain["engine"] == "query_engine"
     assert pipeline and "$search" in pipeline[0]
     search_stage = pipeline[0]["$search"]
@@ -74,6 +77,29 @@ async def test_cross_patient_query_uses_compatibility_search_transformer():
     else:
         assert isinstance(centro_proj, str)
     assert plan.explain["builder"]["chosen"] == "search_pipeline_builder"
+
+
+@pytest.mark.asyncio
+async def test_ibm_profile_compiles_with_its_exact_field_contract():
+    strategy = RPSDualIBMStrategy()
+    storage = FixtureStorage(Path("tests/fixtures/rps_dual"))
+    context = StrategyContext(
+        environment_id="env-ibm",
+        config=strategy.defaults,
+        adapters={"storage": storage},
+        manifest=strategy.manifest,
+    )
+    ir = parse_aql("select Centro as Centro from compositions")
+    ir.scope = "patient"
+    ir.predicates = [{"path": "ehr_id", "op": "eq", "value": "p1"}]
+
+    plan = await strategy.compile_query(context, "openehr", ir.to_dict())
+
+    assert plan.engine == "mongo_pipeline"
+    assert plan.plan["pipeline"] and "$match" in plan.plan["pipeline"][0]
+    assert plan.explain["builder"]["chosen"] == "pipeline_builder"
+    assert plan.explain["schema"]["composition"]["comp_id"] == "_id"
+    assert plan.explain["schema"]["composition"]["path_instance_field"] == "li"
 
 
 def test_no_new_compiler_imports_in_rps_dual_stack():

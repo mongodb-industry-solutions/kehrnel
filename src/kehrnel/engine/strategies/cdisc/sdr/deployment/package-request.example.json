@@ -1,0 +1,17 @@
+{
+  "packageId": "submission-2026-01",
+  "snapshotId": "v1",
+  "standardsPackageId": "sdtmig-3.4-ct-2026-06",
+  "profile": "sdtm",
+  "standard": {
+    "family": "SDTM",
+    "implementationGuide": "SDTMIG",
+    "implementationGuideVersion": "3.4",
+    "terminologyPackages": ["ct-2026-06"]
+  },
+  "datasets": [
+    {"datasetJSON": {"replace": "with a Dataset-JSON document"}}
+  ],
+  "validate": true,
+  "publish": true
+}

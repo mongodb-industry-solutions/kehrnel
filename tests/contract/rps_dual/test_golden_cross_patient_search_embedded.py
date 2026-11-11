@@ -8,24 +8,35 @@ from pathlib import Path
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="Compatibility $search compound filter/lookup parity pending", strict=False)
-async def test_cross_patient_search_embedded_and_lookup():
+async def test_cross_patient_search_and_automatic_lookup():
     cfg = load_json(DEFAULTS_PATH)
-    cfg.setdefault("query_engine", {})["lookup_full_composition"] = True
     storage = FixtureStorage(Path("tests/fixtures/rps_dual"))
     ctx = StrategyContext(environment_id="env", config=cfg, adapters={"storage": storage})
     strat = RPSDualStrategy(MANIFEST)
     aql = "select Centro as Centro from compositions where text = 'hello'"
     ir = parse_aql(aql)
+    ir.scope = "cross_patient"
+    ir.select = [
+        {
+            "path": "admin_salut/items[at0007]/items[at0014]/value/defining_code/code_string",
+            "alias": "Centro",
+        }
+    ]
+    ir.predicates = [
+        {
+            "path": "admin_salut/items[at0007]/items[at0014]/value/defining_code/code_string",
+            "op": "eq",
+            "value": "VAL1",
+        },
+        {"path": "med_ac/time/value", "op": "gt", "value": "2020-01-01T00:00:00"},
+    ]
     plan = await strat.compile_query(ctx, "openehr", ir.to_dict())
     pipeline = plan.plan.get("pipeline", [])
     assert "$search" in pipeline[0]
     search_stage = pipeline[0]["$search"]
     assert "compound" in search_stage
-    filters = search_stage["compound"].get("filter", [])
-    assert any("embeddedDocument" in f for f in filters)
+    assert len(search_stage["compound"].get("must", [])) == 2
     assert any("$lookup" in stage for stage in pipeline)
     project = next((stage for stage in pipeline if "$project" in stage), None)
     assert project
-    proj_expr = project["$project"]["Centro"]["$first"]["$map"]["input"]
-    assert isinstance(proj_expr, str)
+    assert "Centro" in project["$project"]

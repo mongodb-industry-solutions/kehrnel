@@ -1,0 +1,276 @@
+[
+  {
+    "_id": "6a7adb9a534366b73bfda344",
+    "centerId": "H696969",
+    "pacsAET": "RESO1",
+    "stations": [
+      {
+        "risCode": "RESOUDIAT",
+        "modalities": [
+          "MR"
+        ]
+      },
+      {
+        "risCode": "RESOURGENCIES",
+        "modalities": [
+          "MR"
+        ]
+      }
+    ],
+    "active": true,
+    "updatedAt": {
+      "$date": "2026-08-11T08:21:46.773Z"
+    }
+  },
+  {
+    "_id": "6a7adbbd534366b73bfda346",
+    "centerId": "H696969",
+    "pacsAET": "RESO2",
+    "stations": [
+      {
+        "risCode": "RESOURGENCIES",
+        "modalities": [
+          "MR"
+        ]
+      }
+    ],
+    "comments": "reso 2",
+    "active": true,
+    "updatedAt": {
+      "$date": "2026-08-11T08:22:21.623Z"
+    }
+  },
+  {
+    "_id": "6a7ecbf35d5fc901dc1170da",
+    "centerId": "Test1",
+    "pacsAET": "TEST_CT01",
+    "stations": [
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      }
+    ],
+    "comments": "sï",
+    "active": true,
+    "updatedAt": {
+      "$date": "2026-08-14T08:04:03.456Z"
+    }
+  },
+  {
+    "_id": "6ab3ae4e326a2a17f3321c0a",
+    "centerId": "Test1",
+    "pacsAET": "FLOWSIM",
+    "stations": [
+      {
+        "risCode": "MRI-01",
+        "modalities": [
+          "MR"
+        ]
+      },
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      },
+      {
+        "risCode": "XA-01",
+        "modalities": [
+          "XA"
+        ]
+      }
+    ],
+    "comments": "LoadTest flowsim (temporal)",
+    "active": true,
+    "updatedAt": {
+      "$date": "2026-09-23T10:47:42.523Z"
+    }
+  },
+  {
+    "_id": "6ab3b05e326a2a17f33262e5",
+    "centerId": "_default",
+    "pacsAET": "FLOWSIM",
+    "stations": [
+      {
+        "risCode": "LOCAL",
+        "modalities": [
+          "CR",
+          "CT",
+          "MR",
+          "US",
+          "DX",
+          "OT"
+        ]
+      }
+    ],
+    "comments": "Load test - flowtestsimulator (proves multi-PC)",
+    "active": true,
+    "updatedAt": {
+      "$date": "2026-09-23T10:56:30.266Z"
+    }
+  },
+  {
+    "_id": "Test 3_FLOWSIM",
+    "centerId": "Test 3",
+    "pacsAET": "FLOWSIM",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "MRI-01",
+        "modalities": [
+          "MR"
+        ]
+      },
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      },
+      {
+        "risCode": "XA-01",
+        "modalities": [
+          "XA"
+        ]
+      }
+    ],
+    "comments": "LoadTest flowsim (temporal)",
+    "updatedAt": {
+      "$date": "2026-10-07T09:15:00Z"
+    }
+  },
+  {
+    "_id": "Test 5_FLOWSIM",
+    "centerId": "Test 5",
+    "pacsAET": "FLOWSIM",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "MRI-01",
+        "modalities": [
+          "MR"
+        ]
+      },
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      },
+      {
+        "risCode": "XA-01",
+        "modalities": [
+          "XA"
+        ]
+      }
+    ],
+    "comments": "LoadTest flowsim (temporal)",
+    "updatedAt": {
+      "$date": "2026-10-07T09:15:00Z"
+    }
+  },
+  {
+    "_id": "Test2_FLOWSIM",
+    "centerId": "Test2",
+    "pacsAET": "FLOWSIM",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "MRI-01",
+        "modalities": [
+          "MR"
+        ]
+      },
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      },
+      {
+        "risCode": "XA-01",
+        "modalities": [
+          "XA"
+        ]
+      }
+    ],
+    "comments": "LoadTest flowsim node FlowTest-fb01 (temporal)",
+    "updatedAt": {
+      "$date": "2026-10-07T08:55:00Z"
+    }
+  },
+  {
+    "_id": "Test4_FLOWSIM",
+    "centerId": "Test4",
+    "pacsAET": "FLOWSIM",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "MRI-01",
+        "modalities": [
+          "MR"
+        ]
+      },
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      },
+      {
+        "risCode": "XA-01",
+        "modalities": [
+          "XA"
+        ]
+      }
+    ],
+    "comments": "LoadTest flowsim (temporal)",
+    "updatedAt": {
+      "$date": "2026-10-07T09:15:00Z"
+    }
+  },
+  {
+    "_id": "dimse-dev_TEST_CT01",
+    "centerId": "dimse-dev",
+    "pacsAET": "TEST_CT01",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "CT-01",
+        "modalities": [
+          "CT"
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "dimse-dev_TEST_MR01",
+    "centerId": "dimse-dev",
+    "pacsAET": "TEST_MR01",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "MRI-01",
+        "modalities": [
+          "MR"
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "dimse-dev_TEST_XA01",
+    "centerId": "dimse-dev",
+    "pacsAET": "TEST_XA01",
+    "active": true,
+    "stations": [
+      {
+        "risCode": "XA-01",
+        "modalities": [
+          "XA"
+        ]
+      }
+    ]
+  }
+]

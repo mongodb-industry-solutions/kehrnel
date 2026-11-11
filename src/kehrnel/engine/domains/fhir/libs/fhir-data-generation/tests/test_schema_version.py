@@ -19,7 +19,7 @@ def test_r6_aliases():
 
 def test_unknown_version_raises():
     with pytest.raises(ValueError, match="Unknown"):
-        resolve_schema_path(schema_version="R4")
+        resolve_schema_path(schema_version="R3")
 
 
 def test_path_override_wins():

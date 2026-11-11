@@ -1,0 +1,8 @@
+{
+  "version": "dicom-query/v1",
+  "resource": "instances",
+  "filter": {
+    "seriesUid": "2.25.2001"
+  },
+  "limit": 100
+}

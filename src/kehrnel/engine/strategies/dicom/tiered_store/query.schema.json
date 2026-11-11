@@ -1,0 +1,167 @@
+{
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "dicom-query/v1"
+    },
+    "resource": {
+      "enum": [
+        "studies",
+        "series",
+        "instances",
+        "research"
+      ]
+    },
+    "centers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "minItems": 1,
+      "maxItems": 200,
+      "uniqueItems": true
+    },
+    "filter": {
+      "type": "object",
+      "properties": {
+        "patientId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "studyUid": {
+          "type": "string",
+          "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+          "maxLength": 64
+        },
+        "seriesUid": {
+          "type": "string",
+          "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+          "maxLength": 64
+        },
+        "day": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "fromDay": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "toDay": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "modality": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "tag": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "pattern": "^[0-9A-F]{8}$"
+            },
+            "equals": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "gte": {
+              "type": "number"
+            },
+            "lt": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "description": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256
+        },
+        "seriesDescription": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256
+        },
+        "descriptionMode": {
+          "enum": [
+            "exact",
+            "prefix"
+          ],
+          "default": "exact",
+          "description": "Default exact; prefix requires one day. Series descriptions in a study stay correlated with modality and center."
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^[0-9A-F]{8}$"
+              },
+              "equals": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "gte": {
+                "type": "number"
+              },
+              "lt": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          },
+          "description": "AND predicates on distinct promoted tags within the same SOP instance; never across different instances."
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "not": {
+            "required": [
+              "tag",
+              "tags"
+            ]
+          }
+        }
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+    },
+    "cursor": {
+      "type": "string",
+      "maxLength": 4096
+    },
+    "allowPartial": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "version",
+    "resource"
+  ],
+  "additionalProperties": false
+}

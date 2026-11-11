@@ -1,0 +1,46 @@
+[
+  {
+    "_id": "2.25.1001",
+    "dm": "DEMO_A",
+    "pi": "SYNTHETIC_PATIENT_1",
+    "pn": "SYNTHETIC^DEMO",
+    "an": "SYNTHETIC_SHARED_ACCESSION",
+    "dt": {
+      "$date": "2026-01-01T00:00:00Z"
+    },
+    "se": [
+      {
+        "si": "2.25.2001",
+        "ci": "DEMO_A",
+        "sn": "1",
+        "mo": "MG",
+        "ni": 6,
+        "de": "Synthetic imaging metadata; no pixels"
+      }
+    ],
+    "de": "Synthetic imaging playground",
+    "pb": "19800101"
+  },
+  {
+    "_id": "2.25.1002",
+    "dm": "DEMO_B",
+    "pi": "SYNTHETIC_PATIENT_1",
+    "pn": "SYNTHETIC^DEMO",
+    "an": "SYNTHETIC_SHARED_ACCESSION",
+    "dt": {
+      "$date": "2026-01-02T00:00:00Z"
+    },
+    "se": [
+      {
+        "si": "2.25.2002",
+        "ci": "DEMO_B",
+        "sn": "1",
+        "mo": "MG",
+        "ni": 6,
+        "de": "Synthetic imaging metadata; no pixels"
+      }
+    ],
+    "de": "Synthetic imaging playground",
+    "pb": "19800101"
+  }
+]

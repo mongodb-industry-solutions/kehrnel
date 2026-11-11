@@ -1,0 +1,124 @@
+resource: Coverage
+fhir_version: R4
+
+# R4 note: subscriberId is plain string (not Identifier array); payor replaces insurer
+
+search_parameters:
+  status:
+    type: token
+    description: "active | cancelled | draft | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "Retrieve coverages for a patient"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "beneficiary.reference"
+        referenceType: full
+
+  beneficiary:
+    type: reference
+    description: "Covered party"
+    fields:
+      - field: "_search.beneficiaryId"
+        referenceType: id
+      - field: "beneficiary.reference"
+        referenceType: full
+
+  payor:
+    type: reference
+    description: "The identity of the insurer or party paying for services (R4: payor, not insurer)"
+    fields:
+      - field: "_search.payorId"
+        referenceType: id
+      - field: "payor.reference"
+        referenceType: full
+
+  identifier:
+    type: token
+    description: "The primary identifier of the insured and the coverage"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  _id:
+    type: token
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  beneficiary:
+    source: beneficiary
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: beneficiary.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+      - source_path: beneficiary.reference
+        target_field: beneficiaryId
+        datatype: string
+        extractType: id
+
+  payor:
+    source: payor
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: payor[*].reference
+        target_field: payorId
+        datatype: array[string]
+        extractType: id
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - beneficiary
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_cov_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_cov_status

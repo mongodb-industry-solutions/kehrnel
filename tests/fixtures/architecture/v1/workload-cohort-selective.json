@@ -1,0 +1,18 @@
+{
+  "contract": "workload-profile/v1",
+  "artifactRef": {"kind": "workload-profile", "id": "cohort-selective", "version": "1.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+  "workloadId": "cohort-selective",
+  "shape": "cohort_selective",
+  "dataset": {"recordCount": 1000000, "subjectCount": 100000, "logicalBytes": 1000000000, "physicalBytes": 650000000, "averageRecordBytes": 1000, "cardinalityNotes": ["One hundred thousand patient identifiers."], "skewNotes": ["Recent observations are more frequent."]},
+  "expectedResultCount": 1000,
+  "resultBytes": 500000,
+  "predicateCount": 3,
+  "indexedPredicateCount": 3,
+  "selectivityPartsPerMillion": 1000,
+  "shardFanout": 1,
+  "concurrency": 20,
+  "requestsPerSecond": 25,
+  "writesPerSecond": 10,
+  "latencyTargetMs": 250,
+  "freshnessTargetSeconds": 30
+}

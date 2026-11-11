@@ -1,0 +1,94 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "JsonValue": {}
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:implementation-package-runtime-execution-request",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "implementation-package-runtime-execution-request/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "expectedPackageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "idempotencyKey": {
+      "anyOf": [
+        {
+          "maxLength": 256,
+          "minLength": 8,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotencykey"
+    },
+    "interactionId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Interactionid",
+      "type": "string"
+    },
+    "preparationExecutionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "requestPayload": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Requestpayload",
+      "type": "object"
+    }
+  },
+  "required": [
+    "contract",
+    "preparationExecutionRef",
+    "expectedPackageRef",
+    "interactionId",
+    "requestPayload"
+  ],
+  "title": "ImplementationPackageRuntimeExecutionRequest",
+  "type": "object"
+}

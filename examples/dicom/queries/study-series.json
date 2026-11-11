@@ -1,0 +1,8 @@
+{
+  "version": "dicom-query/v1",
+  "resource": "series",
+  "filter": {
+    "studyUid": "2.25.1001"
+  },
+  "limit": 100
+}

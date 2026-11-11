@@ -1,0 +1,222 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "EstimateRange": {
+      "additionalProperties": false,
+      "properties": {
+        "lower": {
+          "minimum": 0,
+          "title": "Lower",
+          "type": "integer"
+        },
+        "upper": {
+          "minimum": 0,
+          "title": "Upper",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "lower",
+        "upper"
+      ],
+      "title": "EstimateRange",
+      "type": "object"
+    },
+    "EvidenceGrade": {
+      "enum": [
+        "a_directly_measured",
+        "b_calibrated",
+        "c_analogous",
+        "d_analytical",
+        "e_unvalidated"
+      ],
+      "title": "EvidenceGrade",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:performance-forecast",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "benchmarkEvidenceRefs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Benchmarkevidencerefs",
+      "type": "array"
+    },
+    "contract": {
+      "const": "performance-forecast/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "evidenceGrade": {
+      "$ref": "#/$defs/EvidenceGrade"
+    },
+    "isGuarantee": {
+      "const": false,
+      "default": false,
+      "title": "Isguarantee",
+      "type": "boolean"
+    },
+    "matchingConditions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Matchingconditions",
+      "type": "array"
+    },
+    "memoryBytes": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EstimateRange"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "monthlyCostMicros": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EstimateRange"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "nonMatchingConditions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Nonmatchingconditions",
+      "type": "array"
+    },
+    "observationKind": {
+      "const": "estimated",
+      "title": "Observationkind",
+      "type": "string"
+    },
+    "p50LatencyMicroseconds": {
+      "$ref": "#/$defs/EstimateRange"
+    },
+    "p95LatencyMicroseconds": {
+      "$ref": "#/$defs/EstimateRange"
+    },
+    "p99LatencyMicroseconds": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EstimateRange"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "performanceModelRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "requiredTests": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Requiredtests",
+      "type": "array"
+    },
+    "resolvedPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "storageBytes": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EstimateRange"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "targetCapabilityProfileRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "throughputPerSecond": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EstimateRange"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "workloadRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "observationKind",
+    "resolvedPlanRef",
+    "workloadRef",
+    "targetCapabilityProfileRef",
+    "performanceModelRef",
+    "evidenceGrade",
+    "p50LatencyMicroseconds",
+    "p95LatencyMicroseconds"
+  ],
+  "title": "PerformanceForecast",
+  "type": "object"
+}

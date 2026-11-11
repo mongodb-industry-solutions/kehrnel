@@ -1,0 +1,133 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:runtime-query-plan-trace",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "runtime-query-plan-trace/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "executorRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "fallbackUsed": {
+      "default": false,
+      "title": "Fallbackused",
+      "type": "boolean"
+    },
+    "interactionId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Interactionid",
+      "type": "string"
+    },
+    "observedFreshnessSeconds": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observedfreshnessseconds"
+    },
+    "planFamilyId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Planfamilyid",
+      "type": "string"
+    },
+    "policyDecisionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "queryFingerprint": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Queryfingerprint",
+      "type": "string"
+    },
+    "resolvedPlanRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "selectedMechanism": {
+      "minLength": 1,
+      "title": "Selectedmechanism",
+      "type": "string"
+    },
+    "semanticBindingRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "targetCapabilityProfileRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "traceDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Tracedigest",
+      "type": "string"
+    },
+    "traceId": {
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$",
+      "title": "Traceid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "traceId",
+    "resolvedPlanRef",
+    "planFamilyId",
+    "interactionId",
+    "semanticBindingRef",
+    "targetCapabilityProfileRef",
+    "queryFingerprint",
+    "selectedMechanism",
+    "policyDecisionRef",
+    "executorRef",
+    "traceDigest"
+  ],
+  "title": "RuntimeQueryPlanTrace",
+  "type": "object"
+}

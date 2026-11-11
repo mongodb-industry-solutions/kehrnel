@@ -1,0 +1,162 @@
+[
+  {
+    "_id": {
+      "$oid": "6ac3713d7207d6e95fa9a16b"
+    },
+    "name": "Pseudonimització de projecte",
+    "description": "Per a un projecte o assaig amb subjectes re-identificables pel responsable de les dades. Treu la identitat del pacient, les persones i el contingut lliure; manté les dates senceres i l'equip, que sovint formen part del protocol. El pseudònim es replica al ClinicalTrialSubjectID perquè la cohort segueixi lligada. Cal informar 'hashSaltRef' amb la clau de configuració que guarda la sal del projecte.",
+    "active": true,
+    "kind": "pseudonymous",
+    "hashSaltRef": "Anonymization:SalTest",
+    "sourceTemplate": "pseudonymous-trial",
+    "sourceTemplateVersion": 2,
+    "appliesTo": [
+      "export"
+    ],
+    "privatePolicy": "removeAll",
+    "sequencePolicy": "recurse",
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      }
+    ],
+    "rules": [
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100020"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "SUBJ-",
+          "length": "16"
+        }
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100010"
+        },
+        "transform": "Constant",
+        "params": {
+          "text": "SUBJECT"
+        }
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00120040"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "SUBJ-",
+          "length": "16"
+        },
+        "note": "same pseudonym as PatientID, so the trial linkage survives"
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100030"
+        },
+        "transform": "TruncateToMonth",
+        "note": "trials usually need a finer age than a year alone"
+      }
+    ],
+    "reidentification": {
+      "enabled": true,
+      "mode": "map"
+    },
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-10-05T09:43:25.770Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-05T09:43:25.770Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ac38946e101b09dc48578c1"
+    },
+    "name": "Assaig clinic multicentric",
+    "description": "Per a un projecte o assaig amb subjectes re-identificables pel responsable de les dades. Treu la identitat del pacient, les persones i el contingut lliure; manté les dates senceres i l'equip, que sovint formen part del protocol. El pseudònim es replica al ClinicalTrialSubjectID perquè la cohort segueixi lligada. Cal informar 'hashSaltRef' amb la clau de configuració que guarda la sal del projecte.",
+    "active": true,
+    "kind": "pseudonymous",
+    "hashSaltRef": "Anonymization:SalTest",
+    "sourceTemplate": "pseudonymous-trial",
+    "sourceTemplateVersion": 2,
+    "appliesTo": [
+      "export"
+    ],
+    "privatePolicy": "removeAll",
+    "sequencePolicy": "recurse",
+    "uidPolicy": {
+      "mode": "remap",
+      "rootRef": "Dicom:InstitutionRoot"
+    },
+    "seriesFilters": [
+      {
+        "kind": "burnedInAnnotation"
+      }
+    ],
+    "rules": [
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100020"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "SUBJ-",
+          "length": "16"
+        }
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100010"
+        },
+        "transform": "Constant",
+        "params": {
+          "text": "SUBJECT"
+        }
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00120040"
+        },
+        "transform": "HashPrefixed",
+        "params": {
+          "prefix": "SUBJ-",
+          "length": "16"
+        },
+        "note": "same pseudonym as PatientID, so the trial linkage survives"
+      },
+      {
+        "selector": {
+          "kind": "tag",
+          "tag": "00100030"
+        },
+        "transform": "TruncateToMonth",
+        "note": "trials usually need a finer age than a year alone"
+      }
+    ],
+    "reidentification": {
+      "enabled": true,
+      "mode": "map"
+    },
+    "schemaVersion": 1,
+    "createdAt": {
+      "$date": "2026-10-05T11:25:58.031Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-05T11:25:58.031Z"
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "contract": "resolved-architecture-plan/v1",
+  "artifactRef": {"kind": "resolved-architecture-plan", "id": "greenfield-openehr-cdr.unsupported-target", "version": "1.0.0", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+  "blueprintRef": {"blueprintId": "greenfield-openehr-cdr", "revision": 1, "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"},
+  "targetCapabilityProfileRef": {"kind": "target-capability-profile", "id": "local-community", "version": "1.0.0", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+  "status": "blocked",
+  "requiresApproval": false,
+  "strategyInstances": [],
+  "semanticBindingRefs": [],
+  "resourceOwnership": [],
+  "materializations": [],
+  "queryPlanFamilies": [],
+  "targetCompatibility": [{"capabilityId": "atlas.search", "required": true, "availability": "unavailable", "compatible": false, "rationale": "The selected cohort plan requires Atlas Search, which the target does not provide."}],
+  "issues": [{"code": "TARGET_CAPABILITY_UNAVAILABLE", "severity": "blocking", "message": "atlas.search is required by the selected plan but unavailable on the target.", "refs": ["atlas.search", "local-community"]}]
+}

@@ -1,0 +1,245 @@
+{
+  "version": "dicom-examples/v1",
+  "dataset": {
+    "kind": "synthetic_metadata",
+    "operation": "dicom_generate_synthetic",
+    "payload": {
+      "instances": 12,
+      "persist": true
+    },
+    "containsPixels": false,
+    "expectedCounts": {
+      "studies": 2,
+      "series": 2,
+      "instances": 24
+    },
+    "expectationsRequire": "fresh database, default centers and generator recipe, default MG research policy, completed example backfill"
+  },
+  "activation": {
+    "domain": "dicom",
+    "strategy_id": "dicom.tiered_store",
+    "version": "0.4.0",
+    "config": {
+      "database": "dicom_demo",
+      "projections": {
+        "enabled": true
+      }
+    },
+    "bindings": {}
+  },
+  "queries": [
+    {
+      "id": "patient-day",
+      "title": "Studies for one patient on a day",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "studies",
+        "filter": {
+          "patientId": "SYNTHETIC_PATIENT_1",
+          "day": "2026-01-01"
+        },
+        "limit": 100,
+        "centers": [
+          "DEMO_A"
+        ]
+      },
+      "requiredTags": [],
+      "expectedRows": 1
+    },
+    {
+      "id": "patient-history",
+      "title": "Historical studies for one center-scoped patient",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "studies",
+        "filter": {
+          "patientId": "SYNTHETIC_PATIENT_1"
+        },
+        "limit": 100,
+        "centers": [
+          "DEMO_A"
+        ]
+      },
+      "requiredTags": [],
+      "expectedRows": 1
+    },
+    {
+      "id": "modality-day",
+      "title": "Mammography studies on a day",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "studies",
+        "filter": {
+          "modality": "MG",
+          "day": "2026-01-01"
+        },
+        "limit": 100
+      },
+      "requiredTags": [],
+      "expectedRows": 1
+    },
+    {
+      "id": "modality-period",
+      "title": "Mammography studies during a half-open period",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "studies",
+        "filter": {
+          "modality": "MG",
+          "fromDay": "2026-01-01",
+          "toDay": "2027-01-01"
+        },
+        "limit": 100
+      },
+      "requiredTags": [],
+      "expectedRows": 1
+    },
+    {
+      "id": "study-series",
+      "title": "Series belonging to a selected study",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "series",
+        "filter": {
+          "studyUid": "2.25.1001"
+        },
+        "limit": 100
+      },
+      "requiredTags": [],
+      "expectedRows": 1
+    },
+    {
+      "id": "series-instances",
+      "title": "Instances in numeric browsing order",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "instances",
+        "filter": {
+          "seriesUid": "2.25.2001"
+        },
+        "limit": 100
+      },
+      "requiredTags": [],
+      "expectedRows": 12
+    },
+    {
+      "id": "description-prefix",
+      "title": "Studies with a matching series description and modality",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "studies",
+        "filter": {
+          "day": "2026-01-01",
+          "modality": "MG",
+          "seriesDescription": "Synthetic imaging",
+          "descriptionMode": "prefix"
+        },
+        "limit": 100
+      },
+      "requiredTags": [],
+      "expectedRows": 1
+    },
+    {
+      "id": "manufacturer",
+      "title": "Mammography metadata from a manufacturer",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "research",
+        "filter": {
+          "modality": "MG",
+          "fromDay": "2026-01-01",
+          "toDay": "2027-01-01",
+          "tag": {
+            "path": "00080070",
+            "equals": "SYNTHETIC_MANUFACTURER"
+          }
+        },
+        "limit": 100,
+        "allowPartial": true
+      },
+      "requiredTags": [
+        {
+          "tag": "00080070",
+          "type": "string"
+        }
+      ],
+      "expectedRows": 12
+    },
+    {
+      "id": "manufacturer-thickness",
+      "title": "Manufacturer and slice-thickness predicates on the same instance",
+      "query": {
+        "version": "dicom-query/v1",
+        "resource": "research",
+        "filter": {
+          "modality": "MG",
+          "fromDay": "2026-01-01",
+          "toDay": "2027-01-01",
+          "tags": [
+            {
+              "path": "00080070",
+              "equals": "SYNTHETIC_MANUFACTURER"
+            },
+            {
+              "path": "00180050",
+              "gte": 1,
+              "lt": 2
+            }
+          ]
+        },
+        "limit": 100,
+        "allowPartial": true
+      },
+      "requiredTags": [
+        {
+          "tag": "00080070",
+          "type": "string"
+        },
+        {
+          "tag": "00180050",
+          "type": "number"
+        }
+      ],
+      "expectedRows": 2
+    }
+  ],
+  "headerExample": {
+    "operation": "dicom_get_headers",
+    "payload": {
+      "seriesUid": "2.25.2001",
+      "sopUids": [
+        "2.25.100001",
+        "2.25.100002"
+      ],
+      "tags": [
+        "00080070",
+        "00180050",
+        "00200013"
+      ]
+    }
+  },
+  "researchBuildExample": {
+    "operation": "dicom_rebuild_projections",
+    "payload": {
+      "seriesUid": "2.25.2001",
+      "limit": 5
+    }
+  },
+  "futureExamples": [
+    {
+      "id": "published-study-cohort",
+      "status": "planned",
+      "requires": "published series/study projection with coverage receipt"
+    },
+    {
+      "id": "condition-cohort",
+      "status": "planned",
+      "requires": "provenance-linked clinical assertions and terminology"
+    },
+    {
+      "id": "pixel-viewer",
+      "status": "planned",
+      "requires": "licensed public pixels and DICOMweb adapter"
+    }
+  ]
+}

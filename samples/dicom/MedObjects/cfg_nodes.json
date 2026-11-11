@@ -1,0 +1,658 @@
+[
+  {
+    "_id": "00b40c4a-dd5c-45e3-a1a1-9690f0d0abe9",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "FBORRELL01",
+    "name": "DIMSE fborrell-dev (self-hosted)",
+    "active": true,
+    "createdAt": "2026-07-17T06:45:19.473Z",
+    "updatedAt": "2026-07-17T07:13:56.178Z",
+    "configVersion": "2026-07-17T06:45:19.473Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "FBORRELL_WLM",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "FBORRELL_STORE",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "FBORRELL_QR",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "37fc57db-6c0e-4c50-a0dc-389da3d601c5",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "UTCenter",
+    "name": "DIMSE Unit Test",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-06-10T08:00:04.869Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-10T09:50:39.319Z"
+    },
+    "configVersion": "2026-06-10T09:50:39.3194426Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "RAIM_WLM",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          },
+          "settings": {
+            "matchMarginMinutes": 30
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "RAIM_STORE",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          },
+          "settings": {
+            "acceptedSopClasses": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": []
+    }
+  },
+  {
+    "_id": "6f8da179-7bd3-4038-8b2f-40b9a1f8f5ed",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "Test2",
+    "name": "FlowTest-fb01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T08:15:11.340Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T08:15:11.340Z"
+    },
+    "lastHeartbeatAt": {
+      "$date": "2026-10-07T11:41:57.546Z"
+    },
+    "runningVersion": "0.0.2-730b2fe",
+    "secretRotatedAt": {
+      "$date": "2026-10-07T08:15:11.339Z"
+    },
+    "configVersion": "2026-10-07T08:15:11.3402095Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "FLST1_WLM",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11412
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "FLST1_STORE",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11413
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "FLST1_QR",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11414
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [
+        {
+          "title": "FLOWSIM",
+          "host": "host.docker.internal",
+          "port": 11104
+        },
+        {
+          "title": "FLOWSIM-CC",
+          "host": "host.docker.internal",
+          "port": 11117
+        }
+      ],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "78faa962-ef89-4966-b214-7de377f32d8d",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "Test4",
+    "name": "FlowTest-pp01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T09:01:09.728Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T09:15:00Z"
+    },
+    "lastHeartbeatAt": {
+      "$date": "2026-10-14T07:07:04.675Z"
+    },
+    "runningVersion": "0.0.2-730b2fe",
+    "secretRotatedAt": {
+      "$date": "2026-10-07T09:01:09.728Z"
+    },
+    "configVersion": "2026-10-07T09:15:00.0000000Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [
+        {
+          "title": "FLOWSIM",
+          "host": "host.docker.internal",
+          "port": 11104
+        },
+        {
+          "title": "FLOWSIM-CC",
+          "host": "host.docker.internal",
+          "port": 11117
+        }
+      ],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "87ee66f0-09ff-4c92-a71a-e69b3d01f9ce",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "Test1",
+    "name": "Flow-rp01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T08:57:55.649Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T09:15:00Z"
+    },
+    "lastHeartbeatAt": {
+      "$date": "2026-10-26T14:01:00.095Z"
+    },
+    "runningVersion": "0.0.2-730b2fe",
+    "secretRotatedAt": {
+      "$date": "2026-10-07T08:57:55.649Z"
+    },
+    "configVersion": "2026-10-07T09:15:00.0000000Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [
+        {
+          "title": "FLOWSIM",
+          "host": "host.docker.internal",
+          "port": 11104
+        },
+        {
+          "title": "FLOWSIM-CC",
+          "host": "host.docker.internal",
+          "port": 11117
+        }
+      ],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "89194bbe-0b62-46f7-ae7c-50e37f3b85b1",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "H696969",
+    "name": "DIMSE proves CECHO",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-08-26T05:40:51.893Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-23T11:20:44.328Z"
+    },
+    "lastHeartbeatAt": {
+      "$date": "2026-10-07T09:29:24.484Z"
+    },
+    "secretRotatedAt": {
+      "$date": "2026-09-09T10:13:45.478Z"
+    },
+    "configVersion": "2026-09-23T11:20:44.3280020Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "AET_PROVES",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "FBORRELL_STORE",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "FBORRELL_QR",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [],
+      "anonimiceHash": null
+    },
+    "lastEchoResult": {
+      "targetAet": "AET_PROVES",
+      "targetHost": "127.0.0.1",
+      "targetPort": 11112,
+      "success": true,
+      "dicomStatusCode": "0x0000",
+      "dicomStatusDescription": "Success",
+      "errorMessage": null,
+      "testedAt": {
+        "$date": "2026-08-26T09:41:04.219Z"
+      }
+    }
+  },
+  {
+    "_id": "8fd2190d-01dd-4b98-bf0f-6895bdc48e58",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "HC3",
+    "name": "HC3DIMSE",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-08-12T05:04:33.014Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-14T05:11:56.774Z"
+    },
+    "lastHeartbeatAt": null,
+    "secretRotatedAt": {
+      "$date": "2026-08-12T10:55:57.632Z"
+    },
+    "configVersion": "2026-08-14T05:11:56.7748149Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "AET_HC3",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "a37b5360-1408-480f-848a-b4a238136035",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "H696969",
+    "name": "DIMSE Hospital A",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-05-06T15:44:09.152Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-26T10:45:24.802Z"
+    },
+    "lastHeartbeatAt": null,
+    "secretRotatedAt": {
+      "$date": "2026-08-12T10:37:42.813Z"
+    },
+    "configVersion": "2026-08-26T10:45:24.8020671Z",
+    "action": {
+      "id": null,
+      "type": "set-log-level",
+      "issuedAt": {
+        "$date": "2026-06-29T12:48:08.117Z"
+      },
+      "params": {
+        "durationMinutes": 10
+      }
+    },
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "RAIM_WLM",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11116,
+            "tls": {
+              "enabled": true
+            }
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "RAIM_STORE",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "RAIM_QR",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "b63dbfe6-866a-4bc6-b9ab-9015cd9dd58c",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "Test 3",
+    "name": "FlowTest-fp01",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T08:56:33.415Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T09:15:00Z"
+    },
+    "lastHeartbeatAt": {
+      "$date": "2026-10-14T07:14:00.837Z"
+    },
+    "runningVersion": "0.0.2-730b2fe",
+    "secretRotatedAt": {
+      "$date": "2026-10-07T08:56:33.415Z"
+    },
+    "configVersion": "2026-10-07T09:15:00.0000000Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "TEST01",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "TEST01",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "TEST01",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [
+        {
+          "title": "FLOWSIM",
+          "host": "host.docker.internal",
+          "port": 11104
+        },
+        {
+          "title": "FLOWSIM-CC",
+          "host": "host.docker.internal",
+          "port": 11117
+        }
+      ],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "bbeec27f-cd58-416a-89d1-9ce93e2381c3",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "Test 5",
+    "name": "NodeDimseTest",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-10-07T09:03:05.210Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-15T08:34:56.060Z"
+    },
+    "lastHeartbeatAt": {
+      "$date": "2026-10-15T10:09:51.396Z"
+    },
+    "runningVersion": "0.0.2-c208479",
+    "secretRotatedAt": {
+      "$date": "2026-10-15T08:34:56.060Z"
+    },
+    "configVersion": "2026-10-07T09:15:00.0000000Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        },
+        {
+          "service": "STORE",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11113
+          }
+        },
+        {
+          "service": "QR",
+          "aet": "TEST",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11114
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [
+        {
+          "title": "FLOWSIM",
+          "host": "host.docker.internal",
+          "port": 11104
+        },
+        {
+          "title": "FLOWSIM-CC",
+          "host": "host.docker.internal",
+          "port": 11117
+        }
+      ],
+      "anonimiceHash": null
+    }
+  },
+  {
+    "_id": "d92f19cb-55d7-45c6-9233-912c26aeb2a5",
+    "_t": [
+      "MongoNode",
+      "DIMSE"
+    ],
+    "centerId": "HC3",
+    "name": "Hospital B",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-08-12T10:57:12.686Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-12T10:57:12.686Z"
+    },
+    "lastHeartbeatAt": null,
+    "secretRotatedAt": {
+      "$date": "2026-08-12T10:57:12.685Z"
+    },
+    "configVersion": "2026-08-12T10:57:12.6860341Z",
+    "action": null,
+    "config": {
+      "services": [
+        {
+          "service": "WLM",
+          "aet": "AET_JP",
+          "endpoint": {
+            "host": "0.0.0.0",
+            "port": 11112
+          }
+        }
+      ],
+      "settings": {
+        "_csharpnull": true
+      },
+      "dicomNodes": [],
+      "anonimiceHash": null
+    }
+  }
+]

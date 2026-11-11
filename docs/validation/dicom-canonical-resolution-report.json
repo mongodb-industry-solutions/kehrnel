@@ -1,0 +1,48 @@
+{
+  "strategy": "dicom.tiered_store",
+  "version": "0.2.0",
+  "milestone": "K1C canonical read-only metadata resolution",
+  "date": "2026-10-27",
+  "status": "validated_for_explicit_evaluation_resolution",
+  "counts": {
+    "tests": 171,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "passed": 170,
+  "testPaths": [
+    "tests/contract/test_dicom_canonical_resolution.py",
+    "tests/contract/test_architecture_plan_compiler.py",
+    "tests/contract/test_architecture_foundation.py",
+    "tests/contract/test_solution_blueprint_canonicalization.py",
+    "tests/contract/test_implementation_package_builder.py",
+    "tests/contract/test_contract_schema_registry.py",
+    "tests/contract/test_dicom_builder_journey.py",
+    "tests/contract/test_dicom_runtime_surfaces.py",
+    "tests/contract/test_source_aware_strategy_compiler.py",
+    "tests/unit/test_dicom_tiered_store.py",
+    "tests/unit/test_catalog_maintenance.py"
+  ],
+  "evidence": [
+    "Canonical participant/interaction request and three linked deterministic plans through SDK and HTTP.",
+    "Exact installed preview strategy and native metadata binding pins.",
+    "Default production, unsupported DICOMweb/Search/export/intake, missing capability and modified binding rejection.",
+    "No implicit Search, preparation stages or published data-product composition.",
+    "Canonical implementation-package building remains rejected for the preview candidate.",
+    "Published schema bytes, existing DICOM runtime contracts and source-aware bridge remain validated."
+  ],
+  "limitations": [
+    "No canonical DICOM package preparation/activation or actual Healthcare Data Lab UI is implemented in this increment.",
+    "No live customer database, hyperscaler, sharded scale or 15-billion-instance performance validation.",
+    "Native query execution evidence from earlier K1 is separate; this increment changes design-time compilation.",
+    "Reference target capability profile is design evidence, not observed tenant state."
+  ],
+  "skippedTests": [
+    {
+      "path": "tests/contract/test_dicom_runtime_surfaces.py",
+      "test": "test_http_and_cli_execute_the_example_journey_against_real_mongo",
+      "reason": "No disposable localhost MongoDB URI supplied; prior K1 real MongoDB execution evidence remains separate."
+    }
+  ]
+}

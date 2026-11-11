@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "dicom-sample-catalog/v1",
+  "domain": "dicom",
+  "datasets": [
+    {
+      "id": "dicom.synthetic-imaging",
+      "version": "1.0.0",
+      "manifest": "synthetic-imaging/1.0.0/manifest.json",
+      "digest": "sha256:069af817ab7c9c475d6c61afe6cdebc41b3ea9e4111194636ec848ecd8639f89",
+      "kind": "synthetic",
+      "containsPixels": false
+    },
+    {
+      "id": "dicom.public-imaging",
+      "version": "1.0.0",
+      "manifest": "public-imaging/1.0.0/manifest.json",
+      "digest": "sha256:dbe325c73f8fd29e58b62804968812bae0934c524399c0180628e12f669f46e5",
+      "kind": "public",
+      "containsPixels": false
+    }
+  ]
+}

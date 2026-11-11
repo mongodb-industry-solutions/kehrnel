@@ -1,0 +1,3292 @@
+{
+  "id": "dicom.tiered_store",
+  "name": "DICOM Tiered Metadata Store",
+  "version": "0.5.0",
+  "domain": "dicom",
+  "maturity": "preview",
+  "pack_format": "strategy-pack/v1",
+  "spec": {
+    "path": "spec.json",
+    "version": "1.0"
+  },
+  "summary": "Study-first class-aware metadata summaries, rule-driven Search plans, bounded reception and exceptional research extensions.",
+  "description": "Retains DICOM source metadata and ContentIndex. Class-aware correlated summaries, annotation facts, scoped metadata publication and typed Atlas Search share the SDK/CLI/HTTP contract. Archive-wide scheduling, embeddings and production scale remain unqualified.",
+  "entrypoint": "kehrnel.engine.strategies.dicom.tiered_store.strategy:DICOMTieredStoreStrategy",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Catalog, header placement, and governed tag promotion policy"
+    }
+  },
+  "capabilities": [
+    "transform",
+    "reverse_transform",
+    "ingest",
+    "query",
+    "generate",
+    "plan",
+    "apply"
+  ],
+  "adapters": {
+    "storage": [
+      "mongodb"
+    ],
+    "artifact": [
+      "filesystem",
+      "s3",
+      "azure-blob"
+    ],
+    "search": [
+      "mongodb"
+    ],
+    "vector": [],
+    "queue": []
+  },
+  "compatibility": {
+    "packFormat": "strategy-pack/v1",
+    "requires": [
+      "storage.mongo"
+    ],
+    "optional": [
+      "artifact.object_store",
+      "search.atlas"
+    ]
+  },
+  "interaction_contracts": [
+    {
+      "id": "dicom.metadata-query",
+      "name": "DICOM metadata catalog queries",
+      "mode": "compiled",
+      "kind": "query",
+      "authority": "Kehrnel",
+      "standard": "DICOM JSON metadata",
+      "contract": "dicom-query/v1",
+      "description": "An application query contract; it does not claim DICOMweb or DIMSE conformance.",
+      "engines": [
+        "mongo_pipeline"
+      ],
+      "builders": [
+        "dicom_query_v1"
+      ],
+      "operations": [
+        "dicom_query"
+      ]
+    }
+  ],
+  "ops": [
+    {
+      "name": "dicom_capabilities",
+      "kind": "query",
+      "summary": "Compute implemented and unsupported interactions for this activation",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_ingest",
+      "kind": "ingest",
+      "summary": "Import bounded customer study/instance batches with typed catalog fields",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "studies": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "minItems": 0,
+            "maxItems": 500
+          },
+          "instances": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "minItems": 0,
+            "maxItems": 500
+          }
+        },
+        "required": [],
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "studies"
+            ]
+          },
+          {
+            "required": [
+              "instances"
+            ]
+          }
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_query",
+      "kind": "query",
+      "summary": "Run tenant- and center-scoped viewer or selective research queries",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "const": "dicom-query/v1"
+          },
+          "resource": {
+            "enum": [
+              "studies",
+              "series",
+              "instances",
+              "research"
+            ]
+          },
+          "centers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "minItems": 1,
+            "maxItems": 200,
+            "uniqueItems": true
+          },
+          "filter": {
+            "type": "object",
+            "properties": {
+              "patientId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "studyUid": {
+                "type": "string",
+                "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+                "maxLength": 64
+              },
+              "seriesUid": {
+                "type": "string",
+                "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+                "maxLength": 64
+              },
+              "day": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              },
+              "fromDay": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              },
+              "toDay": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              },
+              "modality": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "tag": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "pattern": "^[0-9A-F]{8}$"
+                  },
+                  "equals": {
+                    "type": [
+                      "string",
+                      "number"
+                    ]
+                  },
+                  "gte": {
+                    "type": "number"
+                  },
+                  "lt": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "path"
+                ],
+                "additionalProperties": false
+              },
+              "description": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 256
+              },
+              "seriesDescription": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 256
+              },
+              "descriptionMode": {
+                "enum": [
+                  "exact",
+                  "prefix"
+                ],
+                "default": "exact",
+                "description": "Default exact; prefix requires one day. Series descriptions in a study stay correlated with modality and center."
+              },
+              "tags": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 16,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "pattern": "^[0-9A-F]{8}$"
+                    },
+                    "equals": {
+                      "type": [
+                        "string",
+                        "number"
+                      ]
+                    },
+                    "gte": {
+                      "type": "number"
+                    },
+                    "lt": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "path"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "AND predicates on distinct promoted tags within the same SOP instance; never across different instances."
+              }
+            },
+            "required": [],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "not": {
+                  "required": [
+                    "tag",
+                    "tags"
+                  ]
+                }
+              }
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "allowPartial": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "version",
+          "resource"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_get_header",
+      "kind": "query",
+      "summary": "Retrieve one original instance metadata record from MongoDB or a verified bundle",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "sopUid": {
+            "type": "string",
+            "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "sopUid"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rebuild_projections",
+      "kind": "maintenance",
+      "summary": "Backfill one bounded series page under the active field promotion policy",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "seriesUid": {
+            "type": "string",
+            "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+            "maxLength": 64
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "seriesUid"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_generate_synthetic",
+      "kind": "synthetic",
+      "summary": "Generate linked, deterministic two-center metadata without patient data or pixels",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "persist": {
+            "type": "boolean"
+          },
+          "seriesPerStudy": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32
+          },
+          "modalities": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "enum": [
+                "MG",
+                "CT",
+                "MR",
+                "US",
+                "OT",
+                "CR",
+                "DX",
+                "PT",
+                "SR"
+              ]
+            }
+          },
+          "day": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_refresh_series_summary",
+      "kind": "maintenance",
+      "summary": "Refresh an index-backed count of imported instance documents without per-instance catalog updates",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "seriesUid": {
+            "type": "string",
+            "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "seriesUid"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_query_catalog",
+      "kind": "query",
+      "summary": "Describe active query fields, promoted predicates, limits and synthetic examples for builders and agents",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_get_headers",
+      "kind": "query",
+      "summary": "Retrieve selected DICOM attributes for a bounded list of SOPs in one authorized series",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "seriesUid": {
+            "type": "string",
+            "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+            "maxLength": 64
+          },
+          "sopUids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9]+(?:\\.[0-9]+)+$",
+              "maxLength": 64
+            }
+          },
+          "tags": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-F]{8}$"
+            }
+          },
+          "includeContentIndex": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "seriesUid",
+          "sopUids"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_catalog",
+      "kind": "query",
+      "summary": "Discover extraction rules, placement guidance and playground limits",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_demo",
+      "kind": "query",
+      "summary": "Load frozen domain samples and preview governed series projections",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "enum": [
+              "mixed",
+              "ct",
+              "mr",
+              "mg",
+              "legacy"
+            ]
+          },
+          "profile": {
+            "type": "object"
+          },
+          "query": {
+            "type": "object"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_preview",
+      "kind": "query",
+      "summary": "Preview source-preserving embedded summaries and research collections",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "studies": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 500,
+            "items": {
+              "type": "object"
+            }
+          },
+          "instances": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "type": "object"
+            }
+          },
+          "profile": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "studies",
+          "instances",
+          "profile"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_compile_query",
+      "kind": "query",
+      "summary": "Compile rule-aware structured or bounded natural-language queries",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "type": "object"
+          },
+          "generationId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "where": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {
+              "type": "object"
+            }
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 48
+          },
+          "modality": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "allowPartial": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "profile",
+          "generationId"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_receive",
+      "kind": "ingest",
+      "summary": "Durably accept an immutable bounded reception batch",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "studies": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 500,
+            "items": {
+              "type": "object"
+            }
+          },
+          "instances": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "type": "object"
+            }
+          },
+          "profile": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "studies",
+          "instances",
+          "profile"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_process",
+      "kind": "ingest",
+      "summary": "Process a reception batch and publish its immutable bounded generation",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "batchId"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_query",
+      "kind": "query",
+      "summary": "Query an authorized ready bounded generation with the published rules",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "type": "object"
+          },
+          "generationId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "where": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {
+              "type": "object"
+            }
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 48
+          },
+          "modality": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "allowPartial": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "profile",
+          "generationId",
+          "allowPartial"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_apply_indexes",
+      "kind": "admin",
+      "summary": "Create rule-derived regular indexes and optionally request Atlas Search indexes",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "type": "object"
+          },
+          "includeSearch": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "profile"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_rule_plan_backfill",
+      "kind": "query",
+      "summary": "Plan a selective historical projection rebuild without an archive scan",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "type": "object"
+          },
+          "selection": {
+            "type": "object",
+            "properties": {
+              "fromDay": {
+                "type": "string"
+              },
+              "toDay": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "fromDay",
+              "toDay"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "profile",
+          "selection"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_sample_catalog",
+      "kind": "query",
+      "summary": "Discover optional verified DICOM domain datasets",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_sample_import",
+      "kind": "mutation",
+      "summary": "Import a verified bounded domain sample through native ingestion and rules",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "enum": [
+              "dicom.synthetic-imaging",
+              "dicom.public-imaging"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "1.0.0"
+            ]
+          },
+          "variant": {
+            "type": "string",
+            "enum": [
+              "mixed",
+              "ct",
+              "mr",
+              "mg",
+              "legacy",
+              "linked-ct-pet"
+            ]
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "profile": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "datasetId",
+          "version",
+          "variant"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_sample_status",
+      "kind": "query",
+      "summary": "Discover authorized published sample receipts",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "enum": [
+              "dicom.synthetic-imaging",
+              "dicom.public-imaging"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "1.0.0"
+            ]
+          }
+        },
+        "required": [
+          "datasetId",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_sample_query",
+      "kind": "query",
+      "summary": "Execute MongoDB queries against authorized sample publications",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "where": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {
+              "type": "object"
+            }
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 48
+          },
+          "modality": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "receiptIds": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "required": [
+          "receiptIds"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_catalog",
+      "kind": "query",
+      "summary": "Discover class-aware fields, public sources and the shared narrative.",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_preview",
+      "kind": "query",
+      "summary": "Preview reusable study/series metadata and a rule-derived Search mapping.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "studyDescription",
+                "seriesDescription",
+                "protocolName",
+                "bodyPartExamined",
+                "patientSex",
+                "patientAge",
+                "patientSize",
+                "patientWeight",
+                "patientPosition",
+                "laterality",
+                "imageLaterality",
+                "imageType",
+                "acquisitionDate",
+                "acquisitionTime",
+                "acquisitionDateTime",
+                "contentDate",
+                "contentTime",
+                "clinicalTrialSponsorName",
+                "clinicalTrialProtocolID",
+                "clinicalTrialProtocolName",
+                "clinicalTrialSiteID",
+                "clinicalTrialSubjectID",
+                "clinicalTrialTimePointID",
+                "longitudinalTemporalOffsetFromEvent",
+                "longitudinalTemporalEventType",
+                "patientIdentityRemoved",
+                "deidentificationMethod",
+                "manufacturer",
+                "manufacturerModelName",
+                "deviceSerialNumber",
+                "softwareVersions",
+                "stationName",
+                "institutionName",
+                "institutionalDepartmentName",
+                "deviceUID",
+                "gantryID",
+                "rows",
+                "columns",
+                "numberOfFrames",
+                "pixelSpacing",
+                "imagerPixelSpacing",
+                "nominalScannedPixelSpacing",
+                "sliceThickness",
+                "spacingBetweenSlices",
+                "imageOrientationPatient",
+                "imagePositionPatient",
+                "frameOfReferenceUID",
+                "photometricInterpretation",
+                "samplesPerPixel",
+                "bitsAllocated",
+                "bitsStored",
+                "highBit",
+                "pixelRepresentation",
+                "lossyImageCompression",
+                "lossyImageCompressionRatio",
+                "lossyImageCompressionMethod",
+                "burnedInAnnotation",
+                "recognizableVisualFeatures",
+                "rescaleIntercept",
+                "rescaleSlope",
+                "rescaleType",
+                "acquisitionNumber",
+                "instanceNumber",
+                "kVP",
+                "exposureTime",
+                "xRayTubeCurrent",
+                "exposure",
+                "exposureInuAs",
+                "convolutionKernel",
+                "reconstructionDiameter",
+                "dataCollectionDiameter",
+                "distanceSourceToDetector",
+                "distanceSourceToPatient",
+                "gantryDetectorTilt",
+                "tableHeight",
+                "spiralPitchFactor",
+                "cTDIvol",
+                "reconstructionAlgorithm",
+                "revolutionTime",
+                "singleCollimationWidth",
+                "totalCollimationWidth",
+                "magneticFieldStrength",
+                "repetitionTime",
+                "echoTime",
+                "echoTrainLength",
+                "inversionTime",
+                "flipAngle",
+                "scanningSequence",
+                "sequenceVariant",
+                "scanOptions",
+                "mRAcquisitionType",
+                "sequenceName",
+                "receiveCoilName",
+                "transmitCoilName",
+                "numberOfAverages",
+                "pixelBandwidth",
+                "acquisitionMatrix",
+                "inPlanePhaseEncodingDirection",
+                "percentSampling",
+                "percentPhaseFieldOfView",
+                "sAR",
+                "diffusionBValue",
+                "effectiveEchoTime",
+                "parallelAcquisition",
+                "parallelAcquisitionTechnique",
+                "viewPosition",
+                "bodyPartThickness",
+                "compressionForce",
+                "compressionPressure",
+                "anodeTargetMaterial",
+                "filterMaterial",
+                "filterType",
+                "organDose",
+                "entranceDose",
+                "entranceDoseInmGy",
+                "units",
+                "correctedImage",
+                "decayCorrection",
+                "decayFactor",
+                "doseCalibrationFactor",
+                "reconstructionMethod",
+                "collimatorType",
+                "actualFrameDuration",
+                "frameReferenceTime",
+                "numberOfSlices",
+                "numberOfTimeSlices",
+                "energyWindowVector",
+                "transducerData",
+                "transducerType",
+                "transducerFrequency",
+                "depthOfScanField",
+                "frameTime",
+                "frameTimeVector",
+                "cineRate",
+                "effectiveDuration",
+                "totalPixelMatrixColumns",
+                "totalPixelMatrixRows",
+                "totalPixelMatrixFocalPlanes",
+                "numberOfOpticalPaths",
+                "imagedVolumeWidth",
+                "imagedVolumeHeight",
+                "imagedVolumeDepth",
+                "focusMethod",
+                "extendedDepthOfField",
+                "numberOfFocalPlanes",
+                "distanceBetweenFocalPlanes",
+                "containerIdentifier",
+                "doseUnits",
+                "doseType",
+                "doseSummationType",
+                "doseGridScaling",
+                "gridFrameOffsetVector",
+                "rTPlanLabel",
+                "rTPlanName",
+                "rTPlanDescription",
+                "rTPlanGeometry",
+                "structureSetLabel",
+                "structureSetName",
+                "structureSetDescription"
+              ]
+            },
+            "uniqueItems": true,
+            "maxItems": 159
+          },
+          "instances": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 500,
+            "items": {
+              "type": "object",
+              "required": [
+                "header"
+              ],
+              "properties": {
+                "header": {
+                  "type": "object"
+                },
+                "_id": {
+                  "type": "string"
+                },
+                "ContentIndex": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "modalities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 32
+              },
+              "sopClasses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 32
+              },
+              "collection": {
+                "type": "string"
+              },
+              "fromDay": {
+                "type": "string"
+              },
+              "toDay": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "when": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": [
+                "field",
+                "op"
+              ],
+              "properties": {
+                "field": {
+                  "enum": [
+                    "studyDescription",
+                    "seriesDescription",
+                    "protocolName",
+                    "bodyPartExamined",
+                    "patientSex",
+                    "patientAge",
+                    "patientSize",
+                    "patientWeight",
+                    "patientPosition",
+                    "laterality",
+                    "imageLaterality",
+                    "imageType",
+                    "acquisitionDate",
+                    "acquisitionTime",
+                    "acquisitionDateTime",
+                    "contentDate",
+                    "contentTime",
+                    "clinicalTrialSponsorName",
+                    "clinicalTrialProtocolID",
+                    "clinicalTrialProtocolName",
+                    "clinicalTrialSiteID",
+                    "clinicalTrialSubjectID",
+                    "clinicalTrialTimePointID",
+                    "longitudinalTemporalOffsetFromEvent",
+                    "longitudinalTemporalEventType",
+                    "patientIdentityRemoved",
+                    "deidentificationMethod",
+                    "manufacturer",
+                    "manufacturerModelName",
+                    "deviceSerialNumber",
+                    "softwareVersions",
+                    "stationName",
+                    "institutionName",
+                    "institutionalDepartmentName",
+                    "deviceUID",
+                    "gantryID",
+                    "rows",
+                    "columns",
+                    "numberOfFrames",
+                    "pixelSpacing",
+                    "imagerPixelSpacing",
+                    "nominalScannedPixelSpacing",
+                    "sliceThickness",
+                    "spacingBetweenSlices",
+                    "imageOrientationPatient",
+                    "imagePositionPatient",
+                    "frameOfReferenceUID",
+                    "photometricInterpretation",
+                    "samplesPerPixel",
+                    "bitsAllocated",
+                    "bitsStored",
+                    "highBit",
+                    "pixelRepresentation",
+                    "lossyImageCompression",
+                    "lossyImageCompressionRatio",
+                    "lossyImageCompressionMethod",
+                    "burnedInAnnotation",
+                    "recognizableVisualFeatures",
+                    "rescaleIntercept",
+                    "rescaleSlope",
+                    "rescaleType",
+                    "acquisitionNumber",
+                    "instanceNumber",
+                    "kVP",
+                    "exposureTime",
+                    "xRayTubeCurrent",
+                    "exposure",
+                    "exposureInuAs",
+                    "convolutionKernel",
+                    "reconstructionDiameter",
+                    "dataCollectionDiameter",
+                    "distanceSourceToDetector",
+                    "distanceSourceToPatient",
+                    "gantryDetectorTilt",
+                    "tableHeight",
+                    "spiralPitchFactor",
+                    "cTDIvol",
+                    "reconstructionAlgorithm",
+                    "revolutionTime",
+                    "singleCollimationWidth",
+                    "totalCollimationWidth",
+                    "magneticFieldStrength",
+                    "repetitionTime",
+                    "echoTime",
+                    "echoTrainLength",
+                    "inversionTime",
+                    "flipAngle",
+                    "scanningSequence",
+                    "sequenceVariant",
+                    "scanOptions",
+                    "mRAcquisitionType",
+                    "sequenceName",
+                    "receiveCoilName",
+                    "transmitCoilName",
+                    "numberOfAverages",
+                    "pixelBandwidth",
+                    "acquisitionMatrix",
+                    "inPlanePhaseEncodingDirection",
+                    "percentSampling",
+                    "percentPhaseFieldOfView",
+                    "sAR",
+                    "diffusionBValue",
+                    "effectiveEchoTime",
+                    "parallelAcquisition",
+                    "parallelAcquisitionTechnique",
+                    "viewPosition",
+                    "bodyPartThickness",
+                    "compressionForce",
+                    "compressionPressure",
+                    "anodeTargetMaterial",
+                    "filterMaterial",
+                    "filterType",
+                    "organDose",
+                    "entranceDose",
+                    "entranceDoseInmGy",
+                    "units",
+                    "correctedImage",
+                    "decayCorrection",
+                    "decayFactor",
+                    "doseCalibrationFactor",
+                    "reconstructionMethod",
+                    "collimatorType",
+                    "actualFrameDuration",
+                    "frameReferenceTime",
+                    "numberOfSlices",
+                    "numberOfTimeSlices",
+                    "energyWindowVector",
+                    "transducerData",
+                    "transducerType",
+                    "transducerFrequency",
+                    "depthOfScanField",
+                    "frameTime",
+                    "frameTimeVector",
+                    "cineRate",
+                    "effectiveDuration",
+                    "totalPixelMatrixColumns",
+                    "totalPixelMatrixRows",
+                    "totalPixelMatrixFocalPlanes",
+                    "numberOfOpticalPaths",
+                    "imagedVolumeWidth",
+                    "imagedVolumeHeight",
+                    "imagedVolumeDepth",
+                    "focusMethod",
+                    "extendedDepthOfField",
+                    "numberOfFocalPlanes",
+                    "distanceBetweenFocalPlanes",
+                    "containerIdentifier",
+                    "doseUnits",
+                    "doseType",
+                    "doseSummationType",
+                    "doseGridScaling",
+                    "gridFrameOffsetVector",
+                    "rTPlanLabel",
+                    "rTPlanName",
+                    "rTPlanDescription",
+                    "rTPlanGeometry",
+                    "structureSetLabel",
+                    "structureSetName",
+                    "structureSetDescription"
+                  ]
+                },
+                "op": {
+                  "enum": [
+                    "present",
+                    "equals",
+                    "gte",
+                    "lte"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "number"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "seriesUid": {
+            "type": "string"
+          },
+          "destination": {
+            "enum": [
+              "shared",
+              "extension"
+            ]
+          },
+          "includeFacts": {
+            "type": "boolean"
+          },
+          "semanticDesign": {
+            "type": "boolean"
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "maxGroups": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxFacts": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxSummaryBytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxExampleSources": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_source",
+      "kind": "query",
+      "summary": "Inspect a pinned public source header using descriptive DICOM names.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "sopUid": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "sopUid"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_publish",
+      "kind": "ingest",
+      "summary": "Publish a bounded metadata snapshot into the study or exceptional extension.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "studyDescription",
+                "seriesDescription",
+                "protocolName",
+                "bodyPartExamined",
+                "patientSex",
+                "patientAge",
+                "patientSize",
+                "patientWeight",
+                "patientPosition",
+                "laterality",
+                "imageLaterality",
+                "imageType",
+                "acquisitionDate",
+                "acquisitionTime",
+                "acquisitionDateTime",
+                "contentDate",
+                "contentTime",
+                "clinicalTrialSponsorName",
+                "clinicalTrialProtocolID",
+                "clinicalTrialProtocolName",
+                "clinicalTrialSiteID",
+                "clinicalTrialSubjectID",
+                "clinicalTrialTimePointID",
+                "longitudinalTemporalOffsetFromEvent",
+                "longitudinalTemporalEventType",
+                "patientIdentityRemoved",
+                "deidentificationMethod",
+                "manufacturer",
+                "manufacturerModelName",
+                "deviceSerialNumber",
+                "softwareVersions",
+                "stationName",
+                "institutionName",
+                "institutionalDepartmentName",
+                "deviceUID",
+                "gantryID",
+                "rows",
+                "columns",
+                "numberOfFrames",
+                "pixelSpacing",
+                "imagerPixelSpacing",
+                "nominalScannedPixelSpacing",
+                "sliceThickness",
+                "spacingBetweenSlices",
+                "imageOrientationPatient",
+                "imagePositionPatient",
+                "frameOfReferenceUID",
+                "photometricInterpretation",
+                "samplesPerPixel",
+                "bitsAllocated",
+                "bitsStored",
+                "highBit",
+                "pixelRepresentation",
+                "lossyImageCompression",
+                "lossyImageCompressionRatio",
+                "lossyImageCompressionMethod",
+                "burnedInAnnotation",
+                "recognizableVisualFeatures",
+                "rescaleIntercept",
+                "rescaleSlope",
+                "rescaleType",
+                "acquisitionNumber",
+                "instanceNumber",
+                "kVP",
+                "exposureTime",
+                "xRayTubeCurrent",
+                "exposure",
+                "exposureInuAs",
+                "convolutionKernel",
+                "reconstructionDiameter",
+                "dataCollectionDiameter",
+                "distanceSourceToDetector",
+                "distanceSourceToPatient",
+                "gantryDetectorTilt",
+                "tableHeight",
+                "spiralPitchFactor",
+                "cTDIvol",
+                "reconstructionAlgorithm",
+                "revolutionTime",
+                "singleCollimationWidth",
+                "totalCollimationWidth",
+                "magneticFieldStrength",
+                "repetitionTime",
+                "echoTime",
+                "echoTrainLength",
+                "inversionTime",
+                "flipAngle",
+                "scanningSequence",
+                "sequenceVariant",
+                "scanOptions",
+                "mRAcquisitionType",
+                "sequenceName",
+                "receiveCoilName",
+                "transmitCoilName",
+                "numberOfAverages",
+                "pixelBandwidth",
+                "acquisitionMatrix",
+                "inPlanePhaseEncodingDirection",
+                "percentSampling",
+                "percentPhaseFieldOfView",
+                "sAR",
+                "diffusionBValue",
+                "effectiveEchoTime",
+                "parallelAcquisition",
+                "parallelAcquisitionTechnique",
+                "viewPosition",
+                "bodyPartThickness",
+                "compressionForce",
+                "compressionPressure",
+                "anodeTargetMaterial",
+                "filterMaterial",
+                "filterType",
+                "organDose",
+                "entranceDose",
+                "entranceDoseInmGy",
+                "units",
+                "correctedImage",
+                "decayCorrection",
+                "decayFactor",
+                "doseCalibrationFactor",
+                "reconstructionMethod",
+                "collimatorType",
+                "actualFrameDuration",
+                "frameReferenceTime",
+                "numberOfSlices",
+                "numberOfTimeSlices",
+                "energyWindowVector",
+                "transducerData",
+                "transducerType",
+                "transducerFrequency",
+                "depthOfScanField",
+                "frameTime",
+                "frameTimeVector",
+                "cineRate",
+                "effectiveDuration",
+                "totalPixelMatrixColumns",
+                "totalPixelMatrixRows",
+                "totalPixelMatrixFocalPlanes",
+                "numberOfOpticalPaths",
+                "imagedVolumeWidth",
+                "imagedVolumeHeight",
+                "imagedVolumeDepth",
+                "focusMethod",
+                "extendedDepthOfField",
+                "numberOfFocalPlanes",
+                "distanceBetweenFocalPlanes",
+                "containerIdentifier",
+                "doseUnits",
+                "doseType",
+                "doseSummationType",
+                "doseGridScaling",
+                "gridFrameOffsetVector",
+                "rTPlanLabel",
+                "rTPlanName",
+                "rTPlanDescription",
+                "rTPlanGeometry",
+                "structureSetLabel",
+                "structureSetName",
+                "structureSetDescription"
+              ]
+            },
+            "uniqueItems": true,
+            "maxItems": 159
+          },
+          "instances": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 500,
+            "items": {
+              "type": "object",
+              "required": [
+                "header"
+              ],
+              "properties": {
+                "header": {
+                  "type": "object"
+                },
+                "_id": {
+                  "type": "string"
+                },
+                "ContentIndex": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "modalities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 32
+              },
+              "sopClasses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 32
+              },
+              "collection": {
+                "type": "string"
+              },
+              "fromDay": {
+                "type": "string"
+              },
+              "toDay": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "when": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": [
+                "field",
+                "op"
+              ],
+              "properties": {
+                "field": {
+                  "enum": [
+                    "studyDescription",
+                    "seriesDescription",
+                    "protocolName",
+                    "bodyPartExamined",
+                    "patientSex",
+                    "patientAge",
+                    "patientSize",
+                    "patientWeight",
+                    "patientPosition",
+                    "laterality",
+                    "imageLaterality",
+                    "imageType",
+                    "acquisitionDate",
+                    "acquisitionTime",
+                    "acquisitionDateTime",
+                    "contentDate",
+                    "contentTime",
+                    "clinicalTrialSponsorName",
+                    "clinicalTrialProtocolID",
+                    "clinicalTrialProtocolName",
+                    "clinicalTrialSiteID",
+                    "clinicalTrialSubjectID",
+                    "clinicalTrialTimePointID",
+                    "longitudinalTemporalOffsetFromEvent",
+                    "longitudinalTemporalEventType",
+                    "patientIdentityRemoved",
+                    "deidentificationMethod",
+                    "manufacturer",
+                    "manufacturerModelName",
+                    "deviceSerialNumber",
+                    "softwareVersions",
+                    "stationName",
+                    "institutionName",
+                    "institutionalDepartmentName",
+                    "deviceUID",
+                    "gantryID",
+                    "rows",
+                    "columns",
+                    "numberOfFrames",
+                    "pixelSpacing",
+                    "imagerPixelSpacing",
+                    "nominalScannedPixelSpacing",
+                    "sliceThickness",
+                    "spacingBetweenSlices",
+                    "imageOrientationPatient",
+                    "imagePositionPatient",
+                    "frameOfReferenceUID",
+                    "photometricInterpretation",
+                    "samplesPerPixel",
+                    "bitsAllocated",
+                    "bitsStored",
+                    "highBit",
+                    "pixelRepresentation",
+                    "lossyImageCompression",
+                    "lossyImageCompressionRatio",
+                    "lossyImageCompressionMethod",
+                    "burnedInAnnotation",
+                    "recognizableVisualFeatures",
+                    "rescaleIntercept",
+                    "rescaleSlope",
+                    "rescaleType",
+                    "acquisitionNumber",
+                    "instanceNumber",
+                    "kVP",
+                    "exposureTime",
+                    "xRayTubeCurrent",
+                    "exposure",
+                    "exposureInuAs",
+                    "convolutionKernel",
+                    "reconstructionDiameter",
+                    "dataCollectionDiameter",
+                    "distanceSourceToDetector",
+                    "distanceSourceToPatient",
+                    "gantryDetectorTilt",
+                    "tableHeight",
+                    "spiralPitchFactor",
+                    "cTDIvol",
+                    "reconstructionAlgorithm",
+                    "revolutionTime",
+                    "singleCollimationWidth",
+                    "totalCollimationWidth",
+                    "magneticFieldStrength",
+                    "repetitionTime",
+                    "echoTime",
+                    "echoTrainLength",
+                    "inversionTime",
+                    "flipAngle",
+                    "scanningSequence",
+                    "sequenceVariant",
+                    "scanOptions",
+                    "mRAcquisitionType",
+                    "sequenceName",
+                    "receiveCoilName",
+                    "transmitCoilName",
+                    "numberOfAverages",
+                    "pixelBandwidth",
+                    "acquisitionMatrix",
+                    "inPlanePhaseEncodingDirection",
+                    "percentSampling",
+                    "percentPhaseFieldOfView",
+                    "sAR",
+                    "diffusionBValue",
+                    "effectiveEchoTime",
+                    "parallelAcquisition",
+                    "parallelAcquisitionTechnique",
+                    "viewPosition",
+                    "bodyPartThickness",
+                    "compressionForce",
+                    "compressionPressure",
+                    "anodeTargetMaterial",
+                    "filterMaterial",
+                    "filterType",
+                    "organDose",
+                    "entranceDose",
+                    "entranceDoseInmGy",
+                    "units",
+                    "correctedImage",
+                    "decayCorrection",
+                    "decayFactor",
+                    "doseCalibrationFactor",
+                    "reconstructionMethod",
+                    "collimatorType",
+                    "actualFrameDuration",
+                    "frameReferenceTime",
+                    "numberOfSlices",
+                    "numberOfTimeSlices",
+                    "energyWindowVector",
+                    "transducerData",
+                    "transducerType",
+                    "transducerFrequency",
+                    "depthOfScanField",
+                    "frameTime",
+                    "frameTimeVector",
+                    "cineRate",
+                    "effectiveDuration",
+                    "totalPixelMatrixColumns",
+                    "totalPixelMatrixRows",
+                    "totalPixelMatrixFocalPlanes",
+                    "numberOfOpticalPaths",
+                    "imagedVolumeWidth",
+                    "imagedVolumeHeight",
+                    "imagedVolumeDepth",
+                    "focusMethod",
+                    "extendedDepthOfField",
+                    "numberOfFocalPlanes",
+                    "distanceBetweenFocalPlanes",
+                    "containerIdentifier",
+                    "doseUnits",
+                    "doseType",
+                    "doseSummationType",
+                    "doseGridScaling",
+                    "gridFrameOffsetVector",
+                    "rTPlanLabel",
+                    "rTPlanName",
+                    "rTPlanDescription",
+                    "rTPlanGeometry",
+                    "structureSetLabel",
+                    "structureSetName",
+                    "structureSetDescription"
+                  ]
+                },
+                "op": {
+                  "enum": [
+                    "present",
+                    "equals",
+                    "gte",
+                    "lte"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "number"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "seriesUid": {
+            "type": "string"
+          },
+          "destination": {
+            "enum": [
+              "shared",
+              "extension"
+            ]
+          },
+          "includeFacts": {
+            "type": "boolean"
+          },
+          "semanticDesign": {
+            "type": "boolean"
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "maxGroups": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxFacts": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxSummaryBytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxExampleSources": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "sourceMode": {
+            "const": "complete_selected_series_snapshot"
+          }
+        },
+        "required": [
+          "sourceMode",
+          "seriesUid"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_search_plan",
+      "kind": "query",
+      "summary": "Compare typed rule paths with a bound Atlas Search index.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "studyDescription",
+                "seriesDescription",
+                "protocolName",
+                "bodyPartExamined",
+                "patientSex",
+                "patientAge",
+                "patientSize",
+                "patientWeight",
+                "patientPosition",
+                "laterality",
+                "imageLaterality",
+                "imageType",
+                "acquisitionDate",
+                "acquisitionTime",
+                "acquisitionDateTime",
+                "contentDate",
+                "contentTime",
+                "clinicalTrialSponsorName",
+                "clinicalTrialProtocolID",
+                "clinicalTrialProtocolName",
+                "clinicalTrialSiteID",
+                "clinicalTrialSubjectID",
+                "clinicalTrialTimePointID",
+                "longitudinalTemporalOffsetFromEvent",
+                "longitudinalTemporalEventType",
+                "patientIdentityRemoved",
+                "deidentificationMethod",
+                "manufacturer",
+                "manufacturerModelName",
+                "deviceSerialNumber",
+                "softwareVersions",
+                "stationName",
+                "institutionName",
+                "institutionalDepartmentName",
+                "deviceUID",
+                "gantryID",
+                "rows",
+                "columns",
+                "numberOfFrames",
+                "pixelSpacing",
+                "imagerPixelSpacing",
+                "nominalScannedPixelSpacing",
+                "sliceThickness",
+                "spacingBetweenSlices",
+                "imageOrientationPatient",
+                "imagePositionPatient",
+                "frameOfReferenceUID",
+                "photometricInterpretation",
+                "samplesPerPixel",
+                "bitsAllocated",
+                "bitsStored",
+                "highBit",
+                "pixelRepresentation",
+                "lossyImageCompression",
+                "lossyImageCompressionRatio",
+                "lossyImageCompressionMethod",
+                "burnedInAnnotation",
+                "recognizableVisualFeatures",
+                "rescaleIntercept",
+                "rescaleSlope",
+                "rescaleType",
+                "acquisitionNumber",
+                "instanceNumber",
+                "kVP",
+                "exposureTime",
+                "xRayTubeCurrent",
+                "exposure",
+                "exposureInuAs",
+                "convolutionKernel",
+                "reconstructionDiameter",
+                "dataCollectionDiameter",
+                "distanceSourceToDetector",
+                "distanceSourceToPatient",
+                "gantryDetectorTilt",
+                "tableHeight",
+                "spiralPitchFactor",
+                "cTDIvol",
+                "reconstructionAlgorithm",
+                "revolutionTime",
+                "singleCollimationWidth",
+                "totalCollimationWidth",
+                "magneticFieldStrength",
+                "repetitionTime",
+                "echoTime",
+                "echoTrainLength",
+                "inversionTime",
+                "flipAngle",
+                "scanningSequence",
+                "sequenceVariant",
+                "scanOptions",
+                "mRAcquisitionType",
+                "sequenceName",
+                "receiveCoilName",
+                "transmitCoilName",
+                "numberOfAverages",
+                "pixelBandwidth",
+                "acquisitionMatrix",
+                "inPlanePhaseEncodingDirection",
+                "percentSampling",
+                "percentPhaseFieldOfView",
+                "sAR",
+                "diffusionBValue",
+                "effectiveEchoTime",
+                "parallelAcquisition",
+                "parallelAcquisitionTechnique",
+                "viewPosition",
+                "bodyPartThickness",
+                "compressionForce",
+                "compressionPressure",
+                "anodeTargetMaterial",
+                "filterMaterial",
+                "filterType",
+                "organDose",
+                "entranceDose",
+                "entranceDoseInmGy",
+                "units",
+                "correctedImage",
+                "decayCorrection",
+                "decayFactor",
+                "doseCalibrationFactor",
+                "reconstructionMethod",
+                "collimatorType",
+                "actualFrameDuration",
+                "frameReferenceTime",
+                "numberOfSlices",
+                "numberOfTimeSlices",
+                "energyWindowVector",
+                "transducerData",
+                "transducerType",
+                "transducerFrequency",
+                "depthOfScanField",
+                "frameTime",
+                "frameTimeVector",
+                "cineRate",
+                "effectiveDuration",
+                "totalPixelMatrixColumns",
+                "totalPixelMatrixRows",
+                "totalPixelMatrixFocalPlanes",
+                "numberOfOpticalPaths",
+                "imagedVolumeWidth",
+                "imagedVolumeHeight",
+                "imagedVolumeDepth",
+                "focusMethod",
+                "extendedDepthOfField",
+                "numberOfFocalPlanes",
+                "distanceBetweenFocalPlanes",
+                "containerIdentifier",
+                "doseUnits",
+                "doseType",
+                "doseSummationType",
+                "doseGridScaling",
+                "gridFrameOffsetVector",
+                "rTPlanLabel",
+                "rTPlanName",
+                "rTPlanDescription",
+                "rTPlanGeometry",
+                "structureSetLabel",
+                "structureSetName",
+                "structureSetDescription"
+              ]
+            },
+            "uniqueItems": true,
+            "maxItems": 159
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_apply_search",
+      "kind": "plan",
+      "summary": "Request a metadata Search mapping while retaining earlier promoted fields.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "studyDescription",
+                "seriesDescription",
+                "protocolName",
+                "bodyPartExamined",
+                "patientSex",
+                "patientAge",
+                "patientSize",
+                "patientWeight",
+                "patientPosition",
+                "laterality",
+                "imageLaterality",
+                "imageType",
+                "acquisitionDate",
+                "acquisitionTime",
+                "acquisitionDateTime",
+                "contentDate",
+                "contentTime",
+                "clinicalTrialSponsorName",
+                "clinicalTrialProtocolID",
+                "clinicalTrialProtocolName",
+                "clinicalTrialSiteID",
+                "clinicalTrialSubjectID",
+                "clinicalTrialTimePointID",
+                "longitudinalTemporalOffsetFromEvent",
+                "longitudinalTemporalEventType",
+                "patientIdentityRemoved",
+                "deidentificationMethod",
+                "manufacturer",
+                "manufacturerModelName",
+                "deviceSerialNumber",
+                "softwareVersions",
+                "stationName",
+                "institutionName",
+                "institutionalDepartmentName",
+                "deviceUID",
+                "gantryID",
+                "rows",
+                "columns",
+                "numberOfFrames",
+                "pixelSpacing",
+                "imagerPixelSpacing",
+                "nominalScannedPixelSpacing",
+                "sliceThickness",
+                "spacingBetweenSlices",
+                "imageOrientationPatient",
+                "imagePositionPatient",
+                "frameOfReferenceUID",
+                "photometricInterpretation",
+                "samplesPerPixel",
+                "bitsAllocated",
+                "bitsStored",
+                "highBit",
+                "pixelRepresentation",
+                "lossyImageCompression",
+                "lossyImageCompressionRatio",
+                "lossyImageCompressionMethod",
+                "burnedInAnnotation",
+                "recognizableVisualFeatures",
+                "rescaleIntercept",
+                "rescaleSlope",
+                "rescaleType",
+                "acquisitionNumber",
+                "instanceNumber",
+                "kVP",
+                "exposureTime",
+                "xRayTubeCurrent",
+                "exposure",
+                "exposureInuAs",
+                "convolutionKernel",
+                "reconstructionDiameter",
+                "dataCollectionDiameter",
+                "distanceSourceToDetector",
+                "distanceSourceToPatient",
+                "gantryDetectorTilt",
+                "tableHeight",
+                "spiralPitchFactor",
+                "cTDIvol",
+                "reconstructionAlgorithm",
+                "revolutionTime",
+                "singleCollimationWidth",
+                "totalCollimationWidth",
+                "magneticFieldStrength",
+                "repetitionTime",
+                "echoTime",
+                "echoTrainLength",
+                "inversionTime",
+                "flipAngle",
+                "scanningSequence",
+                "sequenceVariant",
+                "scanOptions",
+                "mRAcquisitionType",
+                "sequenceName",
+                "receiveCoilName",
+                "transmitCoilName",
+                "numberOfAverages",
+                "pixelBandwidth",
+                "acquisitionMatrix",
+                "inPlanePhaseEncodingDirection",
+                "percentSampling",
+                "percentPhaseFieldOfView",
+                "sAR",
+                "diffusionBValue",
+                "effectiveEchoTime",
+                "parallelAcquisition",
+                "parallelAcquisitionTechnique",
+                "viewPosition",
+                "bodyPartThickness",
+                "compressionForce",
+                "compressionPressure",
+                "anodeTargetMaterial",
+                "filterMaterial",
+                "filterType",
+                "organDose",
+                "entranceDose",
+                "entranceDoseInmGy",
+                "units",
+                "correctedImage",
+                "decayCorrection",
+                "decayFactor",
+                "doseCalibrationFactor",
+                "reconstructionMethod",
+                "collimatorType",
+                "actualFrameDuration",
+                "frameReferenceTime",
+                "numberOfSlices",
+                "numberOfTimeSlices",
+                "energyWindowVector",
+                "transducerData",
+                "transducerType",
+                "transducerFrequency",
+                "depthOfScanField",
+                "frameTime",
+                "frameTimeVector",
+                "cineRate",
+                "effectiveDuration",
+                "totalPixelMatrixColumns",
+                "totalPixelMatrixRows",
+                "totalPixelMatrixFocalPlanes",
+                "numberOfOpticalPaths",
+                "imagedVolumeWidth",
+                "imagedVolumeHeight",
+                "imagedVolumeDepth",
+                "focusMethod",
+                "extendedDepthOfField",
+                "numberOfFocalPlanes",
+                "distanceBetweenFocalPlanes",
+                "containerIdentifier",
+                "doseUnits",
+                "doseType",
+                "doseSummationType",
+                "doseGridScaling",
+                "gridFrameOffsetVector",
+                "rTPlanLabel",
+                "rTPlanName",
+                "rTPlanDescription",
+                "rTPlanGeometry",
+                "structureSetLabel",
+                "structureSetName",
+                "structureSetDescription"
+              ]
+            },
+            "uniqueItems": true,
+            "maxItems": 159
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_query",
+      "kind": "query",
+      "summary": "Compile or execute study-first typed, text and correlated fact queries.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "kind": {
+            "enum": [
+              "searchCombined",
+              "searchParameters",
+              "searchCodes",
+              "correlated",
+              "prefix",
+              "fuzzy",
+              "semanticText",
+              "extension"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "modality": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "sopClassUid": {
+            "type": "string"
+          },
+          "fromDay": {
+            "type": "string"
+          },
+          "toDay": {
+            "type": "string"
+          },
+          "quantityField": {
+            "enum": [
+              "patientSize",
+              "patientWeight",
+              "longitudinalTemporalOffsetFromEvent",
+              "rows",
+              "columns",
+              "numberOfFrames",
+              "pixelSpacing",
+              "imagerPixelSpacing",
+              "nominalScannedPixelSpacing",
+              "sliceThickness",
+              "spacingBetweenSlices",
+              "imageOrientationPatient",
+              "imagePositionPatient",
+              "samplesPerPixel",
+              "bitsAllocated",
+              "bitsStored",
+              "highBit",
+              "pixelRepresentation",
+              "lossyImageCompressionRatio",
+              "rescaleIntercept",
+              "rescaleSlope",
+              "acquisitionNumber",
+              "instanceNumber",
+              "kVP",
+              "exposureTime",
+              "xRayTubeCurrent",
+              "exposure",
+              "exposureInuAs",
+              "reconstructionDiameter",
+              "dataCollectionDiameter",
+              "distanceSourceToDetector",
+              "distanceSourceToPatient",
+              "gantryDetectorTilt",
+              "tableHeight",
+              "spiralPitchFactor",
+              "cTDIvol",
+              "revolutionTime",
+              "singleCollimationWidth",
+              "totalCollimationWidth",
+              "magneticFieldStrength",
+              "repetitionTime",
+              "echoTime",
+              "echoTrainLength",
+              "inversionTime",
+              "flipAngle",
+              "numberOfAverages",
+              "pixelBandwidth",
+              "acquisitionMatrix",
+              "percentSampling",
+              "percentPhaseFieldOfView",
+              "sAR",
+              "diffusionBValue",
+              "effectiveEchoTime",
+              "bodyPartThickness",
+              "compressionForce",
+              "compressionPressure",
+              "organDose",
+              "entranceDose",
+              "entranceDoseInmGy",
+              "decayFactor",
+              "doseCalibrationFactor",
+              "actualFrameDuration",
+              "frameReferenceTime",
+              "numberOfSlices",
+              "numberOfTimeSlices",
+              "energyWindowVector",
+              "transducerFrequency",
+              "depthOfScanField",
+              "frameTime",
+              "frameTimeVector",
+              "cineRate",
+              "effectiveDuration",
+              "totalPixelMatrixColumns",
+              "totalPixelMatrixRows",
+              "totalPixelMatrixFocalPlanes",
+              "numberOfOpticalPaths",
+              "imagedVolumeWidth",
+              "imagedVolumeHeight",
+              "imagedVolumeDepth",
+              "numberOfFocalPlanes",
+              "distanceBetweenFocalPlanes",
+              "doseGridScaling",
+              "gridFrameOffsetVector"
+            ]
+          },
+          "minimum": {
+            "type": "number"
+          },
+          "maximum": {
+            "type": "number"
+          },
+          "seriesUid": {
+            "type": "string"
+          },
+          "execute": {
+            "type": "boolean"
+          },
+          "allowPartial": {
+            "type": "boolean"
+          },
+          "engine": {
+            "enum": [
+              "native",
+              "atlas"
+            ]
+          },
+          "centerIds": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 200,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "codeSystem": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "generationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "profileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "dicom_metadata_rebuild_series",
+      "kind": "ingest",
+      "summary": "Read a bounded scoped catalog selection, hydrate retained headers, preview or publish a series summary.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "studyDescription",
+                "seriesDescription",
+                "protocolName",
+                "bodyPartExamined",
+                "patientSex",
+                "patientAge",
+                "patientSize",
+                "patientWeight",
+                "patientPosition",
+                "laterality",
+                "imageLaterality",
+                "imageType",
+                "acquisitionDate",
+                "acquisitionTime",
+                "acquisitionDateTime",
+                "contentDate",
+                "contentTime",
+                "clinicalTrialSponsorName",
+                "clinicalTrialProtocolID",
+                "clinicalTrialProtocolName",
+                "clinicalTrialSiteID",
+                "clinicalTrialSubjectID",
+                "clinicalTrialTimePointID",
+                "longitudinalTemporalOffsetFromEvent",
+                "longitudinalTemporalEventType",
+                "patientIdentityRemoved",
+                "deidentificationMethod",
+                "manufacturer",
+                "manufacturerModelName",
+                "deviceSerialNumber",
+                "softwareVersions",
+                "stationName",
+                "institutionName",
+                "institutionalDepartmentName",
+                "deviceUID",
+                "gantryID",
+                "rows",
+                "columns",
+                "numberOfFrames",
+                "pixelSpacing",
+                "imagerPixelSpacing",
+                "nominalScannedPixelSpacing",
+                "sliceThickness",
+                "spacingBetweenSlices",
+                "imageOrientationPatient",
+                "imagePositionPatient",
+                "frameOfReferenceUID",
+                "photometricInterpretation",
+                "samplesPerPixel",
+                "bitsAllocated",
+                "bitsStored",
+                "highBit",
+                "pixelRepresentation",
+                "lossyImageCompression",
+                "lossyImageCompressionRatio",
+                "lossyImageCompressionMethod",
+                "burnedInAnnotation",
+                "recognizableVisualFeatures",
+                "rescaleIntercept",
+                "rescaleSlope",
+                "rescaleType",
+                "acquisitionNumber",
+                "instanceNumber",
+                "kVP",
+                "exposureTime",
+                "xRayTubeCurrent",
+                "exposure",
+                "exposureInuAs",
+                "convolutionKernel",
+                "reconstructionDiameter",
+                "dataCollectionDiameter",
+                "distanceSourceToDetector",
+                "distanceSourceToPatient",
+                "gantryDetectorTilt",
+                "tableHeight",
+                "spiralPitchFactor",
+                "cTDIvol",
+                "reconstructionAlgorithm",
+                "revolutionTime",
+                "singleCollimationWidth",
+                "totalCollimationWidth",
+                "magneticFieldStrength",
+                "repetitionTime",
+                "echoTime",
+                "echoTrainLength",
+                "inversionTime",
+                "flipAngle",
+                "scanningSequence",
+                "sequenceVariant",
+                "scanOptions",
+                "mRAcquisitionType",
+                "sequenceName",
+                "receiveCoilName",
+                "transmitCoilName",
+                "numberOfAverages",
+                "pixelBandwidth",
+                "acquisitionMatrix",
+                "inPlanePhaseEncodingDirection",
+                "percentSampling",
+                "percentPhaseFieldOfView",
+                "sAR",
+                "diffusionBValue",
+                "effectiveEchoTime",
+                "parallelAcquisition",
+                "parallelAcquisitionTechnique",
+                "viewPosition",
+                "bodyPartThickness",
+                "compressionForce",
+                "compressionPressure",
+                "anodeTargetMaterial",
+                "filterMaterial",
+                "filterType",
+                "organDose",
+                "entranceDose",
+                "entranceDoseInmGy",
+                "units",
+                "correctedImage",
+                "decayCorrection",
+                "decayFactor",
+                "doseCalibrationFactor",
+                "reconstructionMethod",
+                "collimatorType",
+                "actualFrameDuration",
+                "frameReferenceTime",
+                "numberOfSlices",
+                "numberOfTimeSlices",
+                "energyWindowVector",
+                "transducerData",
+                "transducerType",
+                "transducerFrequency",
+                "depthOfScanField",
+                "frameTime",
+                "frameTimeVector",
+                "cineRate",
+                "effectiveDuration",
+                "totalPixelMatrixColumns",
+                "totalPixelMatrixRows",
+                "totalPixelMatrixFocalPlanes",
+                "numberOfOpticalPaths",
+                "imagedVolumeWidth",
+                "imagedVolumeHeight",
+                "imagedVolumeDepth",
+                "focusMethod",
+                "extendedDepthOfField",
+                "numberOfFocalPlanes",
+                "distanceBetweenFocalPlanes",
+                "containerIdentifier",
+                "doseUnits",
+                "doseType",
+                "doseSummationType",
+                "doseGridScaling",
+                "gridFrameOffsetVector",
+                "rTPlanLabel",
+                "rTPlanName",
+                "rTPlanDescription",
+                "rTPlanGeometry",
+                "structureSetLabel",
+                "structureSetName",
+                "structureSetDescription"
+              ]
+            },
+            "uniqueItems": true,
+            "maxItems": 159
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "modalities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 32
+              },
+              "sopClasses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 32
+              },
+              "collection": {
+                "type": "string"
+              },
+              "fromDay": {
+                "type": "string"
+              },
+              "toDay": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "when": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": [
+                "field",
+                "op"
+              ],
+              "properties": {
+                "field": {
+                  "enum": [
+                    "studyDescription",
+                    "seriesDescription",
+                    "protocolName",
+                    "bodyPartExamined",
+                    "patientSex",
+                    "patientAge",
+                    "patientSize",
+                    "patientWeight",
+                    "patientPosition",
+                    "laterality",
+                    "imageLaterality",
+                    "imageType",
+                    "acquisitionDate",
+                    "acquisitionTime",
+                    "acquisitionDateTime",
+                    "contentDate",
+                    "contentTime",
+                    "clinicalTrialSponsorName",
+                    "clinicalTrialProtocolID",
+                    "clinicalTrialProtocolName",
+                    "clinicalTrialSiteID",
+                    "clinicalTrialSubjectID",
+                    "clinicalTrialTimePointID",
+                    "longitudinalTemporalOffsetFromEvent",
+                    "longitudinalTemporalEventType",
+                    "patientIdentityRemoved",
+                    "deidentificationMethod",
+                    "manufacturer",
+                    "manufacturerModelName",
+                    "deviceSerialNumber",
+                    "softwareVersions",
+                    "stationName",
+                    "institutionName",
+                    "institutionalDepartmentName",
+                    "deviceUID",
+                    "gantryID",
+                    "rows",
+                    "columns",
+                    "numberOfFrames",
+                    "pixelSpacing",
+                    "imagerPixelSpacing",
+                    "nominalScannedPixelSpacing",
+                    "sliceThickness",
+                    "spacingBetweenSlices",
+                    "imageOrientationPatient",
+                    "imagePositionPatient",
+                    "frameOfReferenceUID",
+                    "photometricInterpretation",
+                    "samplesPerPixel",
+                    "bitsAllocated",
+                    "bitsStored",
+                    "highBit",
+                    "pixelRepresentation",
+                    "lossyImageCompression",
+                    "lossyImageCompressionRatio",
+                    "lossyImageCompressionMethod",
+                    "burnedInAnnotation",
+                    "recognizableVisualFeatures",
+                    "rescaleIntercept",
+                    "rescaleSlope",
+                    "rescaleType",
+                    "acquisitionNumber",
+                    "instanceNumber",
+                    "kVP",
+                    "exposureTime",
+                    "xRayTubeCurrent",
+                    "exposure",
+                    "exposureInuAs",
+                    "convolutionKernel",
+                    "reconstructionDiameter",
+                    "dataCollectionDiameter",
+                    "distanceSourceToDetector",
+                    "distanceSourceToPatient",
+                    "gantryDetectorTilt",
+                    "tableHeight",
+                    "spiralPitchFactor",
+                    "cTDIvol",
+                    "reconstructionAlgorithm",
+                    "revolutionTime",
+                    "singleCollimationWidth",
+                    "totalCollimationWidth",
+                    "magneticFieldStrength",
+                    "repetitionTime",
+                    "echoTime",
+                    "echoTrainLength",
+                    "inversionTime",
+                    "flipAngle",
+                    "scanningSequence",
+                    "sequenceVariant",
+                    "scanOptions",
+                    "mRAcquisitionType",
+                    "sequenceName",
+                    "receiveCoilName",
+                    "transmitCoilName",
+                    "numberOfAverages",
+                    "pixelBandwidth",
+                    "acquisitionMatrix",
+                    "inPlanePhaseEncodingDirection",
+                    "percentSampling",
+                    "percentPhaseFieldOfView",
+                    "sAR",
+                    "diffusionBValue",
+                    "effectiveEchoTime",
+                    "parallelAcquisition",
+                    "parallelAcquisitionTechnique",
+                    "viewPosition",
+                    "bodyPartThickness",
+                    "compressionForce",
+                    "compressionPressure",
+                    "anodeTargetMaterial",
+                    "filterMaterial",
+                    "filterType",
+                    "organDose",
+                    "entranceDose",
+                    "entranceDoseInmGy",
+                    "units",
+                    "correctedImage",
+                    "decayCorrection",
+                    "decayFactor",
+                    "doseCalibrationFactor",
+                    "reconstructionMethod",
+                    "collimatorType",
+                    "actualFrameDuration",
+                    "frameReferenceTime",
+                    "numberOfSlices",
+                    "numberOfTimeSlices",
+                    "energyWindowVector",
+                    "transducerData",
+                    "transducerType",
+                    "transducerFrequency",
+                    "depthOfScanField",
+                    "frameTime",
+                    "frameTimeVector",
+                    "cineRate",
+                    "effectiveDuration",
+                    "totalPixelMatrixColumns",
+                    "totalPixelMatrixRows",
+                    "totalPixelMatrixFocalPlanes",
+                    "numberOfOpticalPaths",
+                    "imagedVolumeWidth",
+                    "imagedVolumeHeight",
+                    "imagedVolumeDepth",
+                    "focusMethod",
+                    "extendedDepthOfField",
+                    "numberOfFocalPlanes",
+                    "distanceBetweenFocalPlanes",
+                    "containerIdentifier",
+                    "doseUnits",
+                    "doseType",
+                    "doseSummationType",
+                    "doseGridScaling",
+                    "gridFrameOffsetVector",
+                    "rTPlanLabel",
+                    "rTPlanName",
+                    "rTPlanDescription",
+                    "rTPlanGeometry",
+                    "structureSetLabel",
+                    "structureSetName",
+                    "structureSetDescription"
+                  ]
+                },
+                "op": {
+                  "enum": [
+                    "present",
+                    "equals",
+                    "gte",
+                    "lte"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "number"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "seriesUid": {
+            "type": "string"
+          },
+          "destination": {
+            "enum": [
+              "shared",
+              "extension"
+            ]
+          },
+          "includeFacts": {
+            "type": "boolean"
+          },
+          "semanticDesign": {
+            "type": "boolean"
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "maxGroups": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxFacts": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxSummaryBytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "maxExampleSources": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "catalog": {
+            "enum": [
+              "instances",
+              "rule_inventory"
+            ]
+          },
+          "publish": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "seriesUid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "dicom_metadata_rules",
+      "kind": "query",
+      "summary": "Read scoped immutable rule configurations referenced by summaries.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "centerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "ruleId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "ui": {
+    "status": "preview",
+    "activatable": true,
+    "domain_badge": "DICOM",
+    "icon": "Scan",
+    "docs": "/guide/docs/dicom-tiered-store-strategy",
+    "tags": [
+      "DICOM",
+      "Medical Imaging",
+      "Metadata",
+      "Research",
+      "Preview"
+    ],
+    "works_with": [
+      "MongoDB",
+      "DICOM JSON",
+      "Azure Blob",
+      "S3"
+    ],
+    "story": "Imaging viewers usually select studies and series before opening instance headers. At billions of instances, indexing every header makes routine access expensive. This strategy retains the customer model while adding typed catalogs, optional bounded object-store metadata bundles, and governed research sidecars.",
+    "how_it_works": "Import studies first, deriving a flat series catalog. Add instances progressively with numeric ordering and validated series ownership. Keep complete metadata inline or in immutable bundles. Promote selected top-level tags for one modality and rebuild bounded series pages. All runtime surfaces use the same strategy operation contracts. Discover the active query catalog, combine promoted tag predicates, and hydrate selected headers in bounded series batches.",
+    "benefits": [
+      "Preserves source records and UIDs",
+      "Fast catalog paths with a small regular-index plan",
+      "Detailed metadata can be retrieved separately",
+      "Research fields are opt-in and versioned",
+      "Synthetic metadata supports a safe public builder journey"
+    ],
+    "constraints": [
+      "Preview; 15-billion-instance scale has not been benchmarked",
+      "Research results require an explicit partial-coverage acknowledgement",
+      "No pixel delivery or standard DICOMweb server is included",
+      "Shard key selection and archival execution require deployment-specific work"
+    ],
+    "links": {
+      "runtime_activate": "/environments/{env_id}/activate",
+      "runtime_plan": "/environments/{env_id}/plan",
+      "runtime_apply": "/environments/{env_id}/apply",
+      "runtime_query": "/environments/{env_id}/query",
+      "runtime_compile_query": "/environments/{env_id}/compile_query",
+      "runtime_strategy_op": "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "strategy_manifest": "/strategies/dicom.tiered_store",
+      "strategy_spec": "/strategies/dicom.tiered_store/spec"
+    },
+    "example_data": {
+      "delivery": "strategy-generated",
+      "operation": "dicom_generate_synthetic",
+      "containsPixels": false,
+      "queryCatalogOperation": "dicom_query_catalog",
+      "examplesPath": "examples.json"
+    },
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "configResolved": true,
+      "requiredForGovernedQueries": [
+        "idx_dicom_instance_series_order",
+        "idx_dicom_study_patient_day"
+      ],
+      "conditionalSearchIndex": "projections.search_index"
+    }
+  }
+}

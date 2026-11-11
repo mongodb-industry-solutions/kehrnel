@@ -1,0 +1,282 @@
+{
+  "$defs": {
+    "ArtifactProvenance": {
+      "description": "Who owns the lifecycle of a reusable catalog artifact.",
+      "enum": [
+        "mongodb_curated",
+        "community",
+        "tenant_generated",
+        "tenant_extended"
+      ],
+      "title": "ArtifactProvenance",
+      "type": "string"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "CapabilityMaturity": {
+      "enum": [
+        "not_assessed",
+        "specified",
+        "simulated",
+        "compilable",
+        "pilot_validated",
+        "production_validated"
+      ],
+      "title": "CapabilityMaturity",
+      "type": "string"
+    },
+    "CatalogArtifactRole": {
+      "description": "The architectural role an artifact plays, independent of its industry.",
+      "enum": [
+        "source_category",
+        "source_profile",
+        "mapping",
+        "target_strategy",
+        "semantic_asset",
+        "data_architecture",
+        "application",
+        "outcome_pattern",
+        "reference_architecture",
+        "demo_experience",
+        "portfolio_domain",
+        "data_product",
+        "architecture_capability",
+        "visual_pattern",
+        "solution_blueprint_template"
+      ],
+      "title": "CatalogArtifactRole",
+      "type": "string"
+    },
+    "CatalogMetadata": {
+      "additionalProperties": false,
+      "description": "Faceted catalog metadata kept separate from executable behavior.",
+      "properties": {
+        "extendsRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "paths": {
+          "items": {
+            "$ref": "#/$defs/CatalogPath"
+          },
+          "minItems": 1,
+          "title": "Paths",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ArtifactProvenance"
+        },
+        "role": {
+          "$ref": "#/$defs/CatalogArtifactRole"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "provenance",
+        "paths"
+      ],
+      "title": "CatalogMetadata",
+      "type": "object"
+    },
+    "CatalogPath": {
+      "additionalProperties": false,
+      "description": "One navigational placement; artifacts may appear in several industries.",
+      "properties": {
+        "industry": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Industry",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "industry",
+        "segments"
+      ],
+      "title": "CatalogPath",
+      "type": "object"
+    },
+    "SourceCategory": {
+      "additionalProperties": false,
+      "description": "Industry category learned from, but not identified with, products.",
+      "properties": {
+        "artifactRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "capabilityMaturity": {
+          "$ref": "#/$defs/CapabilityMaturity",
+          "default": "specified"
+        },
+        "catalog": {
+          "$ref": "#/$defs/CatalogMetadata"
+        },
+        "contract": {
+          "const": "source-category/v1",
+          "title": "Contract",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "functionalInteractions": {
+          "items": {
+            "$ref": "#/$defs/SourceCategoryInteraction"
+          },
+          "minItems": 1,
+          "title": "Functionalinteractions",
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "referenceProfileRefs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Referenceprofilerefs",
+          "type": "array"
+        },
+        "semanticDomains": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Semanticdomains",
+          "type": "array"
+        }
+      },
+      "required": [
+        "contract",
+        "artifactRef",
+        "catalog",
+        "name",
+        "description",
+        "semanticDomains",
+        "functionalInteractions"
+      ],
+      "title": "SourceCategory",
+      "type": "object"
+    },
+    "SourceCategoryInteraction": {
+      "additionalProperties": false,
+      "description": "Product-neutral business interaction that a category must represent.",
+      "properties": {
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "interactionId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Interactionid",
+          "type": "string"
+        },
+        "label": {
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "semanticConceptIds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Semanticconceptids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "interactionId",
+        "label",
+        "description"
+      ],
+      "title": "SourceCategoryInteraction",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:source-category-catalog",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "categories": {
+      "items": {
+        "$ref": "#/$defs/SourceCategory"
+      },
+      "minItems": 1,
+      "title": "Categories",
+      "type": "array"
+    },
+    "contract": {
+      "const": "source-category-catalog/v1",
+      "title": "Contract",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract",
+    "categories"
+  ],
+  "title": "SourceCategoryCatalog",
+  "type": "object"
+}

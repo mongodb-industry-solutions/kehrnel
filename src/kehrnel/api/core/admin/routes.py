@@ -9,7 +9,7 @@ import logging
 import ipaddress
 import base64
 from pathlib import Path
-from fastapi import APIRouter, Request, Body
+from fastapi import APIRouter, Request, Body, Query, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, FileResponse
 from typing import Any, Dict, List
@@ -21,6 +21,168 @@ from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.errors import KehrnelError
 from kehrnel.engine.core.bundle_store import BundleStore
 from kehrnel.engine.core.pack_loader import load_strategy
+from kehrnel.engine.core.strategy_portfolio import load_strategy_portfolio
+from kehrnel.contracts.strategy_portfolio import StrategyPortfolio
+from kehrnel.engine.core.source_profiles import load_source_profile_catalog
+from kehrnel.engine.core.source_categories import load_source_category_catalog
+from kehrnel.engine.core.outcome_catalog import (
+    IndustryOutcomeCatalogError,
+    load_bundled_industry_outcome_catalog,
+)
+from kehrnel.engine.core.blueprint_templates import (
+    BlueprintTemplateCatalogError,
+    ReferenceArchitectureInstantiationError,
+    instantiate_reference_architecture,
+)
+from kehrnel.engine.core.strategy_candidate_compiler import (
+    StrategyCompilationError,
+    compile_strategy_candidate,
+)
+from kehrnel.engine.core.semantic_execution_planner import compile_semantic_execution_plan
+from kehrnel.engine.core.context_object_definitions import load_context_object_definition_catalog
+from kehrnel.engine.core.access_planner import compile_architecture_proposal
+from kehrnel.engine.core.architecture_plan_compiler import (
+    ArchitectureResolutionError,
+    compile_architecture_resolution,
+    load_architecture_resolution_inputs,
+)
+from kehrnel.contracts.architecture_foundation import (
+    ArchitectureResolutionInputCatalog,
+    ArchitectureResolutionRequest,
+    ArchitectureResolutionResult,
+    ImplementationPackage,
+    SolutionBlueprint,
+)
+from kehrnel.contracts.implementation_package_build import (
+    ImplementationPackageBuildRequest,
+)
+from kehrnel.contracts.implementation_package_activation import (
+    ApprovedStrategyActivationSpecification,
+    ImplementationPackageActivationReceipt,
+    ImplementationPackageActivationRequest,
+)
+from kehrnel.contracts.implementation_package_installation import (
+    ImplementationPackageInstallationRequest,
+    ImplementationPackageInstallationStage,
+)
+from kehrnel.contracts.implementation_package_materialization import (
+    ImplementationPackageMaterializationReceipt,
+    ImplementationPackageMaterializationRequest,
+)
+from kehrnel.contracts.implementation_package_preparation import (
+    ImplementationPackagePreparationReadiness,
+    ImplementationPackagePreparationReadinessRequest,
+)
+from kehrnel.contracts.implementation_package_preparation_execution import (
+    ImplementationPackagePreparationExecutionReceipt,
+    ImplementationPackagePreparationExecutionRequest,
+)
+from kehrnel.contracts.implementation_package_runtime_execution import (
+    ImplementationPackageRuntimeExecutionReceipt,
+    ImplementationPackageRuntimeExecutionRequest,
+    ImplementationPackageRuntimeExecutionResponse,
+)
+from kehrnel.contracts.implementation_package_promotion import (
+    ImplementationPackagePromotionReceipt,
+    ImplementationPackagePromotionRequest,
+)
+from kehrnel.contracts.implementation_package_operational_readiness import (
+    ImplementationPackageOperationalReadinessReceipt,
+    ImplementationPackageOperationalReadinessRequest,
+)
+from kehrnel.contracts.implementation_package_deployment import (
+    ImplementationPackageDeploymentReceipt,
+    ImplementationPackageDeploymentRequest,
+    ImplementationPackageDeploymentStatus,
+    ImplementationPackageRollbackReceipt,
+    ImplementationPackageRollbackRequest,
+)
+from kehrnel.contracts.implementation_package_observation import ImplementationPackageOperationalObservationHistory, ImplementationPackageOperationalObservationReceipt, ImplementationPackageOperationalObservationRequest, ImplementationPackageOperationalObservationTriggerRequest
+from kehrnel.engine.core.implementation_package_builder import (
+    ImplementationPackageBuildError,
+    build_implementation_package,
+)
+from kehrnel.engine.core.implementation_package_activation import (
+    ImplementationPackageActivationError,
+    activate_implementation_package_strategies,
+)
+from kehrnel.contracts.implementation_package_proof import (
+    ImplementationPackageProofEvidence,
+    ImplementationPackageProofRequest,
+    ImplementationPackageProofRun,
+)
+from kehrnel.engine.core.implementation_package_proof import (
+    run_implementation_package_proof,
+)
+from kehrnel.engine.core.implementation_artifact_store import (
+    ImplementationArtifactConflict,
+    ImplementationArtifactNotFound,
+)
+from kehrnel.engine.core.implementation_package_installation import (
+    ImplementationPackageInstallationError,
+    stage_implementation_package_installation,
+)
+from kehrnel.engine.core.implementation_package_materialization import (
+    ImplementationPackageMaterializationError,
+    build_package_assembly,
+    materialize_implementation_package,
+)
+from kehrnel.engine.core.implementation_package_preparation import (
+    ImplementationPackagePreparationError,
+    assess_implementation_package_preparation_readiness,
+)
+from kehrnel.engine.core.implementation_package_preparation_execution import (
+    ImplementationPackagePreparationExecutionError,
+    execute_implementation_package_preparation,
+)
+from kehrnel.engine.core.implementation_package_runtime_execution import (
+    ImplementationPackageRuntimeExecutionError,
+    execute_implementation_package_runtime_contract,
+)
+from kehrnel.engine.core.implementation_package_promotion import (
+    ImplementationPackagePromotionError,
+    promote_implementation_package,
+)
+from kehrnel.engine.core.implementation_package_operational_readiness import (
+    ImplementationPackageOperationalReadinessError,
+    assess_implementation_package_operational_readiness,
+)
+from kehrnel.engine.core.implementation_package_deployment import (
+    ImplementationPackageDeploymentError,
+    deploy_implementation_package,
+    get_implementation_package_deployment_status,
+    rollback_implementation_package,
+)
+from kehrnel.engine.core.implementation_package_observation import (
+    ImplementationPackageOperationalObservationError,
+    get_implementation_package_observation_history,
+    observe_implementation_package_operation,
+    trigger_implementation_package_operational_observation,
+)
+from kehrnel.engine.core.implementation_package_proof import ImplementationPackageProofEvidenceNotFound, PROOF_EVIDENCE_STORE
+from kehrnel.engine.core.blueprint_canonicalization import (
+    canonicalize_solution_blueprint,
+)
+from kehrnel.contracts.blueprint_canonicalization import (
+    SolutionBlueprintCanonicalizationResult,
+)
+from kehrnel.contracts.access_planning import ArchitectureProposal
+from kehrnel.contracts.semantic_execution import (
+    ContextObjectDefinitionCatalog,
+    SemanticExecutionPlan,
+    SemanticExecutionPlanningRequest,
+)
+from kehrnel.contracts.mapping_ir import (
+    MappingCatalog,
+    MappingSimulationRequest,
+    MappingSimulationResult,
+)
+from kehrnel.contracts.outcome_catalog import IndustryOutcomeCatalog
+from kehrnel.engine.core.mapping_executor import simulate_mapping
+from kehrnel.engine.core.mappings import load_mapping_catalog
+from kehrnel.contracts.source_architecture import ReferenceArchitectureInstantiationRequest, ReferenceArchitectureInstantiationResult, SourceCategoryCatalog, SourceProfileCatalog, StrategyCandidate, StrategyCompilationRequest
+
+from kehrnel.api.common.delegated_principal import require_package, require_runtime_package, request_authority
 from kehrnel.engine.common.mapping.mapping_engine import apply_mapping
 from kehrnel.engine.common.mapping.handlers.csv_handler import CSVHandler
 from kehrnel.engine.common.mapping.handlers.xml_handler import XMLHandler
@@ -30,6 +192,10 @@ from kehrnel.engine.domains.openehr.templates.generator import kehrnelGenerator
 from kehrnel.engine.domains.openehr.templates.validator import kehrnelValidator
 from kehrnel.api.bridge.app.core.config import settings as bridge_settings
 from kehrnel.engine.core.redaction import redact_sensitive
+from kehrnel.contracts.deployment_configuration import DeploymentCompilationRequest
+from kehrnel.engine.core.deployment_configuration import compile_deployment_configuration
+from kehrnel.engine.core.deployment_identity import SUPPORTED_STRATEGIES, package_identity
+
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -37,8 +203,23 @@ logger = logging.getLogger(__name__)
 RPS_DUAL_STRATEGY_IDS = {"openehr.rps_dual", "openehr.rps_dual_ibm"}
 
 
+
+
 def _is_rps_dual_strategy_id(strategy_id: Any) -> bool:
     return str(strategy_id or "").strip().lower() in RPS_DUAL_STRATEGY_IDS
+
+
+@router.post("/strategies/{strategy_id}/deployment-config/compile")
+async def compile_strategy_deployment(strategy_id: str, request: Request, body: DeploymentCompilationRequest):
+    """Compile supplied configuration only; never activate or connect to a target database."""
+    try:
+        _require_admin_access(request)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        manifest = require_package(request, strategy_id, "strategy:compile")
+        return await compile_deployment_configuration(manifest, body)
+    except Exception as exc:
+        return _error_response(exc)
+
 
 
 ALLOWED_DOC_EXTENSIONS = {".xml", ".csv", ".cda", ".json", ".txt", ".hl7"}
@@ -130,6 +311,30 @@ def _require_admin_access(request: Request) -> None:
     admin_keys = [k.strip() for k in (os.getenv("KEHRNEL_ADMIN_API_KEYS", "") or "").split(",") if k.strip()]
     if admin_keys and not any(secrets.compare_digest(api_key, k) for k in admin_keys):
         raise KehrnelError(code="FORBIDDEN", status=403, message="Admin privileges required")
+
+
+def _local_developer_runtime_allowed(request: Request, env_id: str) -> bool:
+    """An opt-in isolated loopback workspace, never a production authorization bypass."""
+    from urllib.parse import urlsplit
+    if os.getenv("KEHRNEL_LOCAL_DEVELOPER_RUNTIME", "false").lower() != "true":
+        return False
+    uri = urlsplit(os.getenv("CORE_MONGODB_URL", ""))
+    if (uri.scheme != "mongodb" or uri.hostname not in {"127.0.0.1", "localhost", "::1"}
+            or uri.username or uri.password or "," in uri.netloc
+            or uri.query or uri.fragment or uri.path not in {"", "/"}
+            or os.getenv("CORE_DATABASE_NAME") != "hdl_dev_core" or env_id != "env-hdl-developer"):
+        return False
+    key = (request.headers.get("x-api-key") or "").strip()
+    keys = [k.strip() for k in os.getenv("KEHRNEL_API_KEYS", "").split(",") if k.strip()]
+    scopes = _parse_api_key_env_scopes()
+    return bool(key and any(secrets.compare_digest(key, k) for k in keys)
+                and scopes.get(key) == [env_id])
+
+
+def _require_environment_runtime_access(request: Request, env_id: str) -> None:
+    if not _local_developer_runtime_allowed(request, env_id):
+        _require_admin_access(request)
+    _require_env_access(request, env_id)
 
 
 def _parse_api_key_env_scopes() -> dict[str, object]:
@@ -325,8 +530,6 @@ def _enforce_synthetic_team_scope(identity: dict[str, str | None], job: dict[str
         )
 
 
-
-
 def _get_max_upload_bytes() -> int:
     try:
         return max(1024 * 1024, int(os.getenv("KEHRNEL_MAX_UPLOAD_BYTES", str(10 * 1024 * 1024))))
@@ -429,6 +632,23 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
     activation lifecycle change so activate/upgrade/rollback behave the same.
     """
     domain = (getattr(activation, "domain", None) or "").lower()
+    manifest = rt.registry.get_manifest(getattr(activation, "strategy_id", ""))
+    activation_block = getattr(manifest, "activation", None)
+    seed_declared = bool(getattr(activation_block, "seed", None))
+
+    seed_result = None
+    if seed_declared:
+        try:
+            seed_result = await rt.provision_activation_seed(env_id, activation)
+        except Exception as exc:
+            seed_result = {
+                "ok": False,
+                "warning": f"seed provisioning failed: {redact_sensitive(str(exc))}",
+                "code": getattr(exc, "code", None),
+                "message": redact_sensitive(getattr(exc, "message", str(exc))),
+                "details": getattr(exc, "details", None),
+            }
+
     artifact_result = None
     try:
         plan_result = await rt.dispatch(
@@ -483,9 +703,29 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
     except Exception:
         dict_result = {"ok": False, "warning": "dictionary bootstrap failed"}
 
+    # A declared seed must leave a visibly ready tenant: run the manifest's
+    # readiness op so an empty or partial seed is never reported as green.
+    readiness_result = None
+    readiness_op = getattr(activation_block, "readiness_op", None)
+    if seed_declared and readiness_op:
+        try:
+            readiness_result = await rt.dispatch(
+                env_id,
+                "op",
+                {"domain": domain, "op": readiness_op, "payload": {}},
+            )
+        except Exception as exc:
+            readiness_result = {
+                "ok": False,
+                "warning": f"readiness check failed: {redact_sensitive(str(exc))}",
+                "code": getattr(exc, "code", None),
+            }
+
     return {
         "artifacts": artifact_result,
         "dictionaries": dict_result,
+        "seed": seed_result,
+        "readiness": readiness_result,
     }
 
 
@@ -683,7 +923,13 @@ async def list_strategies(request: Request):
             return {"strategies": []}
         manifests = []
         for m in rt.list_strategies():
+            try:
+                require_package(request, m.id)
+            except KehrnelError:
+                continue
             m_dict = m.model_dump()
+            if m.pack_root:
+                m_dict.update(request.app.state.strategy_access_policy.reference(m).as_dict())
             # expose pack spec meta (but not full spec body) for clients
             if hasattr(m, "pack_spec") and m.pack_spec:
                 m_dict["pack_spec_meta"] = {
@@ -696,6 +942,1506 @@ async def list_strategies(request: Request):
         return {"strategies": manifests}
     except Exception as exc:
         return _error_response(exc)
+
+
+@router.post("/architecture-proposals/compile", response_model=ArchitectureProposal)
+async def architecture_proposals_compile(payload: StrategyCompilationRequest):
+    """Compile a source-aware strategy and its minimal justified access fabric."""
+
+    try:
+        return compile_architecture_proposal(payload)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get("/strategy-portfolio", response_model=StrategyPortfolio)
+async def strategy_portfolio():
+    """Return the product delivery track for every bundled strategy."""
+
+    return load_strategy_portfolio()
+
+
+
+
+@router.get("/source-categories", response_model=SourceCategoryCatalog)
+async def source_categories():
+    """Return product-neutral industry source categories."""
+
+    return load_source_category_catalog()
+
+
+def _if_none_match_matches(value: str | None, etag: str) -> bool:
+    """Apply the weak comparison required for ``If-None-Match`` on GET."""
+
+    if not value:
+        return False
+    for candidate in value.split(","):
+        candidate = candidate.strip()
+        if candidate == "*":
+            return True
+        if candidate.startswith("W/"):
+            candidate = candidate[2:].lstrip()
+        if candidate == etag:
+            return True
+    return False
+
+
+@router.get("/outcome-catalog", response_model=IndustryOutcomeCatalog)
+async def outcome_catalog(request: Request, response: Response):
+    """Return the versioned outcome, reference architecture, and demo graph."""
+
+    try:
+        catalog = load_bundled_industry_outcome_catalog()
+    except IndustryOutcomeCatalogError:
+        return _error_response(
+            KehrnelError(
+                code="OUTCOME_CATALOG_UNAVAILABLE",
+                status=503,
+                message="The industry outcome catalog is unavailable",
+            )
+        )
+
+    etag = f'"{catalog.artifact_ref.digest}"'
+    cache_headers = {"ETag": etag, "Cache-Control": "private, max-age=60"}
+    if _if_none_match_matches(request.headers.get("if-none-match"), etag):
+        return Response(status_code=304, headers=cache_headers)
+    response.headers.update(cache_headers)
+    return catalog
+
+
+@router.post(
+    "/reference-architectures/{architecture_id}/instantiate",
+    response_model=ReferenceArchitectureInstantiationResult,
+)
+async def instantiate_catalog_reference_architecture(
+    architecture_id: str,
+    body: ReferenceArchitectureInstantiationRequest,
+):
+    """Derive an editable Blueprint without persisting or activating anything."""
+
+    if architecture_id != body.reference_architecture_ref.id:
+        return _error_response(
+            KehrnelError(
+                code="REFERENCE_ARCHITECTURE_REFERENCE_MISMATCH",
+                status=400,
+                message=(
+                    "The path architecture id and referenceArchitectureRef.id "
+                    "must match."
+                ),
+            )
+        )
+    try:
+        catalog = load_bundled_industry_outcome_catalog()
+        return instantiate_reference_architecture(body, catalog=catalog)
+    except IndustryOutcomeCatalogError:
+        return _error_response(
+            KehrnelError(
+                code="OUTCOME_CATALOG_UNAVAILABLE",
+                status=503,
+                message="The industry outcome catalog is unavailable",
+            )
+        )
+    except BlueprintTemplateCatalogError:
+        return _error_response(
+            KehrnelError(
+                code="BLUEPRINT_TEMPLATE_CATALOG_UNAVAILABLE",
+                status=503,
+                message="The Solution Blueprint template catalog is unavailable",
+            )
+        )
+    except ReferenceArchitectureInstantiationError as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/implementation-packages/build",
+    response_model=ImplementationPackage,
+    response_model_exclude_none=True,
+)
+async def build_canonical_implementation_package(
+    request: Request,
+    body: ImplementationPackageBuildRequest,
+):
+    """Build a content-addressed package from the expected canonical plan."""
+
+    try:
+        package = build_implementation_package(body)
+        resolution = compile_architecture_resolution(body.resolution_request)
+        assembly = build_package_assembly(package, body, resolution)
+        store = request.app.state.implementation_artifact_store
+        store.put_package(package)
+        store.put_package_assembly(assembly)
+        return package
+    except ImplementationPackageBuildError as exc:
+        return _error_response(
+            KehrnelError(
+                code=exc.code,
+                status=exc.status,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/implementation-packages/{package_id}/versions/{version}",
+    response_model=ImplementationPackage,
+    response_model_exclude_none=True,
+)
+async def get_implementation_package(
+    package_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve one durably stored Implementation Package."""
+
+    try:
+        return request.app.state.implementation_artifact_store.find_package(
+            package_id,
+            version,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.post(
+    "/implementation-package-proofs/run",
+    response_model=ImplementationPackageProofRun,
+    response_model_exclude_none=True,
+)
+async def run_canonical_implementation_package_proof(
+    request: Request,
+    body: ImplementationPackageProofRequest,
+):
+    """Run bounded qualification and durably retain its evidence."""
+
+    store = request.app.state.implementation_artifact_store
+    try:
+        persisted = store.get_package(body.package.artifact_ref)
+        if persisted != body.package:
+            raise ImplementationArtifactConflict(
+                "The submitted package differs from its persisted artifact."
+            )
+        return run_implementation_package_proof(body, store=store)
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+@router.get(
+    "/implementation-package-proof-evidence/{evidence_id}/versions/{version}",
+    response_model=ImplementationPackageProofEvidence,
+    response_model_exclude_none=True,
+)
+async def get_implementation_package_proof_evidence(
+    evidence_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve immutable qualification evidence from durable storage."""
+
+    try:
+        return request.app.state.implementation_artifact_store.get(
+            evidence_id,
+            version,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_PROOF_EVIDENCE_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-installations/stage",
+    response_model=ImplementationPackageInstallationStage,
+    response_model_exclude_none=True,
+)
+async def stage_canonical_implementation_package(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageInstallationRequest,
+):
+    """Stage a qualified package for one tenant sandbox without executing it."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        runtime = getattr(request.app.state, "strategy_runtime", None)
+        if runtime is None or runtime.registry.get_environment(env_id) is None:
+            raise ImplementationPackageInstallationError(
+                "IMPLEMENTATION_ENVIRONMENT_NOT_FOUND",
+                f"Environment '{env_id}' does not exist.",
+                status=404,
+            )
+        return stage_implementation_package_installation(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageInstallationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+@router.get(
+    "/environments/{env_id}/implementation-package-installations/"
+    "{installation_id}/versions/{version}",
+    response_model=ImplementationPackageInstallationStage,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_stage(
+    env_id: str,
+    installation_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve a tenant-scoped package installation stage."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        stage = request.app.state.implementation_artifact_store.find_installation_stage(
+            installation_id,
+            version,
+        )
+        if stage.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Installation stage '{installation_id}@{version}' is not stored."
+            )
+        return stage
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_INSTALLATION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-installations/materialize",
+    response_model=ImplementationPackageMaterializationReceipt,
+    response_model_exclude_none=True,
+)
+async def materialize_canonical_implementation_package(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageMaterializationRequest,
+):
+    """Retain and verify a staged package closure without executing its plans."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        runtime = getattr(request.app.state, "strategy_runtime", None)
+        if runtime is None or runtime.registry.get_environment(env_id) is None:
+            raise ImplementationPackageMaterializationError(
+                "IMPLEMENTATION_ENVIRONMENT_NOT_FOUND",
+                f"Environment '{env_id}' does not exist.",
+                status=404,
+            )
+        return materialize_implementation_package(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageMaterializationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+@router.get(
+    "/environments/{env_id}/implementation-package-materializations/"
+    "{materialization_id}/versions/{version}",
+    response_model=ImplementationPackageMaterializationReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_materialization(
+    env_id: str,
+    materialization_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve a durable tenant-scoped artifact materialization receipt."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_materialization_receipt(
+            materialization_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Materialization '{materialization_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_MATERIALIZATION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-preparation/readiness",
+    response_model=ImplementationPackagePreparationReadiness,
+    response_model_exclude_none=True,
+)
+async def assess_canonical_implementation_package_preparation_readiness(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackagePreparationReadinessRequest,
+):
+    """Review tenant activation inputs without activating or executing strategies."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        runtime = request.app.state.strategy_runtime
+        return assess_implementation_package_preparation_readiness(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+            runtime=runtime,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackagePreparationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-preparation-readiness/"
+    "{readiness_id}/versions/{version}",
+    response_model=ImplementationPackagePreparationReadiness,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_preparation_readiness(
+    env_id: str,
+    readiness_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve a durable tenant-scoped preparation readiness assessment."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        readiness = request.app.state.implementation_artifact_store.find_preparation_readiness(
+            readiness_id,
+            version,
+        )
+        if readiness.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Preparation readiness '{readiness_id}@{version}' is not stored."
+            )
+        return readiness
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_PREPARATION_READINESS_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-activations/run",
+    response_model=ImplementationPackageActivationReceipt,
+    response_model_exclude_none=True,
+)
+async def activate_canonical_implementation_package(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageActivationRequest,
+):
+    """Persist exact approvals and idempotently activate package strategies."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return await activate_implementation_package_strategies(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+            runtime=request.app.state.strategy_runtime,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageActivationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-preparation-executions/run",
+    response_model=ImplementationPackagePreparationExecutionReceipt,
+    response_model_exclude_none=True,
+)
+async def execute_canonical_implementation_package_preparation(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackagePreparationExecutionRequest,
+):
+    """Apply package preparation setup without moving data or running a contract."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return await execute_implementation_package_preparation(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+            runtime=request.app.state.strategy_runtime,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackagePreparationExecutionError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-runtime-executions/run",
+    response_model=ImplementationPackageRuntimeExecutionResponse,
+    response_model_exclude_none=True,
+)
+async def execute_canonical_implementation_package_runtime_contract(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageRuntimeExecutionRequest,
+):
+    """Execute one governed query or authoritative-write route from the exact package."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return await execute_implementation_package_runtime_contract(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+            runtime=request.app.state.strategy_runtime,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageRuntimeExecutionError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-promotions/run",
+    response_model=ImplementationPackagePromotionReceipt,
+    response_model_exclude_none=True,
+)
+async def promote_canonical_implementation_package(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackagePromotionRequest,
+):
+    """Approve an exactly proven package revision as a release candidate."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return promote_implementation_package(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackagePromotionError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-operational-readiness/assess",
+    response_model=ImplementationPackageOperationalReadinessReceipt,
+    response_model_exclude_none=True,
+)
+async def assess_canonical_implementation_package_operational_readiness(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageOperationalReadinessRequest,
+):
+    """Review an exact promoted candidate without deploying it."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return assess_implementation_package_operational_readiness(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageOperationalReadinessError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-deployments/run",
+    response_model=ImplementationPackageDeploymentReceipt,
+    response_model_exclude_none=True,
+)
+async def deploy_canonical_implementation_package(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageDeploymentRequest,
+):
+    """Make an operationally-ready package the environment's active release."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return deploy_implementation_package(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageDeploymentError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_ACTIVE_RELEASE_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-deployments/rollback",
+    response_model=ImplementationPackageRollbackReceipt,
+    response_model_exclude_none=True,
+)
+async def rollback_canonical_implementation_package(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageRollbackRequest,
+):
+    """Revert the currently active package release binding."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return rollback_implementation_package(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageDeploymentError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_ACTIVE_RELEASE_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-operational-observations/run",
+    response_model=ImplementationPackageOperationalObservationReceipt,
+    response_model_exclude_none=True,
+)
+async def observe_canonical_implementation_package_operation(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageOperationalObservationRequest,
+):
+    """Record health and release drift for one expected active deployment."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return await observe_implementation_package_operation(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+            runtime=request.app.state.strategy_runtime,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageOperationalObservationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post(
+    "/environments/{env_id}/implementation-package-operational-observations/trigger",
+    response_model=ImplementationPackageOperationalObservationReceipt,
+    response_model_exclude_none=True,
+)
+async def trigger_canonical_implementation_package_operational_observation(
+    env_id: str,
+    request: Request,
+    body: ImplementationPackageOperationalObservationTriggerRequest,
+):
+    """Run one retry-safe observation slot from an external scheduler."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return await trigger_implementation_package_operational_observation(
+            env_id,
+            body,
+            store=request.app.state.implementation_artifact_store,
+            runtime=request.app.state.strategy_runtime,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageOperationalObservationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-deployments/"
+    "{deployment_id}/versions/{version}/operational-observations",
+    response_model=ImplementationPackageOperationalObservationHistory,
+    response_model_exclude_none=True,
+)
+async def list_canonical_implementation_package_operational_observations(
+    env_id: str,
+    deployment_id: str,
+    version: str,
+    request: Request,
+    limit: int = Query(default=20, ge=1, le=50),
+):
+    """List immutable observations for one exact deployment baseline."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        deployment = request.app.state.implementation_artifact_store.find_deployment(
+            deployment_id,
+            version,
+        )
+        return get_implementation_package_observation_history(
+            env_id,
+            deployment.artifact_ref,
+            store=request.app.state.implementation_artifact_store,
+            limit=limit,
+        )
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_DEPLOYMENT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationPackageOperationalObservationError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-operational-observations/"
+    "{observation_id}/versions/{version}",
+    response_model=ImplementationPackageOperationalObservationReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_operational_observation(
+    env_id: str,
+    observation_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve immutable health and release-drift evidence."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_operational_observation(
+            observation_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Operational observation '{observation_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_OPERATIONAL_OBSERVATION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/approved-strategy-activation-specifications/"
+    "{specification_id}/versions/{version}",
+    response_model=ApprovedStrategyActivationSpecification,
+    response_model_exclude_none=True,
+)
+async def get_canonical_approved_strategy_activation_specification(
+    env_id: str,
+    specification_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve one immutable tenant-scoped strategy activation approval."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        specification = request.app.state.implementation_artifact_store.find_activation_specification(
+            specification_id,
+            version,
+        )
+        if specification.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Activation specification '{specification_id}@{version}' is not stored."
+            )
+        return specification
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_ACTIVATION_SPECIFICATION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+@router.get(
+    "/environments/{env_id}/implementation-package-activations/"
+    "{activation_id}/versions/{version}",
+    response_model=ImplementationPackageActivationReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_activation(
+    env_id: str,
+    activation_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve a durable package strategy-activation receipt."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_activation_receipt(
+            activation_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package activation '{activation_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_ACTIVATION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-preparation-executions/"
+    "{execution_id}/versions/{version}",
+    response_model=ImplementationPackagePreparationExecutionReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_preparation_execution(
+    env_id: str,
+    execution_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve a durable package preparation-setup execution receipt."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_preparation_execution(
+            execution_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package preparation execution '{execution_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_PREPARATION_EXECUTION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-runtime-executions/"
+    "{execution_id}/versions/{version}",
+    response_model=ImplementationPackageRuntimeExecutionReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_runtime_execution(
+    env_id: str,
+    execution_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve durable runtime evidence; clinical result data is never retained."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_runtime_execution(
+            execution_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package runtime execution '{execution_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_RUNTIME_EXECUTION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-promotions/"
+    "{promotion_id}/versions/{version}",
+    response_model=ImplementationPackagePromotionReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_promotion(
+    env_id: str,
+    promotion_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve one immutable tenant release-candidate approval."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_promotion(
+            promotion_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package promotion '{promotion_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_PROMOTION_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-operational-readiness/"
+    "{readiness_id}/versions/{version}",
+    response_model=ImplementationPackageOperationalReadinessReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_operational_readiness(
+    env_id: str,
+    readiness_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve one immutable operational-readiness review."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = (
+            request.app.state.implementation_artifact_store.find_operational_readiness(
+                readiness_id,
+                version,
+            )
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package operational readiness '{readiness_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_OPERATIONAL_READINESS_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-deployments/active",
+    response_model=ImplementationPackageDeploymentStatus,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_deployment_status(
+    env_id: str,
+    request: Request,
+):
+    """Return the environment's current Kehrnel-managed release binding."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        return get_implementation_package_deployment_status(
+            env_id,
+            store=request.app.state.implementation_artifact_store,
+        )
+    except ImplementationPackageDeploymentError as exc:
+        return _error_response(
+            KehrnelError(code=exc.code, status=exc.status, message=str(exc))
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_ACTIVE_RELEASE_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-deployments/"
+    "{deployment_id}/versions/{version}",
+    response_model=ImplementationPackageDeploymentReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_deployment(
+    env_id: str,
+    deployment_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve one immutable package deployment receipt."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_deployment(
+            deployment_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package deployment '{deployment_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_DEPLOYMENT_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.get(
+    "/environments/{env_id}/implementation-package-rollbacks/"
+    "{rollback_id}/versions/{version}",
+    response_model=ImplementationPackageRollbackReceipt,
+    response_model_exclude_none=True,
+)
+async def get_canonical_implementation_package_rollback(
+    env_id: str,
+    rollback_id: str,
+    version: str,
+    request: Request,
+):
+    """Retrieve one immutable package rollback receipt."""
+
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        receipt = request.app.state.implementation_artifact_store.find_rollback(
+            rollback_id,
+            version,
+        )
+        if receipt.environment_id != env_id:
+            raise ImplementationArtifactNotFound(
+                f"Package rollback '{rollback_id}@{version}' is not stored."
+            )
+        return receipt
+    except ImplementationArtifactNotFound as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_PACKAGE_ROLLBACK_NOT_FOUND",
+                status=404,
+                message=str(exc),
+            )
+        )
+    except ImplementationArtifactConflict as exc:
+        return _error_response(
+            KehrnelError(
+                code="IMPLEMENTATION_ARTIFACT_CONFLICT",
+                status=409,
+                message=str(exc),
+            )
+        )
+
+
+@router.post(
+    "/architecture-resolutions/compile",
+    response_model=ArchitectureResolutionResult,
+    response_model_exclude_none=True,
+)
+async def compile_canonical_architecture_resolution(body: ArchitectureResolutionRequest):
+    """Resolve a canonical Blueprint into target, materialization, and runtime plans."""
+    try:
+        return compile_architecture_resolution(body)
+    except ArchitectureResolutionError as exc:
+        return _error_response(
+            KehrnelError(code="ARCHITECTURE_RESOLUTION_INVALID", status=422, message=str(exc))
+        )
+
+
+
+
+@router.get(
+    "/context-object-definitions",
+    response_model=ContextObjectDefinitionCatalog,
+)
+async def context_object_definitions():
+    """List the exact versioned ContextObject definitions Core can resolve."""
+
+    return load_context_object_definition_catalog()
+
+
+@router.post(
+    "/internal/legacy/reference-architectures/{architecture_id}/instantiate",
+    response_model=ReferenceArchitectureInstantiationResult,
+    include_in_schema=False,
+)
+async def instantiate_legacy_reference_architecture(
+    architecture_id: str,
+    body: ReferenceArchitectureInstantiationRequest,
+):
+    """Temporary adapter for the pre-canonical Builder; never a public contract."""
+
+    if architecture_id != body.reference_architecture_ref.id:
+        return _error_response(
+            KehrnelError(
+                code="REFERENCE_ARCHITECTURE_REFERENCE_MISMATCH",
+                status=400,
+                message="The path architecture id and referenceArchitectureRef.id must match.",
+            )
+        )
+    try:
+        return instantiate_reference_architecture(
+            body,
+            catalog=load_bundled_industry_outcome_catalog(),
+        )
+    except IndustryOutcomeCatalogError:
+        return _error_response(KehrnelError(code="OUTCOME_CATALOG_UNAVAILABLE", status=503, message="The industry outcome catalog is unavailable"))
+    except BlueprintTemplateCatalogError:
+        return _error_response(KehrnelError(code="BLUEPRINT_TEMPLATE_CATALOG_UNAVAILABLE", status=503, message="The legacy Blueprint template catalog is unavailable"))
+    except ReferenceArchitectureInstantiationError as exc:
+        return _error_response(exc)
+
+
+
+
+@router.get("/mappings", response_model=MappingCatalog)
+async def mappings():
+    """Return governed mappings, including their exact scope and maturity."""
+
+    return load_mapping_catalog()
+
+
+@router.post(
+    "/mappings/{mapping_id}/simulate",
+    response_model=MappingSimulationResult,
+)
+async def simulate_governed_mapping(
+    mapping_id: str,
+    body: MappingSimulationRequest,
+):
+    """Run one exact mapping over supplied records without persisting data."""
+
+    try:
+        if mapping_id != body.mapping_ref.id:
+            raise KehrnelError(
+                code="MAPPING_REFERENCE_MISMATCH",
+                status=400,
+                message="mapping path id and mappingRef.id must match",
+            )
+        return simulate_mapping(body)
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/internal/legacy/strategy-candidates/compile", response_model=StrategyCandidate, include_in_schema=False)
+async def compile_legacy_strategy_candidate(body: StrategyCompilationRequest):
+    try:
+        return compile_strategy_candidate(body)
+    except StrategyCompilationError as exc:
+        return _error_response(KehrnelError(code="STRATEGY_CANDIDATE_NOT_COMPILABLE", status=422, message=str(exc)))
+
+
+@router.post("/internal/legacy/architecture-proposals/compile", response_model=ArchitectureProposal, include_in_schema=False)
+async def compile_legacy_architecture_proposal(body: StrategyCompilationRequest):
+    try:
+        return compile_architecture_proposal(body)
+    except StrategyCompilationError as exc:
+        return _error_response(KehrnelError(code="ARCHITECTURE_PROPOSAL_NOT_COMPILABLE", status=422, message=str(exc)))
+
+
+@router.post("/internal/legacy/semantic-execution-plans/compile", response_model=SemanticExecutionPlan, response_model_exclude_none=True, include_in_schema=False)
+async def compile_legacy_semantic_plan(body: SemanticExecutionPlanningRequest):
+    try:
+        return compile_semantic_execution_plan(body)
+    except StrategyCompilationError as exc:
+        return _error_response(KehrnelError(code="SEMANTIC_EXECUTION_PLAN_NOT_COMPILABLE", status=422, message=str(exc)))
 
 
 @router.get("/health", include_in_schema=False)
@@ -908,7 +2654,20 @@ async def load_strategy_pack(request: Request, body: Dict[str, Any] = Body(defau
         # Validate path is within allowed directories
         validated_path = _validate_strategy_path(pack_path, request)
         manifest = load_strategy(strategy_id, str(validated_path))
+        # Reject identity conflicts before any registry/access-record mutation.
+        rt.registry.validate_manifest_registration(manifest)
+        if set(body) & {"owner", "publication", "dependencies", "assets"}:
+            raise KehrnelError("ACCESS_RECORDS_OPERATOR_OWNED", 403, "Package access records are operator-owned")
+        if _truthy_env("KEHRNEL_AUTH_ENABLED", "true"):
+            policy = request.app.state.strategy_access_policy
+            class CandidateRegistry:
+                def get_manifest(self, candidate_id):
+                    return manifest if candidate_id == manifest.id else rt.registry.get_manifest(candidate_id)
+            ref = policy.reference(manifest)
+            if not policy.allowed(CandidateRegistry(), ref, request_authority(request), "strategy:compile"):
+                raise KehrnelError("STRATEGY_NOT_FOUND", 404, "Strategy not found")
         rt.register_manifest(manifest)
+        request.app.state.strategy_asset_dirs[manifest.id] = manifest.pack_root
         return {"ok": True, "strategy": manifest}
     except Exception as exc:
         return _error_response(exc)
@@ -921,6 +2680,126 @@ async def endpoints_registry(request: Request):
     endpoints = {
         "health": f"{base}/health",
         "strategies": f"{base}/strategies",
+        "strategy_portfolio": f"{base}/strategy-portfolio",
+        "source_profiles": f"{base}/source-profiles",
+        "compile_architecture_resolution": f"{base}/architecture-resolutions/compile",
+        "architecture_resolution_inputs": f"{base}/architecture-resolution-inputs",
+        "context_object_definitions": f"{base}/context-object-definitions",
+        "build_implementation_package": f"{base}/implementation-packages/build",
+        "get_implementation_package": f"{base}/implementation-packages/{{package_id}}/versions/{{version}}",
+        "run_implementation_package_proof": f"{base}/implementation-package-proofs/run",
+        "get_implementation_package_proof_evidence": f"{base}/implementation-package-proof-evidence/{{evidence_id}}/versions/{{version}}",
+        "stage_implementation_package": f"{base}/environments/{{env_id}}/implementation-package-installations/stage",
+        "get_implementation_package_stage": f"{base}/environments/{{env_id}}/implementation-package-installations/{{installation_id}}/versions/{{version}}",
+        "materialize_implementation_package": f"{base}/environments/{{env_id}}/implementation-package-installations/materialize",
+        "get_implementation_package_materialization": f"{base}/environments/{{env_id}}/implementation-package-materializations/{{materialization_id}}/versions/{{version}}",
+        "source_categories": f"{base}/source-categories",
+        "outcome_catalog": f"{base}/outcome-catalog",
+        "canonicalize_solution_blueprint": (
+            f"{base}/solution-blueprints/canonicalize"
+        ),
+        "assess_implementation_package_preparation_readiness": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-preparation/readiness"
+        ),
+        "get_implementation_package_preparation_readiness": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-preparation-readiness/"
+            "{readiness_id}/versions/{version}"
+        ),
+        "activate_implementation_package": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-activations/run"
+        ),
+        "get_approved_strategy_activation_specification": (
+            f"{base}/environments/{{env_id}}/"
+            "approved-strategy-activation-specifications/"
+            "{specification_id}/versions/{version}"
+        ),
+        "get_implementation_package_activation": (
+            f"{base}/environments/{{env_id}}/implementation-package-activations/"
+            "{activation_id}/versions/{version}"
+        ),
+        "execute_implementation_package_preparation": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-preparation-executions/run"
+        ),
+        "get_implementation_package_preparation_execution": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-preparation-executions/"
+            "{execution_id}/versions/{version}"
+        ),
+        "execute_implementation_package_runtime_contract": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-runtime-executions/run"
+        ),
+        "get_implementation_package_runtime_execution": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-runtime-executions/"
+            "{execution_id}/versions/{version}"
+        ),
+        "promote_implementation_package": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-promotions/run"
+        ),
+        "get_implementation_package_promotion": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-promotions/"
+            "{promotion_id}/versions/{version}"
+        ),
+        "assess_implementation_package_operational_readiness": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-operational-readiness/assess"
+        ),
+        "get_implementation_package_operational_readiness": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-operational-readiness/"
+            "{readiness_id}/versions/{version}"
+        ),
+        "deploy_implementation_package": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-deployments/run"
+        ),
+        "rollback_implementation_package": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-deployments/rollback"
+        ),
+        "get_implementation_package_deployment_status": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-deployments/active"
+        ),
+        "get_implementation_package_deployment": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-deployments/"
+            "{deployment_id}/versions/{version}"
+        ),
+        "get_implementation_package_rollback": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-rollbacks/"
+            "{rollback_id}/versions/{version}"
+        ),
+        "observe_implementation_package_operation": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-operational-observations/run"
+        ),
+        "trigger_implementation_package_operational_observation": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-operational-observations/trigger"
+        ),
+        "get_implementation_package_operational_observation": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-operational-observations/"
+            "{observation_id}/versions/{version}"
+        ),
+        "list_implementation_package_operational_observations": (
+            f"{base}/environments/{{env_id}}/"
+            "implementation-package-deployments/{deployment_id}/versions/{version}/"
+            "operational-observations"
+        ),
+        "mappings": f"{base}/mappings",
+        "simulate_mapping": f"{base}/mappings/{{mapping_id}}/simulate",
+        "compile_strategy_candidate": f"{base}/strategy-candidates/compile",
+        "compile_architecture_proposal": f"{base}/architecture-proposals/compile",
         "strategy_detail": f"{base}/strategies/{{strategy_id}}",
         "strategy_spec": f"{base}/strategies/{{strategy_id}}/spec",
         "openehr_domain": f"{base}/api/domains/openehr/...",
@@ -939,7 +2818,7 @@ async def endpoints_registry(request: Request):
 
 @router.get("/strategies/{strategy_id}/endpoints", include_in_schema=False)
 async def strategy_endpoints(strategy_id: str, request: Request):
-    _require_admin_access(request)
+    require_package(request, strategy_id)
     base = ""
     if _is_rps_dual_strategy_id(strategy_id):
         return {
@@ -976,7 +2855,7 @@ async def strategy_endpoints(strategy_id: str, request: Request):
 @router.get("/strategies/diagnostics", include_in_schema=False)
 async def get_strategy_diagnostics(request: Request):
     try:
-        _require_admin_access(request)
+        _require_inventory_access(request)
         diagnostics = getattr(request.app.state, "strategy_diagnostics", None) or []
         return {"strategies": diagnostics}
     except Exception as exc:
@@ -1046,6 +2925,12 @@ def _serialize_manifest_op(manifest: StrategyManifest, op: Any, include_schemas:
     return row
 
 
+def _serialize_interaction_contract(contract: Any) -> Dict[str, Any]:
+    if hasattr(contract, "model_dump"):
+        return contract.model_dump(mode="json", exclude_none=True)
+    return dict(contract or {})
+
+
 @router.get("/ops", include_in_schema=False)
 async def list_ops(request: Request):
     try:
@@ -1055,6 +2940,10 @@ async def list_ops(request: Request):
             raise ValueError("Strategy runtime not initialized")
         ops = []
         for manifest in rt.list_strategies():
+            try:
+                require_package(request, manifest.id)
+            except KehrnelError:
+                continue
             for op in manifest.ops:
                 ops.append(_serialize_manifest_op(manifest, op, include_schemas=False))
         return {"ops": ops}
@@ -1077,6 +2966,8 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_env_access(request, env_id)
+        _require_bound_package(request, env_id, domain)
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload, "domain": domain})
         return _json_safe({"ok": True, "result": result})
     except Exception as exc:
@@ -1086,8 +2977,7 @@ async def run_op(request: Request, body: Dict[str, Any] = Body(default_factory=d
 @router.get("/environments/{env_id}/capabilities", include_in_schema=False)
 async def env_capabilities(env_id: str, request: Request, include_schemas: bool = True):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1095,13 +2985,25 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
         activations = rt.registry.list_activations(env_id) or {}
         domains: List[Dict[str, Any]] = []
         strategy_ops: List[Dict[str, Any]] = []
+        interaction_contracts: List[Dict[str, Any]] = []
 
         for domain_key, activation in activations.items():
-            manifest = rt.registry.get_manifest(activation.strategy_id)
-            if not manifest:
+            try:
+                manifest = require_package(request, activation.strategy_id)
+            except KehrnelError:
                 continue
             op_rows = [_serialize_manifest_op(manifest, op, include_schemas=include_schemas) for op in (manifest.ops or [])]
             strategy_ops.extend(op_rows)
+            contract_rows = [
+                {
+                    **_serialize_interaction_contract(contract),
+                    "domain": domain_key,
+                    "strategy_id": manifest.id,
+                    "strategy_version": activation.version,
+                }
+                for contract in (manifest.interaction_contracts or [])
+            ]
+            interaction_contracts.extend(contract_rows)
             domains.append(
                 {
                     "domain": domain_key,
@@ -1109,12 +3011,14 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
                     "strategy_version": activation.version,
                     "activation_id": activation.activation_id,
                     "ops": [row.get("name") for row in op_rows if row.get("name")],
+                    "interaction_contracts": contract_rows,
                 }
             )
 
         return {
             "env_id": env_id,
             "domains": domains,
+            "interaction_contracts": interaction_contracts,
             "operations": {
                 "standard": _standard_env_operations(),
                 "strategy": strategy_ops,
@@ -1127,8 +3031,7 @@ async def env_capabilities(env_id: str, request: Request, include_schemas: bool 
 @router.post("/environments/{env_id}/run", include_in_schema=False)
 async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(default_factory=dict)):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
@@ -1138,6 +3041,11 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
             raise KehrnelError(code="INVALID_INPUT", status=400, message="operation is required")
 
         op_key = operation.lower().replace("-", "_")
+        if _local_developer_runtime_allowed(request, env_id) and op_key not in {
+            "transform", "ingest", "query", "compile_query", "snomed_readiness",
+            "snomed_search", "snomed_lookup", "snomed_expand",
+        }:
+            _require_admin_access(request)
         direct_ops = {"plan", "apply", "transform", "ingest", "query", "compile_query"}
         payload = body.get("payload") if isinstance(body.get("payload"), dict) else {}
         payload = dict(payload or {})
@@ -1183,6 +3091,10 @@ async def run_env_op(env_id: str, request: Request, body: Dict[str, Any] = Body(
             dispatch_payload = {"domain": requested_domain, "op": operation, "payload": op_inner_payload}
             route_scope = "strategy"
 
+        if dispatch_op in {"query", "compile_query"}:
+            require_runtime_package(request, env_id, requested_domain, "runtime:query" if dispatch_op == "query" else "strategy:compile")
+        else:
+            _require_bound_package(request, env_id, requested_domain or None)
         result = await rt.dispatch(env_id, dispatch_op, dispatch_payload)
         return _json_safe(
             {
@@ -1251,16 +3163,27 @@ async def delete_bundle(bundle_id: str, request: Request):
         return _error_response(exc)
 
 
+@router.get("/strategies/installed", include_in_schema=False)
+async def installed_strategies(request: Request):
+    try:
+        _require_inventory_access(request)
+        return {"strategies": [m.model_dump() for m in request.app.state.strategy_runtime.list_strategies()]}
+    except Exception as exc:
+        return _error_response(exc)
+
+
 @router.get("/strategies/{strategy_id}", response_model=StrategyManifest)
 async def get_strategy(strategy_id: str, request: Request):
     try:
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
-        manifest = rt.registry.get_manifest(strategy_id)
-        if not manifest:
-            raise KeyError("Strategy not found")
+        manifest = require_package(request, strategy_id)
         data = manifest.model_dump()
+        if manifest.pack_root:
+            data.update(request.app.state.strategy_access_policy.reference(manifest).as_dict())
+        if manifest.id in SUPPORTED_STRATEGIES:
+            data.update(package_identity(manifest))
         if hasattr(manifest, "pack_spec") and manifest.pack_spec:
             data["pack_spec"] = manifest.pack_spec
         return data
@@ -1275,13 +3198,7 @@ async def get_persistence_strategy_compat(strategy_id: str, request: Request):
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
-        manifest = rt.registry.get_manifest(strategy_id)
-        if not manifest:
-            raise KehrnelError(
-                code="STRATEGY_NOT_FOUND",
-                status=404,
-                message=f"Strategy {strategy_id} not found",
-            )
+        manifest = require_package(request, strategy_id)
         data = manifest.model_dump()
         return {
             "id": data.get("id"),
@@ -1300,24 +3217,9 @@ async def get_persistence_strategy_compat(strategy_id: str, request: Request):
 @router.get("/strategies/{strategy_id}/assets/{asset_path:path}")
 async def get_strategy_asset(strategy_id: str, asset_path: str, request: Request):
     try:
-        asset_dirs = getattr(request.app.state, "strategy_asset_dirs", None) or {}
-        base_dir = asset_dirs.get(strategy_id)
-        if not base_dir:
-            raise KehrnelError(code="STRATEGY_NOT_FOUND", status=404, message=f"Strategy {strategy_id} not found")
-        # Explicit path traversal protection
-        if ".." in asset_path or asset_path.startswith("/"):
-            raise KehrnelError(code="INVALID_PATH", status=400, message="Path traversal not allowed")
-        base_path = Path(base_dir).resolve()
-        safe_asset = asset_path.lstrip("/")
-        # Additional check for null bytes and other dangerous characters
-        if "\x00" in safe_asset or "\\" in safe_asset:
-            raise KehrnelError(code="INVALID_PATH", status=400, message="Invalid characters in path")
-        candidate = (base_path / safe_asset).resolve()
-        if base_path not in candidate.parents and candidate != base_path:
-            raise KehrnelError(code="ASSET_OUT_OF_BOUNDS", status=400, message="Invalid asset path")
-        if not candidate.exists() or not candidate.is_file():
-            raise KehrnelError(code="ASSET_NOT_FOUND", status=404, message="Asset not found")
-        return FileResponse(str(candidate))
+        candidate = request.app.state.strategy_access_policy.asset(
+            request.app.state.strategy_runtime.registry, strategy_id, asset_path, request_authority(request))
+        return FileResponse(str(candidate), headers={"Cache-Control": "private, no-store"})
     except Exception as exc:
         return _error_response(exc)
 
@@ -1329,9 +3231,7 @@ async def get_strategy_spec(strategy_id: str, request: Request):
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
-        manifest = rt.registry.get_manifest(strategy_id)
-        if not manifest:
-            raise KeyError(f"Strategy {strategy_id} not found")
+        manifest = require_package(request, strategy_id)
         pack_spec = getattr(manifest, "pack_spec", None)
         if not pack_spec:
             raise KehrnelError(
@@ -1355,13 +3255,13 @@ async def run_extension(env_id: str, strategy_id: str, op: str, request: Request
         activation = rt.registry.get_activation_by_strategy(env_id, strategy_id)
         if not activation:
             raise KeyError(f"No activation for env {env_id}")
+        require_package(request, strategy_id)
         if activation.strategy_id != strategy_id:
             raise ValueError(f"Environment {env_id} active with {activation.strategy_id}, not {strategy_id}")
         result = await rt.dispatch(env_id, "op", {"op": op, "payload": payload or {}, "strategy_id": strategy_id})
         return _json_safe({"ok": True, "result": result})
     except Exception as exc:
         return _error_response(exc)
-
 
 
 def _coerce_request_bool(value: Any) -> bool:
@@ -1396,12 +3296,15 @@ def _serialize_environment(rt, env_id: str, env=None) -> Dict[str, Any] | None:
     }
 
 
-def _summarize_env_activations(rt, env_id: str) -> tuple[Dict[str, Any], Dict[str, Any]]:
+def _summarize_env_activations(rt, env_id: str, request: Request) -> tuple[Dict[str, Any], Dict[str, Any]]:
     activations = rt.registry.list_activations(env_id)
     summary = {}
     history_summary = {}
     for proto, activation in activations.items():
-        manifest = rt.registry.get_manifest(activation.strategy_id)
+        try:
+            manifest = require_package(request, activation.strategy_id)
+        except KehrnelError:
+            continue
         summary[proto] = {
             "strategy_id": activation.strategy_id,
             "strategy_version": activation.version,
@@ -1528,11 +3431,23 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
         allow_plain = body.get("allow_plaintext_bindings", False)
         force = bool(body.get("force"))
         replace_reason = body.get("reason")
+        condition_acceptances = (
+            body.get("condition_acceptances")
+            or body.get("conditionAcceptances")
+            or []
+        )
+        if not isinstance(condition_acceptances, list):
+            raise KehrnelError(
+                code="INVALID_CONDITION_ACCEPTANCE",
+                status=400,
+                message="condition_acceptances must be a list of {id, accepted} objects.",
+            )
         auth_enabled = os.getenv("KEHRNEL_AUTH_ENABLED", "true").lower() in ("1", "true", "yes")
         if not strategy_id:
             raise KehrnelError(code="INVALID_INPUT", status=400, message="strategy_id is required")
         if not domain:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
+        require_package(request, strategy_id)
 
         # Security model:
         # - In production (auth enabled): require bindings_ref; do not accept plaintext bindings.
@@ -1571,6 +3486,7 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
             force=force,
             replace_reason=replace_reason,
             bindings_ref=bindings_ref,
+            condition_acceptances=condition_acceptances,
         )
         _sync_bridge_openehr_settings_from_activation(rt, activation)
         initialization = await _initialize_activation_artifacts(rt, env_id, activation)
@@ -1592,6 +3508,8 @@ async def activate_env(env_id: str, request: Request, body: Dict[str, Any] = Bod
                 "previous_activation_id": activation.previous_activation_id,
                 "replaced_from": activation.replaced_from,
                 "already_active": activation.already_active,
+                "condition_acceptances": activation.condition_acceptances,
+                "seed": activation.seed,
             },
             "initialization": initialization,
         }
@@ -1618,6 +3536,9 @@ async def activate_strategy_compat(request: Request, body: Dict[str, Any] = Body
         "domain": (body.get("domain") or "").lower() or body.get("domain"),
         "force": body.get("force") or False,
         "reason": body.get("reason"),
+        "condition_acceptances": body.get("conditionAcceptances")
+        or body.get("condition_acceptances")
+        or [],
     }
     # In dev/test mode, compatibility clients often omit bindings fields entirely.
     # If auth is disabled and no bindings_ref is provided, default to plaintext mode.
@@ -1643,7 +3564,7 @@ async def get_env(env_id: str, request: Request):
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         env = rt.get_environment(env_id)
-        summary, history_summary = _summarize_env_activations(rt, env_id)
+        summary, history_summary = _summarize_env_activations(rt, env_id, request)
         if not env and not summary:
             raise KeyError("Environment not found")
         return {
@@ -1669,6 +3590,7 @@ async def upgrade_activation(env_id: str, domain: str, request: Request):
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_bound_package(request, env_id, domain)
         new_act = await rt.upgrade_activation(env_id, domain)
         _sync_bridge_openehr_settings_from_activation(rt, new_act)
         initialization = await _initialize_activation_artifacts(rt, env_id, new_act)
@@ -1698,6 +3620,10 @@ async def rollback_activation(env_id: str, domain: str, request: Request):
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        history = rt.registry.list_history(env_id, domain)
+        if history:
+            previous = history[-1].get("activation", {})
+            require_package(request, previous.get("strategy_id"))
         act = await rt.rollback_activation(env_id, domain)
         _sync_bridge_openehr_settings_from_activation(rt, act)
         initialization = await _initialize_activation_artifacts(rt, env_id, act)
@@ -1728,6 +3654,7 @@ async def delete_activation(env_id: str, domain: str, request: Request):
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_bound_package(request, env_id, domain)
         act = rt.delete_activation(env_id, domain)
         return {"ok": True, "activation": {"activation_id": act.activation_id, "domain": act.domain}}
     except Exception as exc:
@@ -1742,6 +3669,7 @@ async def plan_env(env_id: str, request: Request, payload: Dict[str, Any] = Body
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_bound_package(request, env_id, (payload or {}).get("domain"))
         res = await rt.dispatch(env_id, "plan", payload or {})
         return {"ok": True, "result": res}
     except Exception as exc:
@@ -1756,6 +3684,7 @@ async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_bound_package(request, env_id, (payload or {}).get("domain"))
         res = await rt.dispatch(env_id, "apply", payload or {})
         return {"ok": True, "result": res}
     except Exception as exc:
@@ -1765,11 +3694,11 @@ async def apply_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
 @router.post("/environments/{env_id}/transform", include_in_schema=False)
 async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_bound_package(request, env_id, (payload or {}).get("domain"))
         res = await rt.dispatch(env_id, "transform", payload or {})
         return _json_safe({"ok": True, "result": res})
     except Exception as exc:
@@ -1779,11 +3708,11 @@ async def transform_env(env_id: str, request: Request, payload: Dict[str, Any] =
 @router.post("/environments/{env_id}/ingest", include_in_schema=False)
 async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
+        _require_bound_package(request, env_id, (payload or {}).get("domain"))
         res = await rt.dispatch(env_id, "ingest", payload or {})
         return _json_safe({"ok": True, "result": res})
     except Exception as exc:
@@ -1793,14 +3722,14 @@ async def ingest_env(env_id: str, request: Request, payload: Dict[str, Any] = Bo
 @router.post("/environments/{env_id}/query", include_in_schema=False)
 async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict)):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         domain = (payload or {}).get("domain")
         if not domain:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
+        require_runtime_package(request, env_id, domain, "runtime:query")
         payload["domain"] = domain
         res = await rt.dispatch(env_id, "query", payload or {})
         # when dispatch returns QueryResult dict or simple, wrap as ok/result if needed
@@ -1814,14 +3743,14 @@ async def query_env(env_id: str, request: Request, payload: Dict[str, Any] = Bod
 @router.post("/environments/{env_id}/compile_query", include_in_schema=False)
 async def compile_query_env(env_id: str, request: Request, payload: Dict[str, Any] = Body(default_factory=dict), debug: bool = False):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         rt = getattr(request.app.state, "strategy_runtime", None)
         if not rt:
             raise ValueError("Strategy runtime not initialized")
         domain = (payload or {}).get("domain")
         if not domain:
             raise KehrnelError(code="DOMAIN_REQUIRED", status=400, message="domain is required")
+        require_runtime_package(request, env_id, domain, "strategy:compile")
         payload["domain"] = domain
         if debug and isinstance(payload, dict):
             payload["debug"] = True
@@ -1834,8 +3763,7 @@ async def compile_query_env(env_id: str, request: Request, payload: Dict[str, An
 @router.get("/environments/{env_id}/endpoints", include_in_schema=False)
 async def list_env_endpoints(env_id: str, request: Request):
     try:
-        _require_admin_access(request)
-        _require_env_access(request, env_id)
+        _require_environment_runtime_access(request, env_id)
         base = str(request.base_url).rstrip("/")
         rt = getattr(request.app.state, "strategy_runtime", None)
         activations = rt.registry.list_activations(env_id) if rt else {}
@@ -1946,6 +3874,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 status=404,
                 message=f"No activation for env {env_id} (domain={domain})",
             )
+        require_package(request, activation.strategy_id)
         if not activation.bindings_ref and not activation.bindings:
             raise KehrnelError(
                 code="BINDINGS_REF_REQUIRED",
@@ -1999,7 +3928,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 db_bindings = bindings.get("db")
             else:
                 db_bindings = getattr(bindings, "db", None)
-            
+
             if db_bindings:
                 if isinstance(db_bindings, dict):
                     target_database = db_bindings.get("database") or db_bindings.get("name")
@@ -2109,3 +4038,20 @@ async def cancel_synthetic_job(env_id: str, job_id: str, request: Request):
         return {"ok": True, "job": job}
     except Exception as exc:
         return _error_response(exc)
+
+
+def _require_bound_package(request: Request, env_id: str, domain: str | None):
+    if not _truthy_env("KEHRNEL_AUTH_ENABLED", "true") or _local_developer_runtime_allowed(request, env_id):
+        return None
+    activation = request.app.state.strategy_runtime.registry.get_activation(env_id, domain)
+    if not activation:
+        raise KehrnelError("PREPARATION_REQUIRED", 409, "An explicit strategy activation is required")
+    return require_package(request, activation.strategy_id)
+
+
+def _require_inventory_access(request: Request):
+    _require_admin_access(request)
+    fingerprint = getattr(request.state, "authenticated_api_key", None)
+    inventory_keys = {k.strip() for k in os.getenv("KEHRNEL_INVENTORY_API_KEY_FINGERPRINTS", "").split(",") if k.strip()}
+    if _truthy_env("KEHRNEL_AUTH_ENABLED", "true") and fingerprint not in inventory_keys:
+        raise KehrnelError("FORBIDDEN", 403, "Installed inventory privileges required")

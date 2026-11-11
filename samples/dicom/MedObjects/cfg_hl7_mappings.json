@@ -1,0 +1,309 @@
+[
+  {
+    "_id": "000000000000000000000001",
+    "centerId": "_default",
+    "name": "Default — ORM/OMI Worklist",
+    "messageTypes": [
+      "ORM_O01",
+      "OMI_O23"
+    ],
+    "active": true,
+    "mappings": [
+      {
+        "hl7Path": "PID.3.1",
+        "targetField": "PatientID",
+        "required": true
+      },
+      {
+        "hl7Path": "PID.5",
+        "targetField": "PatientName",
+        "transform": "HL7NAME",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.7",
+        "targetField": "PatientBirthDate",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.8",
+        "targetField": "PatientSex",
+        "transform": "SEX",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.2.1",
+        "targetField": "AccessionNumber",
+        "required": true
+      },
+      {
+        "hl7Path": "OBR.4.1",
+        "targetField": "RequestedProcedureID",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.4.2",
+        "targetField": "RequestedProcedureDescription",
+        "required": false
+      },
+      {
+        "hl7Path": "ZDS.1.1",
+        "targetField": "StudyInstanceUID",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.7",
+        "targetField": "ScheduledStartDateTime",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.2.1",
+        "targetField": "ScheduledProcedureStepID",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.16",
+        "targetField": "ScheduledPerformingPhysicianName",
+        "transform": "HL7NAME",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.4.2",
+        "targetField": "ScheduledProcedureStepDescription",
+        "required": false
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-06-09T00:00:00Z"
+    }
+  },
+  {
+    "_id": "000000000000000000000002",
+    "centerId": "_default",
+    "name": "Default — SIU Worklist",
+    "messageTypes": [
+      "SIU_S12",
+      "SIU_S13",
+      "SIU_S15"
+    ],
+    "active": true,
+    "mappings": [
+      {
+        "hl7Path": "PID.3.1",
+        "targetField": "PatientID",
+        "required": true
+      },
+      {
+        "hl7Path": "PID.5",
+        "targetField": "PatientName",
+        "transform": "HL7NAME",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.7",
+        "targetField": "PatientBirthDate",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.8",
+        "targetField": "PatientSex",
+        "transform": "SEX",
+        "required": false
+      },
+      {
+        "hl7Path": "SCH.2.1",
+        "targetField": "AccessionNumber",
+        "required": true
+      },
+      {
+        "hl7Path": "AIS.3.1",
+        "targetField": "RequestedProcedureID",
+        "required": false
+      },
+      {
+        "hl7Path": "AIS.3.2",
+        "targetField": "RequestedProcedureDescription",
+        "required": false
+      },
+      {
+        "hl7Path": "ZDS.1.1",
+        "targetField": "StudyInstanceUID",
+        "required": false
+      },
+      {
+        "hl7Path": "AIS.6",
+        "targetField": "ScheduledStartDateTime",
+        "required": false
+      },
+      {
+        "hl7Path": "SCH.2.1",
+        "targetField": "ScheduledProcedureStepID",
+        "required": false
+      },
+      {
+        "hl7Path": "AIL.3.1",
+        "targetField": "ScheduledStationName",
+        "required": false
+      },
+      {
+        "hl7Path": "AIS.3.2",
+        "targetField": "ScheduledProcedureStepDescription",
+        "required": false
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-06-09T00:00:00Z"
+    }
+  },
+  {
+    "_id": "000000000000000000000003",
+    "centerId": "_default",
+    "name": "Default — ADT Demographics (A01/A08)",
+    "messageTypes": [
+      "ADT_A01",
+      "ADT_A08"
+    ],
+    "active": true,
+    "mappings": [
+      {
+        "hl7Path": "PID.3.1",
+        "targetField": "PatientID",
+        "required": true
+      },
+      {
+        "hl7Path": "PID.5",
+        "targetField": "PatientName",
+        "transform": "HL7NAME",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.7",
+        "targetField": "PatientBirthDate",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.8",
+        "targetField": "PatientSex",
+        "transform": "SEX",
+        "required": false
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "_id": "000000000000000000000004",
+    "centerId": "_default",
+    "name": "Default — ADT Merge (A40)",
+    "messageTypes": [
+      "ADT_A40"
+    ],
+    "active": true,
+    "mappings": [
+      {
+        "hl7Path": "PID.3.1",
+        "targetField": "PatientID",
+        "required": true
+      },
+      {
+        "hl7Path": "PID.5",
+        "targetField": "PatientName",
+        "transform": "HL7NAME",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.7",
+        "targetField": "PatientBirthDate",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.8",
+        "targetField": "PatientSex",
+        "transform": "SEX",
+        "required": false
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "_id": "000000000000000000000005",
+    "centerId": "_default",
+    "name": "Default — VH/SAP OMI/ORM (HL7 v2.5+ con IPC)",
+    "messageTypes": [
+      "OMI_O23",
+      "ORM_O01",
+      "OMG_O19"
+    ],
+    "sendingApps": [
+      "SAP"
+    ],
+    "active": true,
+    "mappings": [
+      {
+        "hl7Path": "PID.3.1",
+        "targetField": "PatientID",
+        "required": true
+      },
+      {
+        "hl7Path": "PID.5",
+        "targetField": "PatientName",
+        "transform": "HL7NAME",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.7",
+        "targetField": "PatientBirthDate",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "PID.8",
+        "targetField": "PatientSex",
+        "transform": "SEX",
+        "required": false
+      },
+      {
+        "hl7Path": "IPC.1.1",
+        "targetField": "AccessionNumber",
+        "required": true
+      },
+      {
+        "hl7Path": "OBR.4.1",
+        "targetField": "RequestedProcedureID",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.4.2",
+        "targetField": "RequestedProcedureDescription",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.27.4",
+        "targetField": "ScheduledStartDateTime",
+        "transform": "DATE",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.4.1",
+        "targetField": "ScheduledProcedureStepID",
+        "required": false
+      },
+      {
+        "hl7Path": "OBR.4.2",
+        "targetField": "ScheduledProcedureStepDescription",
+        "required": false
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-05-17T00:00:00Z"
+    }
+  }
+]

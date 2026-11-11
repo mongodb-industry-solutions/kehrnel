@@ -1,0 +1,211 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "ModelerToolReceipt": {
+      "additionalProperties": false,
+      "description": "Content-addressed receipt for one bounded Agentic Engine tool call.",
+      "properties": {
+        "callId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Callid",
+          "type": "string"
+        },
+        "inputDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Inputdigest",
+          "type": "string"
+        },
+        "receiptContract": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Receiptcontract",
+          "type": "string"
+        },
+        "receiptDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Receiptdigest",
+          "type": "string"
+        },
+        "receiptId": {
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Receiptid",
+          "type": "string"
+        },
+        "resultArtifactRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resultDigest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Resultdigest",
+          "type": "string"
+        },
+        "toolRef": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "receiptId",
+        "receiptDigest",
+        "callId",
+        "toolRef",
+        "receiptContract",
+        "inputDigest",
+        "resultDigest"
+      ],
+      "title": "ModelerToolReceipt",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:modeler-agentic-execution-receipt",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Server-captured Agentic Engine execution identity and tool evidence.\n\nThis is a structural receipt, not a cryptographic attestation from MongoDB.\nThe host must obtain it from the configured Agentic Engine integration and\nverify every ``toolRef`` is a member of the pinned registry.",
+  "properties": {
+    "completedAt": {
+      "format": "date-time",
+      "title": "Completedat",
+      "type": "string"
+    },
+    "contract": {
+      "const": "modeler-agentic-execution-receipt/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "engine": {
+      "const": "mongodb_agentic_engine",
+      "title": "Engine",
+      "type": "string"
+    },
+    "executionDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Executiondigest",
+      "type": "string"
+    },
+    "executionId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Executionid",
+      "type": "string"
+    },
+    "invocationDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Invocationdigest",
+      "type": "string"
+    },
+    "invocationId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Invocationid",
+      "type": "string"
+    },
+    "modelId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Modelid",
+      "type": "string"
+    },
+    "providerId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Providerid",
+      "type": "string"
+    },
+    "sessionId": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Sessionid",
+      "type": "string"
+    },
+    "startedAt": {
+      "format": "date-time",
+      "title": "Startedat",
+      "type": "string"
+    },
+    "toolReceipts": {
+      "items": {
+        "$ref": "#/$defs/ModelerToolReceipt"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "title": "Toolreceipts",
+      "type": "array"
+    },
+    "toolRegistryRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "workspaceRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "engine",
+    "executionDigest",
+    "invocationId",
+    "invocationDigest",
+    "toolRegistryRef",
+    "workspaceRef",
+    "providerId",
+    "modelId",
+    "executionId",
+    "sessionId",
+    "startedAt",
+    "completedAt",
+    "toolReceipts"
+  ],
+  "title": "ModelerAgenticExecutionReceipt",
+  "type": "object"
+}

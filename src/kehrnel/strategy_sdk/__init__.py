@@ -1,12 +1,4 @@
-"""
-Strategy SDK scaffolding for the multi-strategy kehrnel runtime.
-
-This package introduces:
-- Capability enums and core types
-- Strategy manifest model (JSON-schema friendly)
-- Plugin base class with lifecycle hooks
-- Loader utilities to import strategies from entrypoints or dotted paths
-"""
+"""Public Python authoring surface for executable Kehrnel strategy packs."""
 
 from .capabilities import StrategyCapability
 from .manifest import (
@@ -21,8 +13,17 @@ from .plugin import (
     StrategyBindings,
     StrategyInitResult,
 )
+from .types import ApplyPlan, ApplyResult, QueryPlan, QueryResult, TransformResult
 from .loader import load_strategy_from_entrypoint, load_strategy_from_path, discover_entrypoint_manifests
 from .runtime import StrategyHandle, StrategyRuntimeError
+from .conformance import (
+    StrategyConformanceDiagnostic,
+    StrategyConformanceError,
+    StrategyConformanceReport,
+    require_strategy_conformance,
+    validate_strategy_entrypoint,
+    validate_strategy_plugin,
+)
 
 __all__ = [
     "StrategyCapability",
@@ -36,6 +37,17 @@ __all__ = [
     "StrategyInitResult",
     "StrategyHandle",
     "StrategyRuntimeError",
+    "ApplyPlan",
+    "ApplyResult",
+    "QueryPlan",
+    "QueryResult",
+    "TransformResult",
+    "StrategyConformanceDiagnostic",
+    "StrategyConformanceError",
+    "StrategyConformanceReport",
+    "require_strategy_conformance",
+    "validate_strategy_entrypoint",
+    "validate_strategy_plugin",
     "load_strategy_from_entrypoint",
     "load_strategy_from_path",
     "discover_entrypoint_manifests",

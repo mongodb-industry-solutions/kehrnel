@@ -22,20 +22,42 @@ def test_data_dir() -> Path:
 @pytest.fixture(scope="session")
 def configs_dir() -> Path:
     """
-    Return the path to the YAML configs bundled inside the package.
+    Return the path to the R5 YAML configs bundled inside the package.
 
-    Configs are now packaged inside ``src/fhir_search_to_mql/configs/``
-    (instead of the repo-root ``configs/`` directory) so they ship as
-    package data when the library is installed via pip. Tests that
-    need a filesystem path to those configs (e.g. for assertions
-    about file presence or for explicit override paths) pull from
-    here.
+    R5 configs now live at ``src/fhir_search_to_mql/configs/r5/``
+    (mirroring the layout of ``configs/r4/`` and ``configs/r4-us-core/``).
+    Tests that need a filesystem path to the default configs pull from here.
     """
     return (
         Path(__file__).parent.parent
         / "src"
         / "fhir_search_to_mql"
         / "configs"
+        / "r5"
+    )
+
+
+@pytest.fixture(scope="session")
+def configs_r4_dir() -> Path:
+    """Return the path to the plain R4 YAML configs."""
+    return (
+        Path(__file__).parent.parent
+        / "src"
+        / "fhir_search_to_mql"
+        / "configs"
+        / "r4"
+    )
+
+
+@pytest.fixture(scope="session")
+def configs_r4_us_core_dir() -> Path:
+    """Return the path to the R4 + US Core overlay YAML configs."""
+    return (
+        Path(__file__).parent.parent
+        / "src"
+        / "fhir_search_to_mql"
+        / "configs"
+        / "r4-us-core"
     )
 
 

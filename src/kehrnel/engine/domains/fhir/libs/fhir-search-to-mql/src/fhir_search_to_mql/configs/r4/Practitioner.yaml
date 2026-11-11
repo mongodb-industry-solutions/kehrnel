@@ -1,0 +1,112 @@
+resource: Practitioner
+fhir_version: R4
+
+# US Core Practitioner Profile: http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner
+# FHIR R4 Practitioner search parameters: https://www.hl7.org/fhir/R4/practitioner.html#search
+
+search_parameters:
+  name:
+    type: string
+    description: "A server-defined search that may match any of the string fields in the HumanName"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+        - field: "_search.givenNames_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+        - field: "_search.givenNames"
+
+  family:
+    type: string
+    description: "A portion of the family name"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+
+  given:
+    type: string
+    description: "A portion of the given name"
+    fields:
+      default:
+        - field: "_search.givenNames_lower"
+          query_type: range
+      exact:
+        - field: "_search.givenNames"
+
+  identifier:
+    type: token
+    description: "A practitioner's Identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  active:
+    type: token
+    description: "Whether the practitioner record is active"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  name:
+    source: name
+    target: _search
+    extractor: HumanNameExtractor
+    field_mappings:
+      - source_path: name[*].family
+        target_field: familyName
+        datatype: array[string]
+      - source_path: name[*].family
+        target_field: familyName_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name[*].given
+        target_field: givenNames
+        datatype: array[string]
+      - source_path: name[*].given
+        target_field: givenNames_lower
+        datatype: array[string]
+        normalize: lowercase
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "_search.familyName_lower": 1
+    options:
+      name: idx_r4_prac_family_name_lower
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_r4_prac_identifier

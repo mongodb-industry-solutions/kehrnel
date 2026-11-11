@@ -12,7 +12,7 @@ def test_ops_endpoints(tmp_path):
     # activate and run an op
     client.post(
         "/v1/environments/env-ops/activate",
-        json={"strategy_id": "openehr.rps_dual", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
+        json={"strategy_id": "openehr.rps_dual", "version": "0.2.0", "config": {"database": "kehrnel_contract_test"}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "openEHR"},
     )
     res = client.post("/v1/ops", json={"environment": "env-ops", "domain": "openEHR", "op": "ensure_dictionaries", "payload": {}})
     assert res.status_code == 200

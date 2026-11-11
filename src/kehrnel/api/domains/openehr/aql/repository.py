@@ -50,14 +50,17 @@ def _codes_coll() -> str:
     return settings.search_config.codes_collection
 
 
-async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
+async def detect_collection_format(
+    db: AsyncIOMotorDatabase,
+    collection_name: str | None = None,
+) -> str:
     """
     Detects which collection format to use by checking for data structure.
     Returns either 'shortened' or 'full' based on the format found.
     """
     try:
         # Check flatten collection first since it's the preferred collection
-        flatten_coll = _flatten_coll()
+        flatten_coll = collection_name or _flatten_coll()
         shorten_count = await db[flatten_coll].count_documents({})
         if shorten_count > 0:
             # Sample a document to determine the format within flatten collection
@@ -66,7 +69,7 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
                 # Check if this is shortened format (short p paths like '7') or full format (long archetype paths)
                 first_cn_element = sample['cn'][0] if sample['cn'] else {}
                 p_value = first_cn_element.get('p', '')
-                
+
                 # If p value is short (like '7', '-4.7', etc.) it's shortened format
                 # If p value is long (like 'at0021/at0017/openEHR-EHR-ACTION...') it's full format
                 if len(p_value) < 20 and not p_value.startswith('at'):  # Short path = shortened format
@@ -79,7 +82,7 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
                 # Direct nested structure without cn array = shortened format
                 logger.info(f"Using shortened format from collection: {flatten_coll}")
                 return 'shortened'
-        
+
         # Fallback to check compositionsFullPath collection
         full_count = await db[flatten_coll].count_documents({})
         if full_count > 0:
@@ -87,11 +90,11 @@ async def detect_collection_format(db: AsyncIOMotorDatabase) -> str:
             if sample and 'cn' in sample:
                 logger.info(f"Using full format from collection: {flatten_coll}")
                 return 'full'
-        
+
         # Default to full format if unclear
         logger.warning("Could not detect collection format, defaulting to full format")
         return 'full'
-        
+
     except PyMongoError as e:
         logger.error(f"Error detecting collection format: {e}")
         return 'full'  # Default fallback
@@ -103,10 +106,11 @@ async def execute_aql_query(
     collection_format: str = None,
     use_search_collection: bool = False,
     max_results: int | None = None,
+    collection_name: str | None = None,
 ) -> List[Dict[str, Any]]:
     """
     Executes a MongoDB aggregation pipeline against the appropriate compositions collection.
-    
+
     Args:
         pipeline: MongoDB aggregation pipeline
         db: Database connection
@@ -114,7 +118,9 @@ async def execute_aql_query(
         use_search_collection: If True, use search collection; if False, use standard collection
     """
     try:
-        if use_search_collection:
+        if collection_name:
+            logger.info("Executing AQL query against request-scoped collection: %s", collection_name)
+        elif use_search_collection:
             # Use search collection for Atlas Search queries
             from kehrnel.api.bridge.app.core.config import settings
             collection_name = settings.search_config.search_collection
@@ -124,7 +130,7 @@ async def execute_aql_query(
             # Auto-detect format if not specified
             if collection_format is None:
                 collection_format = await detect_collection_format(db)
-            
+
             # Determine which collection to use based on what's available
             # Check FLATTEN_COMPOSITION_COLL_NAME first since it's the preferred collection
             flatten_coll = _flatten_coll()
@@ -136,7 +142,7 @@ async def execute_aql_query(
                 # Fallback to compositionsFullPath
                 collection_name = flatten_coll
                 logger.info(f"Executing standard query against collection: {collection_name}")
-        
+
         safe_max_results = min(max_results or _max_query_results(), _max_query_results())
         cursor = db[collection_name].aggregate(pipeline, maxTimeMS=_max_query_time_ms())
         doc_result = await cursor.to_list(length=safe_max_results)

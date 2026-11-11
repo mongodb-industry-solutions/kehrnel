@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "InteractionBehavior": {
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "command",
+        "read",
+        "search",
+        "query",
+        "subscribe",
+        "publish",
+        "export"
+      ],
+      "title": "InteractionBehavior",
+      "type": "string"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:interaction-promotion-evidence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "behavior": {
+      "$ref": "#/$defs/InteractionBehavior"
+    },
+    "evidenceKind": {
+      "enum": [
+        "query_plan_trace",
+        "write_acknowledgement"
+      ],
+      "title": "Evidencekind",
+      "type": "string"
+    },
+    "interactionId": {
+      "minLength": 1,
+      "title": "Interactionid",
+      "type": "string"
+    },
+    "resultDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Resultdigest",
+      "type": "string"
+    },
+    "runtimeExecutionRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "interactionId",
+    "behavior",
+    "runtimeExecutionRef",
+    "evidenceKind",
+    "resultDigest"
+  ],
+  "title": "InteractionPromotionEvidence",
+  "type": "object"
+}

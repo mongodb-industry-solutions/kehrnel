@@ -1,0 +1,11 @@
+{
+  "version": "dicom-query/v1",
+  "resource": "studies",
+  "filter": {
+    "day": "2026-01-01",
+    "modality": "MG",
+    "seriesDescription": "Synthetic imaging",
+    "descriptionMode": "prefix"
+  },
+  "limit": 100
+}

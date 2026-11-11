@@ -1,0 +1,131 @@
+resource: EpisodeOfCare
+fhir_version: R4
+
+search_parameters:
+  status:
+    type: token
+    description: "EpisodeOfCare status"
+    fields:
+      - field: "status"
+        tokenType: code
+  type:
+    type: token
+    description: "Type of EpisodeOfCare"
+    fields:
+      - field: "_search.typeCode"
+        tokenType: code
+      - field: "_search.typeSystemCode"
+        tokenType: systemCode
+  patient:
+    type: reference
+    description: "Patient for EpisodeOfCare"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+  date:
+    type: date
+    description: "Date for EpisodeOfCare"
+    fields:
+      - field: "_search.date"
+        type: date
+  identifier:
+    type: token
+    description: "Identifier for EpisodeOfCare"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: typeCode
+        datatype: array[string]
+      - source_path: type
+        target_field: typeSystemCode
+        datatype: array[string]
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+  period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: period.start
+        target_field: date
+        datatype: date
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        include_self: false
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_r4_epsdfc_compartment_patient
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r4_epsdfc_status
+  - fields:
+      - "_search.date": -1
+    options:
+      name: idx_r4_epsdfc_date
+  - fields:
+      - "_search.typeCode": 1
+    options:
+      name: idx_r4_epsdfc_type
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r4_epsdfc_updated

@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "strategyId": "dicom.tiered_store",
+    "specVersion": "1.0",
+    "modelSchemaVersion": "1.0.0",
+    "title": "DICOM study-first metadata, class-aware rules and exceptional extensions"
+  },
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "dicom.customer.study",
+          "fields": {
+            "_id": "StudyInstanceUID",
+            "dm": "study center",
+            "pi": "local patient ID",
+            "dt": "legacy study date",
+            "se": "embedded series"
+          }
+        },
+        {
+          "id": "dicom.customer.instance",
+          "fields": {
+            "_id": "SOPInstanceUID",
+            "header": "original DICOM JSON",
+            "ContentIndex": "original frame/bulk offsets",
+            "sz": "source bytes"
+          }
+        }
+      ]
+    },
+    "concepts": [
+      {
+        "id": "dicom.series.catalog",
+        "meaning": "One series with its own center and typed study/patient/date/modality routing fields"
+      },
+      {
+        "id": "dicom.instance.locator",
+        "meaning": "SOP identity, series ownership, numeric InstanceNumber and optional immutable metadata-bundle reference"
+      },
+      {
+        "id": "dicom.research.projection",
+        "meaning": "Selected typed top-level attribute values, each paired with its tag, source revision, and projection policy version"
+      },
+      {
+        "id": "dicom.shared.metadata.summary",
+        "meaning": "Class-aware paired acquisition values and context-preserving annotation facts in studies.se[].summary; exceptional project fields may extend it."
+      }
+    ],
+    "identity": {
+      "patient": "tenant + center + local patient ID; issuer-aware enterprise linking is a separate future service",
+      "study": "source StudyInstanceUID",
+      "series": "source SeriesInstanceUID",
+      "instance": "source SOPInstanceUID",
+      "tenancy": "Prefer a dedicated database per tenant; conflicting source UIDs fail closed"
+    }
+  },
+  "storageModel": {
+    "stores": [
+      {
+        "id": "studies",
+        "collectionConfig": "collections.studies",
+        "shape": {
+          "_id": "UID",
+          "se": "customer series array",
+          "_kehrnel": "typed, versioned catalog envelope"
+        },
+        "indexes": [
+          "idx_dicom_study_patient_day",
+          "idx_dicom_study_day",
+          "idx_dicom_study_modality_day",
+          "idx_dicom_study_description_day"
+        ]
+      },
+      {
+        "id": "series",
+        "collectionConfig": "collections.series",
+        "shape": {
+          "_id": "UID",
+          "source": "original series",
+          "_kehrnel": "typed series routing"
+        },
+        "indexes": [
+          "idx_dicom_series_study",
+          "idx_dicom_series_modality_day",
+          "idx_dicom_series_patient_day",
+          "idx_dicom_series_description_day"
+        ]
+      },
+      {
+        "id": "instances",
+        "collectionConfig": "collections.instances",
+        "shape": {
+          "_id": "UID",
+          "header": "inline only",
+          "ContentIndex": "inline only",
+          "_kehrnel.headerRef": "bundle key, checksum, ordinal, size"
+        },
+        "indexes": [
+          "idx_dicom_instance_series_order"
+        ],
+        "search": {
+          "enabled": false
+        }
+      },
+      {
+        "id": "research",
+        "collectionConfig": "collections.research",
+        "shape": {
+          "_id": "SOP UID",
+          "attrs": [
+            {
+              "p": "DICOM tag",
+              "s": "string or absent",
+              "n": "number or absent"
+            }
+          ],
+          "projectionVersion": "configuration digest"
+        },
+        "indexes": [
+          "idx_dicom_research_scope",
+          "idx_dicom_research_strings",
+          "idx_dicom_research_numbers"
+        ],
+        "search": {
+          "optional": true,
+          "mapping": "attrs as embeddedDocuments; dynamic:false; no global instance search"
+        }
+      }
+    ],
+    "metadataBundles": {
+      "format": "dicom-metadata-bundle/v1",
+      "encoding": "BSON",
+      "maximumBytesConfig": "headers.bundle_max_bytes",
+      "immutable": true,
+      "checksum": "SHA-256",
+      "pixelBytesIncluded": false
+    },
+    "continuousIngestion": {
+      "instanceWrite": "independent SOP upsert; no instance arrays or catalog rewrite",
+      "seriesSummary": "explicit index-backed asynchronous refresh; retries do not increment counts",
+      "sharedMutableFields": "patient/date/modality remain in catalogs and selected research projections",
+      "researchDefault": "separate backfill, not synchronous instance-ingestion work"
+    }
+  },
+  "transformModel": {
+    "mappings": [
+      {
+        "source": "study._id",
+        "target": "_kehrnel.studyUid"
+      },
+      {
+        "source": "study.dt",
+        "target": "_kehrnel.studyDate and day",
+        "policy": "UTC legacy source date; raw source is preserved"
+      },
+      {
+        "source": "series.ci",
+        "target": "_kehrnel.centerId",
+        "policy": "do not inherit study dm"
+      },
+      {
+        "source": "header.00200013.Value",
+        "target": "_kehrnel.instanceNumber",
+        "policy": "numeric IS; missing last; UID tie-break"
+      },
+      {
+        "source": "configured top-level DICOM tags",
+        "target": "research.attrs",
+        "policy": "typed whitelist; same-element predicates"
+      }
+    ],
+    "evolution": {
+      "storageSchema": "_kehrnel.storage_schema_version",
+      "projectionPolicy": "_kehrnel.projection_contract_version",
+      "sourceRevision": "_kehrnel.source_revision",
+      "history": "source content digest, not a retained historical version store"
+    }
+  },
+  "queryModel": {
+    "contract": "dicom-query/v1",
+    "schema": "query.schema.json",
+    "engine": "mongo_pipeline",
+    "resources": [
+      "studies",
+      "series",
+      "instances",
+      "research"
+    ],
+    "pagination": "query- and scope-bound keyset cursor",
+    "dates": "day equality or half-open fromDay/toDay",
+    "instanceScope": "seriesUid required",
+    "researchCoverage": "partial, explicit allowPartial required",
+    "unsupported": [
+      "condition inference",
+      "geometric image ordering",
+      "arbitrary MQL",
+      "nested sequence correlation",
+      "complete cohort publication",
+      "Atlas Search query execution"
+    ],
+    "instanceFilters": [
+      "seriesUid",
+      "studyUid"
+    ],
+    "descriptions": {
+      "description": "Study de or series de, depending on selected catalog",
+      "seriesDescription": "Study selection using one authorized series; same-series modality correlation",
+      "modes": [
+        "exact",
+        "prefix"
+      ],
+      "defaultMode": "exact",
+      "scope": "Prefix and study selection by series description require one source day"
+    },
+    "tagPredicates": {
+      "single": "filter.tag retained for compatibility",
+      "multiple": "filter.tags: up to 16 distinct promoted tags, AND within the same SOP instance",
+      "valueCorrelation": "each tag and its value/range match one attrs element",
+      "sequenceItems": "unsupported; no flattened sibling correlation"
+    },
+    "discoveryOperation": "dicom_query_catalog",
+    "headerBatch": {
+      "operation": "dicom_get_headers",
+      "seriesRequired": true,
+      "maxInstances": 100,
+      "maxSelectedTags": 32,
+      "responseBytesConfig": "headers.max_response_bytes",
+      "deferred": "retry the explicitly returned deferred SOP UIDs in a smaller batch"
+    }
+  },
+  "instanceShape": {
+    "customerCompatibility": true,
+    "sourceUIDsPreserved": true,
+    "reservedNamespace": "_kehrnel"
+  }
+}

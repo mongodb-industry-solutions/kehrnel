@@ -1,0 +1,57 @@
+resource: SubscriptionStatus
+fhir_version: R5
+
+search_parameters:
+  status:
+    type: token
+    description: "SubscriptionStatus status"
+    fields:
+      - field: status
+        tokenType: code
+  code:
+    type: token
+    description: "Code for SubscriptionStatus"
+    fields:
+      - field: _search.codeCode
+        tokenType: code
+      - field: _search.codeSystemCode
+        tokenType: systemCode
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: id
+        tokenType: code
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: meta.lastUpdated
+        type: date
+
+denormalization:
+  code:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: codeCode
+        datatype: array[string]
+      - source_path: type
+        target_field: codeSystemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_r5_subscr_status
+  - fields:
+      - "_search.codeCode": 1
+    options:
+      name: idx_r5_subscr_code
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_r5_subscr_updated

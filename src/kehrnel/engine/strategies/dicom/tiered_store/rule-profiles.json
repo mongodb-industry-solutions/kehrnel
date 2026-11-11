@@ -1,0 +1,969 @@
+{
+  "profiles": [
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "imaging-core",
+      "name": "Imaging core and rendering",
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        }
+      ],
+      "groups": [
+        {
+          "name": "rendering",
+          "fields": [
+            "rows",
+            "columns",
+            "photometric"
+          ],
+          "target": "research",
+          "maxGroups": 16
+        },
+        {
+          "name": "viewerRendering",
+          "fields": [
+            "rows",
+            "columns",
+            "photometric"
+          ],
+          "target": "embedded",
+          "maxGroups": 16
+        }
+      ]
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "ct",
+      "name": "CT acquisition and reconstruction",
+      "modalities": [
+        "CT"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "sliceThickness",
+          "source": "header",
+          "path": [
+            "00180050"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "kernel",
+          "source": "header",
+          "path": [
+            "00181210"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "kvp",
+          "source": "header",
+          "path": [
+            "00180060"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "mr",
+      "name": "MR acquisition",
+      "modalities": [
+        "MR"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "repetitionTime",
+          "source": "header",
+          "path": [
+            "00180080"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "echoTime",
+          "source": "header",
+          "path": [
+            "00180081"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "sequenceName",
+          "source": "header",
+          "path": [
+            "00180024"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "mg",
+      "name": "Mammography views",
+      "modalities": [
+        "MG"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "laterality",
+          "source": "header",
+          "path": [
+            "00200062"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "view",
+          "source": "header",
+          "path": [
+            "00185101"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": [
+        {
+          "name": "views",
+          "fields": [
+            "laterality",
+            "view"
+          ],
+          "target": "research",
+          "maxGroups": 16
+        }
+      ]
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "us",
+      "name": "Ultrasound technical metadata",
+      "modalities": [
+        "US"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "transducerType",
+          "source": "header",
+          "path": [
+            "00186031"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "pt",
+      "name": "PET technical metadata",
+      "modalities": [
+        "PT"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "units",
+          "source": "header",
+          "path": [
+            "00541001"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "decayCorrection",
+          "source": "header",
+          "path": [
+            "00541102"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "nm",
+      "name": "Nuclear medicine technical metadata",
+      "modalities": [
+        "NM"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "imageType",
+          "source": "header",
+          "path": [
+            "00080008"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "sm",
+      "name": "Whole-slide technical metadata",
+      "modalities": [
+        "SM"
+      ],
+      "fields": [
+        {
+          "name": "manufacturer",
+          "source": "header",
+          "path": [
+            "00080070"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "model",
+          "source": "header",
+          "path": [
+            "00081090"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "rows",
+          "source": "header",
+          "path": [
+            "00280010"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "columns",
+          "source": "header",
+          "path": [
+            "00280011"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "photometric",
+          "source": "header",
+          "path": [
+            "00280004"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "frames",
+          "source": "header",
+          "path": [
+            "00280008"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "embedded",
+          "maxValues": 16
+        },
+        {
+          "name": "totalMatrixRows",
+          "source": "header",
+          "path": [
+            "00480007"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "totalMatrixColumns",
+          "source": "header",
+          "path": [
+            "00480006"
+          ],
+          "type": "number",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "sr",
+      "name": "Structured report metadata; no clinical inference",
+      "modalities": [
+        "SR"
+      ],
+      "fields": [
+        {
+          "name": "sopClass",
+          "source": "header",
+          "path": [
+            "00080016"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "valueType",
+          "source": "header",
+          "path": [
+            "0040A040"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "template",
+          "source": "header",
+          "path": [
+            "0040A504",
+            "*",
+            "0040DB00"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "seg",
+      "name": "Segmentation labels; item correlation requires an adapter",
+      "fields": [
+        {
+          "name": "sopClass",
+          "source": "header",
+          "path": [
+            "00080016"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "segmentLabels",
+          "source": "header",
+          "path": [
+            "00620002",
+            "*",
+            "00620005"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 64
+        }
+      ],
+      "sopClasses": [
+        "1.2.840.10008.5.1.4.1.1.66.4"
+      ],
+      "groups": []
+    },
+    {
+      "version": "dicom-rule-profile/v1",
+      "id": "rt",
+      "name": "Radiotherapy object labels",
+      "modalities": [
+        "RTPLAN",
+        "RTSTRUCT",
+        "RTDOSE",
+        "RTIMAGE"
+      ],
+      "fields": [
+        {
+          "name": "planLabel",
+          "source": "header",
+          "path": [
+            "300A0002"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        },
+        {
+          "name": "structureSetLabel",
+          "source": "header",
+          "path": [
+            "30060002"
+          ],
+          "type": "string",
+          "aggregate": "distinct",
+          "target": "research",
+          "maxValues": 16
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "placementGuide": [
+    {
+      "family": "All imaging",
+      "embedded": "Identity, modality/SOP Class summary, validated technical groups, SOP/frame counts, inventory/header coverage and revision",
+      "outside": "Original bytes, full headers, detailed per-instance/frame geometry and retrieval offsets",
+      "adapter": "SOP Class determines frame and content semantics; modality alone is insufficient"
+    },
+    {
+      "family": "CT",
+      "embedded": "Bounded reconstruction/acquisition groups: kernel, thickness, acquisition protocol, equipment and contrast evidence when available",
+      "outside": "Per-frame geometry, per-event dose, large reconstruction groups",
+      "adapter": "Classic and enhanced CT; shared/per-frame functional groups require dedicated frame contracts"
+    },
+    {
+      "family": "MR",
+      "embedded": "Bounded observed acquisition tuples: TR/TE, sequence, echo and diffusion parameters when their scope is known",
+      "outside": "Per-frame diffusion/dynamic/echo geometry and full spectroscopy data",
+      "adapter": "Classic/enhanced MR and spectroscopy are different objects; generic root-tag profiles are incomplete"
+    },
+    {
+      "family": "MG / DX / CR",
+      "embedded": "Laterality/view groups, equipment and image-versus-frame counts",
+      "outside": "Tomosynthesis frame positions, presentation details, dose measurement trees",
+      "adapter": "Presentation/processing/3D SOP Classes and functional-group anatomy must be distinguished"
+    },
+    {
+      "family": "US / XA / RF",
+      "embedded": "Acquisition/encoding summaries and bounded region/sequence metadata",
+      "outside": "Cine frame timeline, region calibration, waveforms and frame geometry",
+      "adapter": "Region/temporal context is required before interpreting measurements"
+    },
+    {
+      "family": "PT / NM",
+      "embedded": "Acquisition groups, units and correction status when explicitly supported",
+      "outside": "Radiopharmaceutical timing/activity and dynamic frame details",
+      "adapter": "Quantitative interpretation requires units, decay correction, timing and calibrated algorithms"
+    },
+    {
+      "family": "SM whole slide",
+      "embedded": "Specimen identity references, total matrix, optical path and resolution summaries",
+      "outside": "Tile/frame geometry, optical-path details and large specimen/annotation trees",
+      "adapter": "Sparse tiles, pyramids and specimen context are not a flat image series"
+    },
+    {
+      "family": "SR / SEG / PR / RT / ANN",
+      "embedded": "Object kinds, template/label summaries and bounded reference availability",
+      "outside": "Concept/value/unit/target items, segment definitions, contours, dose grids and annotations",
+      "adapter": "References describe another object; storage membership is not clinical target identity"
+    }
+  ]
+}

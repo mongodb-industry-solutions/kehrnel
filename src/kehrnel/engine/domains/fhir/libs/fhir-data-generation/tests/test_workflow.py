@@ -76,7 +76,7 @@ class TestWorkflowEnrichers:
         gen = make_gen()
         q = gen.generate("Questionnaire")[0]
         assert q["status"] in ["draft", "active", "retired", "unknown"]
-        assert q["code"][0]["coding"][0]["system"] == "http://loinc.org"
+        assert q["code"][0]["system"] == "http://loinc.org"
 
     def test_device_request(self):
         gen = make_gen()

@@ -53,7 +53,7 @@ Support end-to-end generation of high-quality records:
 - persistence-extensible (MongoDB-first today)
 - compatible with open standards and custom models
 
-### 6. AI-Ready Data Access
+### 6. AI-Ready Data Access (Planned)
 
 \{kehrnel\} is evolving toward agentic and AI-native data operations where autonomous systems can access data at scale with explicit policy controls, auditability, and governed execution boundaries.
 
@@ -62,3 +62,4 @@ Support end-to-end generation of high-quality records:
 Today, the most mature production path is openEHR on MongoDB with the `openehr.rps_dual` reference strategy.
 
 This is the starting point, not the product boundary.
+

@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "652d2489-0ca6-4d84-a5f4-e15919ecaecc",
+    "centerId": "HC3",
+    "name": "EntraIdRCloudV3",
+    "active": true,
+    "createdAt": {
+      "$date": "2026-06-09T18:08:36.839Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-26T11:11:02.725Z"
+    }
+  }
+]

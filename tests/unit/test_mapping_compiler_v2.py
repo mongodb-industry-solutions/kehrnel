@@ -96,6 +96,47 @@ def test_id_encoding_policy():
     assert isinstance(oid, ObjectId)
 
 
+def test_default_id_encoding_preserves_openehr_object_version_id_as_string():
+    flattener = make_flattener({"templates": []})
+    version_uid = "001b7ad3-98da-4d4b-b3c0-7557e97dce22::ehr.example::1"
+
+    encoded = flattener._encode_id(version_uid, "composition_id")
+
+    assert encoded == version_uid
+    assert isinstance(encoded, str)
+
+
+@pytest.mark.parametrize(
+    "encoding",
+    ["objectid", "uuidbin"],
+)
+def test_typed_id_encoding_rejects_values_that_would_drift_to_string(encoding):
+    flattener = make_flattener(
+        {"templates": []},
+        config_overrides={
+            "ids": {"ehr_id": "string", "composition_id": encoding}
+        },
+    )
+
+    with pytest.raises(ValueError, match=f"configured {encoding} encoding"):
+        flattener._encode_id(
+            "001b7ad3-98da-4d4b-b3c0-7557e97dce22::ehr.example::1",
+            "composition_id",
+        )
+
+
+def test_unknown_id_encoding_is_rejected():
+    flattener = make_flattener(
+        {"templates": []},
+        config_overrides={
+            "ids": {"ehr_id": "string", "composition_id": "opaque"}
+        },
+    )
+
+    with pytest.raises(ValueError, match="Unsupported ID encoding policy"):
+        flattener._encode_id("composition-1", "composition_id")
+
+
 def test_load_mappings_accepts_raw_analytics_template_shape():
     flattener = make_flattener(
         {

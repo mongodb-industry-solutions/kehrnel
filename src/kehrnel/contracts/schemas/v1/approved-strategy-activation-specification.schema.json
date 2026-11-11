@@ -1,0 +1,124 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "Immutable reference to one exact artifact version and content digest.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "digest"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$id": "urn:mongodb:data-lab:contracts:v1:approved-strategy-activation-specification",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable, non-secret tenant approval consumed by the runtime.",
+  "properties": {
+    "approval": {
+      "const": "approved",
+      "title": "Approval",
+      "type": "string"
+    },
+    "approvedInputDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Approvedinputdigest",
+      "type": "string"
+    },
+    "artifactRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "bindingsRef": {
+      "minLength": 1,
+      "title": "Bindingsref",
+      "type": "string"
+    },
+    "configuration": {
+      "additionalProperties": true,
+      "title": "Configuration",
+      "type": "object"
+    },
+    "contract": {
+      "const": "approved-strategy-activation-specification/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "domain": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Domain",
+      "type": "string"
+    },
+    "environmentId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Environmentid",
+      "type": "string"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "readinessRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "specificationDigest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Specificationdigest",
+      "type": "string"
+    },
+    "strategyInstanceId": {
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+      "title": "Strategyinstanceid",
+      "type": "string"
+    },
+    "strategyRef": {
+      "$ref": "#/$defs/ArtifactRef"
+    }
+  },
+  "required": [
+    "contract",
+    "artifactRef",
+    "environmentId",
+    "packageRef",
+    "readinessRef",
+    "strategyInstanceId",
+    "strategyRef",
+    "domain",
+    "configuration",
+    "bindingsRef",
+    "approval",
+    "approvedInputDigest",
+    "specificationDigest"
+  ],
+  "title": "ApprovedStrategyActivationSpecification",
+  "type": "object"
+}

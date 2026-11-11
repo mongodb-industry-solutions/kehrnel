@@ -133,7 +133,7 @@ async def test_build_aql_pipeline_uses_request_scoped_codes_and_shortcuts(monkey
 
     db = _FakeDB(
         {
-            "compositions_rps": _FakeCollection({"sample": {"cn": [{"p": "1", "data": {"ani": 1}}]}}),
+            "tenant_flat": _FakeCollection({"sample": {"cn": [{"p": "1", "data": {"ani": 1}}]}}),
             "custom_codes": _FakeCollection(
                 {
                     "codes_v2": {
@@ -167,7 +167,7 @@ async def test_build_aql_pipeline_uses_request_scoped_codes_and_shortcuts(monkey
             "activation": SimpleNamespace(
                 config={
                     "collections": {
-                        "compositions": {"name": "compositions_rps"},
+                        "compositions": {"name": "tenant_flat"},
                         "search": {
                             "name": "compositions_search",
                             "enabled": True,
@@ -179,9 +179,27 @@ async def test_build_aql_pipeline_uses_request_scoped_codes_and_shortcuts(monkey
                 }
             ),
             "database_name": "tenant_db",
+            "synced": {
+                "flat_collection": "tenant_flat",
+                "search_collection": "compositions_search",
+                "codes_collection": "custom_codes",
+                "shortcuts_collection": "custom_shortcuts",
+                "search_index_name": "search_nodes_index",
+                "search_enabled": True,
+            },
         }
 
     monkeypatch.setattr(aql_service, "resolve_active_openehr_context", _fake_context)
+
+    _, schema_config, search_schema_config, _, _ = await aql_service._resolve_transformer_inputs(
+        db,
+        request=object(),
+    )
+    assert schema_config["collection"] == "tenant_flat"
+    assert schema_config["codes_collection"] == "custom_codes"
+    assert schema_config["shortcuts_collection"] == "custom_shortcuts"
+    assert search_schema_config["collection"] == "compositions_search"
+    assert search_schema_config["lookup_from"] == "tenant_flat"
 
     pipeline = await aql_service.build_aql_pipeline(ast, db, ehr_id="ehr-1", request=object())
 

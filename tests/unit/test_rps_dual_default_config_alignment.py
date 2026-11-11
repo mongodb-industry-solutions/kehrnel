@@ -52,6 +52,7 @@ def test_defaults_json_matches_schema_and_python_config_builders():
     assert flattener_cfg["target"]["codes_collection"] == defaults["collections"]["codes"]["name"]
     assert flattener_cfg["target"]["shortcuts_collection"] == defaults["collections"]["shortcuts"]["name"]
     assert flattener_cfg["envelope_fields"] == defaults["transform"]["envelope"]
+    assert defaults["ids"]["composition_id"] == "string"
 
     assert schema_cfg["composition"]["collection"] == defaults["collections"]["compositions"]["name"]
     assert schema_cfg["search"]["collection"] == defaults["collections"]["search"]["name"]
@@ -61,6 +62,10 @@ def test_defaults_json_matches_schema_and_python_config_builders():
     assert schema_cfg["search"]["ehr_id_encoding"] == defaults["ids"]["ehr_id"]
     assert schema_cfg["search"]["sort_time"] == defaults["fields"]["document"]["sort_time"]
     assert flattener_cfg["search_fields"]["comp_id"] == defaults["fields"]["document"]["comp_id"]
+
+    fallback_index = RPSDualStrategy()._default_search_index_definition(cfg)
+    fallback_fields = fallback_index["mappings"]["fields"]
+    assert fallback_fields["comp_id"] == {"type": "token"}
 
 
 def test_ibm_defaults_use_legacy_li_instance_field():
@@ -97,6 +102,10 @@ def test_ibm_defaults_use_legacy_li_instance_field():
     assert strategy.defaults["fields"]["document"]["comp_id"] == "_id"
     assert strategy.manifest.default_config["fields"]["node"]["pi"] == "li"
     assert strategy.manifest.default_config["fields"]["document"]["comp_id"] == "_id"
+
+    fallback_index = strategy._default_search_index_definition(cfg)
+    fallback_fields = fallback_index["mappings"]["fields"]
+    assert fallback_fields["_id"] == {"type": "objectId"}
 
     legacy_activation_cfg = deepcopy(strategy.defaults)
     legacy_activation_cfg["fields"]["node"]["pi"] = "pi"
