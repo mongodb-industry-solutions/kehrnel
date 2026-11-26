@@ -96,7 +96,7 @@ async def _resolve_requested_uid(
         _, actual_version = _parse_version_uid(composition_uid)
         if requested_version is not None and requested_version != actual_version:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=422,
                 detail=(
                     "version does not match the version encoded in compositionUid. "
                     f"Requested version={requested_version}, uid version={actual_version}."
@@ -186,14 +186,14 @@ async def create_composition(
         composition_create = CompositionCreate.model_validate(payload.composition)
     except ValidationError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail=f"Request body must contain a valid canonical COMPOSITION: {exc}",
         ) from exc
 
     body_template_id = composition_create.template_id
     if body_template_id != payload.templateId:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail=(
                 "templateId does not match the canonical composition payload. "
                 f"Request templateId='{payload.templateId}', payload templateId='{body_template_id}'."

@@ -126,7 +126,7 @@ async def _prepare_new_composition_artifacts(
         flattened_base_doc, flattened_search_doc = flattener.transform_composition(raw_doc_for_flattener)
     except FlattenerError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail=f"Composition could not be processed: {exc}",
         ) from exc
 
@@ -254,7 +254,7 @@ async def bulk_add_compositions(
     requested_items = list(items or [])
     if not requested_items:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="At least one composition is required.",
         )
 
@@ -655,7 +655,7 @@ async def update_composition(
         flattened_base_doc, flattened_search_doc = flattener.transform_composition(raw_doc_for_flattener)
     except FlattenerError as e:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail=f"Composition could not be processed: {e}"
         )
 
@@ -826,7 +826,7 @@ async def bulk_delete_compositions(
 
     if not requested_uids:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="At least one composition uid is required."
         )
 

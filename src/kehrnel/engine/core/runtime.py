@@ -6,6 +6,7 @@ import importlib
 import importlib.util
 import json
 import hashlib
+import os
 import weakref
 from datetime import datetime
 from typing import Dict, Optional, Any
@@ -152,6 +153,18 @@ class StrategyRuntime:
             db_binding["provider"] = "mongodb"
         resolved["db"] = db_binding
         return resolved
+
+    @staticmethod
+    def _apply_db_uri_override(bindings: Dict[str, Any]) -> Dict[str, Any]:
+        """Point every strategy at KEHRNEL_DB_URI_OVERRIDE (set by `startKehrnel --local`).
+
+        Applied at dispatch only, so the registry keeps its reviewed bindings.
+        """
+        uri = (os.getenv("KEHRNEL_DB_URI_OVERRIDE") or "").strip()
+        db_binding = bindings.get("db")
+        if not uri or not isinstance(db_binding, dict):
+            return bindings
+        return {**bindings, "db": {**db_binding, "uri": uri}}
 
     async def activate(
         self,
@@ -537,6 +550,7 @@ class StrategyRuntime:
         # embedded in the URI, environment metadata, or a generic resolver to
         # redirect strategy collections into the tenant core database.
         effective_bindings = self._bind_strategy_database(manifest, activation.config, effective_bindings)
+        effective_bindings = self._apply_db_uri_override(effective_bindings)
 
         cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
         config_hash = activation.config_hash or self._config_hash(activation.config)

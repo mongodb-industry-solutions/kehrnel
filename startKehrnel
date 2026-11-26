@@ -13,6 +13,9 @@ BUILD_DOCS_MODE="auto"
 SYNC_MODE="${KEHRNEL_SYNC_MODE:-auto}"
 EXPLICIT_PORT=0
 EXTRA_ARGS=()
+LOCAL_DB="${KEHRNEL_LOCAL_DB:-0}"
+LOCAL_MONGO_URI="${KEHRNEL_LOCAL_MONGO_URI:-mongodb://127.0.0.1:27017}"
+LOCAL_MONGO_DBPATH="${KEHRNEL_LOCAL_MONGO_DBPATH:-$SCRIPT_DIR/.local-mongo/db}"
 
 log() {
   printf '[startKehrnel] %s\n' "$*" >&2
@@ -31,11 +34,22 @@ Options:
   --skip-docs         Skip docs build checks
   --skip-sync         Skip Python dependency sync
   --force-sync        Force Python dependency sync
+  --local             Use a local MongoDB for every connection (also: KEHRNEL_LOCAL_DB=1)
   -h, --help          Show this help
 
 Environment defaults applied when unset:
   KEHRNEL_AUTH_ENABLED=false
   KEHRNEL_INIT_INGESTION_RUNTIME=false
+
+Local database mode (--local):
+  KEHRNEL_LOCAL_MONGO_URI     default mongodb://127.0.0.1:27017
+  KEHRNEL_MONGOD              mongod executable (default: mongod on PATH)
+  KEHRNEL_MONGOD_CONFIG       config for `mongod --config` (default: ./mongod.cfg, else a
+                              mongod.cfg up to two levels above the mongod binary)
+  KEHRNEL_LOCAL_MONGO_DBPATH  default ./.local-mongo/db (only when no mongod.cfg is found)
+  mongod is started only when nothing answers on the URI's host:port.
+  Overrides MONGODB_URI, CORE_MONGODB_URL and every strategy binding URI;
+  strategy database names from the activations are kept.
 EOF
 }
 
@@ -345,6 +359,94 @@ choose_port() {
   printf '%s\n' "$PORT"
 }
 
+tcp_open() {
+  (exec 3<>"/dev/tcp/$1/$2") 2>/dev/null
+}
+
+# mongod.cfg lookup: KEHRNEL_MONGOD_CONFIG, ./mongod.cfg, then up to two levels above the mongod binary.
+find_mongod_config() {
+  local dir candidate
+  if [[ -n "${KEHRNEL_MONGOD_CONFIG:-}" ]]; then
+    if [[ ! -f "$KEHRNEL_MONGOD_CONFIG" ]]; then
+      log "ERROR: KEHRNEL_MONGOD_CONFIG=$KEHRNEL_MONGOD_CONFIG does not exist"
+      exit 1
+    fi
+    printf '%s\n' "$KEHRNEL_MONGOD_CONFIG"
+    return
+  fi
+  dir="$(cd "$(dirname "$1")" && pwd)"
+  for candidate in "$SCRIPT_DIR/mongod.cfg" "$dir/mongod.cfg" "$dir/../mongod.cfg" "$dir/../../mongod.cfg"; do
+    if [[ -f "$candidate" ]]; then
+      (cd "$(dirname "$candidate")" && printf '%s/mongod.cfg\n' "$(pwd)")
+      return
+    fi
+  done
+}
+
+# First value of a "key: value" line in a mongod YAML config (CRLF-safe).
+mongod_config_value() {
+  tr -d '\r' < "$1" | sed -n "s/^[[:space:]]*$2:[[:space:]]*//p" | head -n 1
+}
+
+# Ensures LOCAL_MONGO_URI answers; starts mongod in the background when it points at this machine.
+ensure_local_mongo() {
+  local hostport host port mongod_bin config cfg_port logfile i
+  hostport="${LOCAL_MONGO_URI#*://}"
+  hostport="${hostport##*@}"
+  hostport="${hostport%%[/?,]*}"
+  host="${hostport%%:*}"
+  port="${hostport##*:}"
+  [[ "$port" == "$hostport" ]] && port=27017
+
+  if tcp_open "$host" "$port"; then
+    log "Local MongoDB already running at $host:$port"
+    return
+  fi
+  if [[ "$host" != "127.0.0.1" && "$host" != "localhost" ]]; then
+    log "ERROR: MongoDB at $host:$port is not reachable"
+    exit 1
+  fi
+
+  mongod_bin="${KEHRNEL_MONGOD:-$(command -v mongod || true)}"
+  if [[ -z "$mongod_bin" ]]; then
+    log "ERROR: mongod not found. Start MongoDB on $host:$port, put mongod on PATH, or set KEHRNEL_MONGOD"
+    exit 1
+  fi
+
+  config="$(find_mongod_config "$mongod_bin")"
+  if [[ -n "$config" ]]; then
+    cfg_port="$(mongod_config_value "$config" port)"
+    if [[ -n "$cfg_port" && "$cfg_port" != "$port" ]]; then
+      log "ERROR: $config listens on port $cfg_port but KEHRNEL_LOCAL_MONGO_URI uses $port"
+      exit 1
+    fi
+    logfile="$(mongod_config_value "$config" path)"
+    logfile="${logfile:-mongod log configured in $config}"
+    if have_cmd cygpath; then
+      config="$(cygpath -w "$config")"
+    fi
+    log "Starting local MongoDB: mongod --config $config"
+    nohup "$mongod_bin" --config "$config" >/dev/null 2>&1 &
+  else
+    mkdir -p "$LOCAL_MONGO_DBPATH"
+    logfile="$(dirname "$LOCAL_MONGO_DBPATH")/mongod.log"
+    log "No mongod.cfg found; starting local MongoDB on $host:$port (dbpath: $LOCAL_MONGO_DBPATH, log: $logfile)"
+    nohup "$mongod_bin" --dbpath "$LOCAL_MONGO_DBPATH" --bind_ip 127.0.0.1 --port "$port" \
+      --logpath "$logfile" --logappend >/dev/null 2>&1 &
+  fi
+  disown || true
+
+  for i in $(seq 1 30); do
+    if tcp_open "$host" "$port"; then
+      log "Local MongoDB is up"
+      return
+    fi
+    sleep 1
+  done
+  log "ERROR: local MongoDB did not start within 30s; see $logfile"
+  exit 1
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --host)
@@ -378,6 +480,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --force-sync)
       SYNC_MODE="force"
+      shift
+      ;;
+    --local)
+      LOCAL_DB=1
       shift
       ;;
     -h|--help)
@@ -419,6 +525,15 @@ sync_python_deps
 build_docs_if_needed
 
 RUN_PORT="$(choose_port)"
+
+if [[ "$LOCAL_DB" == "1" || "$LOCAL_DB" == "true" ]]; then
+  ensure_local_mongo
+  # Exported values win over .env / .env.local (both are loaded without override).
+  export MONGODB_URI="$LOCAL_MONGO_URI"
+  export CORE_MONGODB_URL="$LOCAL_MONGO_URI"
+  export KEHRNEL_DB_URI_OVERRIDE="$LOCAL_MONGO_URI"
+  log "Local database mode: all MongoDB connections use $LOCAL_MONGO_URI"
+fi
 
 export KEHRNEL_AUTH_ENABLED="${KEHRNEL_AUTH_ENABLED:-false}"
 export KEHRNEL_INIT_INGESTION_RUNTIME="${KEHRNEL_INIT_INGESTION_RUNTIME:-false}"

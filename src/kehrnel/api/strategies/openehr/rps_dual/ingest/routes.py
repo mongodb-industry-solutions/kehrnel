@@ -285,7 +285,7 @@ async def ingest_from_payload(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
+        raise HTTPException(status_code=422, detail=f"Transformation Error: {e}")
     except Exception:
         logger.exception("Unexpected error while ingesting payload")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
@@ -446,7 +446,7 @@ async def ingest_from_file(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except FlattenerError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
+        raise HTTPException(status_code=422, detail=f"Transformation Error: {e}")
     except Exception:
         logger.exception("Unexpected error while ingesting from local file")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")
@@ -481,7 +481,7 @@ async def ingest_from_db(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except FlattenerError as e:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Transformation Error: {e}")
+        raise HTTPException(status_code=422, detail=f"Transformation Error: {e}")
     except Exception:
         logger.exception("Unexpected error while ingesting from source database")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error.")

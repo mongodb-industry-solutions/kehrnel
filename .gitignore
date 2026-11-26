@@ -237,3 +237,4 @@ src/kehrnel/engine/domains/fhir/libs/**/.DS_Store
 
 # LOCAL_TESTING
 LOCAL_TESTING/
+.local-mongo/

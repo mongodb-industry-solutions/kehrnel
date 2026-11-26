@@ -35,7 +35,7 @@ aql_query_responses = {
             }
         }
     },
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+    422: {
         "description": "Validation Error",
         "model": ErrorResponse
     }
@@ -130,7 +130,7 @@ delete_stored_query_responses = {
             }
         }
     },
-    status.HTTP_422_UNPROCESSABLE_ENTITY: {
+    422: {
         "description": "Validation Error",
         "content": {
             "application/json": {

@@ -125,7 +125,7 @@ async def create_composition_endpoint(
         payload = composition_create.root if hasattr(composition_create, "root") else {}
         if not isinstance(payload, dict) or payload.get("_type") != "COMPOSITION":
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=422,
                 detail="Request body must be a canonical COMPOSITION object.",
             )
         new_composition = await add_composition(
