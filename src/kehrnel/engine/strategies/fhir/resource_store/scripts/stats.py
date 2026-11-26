@@ -10,6 +10,7 @@ from kehrnel.engine.core.types import StrategyContext
 from kehrnel.engine.strategies.fhir.resource_store.scripts import bridge
 from kehrnel.engine.strategies.fhir.resource_store.scripts.document_contract import (
     STORED_DOCUMENT_SCHEMA_VERSION,
+    build_projection_readiness_receipt,
     build_projection_versions,
 )
 from kehrnel.engine.strategies.fhir.resource_store.scripts.query import (
@@ -226,6 +227,28 @@ async def fhir_stats(
                     "generation_schema": generation_schema,
                     "search_index_present": has_search_index,
                     "coverage_gap": generation_schema and not search_configured,
+                    # Governed readiness evidence for qualified execution.
+                    # Consumers that must fail closed (the clinical-meaning
+                    # capability probe, the terminology cohort gate) read this
+                    # receipt instead of inferring readiness from counts.
+                    "projection_readiness_receipt": build_projection_readiness_receipt(
+                        resource_type=resource_type,
+                        document_count=document_count,
+                        denormalized_count=denormalized_count,
+                        compartment_count=compartment_count,
+                        contract_current_count=contract_current_count,
+                        search_configured=search_configured,
+                        search_index_present=has_search_index,
+                        coverage_gap=generation_schema and not search_configured,
+                        storage_schema_version=STORED_DOCUMENT_SCHEMA_VERSION,
+                        resource_projection_version=(
+                            versions.for_resource(resource_type)
+                            if resource_type in search_types
+                            else None
+                        ),
+                        fhir_release=versions.fhir_release,
+                        projection_contract_version=versions.projection_contract_version,
+                    ),
                 },
                 resource_job_ids,
             )

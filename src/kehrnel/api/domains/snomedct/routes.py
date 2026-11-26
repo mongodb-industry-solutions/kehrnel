@@ -75,6 +75,25 @@ def _query_payload(mode: str, payload: dict[str, Any]) -> dict[str, Any]:
     return {"domain": SNOMEDCT_DOMAIN, "query": {"mode": mode, **payload}}
 
 
+def _op_payload(op: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Envelope for an `op` dispatch, with the domain always stamped on.
+
+    `domain` is load-bearing, not decorative. StrategyRuntime.dispatch resolves
+    the activation as ``get_activation(env_id, domain)`` and then falls back to
+    ``get_activation(env_id)``, which returns an activation ONLY when the
+    environment has exactly one. An op dispatched without `domain` therefore
+    happened to work while snomedct was the sole activation, and started failing
+    ``404 ACTIVATION_NOT_FOUND (domain=None)`` the moment a second domain (fhir)
+    was activated in the same environment.
+
+    That 404 is what made POST /api/domains/snomedct/expand look "absent from
+    this build" - it is a routing defect, not a missing endpoint. Every op
+    dispatch in this module builds its envelope here so the domain can never be
+    dropped again.
+    """
+    return {"domain": SNOMEDCT_DOMAIN, "op": op, "payload": payload or {}}
+
+
 def _model_payload(payload: Any | None) -> dict[str, Any]:
     return payload.model_dump(exclude_none=True) if payload is not None else {}
 
@@ -82,11 +101,7 @@ def _model_payload(payload: Any | None) -> dict[str, Any]:
 async def _dispatch_snomed_op(request: Request, op: str, payload: dict[str, Any]) -> dict[str, Any]:
     env_id = resolve_active_env_id(request)
     runtime, _ = _require_snomed_activation(request, env_id)
-    return await runtime.dispatch(
-        env_id,
-        "op",
-        {"domain": SNOMEDCT_DOMAIN, "op": op, "payload": payload},
-    )
+    return await runtime.dispatch(env_id, "op", _op_payload(op, payload))
 
 
 @router.get("/releases")
@@ -310,7 +325,7 @@ async def hybrid_search_snomed(request: Request, payload: SnomedHybridSearchRequ
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_hybrid_search", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_hybrid_search", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -376,7 +391,7 @@ async def children_snomed_concept(request: Request, concept_id: str, payload: Sn
         runtime, _ = _require_snomed_activation(request, env_id)
         body = payload.model_dump(exclude_none=True) if payload else {}
         body["concept_id"] = concept_id
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_concept_children", "payload": body})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_concept_children", body))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -393,7 +408,7 @@ async def descendants_snomed_concept(request: Request, concept_id: str, payload:
         runtime, _ = _require_snomed_activation(request, env_id)
         body = payload.model_dump(exclude_none=True) if payload else {}
         body["concept_id"] = concept_id
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_concept_descendants", "payload": body})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_concept_descendants", body))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -410,7 +425,7 @@ async def ancestors_snomed_concept(request: Request, concept_id: str, payload: S
         runtime, _ = _require_snomed_activation(request, env_id)
         body = payload.model_dump(exclude_none=True) if payload else {}
         body["concept_id"] = concept_id
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_concept_ancestors", "payload": body})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_concept_ancestors", body))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -441,7 +456,7 @@ async def parse_snomed_ecl(request: Request, payload: SnomedEclRequest = Body(..
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_parse_ecl", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_parse_ecl", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -456,7 +471,7 @@ async def compile_snomed_ecl(request: Request, payload: SnomedEclRequest = Body(
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_compile_ecl", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_compile_ecl", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -471,7 +486,7 @@ async def expand_snomed_value_set(request: Request, payload: SnomedValueSetExpan
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_expand_value_set", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_expand_value_set", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -486,7 +501,7 @@ async def relationship_search_snomed(request: Request, payload: SnomedRelationsh
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_relationship_search", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_relationship_search", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -501,7 +516,7 @@ async def semantic_facets_snomed(request: Request, payload: SnomedSemanticFacets
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_semantic_facets", "payload": payload.model_dump(exclude_none=True) if payload else {}})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_semantic_facets", payload.model_dump(exclude_none=True) if payload else {}))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -516,7 +531,7 @@ async def ground_snomed_mentions(request: Request, payload: SnomedGroundRequest 
     try:
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_ground_note", "payload": payload.model_dump(exclude_none=True)})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_ground_note", payload.model_dump(exclude_none=True)))
         return _json_safe(result)
     except HTTPException:
         raise
@@ -593,7 +608,7 @@ async def snomed_readiness(request: Request, release_id: str | None = None):
         env_id = resolve_active_env_id(request)
         runtime, _ = _require_snomed_activation(request, env_id)
         payload = {"release_id": release_id} if release_id else {}
-        result = await runtime.dispatch(env_id, "op", {"op": "snomed_readiness", "payload": payload})
+        result = await runtime.dispatch(env_id, "op", _op_payload("snomed_readiness", payload))
         return _json_safe(result)
     except HTTPException:
         raise

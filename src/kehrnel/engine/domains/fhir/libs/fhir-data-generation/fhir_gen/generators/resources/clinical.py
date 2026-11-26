@@ -267,6 +267,12 @@ def enrich_Condition(
     if store.has("Practitioner"):
         r["recorder"] = store.get_reference("Practitioner", rng)
     r["onsetDateTime"] = t.p.gen_dateTime(min_year=2015, max_year=2023)
+    # onset[x] and abatement[x] are choice elements: keep ONLY the variant set here.
+    # Without this the schema-driven generator's own onsetPeriod survived alongside
+    # onsetDateTime, and the date projection indexed both intervals - making
+    # `onset-date=ge<year>` match on the wrong one.
+    _clear_choice_polymorphs(r, "onset", "onsetDateTime")
+    _clear_choice_polymorphs(r, "abatement", "abatementDateTime")
     r["recordedDate"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     cat = random_code("condition_category", rng)
     r["category"] = [t.gen_CodeableConcept(
@@ -275,6 +281,24 @@ def enrich_Condition(
         display=cat["display"] if cat else "Problem List Item",
     )]
     return r
+
+
+def _clear_choice_polymorphs(r: dict[str, Any], prefix: str, keep: str) -> None:
+    """Drop every sibling of a FHIR choice element except the one being kept.
+
+    FHIR `onset[x]`, `abatement[x]`, `value[x]` etc. are CHOICE elements: at most one
+    variant may be present. The schema-driven generator can populate more than one,
+    so an enricher that assigns its preferred variant must also remove the rest.
+
+    Leaving them is not harmless. The temporal projection indexes EVERY onset element
+    as its own interval under `_search._dates.onset-date`, and FHIR date search is an
+    $elemMatch over those intervals - so a Condition with a real 2016 onsetDateTime
+    plus a stray 2024 onsetPeriod matches `onset-date=ge2018-01-01` and corrupts every
+    "since <year>" cohort answer.
+    """
+    for key in list(r.keys()):
+        if key.startswith(prefix) and key != keep and key != prefix:
+            r.pop(key, None)
 
 
 def _clear_value_polymorphs(r: dict[str, Any], keep: str) -> None:
@@ -367,6 +391,8 @@ def enrich_AllergyIntolerance(
     if store.has("Patient"):
         r["patient"] = store.get_reference("Patient", rng)
     r["onsetDateTime"] = t.p.gen_dateTime(min_year=2010, max_year=2023)
+    # Same choice-type rule as Condition.onset[x] above.
+    _clear_choice_polymorphs(r, "onset", "onsetDateTime")
     r["recordedDate"] = t.p.gen_dateTime(min_year=2023, max_year=2024)
     sev = random_code("reaction_severity", rng)
     r["reaction"] = [{

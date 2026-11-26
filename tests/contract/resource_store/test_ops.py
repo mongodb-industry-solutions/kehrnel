@@ -161,6 +161,128 @@ async def test_fhir_stats_dry_structure():
     assert result["summary"]["unclassified_count"] == 5
     assert "Patient" in result["indexed_resource_types"]
 
+@pytest.mark.asyncio
+async def test_fhir_stats_emits_projection_readiness_receipt():
+    """Every collection row carries a governed readiness receipt.
+
+    The clinical-meaning capability probe and the terminology cohort gate both
+    fail closed on this receipt, so its absence silently pins those consumers to
+    "unavailable" even when the data is healthy. Pin the contract here.
+    """
+
+    class FakeCollection:
+        def count_documents(self, filt):
+            # Fully projected: every document denormalized, compartmented and
+            # stamped with the current contract version.
+            return 5
+
+        def list_indexes(self):
+            return [{"name": "idx_search", "key": {"_search.gender": 1}}]
+
+        def find_one(self, *args, **kwargs):
+            return None
+
+        def distinct(self, field):
+            return []
+
+    class FakeDb:
+        def __getitem__(self, name):
+            return FakeCollection()
+
+    class FakeLoader:
+        def list_resources(self):
+            return ["Patient", "Observation"]
+
+        def get_config(self, resource_type):
+            return {"resourceType": resource_type, "indexes": []}
+
+    class FakeClient:
+        def close(self):
+            return None
+
+    class FakeMqlCtx:
+        def __init__(self):
+            self.config_loader = FakeLoader()
+            self.db = FakeDb()
+            self.client = FakeClient()
+            self.compartment_definitions_dir = None
+
+    with patch(
+        "kehrnel.engine.strategies.fhir.resource_store.stats.bridge.build_mql_context",
+        return_value=FakeMqlCtx(),
+    ):
+        with patch(
+            "kehrnel.engine.strategies.fhir.resource_store.stats.bridge.known_generation_resource_types",
+            return_value={"Patient"},
+        ):
+            result = await fhir_stats_mod.fhir_stats(_ctx(), {"resource_types": ["Patient"]})
+
+    receipt = result["collections"][0]["projection_readiness_receipt"]
+    assert receipt["contract"] == "fhir-projection-readiness-receipt/v1"
+    assert receipt["state"] == "ready"
+    assert receipt["unmet"] == []
+    assert all(receipt["conditions"].values())
+    assert receipt["receiptDigest"]
+    assert receipt["evidence"]["document_count"] == 5
+    assert receipt["evidence"]["index_verified"] is True
+
+
+@pytest.mark.asyncio
+async def test_fhir_stats_readiness_fails_closed_on_partial_projection():
+    """A populated but under-projected collection must NOT report ready."""
+
+    class FakeCollection:
+        def count_documents(self, filt):
+            if filt == {}:
+                return 10
+            # Only half the documents carry the projection buckets.
+            return 5
+
+        def list_indexes(self):
+            return [{"name": "idx_search", "key": {"_search.gender": 1}}]
+
+        def find_one(self, *args, **kwargs):
+            return None
+
+        def distinct(self, field):
+            return []
+
+    class FakeDb:
+        def __getitem__(self, name):
+            return FakeCollection()
+
+    class FakeLoader:
+        def list_resources(self):
+            return ["Patient"]
+
+        def get_config(self, resource_type):
+            return {"resourceType": resource_type, "indexes": []}
+
+    class FakeClient:
+        def close(self):
+            return None
+
+    class FakeMqlCtx:
+        def __init__(self):
+            self.config_loader = FakeLoader()
+            self.db = FakeDb()
+            self.client = FakeClient()
+            self.compartment_definitions_dir = None
+
+    with patch(
+        "kehrnel.engine.strategies.fhir.resource_store.stats.bridge.build_mql_context",
+        return_value=FakeMqlCtx(),
+    ):
+        with patch(
+            "kehrnel.engine.strategies.fhir.resource_store.stats.bridge.known_generation_resource_types",
+            return_value={"Patient"},
+        ):
+            result = await fhir_stats_mod.fhir_stats(_ctx(), {"resource_types": ["Patient"]})
+
+    receipt = result["collections"][0]["projection_readiness_receipt"]
+    assert receipt["state"] == "not_ready"
+    assert "projection_complete" in receipt["unmet"]
+
 
 @pytest.mark.asyncio
 async def test_strategy_run_op_fhir_search_explain_only():

@@ -22,6 +22,9 @@ from kehrnel.api.bridge.app.core.database import (
 from kehrnel.api.core.admin.routes import _json_safe
 from kehrnel.api.domains.fhir.models import FhirSearchRequest
 from kehrnel.engine.core.errors import KehrnelError
+from kehrnel.api.domains.fhir.terminology_cohort import (
+    execute_terminology_cohort_query,
+)
 from kehrnel.engine.domains.fhir import implementation_guides
 from kehrnel.engine.terminology import TerminologyService
 from kehrnel.engine.strategies.fhir.resource_store.scripts.serialization import (
@@ -1427,6 +1430,32 @@ async def inspect_fhir_migration_references(
     except Exception as exc:
         return _operation_outcome_response(exc)
 
+
+@router.post("/semantic/terminology-query-executions")
+async def execute_fhir_terminology_cohort(
+    request: Request, payload: dict[str, Any] = Body(...)
+):
+    """Execute one governed, terminology-driven cohort query.
+
+    Resolves the caller's ECL expression against the activated SNOMED release,
+    refuses to run unless the FHIR projection readiness receipt says ready, then
+    executes the compiled search per resolved code and unions the result.
+
+    Registered ahead of the GET-only compartment catch-all; otherwise this path
+    matches that route and answers 405 Method Not Allowed.
+    """
+    try:
+        env_id = resolve_active_env_id(request)
+        runtime, activation = _require_fhir_activation(request, env_id)
+        result = await execute_terminology_cohort_query(
+            runtime,
+            env_id,
+            payload,
+            strategy_id=(getattr(activation, "strategy_id", None) or DEFAULT_STRATEGY_ID),
+        )
+        return JSONResponse(content=_json_safe(result))
+    except Exception as exc:
+        return _operation_outcome_response(exc)
 
 @router.post("/semantic/preview")
 async def preview_fhir_semantic_projection(request: Request):

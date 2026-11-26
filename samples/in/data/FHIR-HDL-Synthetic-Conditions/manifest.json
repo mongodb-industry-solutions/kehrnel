@@ -1,0 +1,34 @@
+{
+  "datasetId": "hdl-syn-conditions-1",
+  "synthetic": true,
+  "notice": "SYNTHETIC demonstration data. Fabricated patients and fabricated diagnoses carrying codes from the synthetic hdl-synthetic-2 hierarchy. NOT real patient data, NOT SNOMED CT content, NOT for clinical use.",
+  "generator": "kehrnel/scripts/generate_synthetic_fhir_conditions.py",
+  "verifier": "kehrnel/scripts/verify_synthetic_fhir_conditions.py",
+  "terminologyRelease": "hdl-synthetic-2",
+  "fhirRelease": "R5",
+  "seed": 20260601,
+  "patients": 200,
+  "conditions": 890,
+  "distinctCodes": 505,
+  "paletteCodes": 449,
+  "onsetWindow": {
+    "start": "2010-01-01",
+    "end": "2024-12-31"
+  },
+  "files": [
+    {
+      "file": "patients.ndjson",
+      "resourceType": "Patient",
+      "count": 200
+    },
+    {
+      "file": "conditions.ndjson",
+      "resourceType": "Condition",
+      "count": 890
+    }
+  ],
+  "loadOrder": [
+    "patients.ndjson",
+    "conditions.ndjson"
+  ]
+}

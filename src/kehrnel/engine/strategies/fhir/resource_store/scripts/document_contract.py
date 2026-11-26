@@ -123,6 +123,94 @@ def build_projection_versions(
     )
 
 
+#: Conditions that must all hold before a resource type is declared ready for
+#: governed, qualified execution. Named so a refusal can say which one failed
+#: rather than reporting a bare boolean.
+PROJECTION_READINESS_CONDITIONS = (
+    "collection_populated",
+    "projection_complete",
+    "compartments_complete",
+    "contract_current",
+    "search_configured",
+    "search_index_present",
+    "no_coverage_gap",
+)
+
+PROJECTION_READINESS_CONTRACT = "fhir-projection-readiness-receipt/v1"
+
+
+def build_projection_readiness_receipt(
+    *,
+    resource_type: str,
+    document_count: int,
+    denormalized_count: int,
+    compartment_count: int,
+    contract_current_count: int,
+    search_configured: bool,
+    search_index_present: bool | None,
+    coverage_gap: bool,
+    storage_schema_version: str,
+    resource_projection_version: str | None,
+    fhir_release: str,
+    projection_contract_version: str,
+) -> dict[str, Any]:
+    """Governed readiness receipt for one resource type.
+
+    WHY THIS EXISTS
+    ---------------
+    A consumer that is about to execute a *qualified* clinical query must be
+    able to fail closed on evidence rather than on a liveness guess. Counting
+    documents is not sufficient: a collection can be fully populated while its
+    exact-code projection is stale, its compartments missing, or its search
+    index absent - any of which silently changes what a cohort query returns.
+
+    So this reports each condition independently, and declares ``ready`` only
+    when every one holds. ``unmet`` names the failures so a refusal can explain
+    itself. ``receiptDigest`` fingerprints the exact evidence, letting a caller
+    prove which projection state an answer was computed against.
+
+    ``search_index_present`` may be ``None`` when the caller asked for a summary
+    that deliberately skipped live index verification; unverified is treated as
+    NOT ready, because this gate must never pass on absent evidence.
+    """
+    conditions = {
+        "collection_populated": document_count > 0,
+        "projection_complete": document_count > 0
+        and denormalized_count == document_count,
+        "compartments_complete": document_count > 0
+        and compartment_count == document_count,
+        "contract_current": document_count > 0
+        and contract_current_count == document_count,
+        "search_configured": bool(search_configured),
+        # Unverified (None) is not evidence of presence - fail closed.
+        "search_index_present": search_index_present is True,
+        "no_coverage_gap": not coverage_gap,
+    }
+    unmet = [name for name in PROJECTION_READINESS_CONDITIONS if not conditions[name]]
+    evidence = {
+        "resource_type": resource_type,
+        "document_count": document_count,
+        "denormalized_count": denormalized_count,
+        "compartment_count": compartment_count,
+        "contract_current_count": contract_current_count,
+        "storage_schema_version": storage_schema_version,
+        "resource_projection_version": resource_projection_version,
+        "projection_contract_version": projection_contract_version,
+        "fhir_release": fhir_release,
+        "index_verified": search_index_present is not None,
+    }
+    return {
+        "contract": PROJECTION_READINESS_CONTRACT,
+        "state": "ready" if not unmet else "not_ready",
+        "conditions": conditions,
+        "unmet": unmet,
+        "evidence": evidence,
+        "receiptDigest": _digest(
+            {"contract": PROJECTION_READINESS_CONTRACT, "evidence": evidence}
+        ),
+    }
+
+
 def normalize_projection_buckets(resource: dict[str, Any]) -> dict[str, Any]:
     """Guarantee both mandatory projection buckets exist and have stable shapes."""
     result = dict(resource)
