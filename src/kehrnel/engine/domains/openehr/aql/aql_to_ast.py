@@ -129,6 +129,9 @@ class AQLToASTParser:
         """Parse the SELECT clause"""
         if not select_text:
             return {"distinct": False, "columns": {}}
+
+        if re.match(r'^TOP\s+\d+\b', select_text, re.IGNORECASE):
+            raise ValueError("Deprecated keyword 'TOP' not implemented. Use 'LIMIT'.")
         
         # Check for DISTINCT
         distinct = bool(re.search(r'DISTINCT\s+', select_text, re.IGNORECASE))
@@ -216,21 +219,31 @@ class AQLToASTParser:
         """Parse FROM clause and extract CONTAINS structures"""
         if not from_text:
             return {"from": {}, "contains": None}
-        
-        # Split the FROM clause by CONTAINS, respecting parentheses
-        parts = self._split_by_top_level_contains(from_text)
-        
-        # The first part is the main FROM expression
-        main_from = self._parse_rm_type(parts[0])
-        
-        # If there are no CONTAINS clauses, return just the FROM part
-        if len(parts) <= 1:
-            return {"from": main_from, "contains": None}
-        
-        # Build the nested CONTAINS structure from the remaining parts
-        contains_structure = self._build_nested_contains_structure(parts[1:])
-        
+
+        contains_index = self._find_top_level_keyword(from_text, 'CONTAINS')
+        if contains_index == -1:
+            return {"from": self._parse_rm_type(from_text), "contains": None}
+
+        before_contains, after_contains, contains_negated = self._split_contains_edge(from_text, contains_index)
+        if contains_negated:
+            raise ValueError("NOT CONTAINS directly after FROM is not supported yet.")
+
+        main_from = self._parse_rm_type(before_contains)
+        contains_structure = self._parse_contains_expression(after_contains)
         return {"from": main_from, "contains": contains_structure}
+
+    def _split_contains_edge(self, text: str, contains_index: int) -> Tuple[str, str, bool]:
+        """Split an expression around CONTAINS and detect a preceding NOT edge modifier."""
+        before_contains = text[:contains_index].strip()
+        after_contains = text[contains_index + 8:].strip()
+
+        negated = False
+        not_match = re.search(r'(?i)\bNOT\s*$', before_contains)
+        if not_match:
+            negated = True
+            before_contains = before_contains[:not_match.start()].rstrip()
+
+        return before_contains, after_contains, negated
     
     def _split_by_top_level_contains(self, text: str) -> List[str]:
         """Split a FROM clause by top-level CONTAINS"""
@@ -385,13 +398,14 @@ class AQLToASTParser:
         
         if contains_index != -1:
             # This has a nested CONTAINS
-            before_contains = expr[:contains_index].strip()
-            after_contains = expr[contains_index + 8:].strip()
+            before_contains, after_contains, contains_negated = self._split_contains_edge(expr, contains_index)
             
             containing_node = self._parse_rm_type(before_contains)
             contained_node = self._parse_contains_expression(after_contains)
             
             containing_node["contains"] = contained_node
+            if contains_negated:
+                containing_node["containsNegated"] = True
             return containing_node
         
         # Simple RM type expression
@@ -423,6 +437,21 @@ class AQLToASTParser:
     def _parse_predicate(self, text: str) -> Dict[str, Any]:
         """Parse a predicate expression (content inside square brackets)"""
         text = text.strip()
+
+        # CONTAINS predicates commonly combine the archetype id with a name
+        # constraint, e.g. [openEHR-EHR-OBSERVATION.foo.v0 and name/value='Bar'].
+        # The query builders consume the archetype id as the structural
+        # predicate; keep that part instead of folding the full expression into
+        # a malformed equality predicate.
+        and_index = self._find_top_level_keyword(text, 'AND')
+        if and_index != -1:
+            first_predicate = text[:and_index].strip()
+            if first_predicate.startswith('openEHR-') and '=' not in first_predicate:
+                return {
+                    "path": "archetype_node_id",
+                    "operator": "=",
+                    "value": first_predicate
+                }
         
         # If it's an openEHR archetype ID without operator
         if text.startswith('openEHR-') and '=' not in text:
@@ -555,27 +584,46 @@ class AQLToASTParser:
             
             # Remove quotes if present
             value = raw_value.strip('\'"')
+            value_operand: Any = value
             
             # Only attempt numeric conversion for unquoted values
             # Quoted values should always be preserved as strings to maintain
             # leading zeros and other string semantics (e.g., '01817273', '007')
             if not is_quoted:
-                try:
-                    if '.' in value:
-                        value = float(value)
-                    else:
-                        value = int(value)
-                except ValueError:
-                    pass  # Keep as string
+                if self._looks_like_data_path(value):
+                    value_operand = {
+                        "type": "dataMatchPath",
+                        "path": value,
+                    }
+                else:
+                    try:
+                        if '.' in value:
+                            value_operand = float(value)
+                        else:
+                            value_operand = int(value)
+                    except ValueError:
+                        value_operand = value  # Keep as string
             
             return {
                 "path": path,
                 "operator": operator,
-                "value": value
+                "value": value_operand
             }
         
         # If no pattern matched, return the raw condition
         return {"raw": text}
+
+    def _looks_like_data_path(self, value: Any) -> bool:
+        """Return true for unquoted RHS operands that look like AQL identified paths."""
+        if not isinstance(value, str):
+            return False
+        candidate = value.strip()
+        if "/" not in candidate or re.search(r"\s", candidate):
+            return False
+        if candidate.startswith("$"):
+            return False
+        first, _sep, rest = candidate.partition("/")
+        return bool(first and rest and re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", first))
     
     def _parse_order_by_clause(self, order_by_text: str) -> Dict[str, Any]:
         """Parse the ORDER BY clause"""
@@ -630,7 +678,7 @@ class AQLToASTParser:
     # Helper methods
     
     def _find_top_level_keyword(self, text: str, keyword: str) -> int:
-        """Find a top-level keyword in text, respecting parentheses depth"""
+        """Find a top-level keyword in text, respecting nested delimiters."""
         depth = 0
         in_single = False
         in_double = False
@@ -647,9 +695,9 @@ class AQLToASTParser:
             if in_single or in_double:
                 continue
 
-            if char == '(':
+            if char in '([{':
                 depth += 1
-            elif char == ')':
+            elif char in ')]}' and depth > 0:
                 depth -= 1
             
             if depth == 0 and upper_text[i:i + keyword_length] == keyword:

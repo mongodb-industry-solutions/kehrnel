@@ -1,0 +1,362 @@
+resource: EpisodeOfCare
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec EpisodeOfCare)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json
+#
+# Total parameters: 14 (12 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `EpisodeOfCare.patient` is required Reference(Patient).
+#   * `EpisodeOfCare.period` powers the `date` search (interval overlap).
+#   * `diagnosis[].condition` and `reason[].value` are CodeableReference —
+#     token params search `.concept`, reference params search `.reference`.
+#   * `care-manager` filters `careManager` to Practitioner/* only.
+#   * `organization` searches `managingOrganization` (Organization).
+#   * `incoming-referral` searches `referralRequest[]` (ServiceRequest).
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  care-manager:
+    type: reference
+    description: "Care manager Practitioner for this episode"
+    fields:
+      - field: "_search.careManagerId"
+        referenceType: id
+      - field: "careManager.reference"
+        referenceType: full
+
+  diagnosis-reference:
+    type: reference
+    description: "Diagnosis Condition reference for this episode"
+    fields:
+      - field: "_search.diagnosisReferenceIds"
+        referenceType: id
+      - field: "_search.diagnosisReferenceTypes"
+        referenceType: type
+
+  incoming-referral:
+    type: reference
+    description: "Incoming ServiceRequest referral for this episode"
+    fields:
+      - field: "_search.referralRequestIds"
+        referenceType: id
+      - field: "_search.referralRequestTypes"
+        referenceType: type
+      - field: "referralRequest.reference"
+        referenceType: full
+
+  organization:
+    type: reference
+    description: "Organization that manages this episode"
+    fields:
+      - field: "_search.organizationId"
+        referenceType: id
+      - field: "managingOrganization.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "The patient who this episode applies to"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  reason-reference:
+    type: reference
+    description: "Reference to a resource (by instance) for the reason"
+    fields:
+      - field: "_search.reasonReferenceIds"
+        referenceType: id
+      - field: "_search.reasonReferenceTypes"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  diagnosis-code:
+    type: token
+    description: "Diagnosis coded concept for this episode"
+    fields:
+      - field: "_search.diagnosisCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.diagnosisCode_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Business identifier for this episode"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  reason-code:
+    type: token
+    description: "Reason coded concept for this episode"
+    fields:
+      - field: "_search.reasonCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.reasonCode_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "planned | waitlist | active | onhold | finished | cancelled | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  type:
+    type: token
+    description: "Type/class of the episode"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "A date within the period the episode covers"
+    fields:
+      - field: "_search.period"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type[*].coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type[*].coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  care_manager:
+    source: careManager
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: careManager.reference
+        target_field: careManagerId
+        datatype: string
+        extractType: id
+        filterType: Practitioner
+
+  managing_organization:
+    source: managingOrganization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: managingOrganization.reference
+        target_field: organizationId
+        datatype: string
+        extractType: id
+
+  referral_request:
+    source: referralRequest
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: referralRequest[*].reference
+        target_field: referralRequestIds
+        datatype: array[string]
+        extractType: id
+      - source_path: referralRequest[*].reference
+        target_field: referralRequestTypes
+        datatype: array[string]
+        extractType: type
+
+  diagnosis_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: diagnosis[*].condition.concept.coding[*].code
+        target_field: diagnosisCode_codes
+        datatype: array[string]
+      - source_path: diagnosis[*].condition.concept.coding[*]
+        target_field: diagnosisCode_systemCode
+        datatype: array[string]
+
+  diagnosis_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: diagnosis[*].condition.reference.reference
+        target_field: diagnosisReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: diagnosis[*].condition.reference.reference
+        target_field: diagnosisReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  reason_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: reason[*].value.concept.coding[*].code
+        target_field: reasonCode_codes
+        datatype: array[string]
+      - source_path: reason[*].value.concept.coding[*]
+        target_field: reasonCode_systemCode
+        datatype: array[string]
+
+  reason_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reason[*].value.reference.reference
+        target_field: reasonReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: reason[*].value.reference.reference
+        target_field: reasonReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: start
+        target_field: period.start
+        datatype: date
+        optional: true
+      - source_path: end
+        target_field: period.end
+        datatype: date
+        optional: true
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: Practitioner
+        source_paths:
+          - careManager
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: "Practitioner compartment (practitioner.json linking param care-manager)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.organizationId": 1
+    options:
+      name: idx_organization_id
+      sparse: true
+  - fields:
+      - "_search.careManagerId": 1
+    options:
+      name: idx_care_manager_id
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.type_codes": 1
+    options:
+      name: idx_type_codes
+      sparse: true
+  - fields:
+      - "_search.period.start": 1
+      - "_search.period.end": 1
+    options:
+      name: idx_period
+      sparse: true
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

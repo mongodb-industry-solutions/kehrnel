@@ -1,0 +1,491 @@
+resource: Organization
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/organization-definitions.html
+# Search Parameters Configuration
+# Reference: https://www.hl7.org/fhir/organization-search.html
+# Total Parameters: 15 (13 resource-specific per FHIR R5 + 2 common: _id, _lastUpdated)
+# Validated against the canonical R5 search parameter table at
+# https://www.hl7.org/fhir/organization-search.html (2026-05).
+#
+# R5 spec parameter coverage (alphabetical):
+#   active (token), address (string), address-city (string),
+#   address-country (string), address-postalcode (string),
+#   address-state (string), address-use (token), endpoint (reference),
+#   identifier (token), name (string), partof (reference),
+#   phonetic (string), type (token)
+#
+# Compartments: NONE per the FHIR R5 spec — Organization is neither a
+# compartment root nor a member of any defined compartment
+# (see https://www.hl7.org/fhir/compartmentdefinition-patient.html and
+# the compartmentdefinition-* peers — Organization is not listed).
+# Therefore this YAML does NOT define a `compartments:` block; the
+# `CompartmentResolver` falls back to dynamic translation if anyone
+# attempts a compartment query against Organization (and will surface
+# the proper "not in compartment" error).
+#
+# Cross-resource linking inventory (where other resources reference
+# Organization, FYI for query authors):
+#   Patient.managingOrganization → Patient/_search.managingOrganizationId
+#   Patient.generalPractitioner  → Patient/_search.generalPractitionerId
+#                                    (with type=Organization in
+#                                    _search.generalPractitionerType)
+#   Observation.subject          → Observation/_search.subjectId
+#                                    + _search.subjectType=Organization
+#   Observation.performer        → Observation/_search.performerId
+#                                    + _search.performerType=Organization
+#   Appointment.participant.actor → Appointment/_search.actorIds
+# All of these continue to work unchanged because the existing
+# ReferenceExtractor in those configs captures Id, Type, and full
+# reference uniformly.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Token parameters
+  # ─────────────────────────────────────────────────────────────
+  active:
+    type: token
+    description: "Whether the organization's record is active (Organization.active)"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  type:
+    type: token
+    description: "A code for the type of organization (Organization.type[*].coding)"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: |
+      Any identifier for the organization (not the accreditation issuer's
+      identifier). Per FHIR R5 the spec expression is
+      `Organization.identifier | Organization.qualification.identifier`,
+      so the parameter searches BOTH the top-level identifier array and
+      every qualification's identifier in one query.
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  address-use:
+    type: token
+    description: "A use code specified in an address (Organization.contact.address.use)"
+    fields:
+      - field: "_search.addressUse"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # String parameters
+  # ─────────────────────────────────────────────────────────────
+  # Per-modifier `fields` routing wires FHIR's case-sensitive `:exact`
+  # modifier to the case-preserved `_search.*` fields (`name`,
+  # `aliases`, `addressCity`, etc.). The `_lower` companions remain
+  # the default-modifier targets for case-insensitive prefix match.
+  name:
+    type: string
+    description: |
+      A portion of the organization's name or alias. Per FHIR R5 the
+      spec expression is `Organization.name | Organization.alias`, so
+      this parameter ranges over BOTH the canonical name and every
+      alias.
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+        - field: "_search.aliases_lower"
+          query_type: range
+        - field: "_search.nameAlias_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+        - field: "_search.aliases"
+
+  address:
+    type: string
+    description: "A server defined search that matches any address field (line, city, district, state, country, postalCode, text)"
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+
+  address-city:
+    type: string
+    description: "A city specified in an address (Organization.contact.address.city)"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  address-country:
+    type: string
+    description: "A country specified in an address (Organization.contact.address.country)"
+    fields:
+      default:
+        - field: "_search.addressCountry_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCountry"
+
+  address-postalcode:
+    type: string
+    description: "A postal code specified in an address (Organization.contact.address.postalCode)"
+    fields:
+      - field: "_search.addressPostalCode"
+        query_type: exact
+
+  address-state:
+    type: string
+    description: "A state specified in an address (Organization.contact.address.state)"
+    fields:
+      default:
+        - field: "_search.addressState_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressState"
+
+  phonetic:
+    type: token
+    # FHIR's `phonetic` modifier targets Organization.name with a
+    # phonetic-matching algorithm. The denormalizer's PhoneticExtractor
+    # populates _search.phonetic_codes with American Soundex codes for
+    # every token in the name and every alias, so an exact-array token
+    # match against this field is the index-friendly substitute.
+    description: "A portion of the organization's name encoded with the Soundex phonetic algorithm"
+    fields:
+      - field: "_search.phonetic_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference parameters
+  # ─────────────────────────────────────────────────────────────
+  partof:
+    type: reference
+    description: "An organization of which this organization forms a part (Organization.partOf -> Organization)"
+    targetResources:
+      - Organization
+    fields:
+      - field: "_search.partOfId"
+        referenceType: id
+      - field: "_search.partOfType"
+        referenceType: type
+      - field: "partOf.reference"
+        referenceType: full
+
+  endpoint:
+    type: reference
+    description: "Technical endpoints providing access to services operated for the organization (Organization.endpoint -> Endpoint)"
+    targetResources:
+      - Endpoint
+    fields:
+      - field: "_search.endpointId"
+        referenceType: id
+      - field: "endpoint.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Common parameters (apply to every FHIR resource)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# =====================================================================
+# Denormalization rules
+#
+# Built entirely from the GENERIC, data-type-specific extractors —
+# no Organization-specific extractor is created. Cross-cutting
+# computations (name+alias union, identifier-from-multiple-paths) use
+# the `source: $resource` sentinel + path expressions that the
+# generic extractors resolve via the project's FHIRPath-lite resolver.
+# =====================================================================
+denormalization:
+  # ---------------------------------------------------------------
+  # Name and alias (FHIR types: string, list of strings)
+  #
+  # Three target fields:
+  #   - `_search.name_lower`      Lowercased canonical name (string)
+  #   - `_search.aliases_lower`   Lowercased alias array (array[string])
+  #   - `_search.nameAlias_lower` Concatenated lowercased blob
+  #                                that powers the FHIR `name` parameter
+  #                                whose spec expression is
+  #                                `Organization.name | Organization.alias`.
+  # The plain-case copies (`name`, `aliases`) are also kept so an exact
+  # token match (`name=Acme%20Corp`) can still hit the original casing.
+  # ---------------------------------------------------------------
+  name:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+        normalize: none
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+      - source_path: alias[*]
+        target_field: aliases
+        datatype: array[string]
+      - source_path: alias[*]
+        target_field: aliases_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: name | alias[*]
+        target_field: nameAlias_lower
+        datatype: string
+        normalize: lowercase
+        separator: " "
+
+  phonetic:
+    # Generic PhoneticExtractor accepts both HumanName dicts AND plain
+    # strings. Walking `name | alias[*]` produces a flat list of strings;
+    # the extractor splits each on whitespace and Soundex-encodes every
+    # token, deduped.
+    source: $resource
+    target: _search
+    extractor: PhoneticExtractor
+    field_mappings:
+      - source_path: name | alias[*]
+        target_field: phonetic_codes
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Identifier — STRUCTURALLY DIFFERENT from the identifier rules in
+  # Patient / Observation / Appointment, on purpose.
+  #
+  # FHIR R5 (https://www.hl7.org/fhir/organization-search.html) defines
+  # the `identifier` parameter expression as the UNION:
+  #     Organization.identifier | Organization.qualification.identifier
+  # Organization is the only one of our four resources whose
+  # identifier expression spans more than one structural location —
+  # qualifications carry their own accreditation IDs that must be
+  # searchable through the same parameter. Without `source: $resource`
+  # + the union path, those qualification identifiers would never be
+  # populated.
+  #
+  # IdentifierExtractor's resource-rooted mode walks both branches and
+  # writes one set of target fields. The output shape (`_search.
+  # identifier_values` and `_search.identifier_systemCode`) is
+  # IDENTICAL to what other resources emit, so the `identifier` search
+  # parameter consumes the same denormalized fields regardless of the
+  # underlying spec expression.
+  # ---------------------------------------------------------------
+  identifier:
+    source: $resource
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier | qualification[*].identifier
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier | qualification[*].identifier
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Type (CodeableConcept, 0..*) — uses the same coding-walking style
+  # as Appointment (`appointmentType`, `serviceCategory`, `specialty`,
+  # `reasonCode`) and Observation (`code`, `category`) for codebase
+  # consistency. The path is a hint for the legacy projection layer;
+  # CodeableConceptExtractor walks `coding[]` internally and emits
+  # `codes` / `system|code` / `displays` / `text` lists which are then
+  # routed by target_field name.
+  # ---------------------------------------------------------------
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type[*].coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type[*].coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # Address — Organization.contact.address[]. Note that this is
+  # NOT Organization.address (FHIR R5 moved telecom/address one
+  # level deeper into ExtendedContactDetail). The AddressExtractor
+  # accepts Address values, so we resolve the path explicitly and
+  # pass the result through the same extractor that powers Patient
+  # address denormalization.
+  # ---------------------------------------------------------------
+  address:
+    source: $resource
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: contact[*].address
+        target_field: addressFull
+        datatype: array[string]
+      - source_path: contact[*].address
+        target_field: addressFull_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: contact[*].address.city
+        target_field: addressCity
+        datatype: array[string]
+      - source_path: contact[*].address.city
+        target_field: addressCity_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: contact[*].address.state
+        target_field: addressState
+        datatype: array[string]
+      - source_path: contact[*].address.state
+        target_field: addressState_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: contact[*].address.postalCode
+        target_field: addressPostalCode
+        datatype: array[string]
+      - source_path: contact[*].address.country
+        target_field: addressCountry
+        datatype: array[string]
+      - source_path: contact[*].address.country
+        target_field: addressCountry_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: contact[*].address.use
+        target_field: addressUse
+        datatype: array[string]
+
+  # ---------------------------------------------------------------
+  # partOf (Reference -> Organization, 0..1)
+  # ---------------------------------------------------------------
+  partOf:
+    source: partOf
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: partOf.reference
+        target_field: partOfId
+        datatype: string
+        extractType: id
+      - source_path: partOf.reference
+        target_field: partOfType
+        datatype: string
+        extractType: type
+
+  # ---------------------------------------------------------------
+  # endpoint (Reference -> Endpoint, 0..*)
+  # ---------------------------------------------------------------
+  endpoint:
+    source: endpoint
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: endpoint[*].reference
+        target_field: endpointId
+        datatype: array[string]
+        extractType: id
+
+# =====================================================================
+# Recommended MongoDB Indexes
+# =====================================================================
+indexes:
+  # Name / phonetic — high-volume directory lookups
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_org_name_lower
+      sparse: true
+  - fields:
+      - "_search.nameAlias_lower": 1
+    options:
+      name: idx_org_name_alias_lower
+      sparse: true
+  - fields:
+      - "_search.phonetic_codes": 1
+    options:
+      name: idx_org_phonetic_codes
+      sparse: true
+
+  # Identifier — primary integration / external system lookup
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_org_identifier_system_code
+      sparse: true
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_org_identifier_values
+      sparse: true
+
+  # Type / active — common filter combos
+  - fields:
+      - "_search.type_systemCode": 1
+    options:
+      name: idx_org_type_system_code
+      sparse: true
+  - fields:
+      - "active": 1
+    options:
+      name: idx_org_active
+
+  # Hierarchy — partOf chained queries
+  - fields:
+      - "_search.partOfId": 1
+    options:
+      name: idx_org_part_of_id
+      sparse: true
+
+  # Endpoints
+  - fields:
+      - "_search.endpointId": 1
+    options:
+      name: idx_org_endpoint_id
+      sparse: true
+
+  # Address — geographic filters
+  - fields:
+      - "_search.addressCity_lower": 1
+    options:
+      name: idx_org_address_city_lower
+      sparse: true
+  - fields:
+      - "_search.addressState_lower": 1
+    options:
+      name: idx_org_address_state_lower
+      sparse: true
+  - fields:
+      - "_search.addressCountry_lower": 1
+    options:
+      name: idx_org_address_country_lower
+      sparse: true
+  - fields:
+      - "_search.addressPostalCode": 1
+    options:
+      name: idx_org_address_postal_code
+      sparse: true
+
+  # Common metadata
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_org_last_updated
+      sparse: true

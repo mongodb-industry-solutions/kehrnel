@@ -1,0 +1,409 @@
+resource: Slot
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/slot-definitions.html
+# Search Parameters: https://www.hl7.org/fhir/slot-search.html
+# Compartments: NONE — Slot has no defined FHIR R5 compartments.
+#   No _compartments.* fields are precomputed for this resource and no
+#   `compartment_membership` rule is needed.
+# FHIR R5 Slot search parameter table validated 2026-05.
+#
+# Total parameters: 11 (9 resource-specific per R5 §12.17.13 + 2 common).
+#
+# Resource-specific search parameters (per R5 §12.17.13):
+#   appointment-type (token), identifier (token), schedule (reference),
+#   service-category (token), service-type (token),
+#   service-type-reference (reference), specialty (token),
+#   start (date), status (token).
+#
+# R5 structural notes worth calling out:
+#   * `Slot.status` (1..1) is a required top-level scalar code with fixed
+#     R5 bindings: free | busy | busy-unavailable | busy-tentative |
+#     entered-in-error. Queried directly (no `_search.*` projection needed).
+#     Same pattern as `Appointment.status`.
+#   * `Slot.start` (1..1) is a required top-level `instant` (datetime).
+#     The `start` search parameter queries this field directly — no
+#     denormalization required. All FHIR R5 date prefixes (ge/gt/le/lt/
+#     eq/ne/sa/eb/ap) are supported by the date converter.
+#   * `Slot.end` (1..1) is a required `instant` with NO search parameter
+#     — not denormalized.
+#   * `Slot.serviceType` is `CodeableReference(HealthcareService)[]` (R5
+#     change from R4's CodeableConcept). Each entry has EITHER `.concept`
+#     (CodeableConcept) OR `.reference` (Reference). Two separate search
+#     params cover the two arms:
+#       - `service-type`            → Slot.serviceType.concept
+#       - `service-type-reference`  → Slot.serviceType.reference
+#     Mirrors the identical split used by Schedule.yaml and Appointment.yaml.
+#   * `Slot.appointmentType` changed from 0..1 (R4) to 0..* (R5) — it is
+#     now an array of CodeableConcepts, denormalized as an array.
+#   * `Slot.schedule` (1..1) is a required single Reference(Schedule) —
+#     denormalized as a scalar id + type (not arrays).
+#   * `Slot.overbooked` and `Slot.comment` carry no search parameters and
+#     are NOT denormalized.
+#   * NO COMPARTMENTS: Slot participates in no FHIR R5 compartments. There
+#     is no `compartment_membership` rule, no `compartments.precomputed`
+#     section, and no `_compartments.*` indexes.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters (5 — appointment-type, identifier,
+  #                        service-category, service-type, specialty)
+  # ─────────────────────────────────────────────────────────────
+
+  # appointment-type is 0..* in R5 (was 0..1 in R4).
+  appointment-type:
+    type: token
+    description: >
+      The style of appointment or patient that may be booked in the slot
+      (Slot.appointmentType — CodeableConcept[]).
+    fields:
+      - field: "_search.appointmentType_systemCode"
+        tokenType: systemCode
+      - field: "_search.appointmentType_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "A Slot Identifier (Slot.identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  service-category:
+    type: token
+    description: "High-level category of the service (Slot.serviceCategory)"
+    fields:
+      - field: "_search.serviceCategory_systemCode"
+        tokenType: systemCode
+      - field: "_search.serviceCategory_codes"
+        tokenType: code
+
+  # service-type queries the CodeableConcept arm of the R5 CodeableReference.
+  service-type:
+    type: token
+    description: >
+      The type (by coding) of appointments that can be booked into the slot —
+      Slot.serviceType.concept (CodeableReference's concept arm).
+    fields:
+      - field: "_search.serviceType_systemCode"
+        tokenType: systemCode
+      - field: "_search.serviceType_codes"
+        tokenType: code
+
+  specialty:
+    type: token
+    description: "The specialty required to perform this appointment (Slot.specialty)"
+    fields:
+      - field: "_search.specialty_systemCode"
+        tokenType: systemCode
+      - field: "_search.specialty_codes"
+        tokenType: code
+
+  # status — required top-level scalar code; queried directly.
+  # Fixed R5 binding: free | busy | busy-unavailable | busy-tentative |
+  # entered-in-error. `tokenType: code` (not boolean) — same pattern as
+  # Appointment.status, Device.status, etc.
+  status:
+    type: token
+    description: "The free/busy status of the slot (Slot.status)"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters (2 — schedule, service-type-reference)
+  # ─────────────────────────────────────────────────────────────
+
+  # schedule — required single Reference(Schedule).
+  schedule:
+    type: reference
+    description: >
+      The Schedule resource that this slot defines an interval of status
+      information for (Slot.schedule). Single target: Schedule.
+    fields:
+      - field: "_search.scheduleId"
+        referenceType: id
+      - field: "_search.scheduleType"
+        referenceType: type
+      - field: "schedule.reference"
+        referenceType: full
+
+  # service-type-reference queries the Reference arm of the CodeableReference.
+  service-type-reference:
+    type: reference
+    description: >
+      The type (by HealthcareService) of appointments that can be booked —
+      Slot.serviceType.reference (CodeableReference's reference arm).
+    fields:
+      - field: "_search.serviceTypeReferenceId"
+        referenceType: id
+      - field: "_search.serviceTypeReferenceType"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters (1 — start queried directly from Slot.start)
+  # ─────────────────────────────────────────────────────────────
+
+  # `Slot.start` is a required top-level `instant`. The search parameter
+  # queries this field directly (no _search.* projection). The date
+  # converter applies all FHIR prefix semantics (ge/gt/le/lt/eq/ne/sa/eb/ap).
+  # MongoDB tests MUST seed `start` as Python `datetime` objects so the
+  # field is stored as BSON ISODate and matches the converter's datetime
+  # query operands.
+  start:
+    type: date
+    description: "Appointment date/time (Slot.start — instant, queried directly)"
+    fields:
+      - field: "start"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters (_id, _lastUpdated)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Denormalization
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Fields NOT denormalized (queried directly from the FHIR resource):
+#   * `status`  — top-level scalar code  (queried as `{"status": "free"}`)
+#   * `start`   — top-level scalar instant (queried as range on `start`)
+#
+# Fields NOT denormalized (no search parameter):
+#   * `end`, `overbooked`, `comment`
+# ─────────────────────────────────────────────────────────────────────────────
+denormalization:
+
+  # ── identifier ────────────────────────────────────────────────────────────
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Bare identifier values from Slot.identifier[*].value"
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "system|value pairs from Slot.identifier for token lookup"
+
+  # ── serviceCategory ───────────────────────────────────────────────────────
+  serviceCategory:
+    source: serviceCategory
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: serviceCategory[*].coding[*].code
+        target_field: serviceCategory_codes
+        datatype: array[string]
+        comment: "Codes from Slot.serviceCategory[*].coding[*].code"
+      - source_path: serviceCategory[*].coding[*]
+        target_field: serviceCategory_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Slot.serviceCategory"
+
+  # ── serviceType.concept ───────────────────────────────────────────────────
+  # R5: serviceType is CodeableReference(HealthcareService)[]. The concept
+  # arm carries the CodeableConcept used for the `service-type` token param.
+  # path_resolver auto-adds R4 legacy branches for `.concept.` paths.
+  serviceType_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: serviceType[*].concept.coding[*].code
+        target_field: serviceType_codes
+        datatype: array[string]
+        comment: "Codes from Slot.serviceType (R5 concept arm; R4 flat CC auto-unioned)"
+      - source_path: serviceType[*].concept.coding[*]
+        target_field: serviceType_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Slot.serviceType[*].concept"
+
+  # ── serviceType.reference ─────────────────────────────────────────────────
+  # The reference arm of the CodeableReference points to a HealthcareService.
+  serviceTypeReference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: serviceType[*].reference
+        target_field: serviceTypeReferenceId
+        datatype: array[string]
+        extractType: id
+        comment: "IDs extracted from Slot.serviceType[*].reference (HealthcareService)"
+      - source_path: serviceType[*].reference
+        target_field: serviceTypeReferenceType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from Slot.serviceType[*].reference (always 'HealthcareService')"
+
+  # ── specialty ─────────────────────────────────────────────────────────────
+  specialty:
+    source: specialty
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialty[*].coding[*].code
+        target_field: specialty_codes
+        datatype: array[string]
+        comment: "Codes from Slot.specialty[*].coding[*].code"
+      - source_path: specialty[*].coding[*]
+        target_field: specialty_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Slot.specialty"
+
+  # ── appointmentType ───────────────────────────────────────────────────────
+  # 0..* in R5 (was 0..1 in R4) — denormalized as array of codes.
+  appointmentType:
+    source: appointmentType
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: appointmentType[*].coding[*].code
+        target_field: appointmentType_codes
+        datatype: array[string]
+        comment: "Codes from Slot.appointmentType[*].coding[*].code"
+      - source_path: appointmentType[*].coding[*]
+        target_field: appointmentType_systemCode
+        datatype: array[string]
+        comment: "system|code pairs from Slot.appointmentType"
+
+  # ── schedule ──────────────────────────────────────────────────────────────
+  # Slot.schedule (1..1) is a required single Reference(Schedule).
+  # Denormalized as scalar id + type (not arrays — cardinality 1..1).
+  schedule:
+    source: schedule
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: schedule.reference
+        target_field: scheduleId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from Slot.schedule (required single Reference(Schedule))"
+      - source_path: schedule.reference
+        target_field: scheduleType
+        datatype: string
+        extractType: type
+        comment: "Resource type from Slot.schedule (always 'Schedule')"
+
+# No `compartments` section — Slot has no defined FHIR R5 compartments.
+
+indexes:
+  # ── status (required top-level scalar, highly selective)
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  # ── start (required top-level instant — primary date-range index)
+  - fields:
+      - "start": 1
+    options:
+      name: idx_start
+
+  # ── schedule reference (required 1..1 — very high cardinality query)
+  - fields:
+      - "_search.scheduleId": 1
+    options:
+      name: idx_schedule_id
+      sparse: true
+
+  # Compound: status + start (most common query pattern — free slots in a window)
+  - fields:
+      - "status": 1
+      - "start": 1
+    options:
+      name: idx_status_start_compound
+
+  # ── Identifier
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  # ── Service category / type / specialty
+  - fields:
+      - "_search.serviceCategory_codes": 1
+    options:
+      name: idx_service_category_codes
+      sparse: true
+  - fields:
+      - "_search.serviceCategory_systemCode": 1
+    options:
+      name: idx_service_category_system_code
+      sparse: true
+  - fields:
+      - "_search.serviceType_codes": 1
+    options:
+      name: idx_service_type_codes
+      sparse: true
+  - fields:
+      - "_search.serviceType_systemCode": 1
+    options:
+      name: idx_service_type_system_code
+      sparse: true
+  - fields:
+      - "_search.serviceTypeReferenceId": 1
+    options:
+      name: idx_service_type_reference_id
+      sparse: true
+
+  # ── appointmentType
+  - fields:
+      - "_search.appointmentType_codes": 1
+    options:
+      name: idx_appointment_type_codes
+      sparse: true
+  - fields:
+      - "_search.appointmentType_systemCode": 1
+    options:
+      name: idx_appointment_type_system_code
+      sparse: true
+
+  # ── specialty
+  - fields:
+      - "_search.specialty_codes": 1
+    options:
+      name: idx_specialty_codes
+      sparse: true
+  - fields:
+      - "_search.specialty_systemCode": 1
+    options:
+      name: idx_specialty_system_code
+      sparse: true
+
+  # ── Common metadata
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated
+  - fields:
+      - "id": 1
+    options:
+      name: idx_id
+      unique: true

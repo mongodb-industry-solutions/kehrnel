@@ -181,6 +181,9 @@ def _parse_literal(raw_value: str, params: Dict[str, Any], missing_params: set[s
 
 
 def _parse_selects(select_clause: str) -> List[RawAqlSelect]:
+    if re.match(r"^TOP\s+\d+\b", select_clause.strip(), flags=re.IGNORECASE):
+        raise ValueError("Deprecated keyword 'TOP' not implemented. Use 'LIMIT'.")
+
     selects: list[RawAqlSelect] = []
     for item in _split_top_level(select_clause, ","):
         match = re.match(r"^(.*?)\s+AS\s+([A-Za-z_][\w]*)$", item.strip(), flags=re.IGNORECASE)

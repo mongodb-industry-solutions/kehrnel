@@ -32,11 +32,12 @@ def test_environment_registry_crud_and_activation_fallback(tmp_path):
     activate_res = client.post(
         "/v1/environments/env-meta/activate",
         json={
-            "strategy_id": "fhir.resource_first",
+            "strategy_id": "fhir.clinical_cdr",
             "version": "0.1.0",
             "config": {},
             "domain": "fhir",
             "bindings": {},
+            "allow_plaintext_bindings": True,
         },
     )
     assert activate_res.status_code == 200

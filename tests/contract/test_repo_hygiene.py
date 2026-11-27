@@ -11,7 +11,7 @@ def test_no_copy_suffix_files():
 
 def test_no_protocols_dirs_in_strategies():
     offenders = []
-    for path in Path("src/kehrnel/strategies").rglob("protocols"):
+    for path in Path("src/kehrnel/engine/strategies").rglob("protocols"):
         if path.is_dir():
             offenders.append(path)
     assert not offenders, f"Unexpected protocols directories remain: {offenders}"

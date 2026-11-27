@@ -50,7 +50,7 @@ async def test_deterministic_portable_compilation_and_extraction_digest():
 @pytest.mark.asyncio
 async def test_ibm_aliases_optional_indexes_and_disabled_search():
     compiled = await compile_deployment_configuration(manifest("rps_dual_ibm"), request())
-    assert compiled["config"]["fields"]["document"]["comp_id"] == "version"
+    assert compiled["config"]["fields"]["document"]["comp_id"] == "_id"
     assert compiled["config"]["fields"]["node"]["pi"] == "li"
     assert compiled["indexes"]["atlasSearch"][0]["definition"]["mappings"]["fields"]["ehr_id"]["type"] == "uuid"
     assert compiled["projection"]["shortcutValuePrefix"] == "$>"

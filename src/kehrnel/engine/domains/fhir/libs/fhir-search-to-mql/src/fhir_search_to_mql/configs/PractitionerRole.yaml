@@ -1,0 +1,605 @@
+resource: PractitionerRole
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/practitionerrole-definitions.html
+# Search Parameters: https://www.hl7.org/fhir/practitionerrole-search.html
+# Compartment: PractitionerRole is a member of the Practitioner compartment
+#   via the `practitioner` linking parameter
+#   (https://www.hl7.org/fhir/compartmentdefinition-practitioner.html).
+# FHIR R5 PractitionerRole search parameter table validated 2026-05.
+#
+# Total parameters: 17 (15 resource-specific per R5 §8.5.16 + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# Resource-specific search parameters (per R5 §8.5.16):
+#   active (token), characteristic (token), communication (token),
+#   date (date), email (token), endpoint (reference),
+#   identifier (token), location (reference), organization (reference),
+#   phone (token), practitioner (reference), role (token),
+#   service (reference), specialty (token), telecom (token).
+#
+# R5 structural notes worth calling out:
+#   * `PractitionerRole.contact` is `ExtendedContactDetail[]`
+#     (introduced in R5 — replaces the flat `ContactPoint[]` from R4).
+#     The token search expressions for `email` / `phone` / `telecom`
+#     therefore navigate `contact.telecom.where(system='…')` rather
+#     than the resource-root `telecom`. The denormalization rules
+#     below feed the full resource (`source: $resource`) to
+#     ContactPointExtractor with `source_path: contact[*].telecom`,
+#     which the path resolver flattens to a single ContactPoint stream.
+#   * `PractitionerRole.code`, `.specialty`, `.communication`,
+#     `.characteristic` are all `CodeableConcept[]` — denormalized as
+#     parallel `*_systemCode` (`system|code` pair) and `*_codes`
+#     (bare-code) projections so the `:exact`-vs-default token
+#     contract works consistently across all four parameters.
+#   * `PractitionerRole.period` is the single-Period validity window
+#     for the role (cardinality 0..1). The `date` parameter compares
+#     against `_search.period.start`/`end`.
+#
+# Compartment integration:
+#   - PractitionerRole is in the FHIR R5 Practitioner compartment via
+#     `practitioner` (single Reference, target Practitioner).
+#   - This config opts into the Hybrid Approach 3 fast-path by listing
+#     `Practitioner` under `compartments.precomputed`. The denormalizer
+#     then writes every PractitionerRole's practitioner-id into
+#     `_compartments.Practitioner` so a query like
+#     `Practitioner/dr-1/PractitionerRole` collapses to a single
+#     indexed lookup.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters (5 total)
+  # ─────────────────────────────────────────────────────────────
+  practitioner:
+    type: reference
+    description: "Practitioner that is able to provide the defined services for the organization (PractitionerRole.practitioner)"
+    fields:
+      - field: "_search.practitionerId"
+        referenceType: id
+      - field: "_search.practitionerType"
+        referenceType: type
+      - field: "practitioner.reference"
+        referenceType: full
+
+  organization:
+    type: reference
+    description: "The identity of the organization the practitioner represents / acts on behalf of (PractitionerRole.organization)"
+    fields:
+      - field: "_search.organizationId"
+        referenceType: id
+      - field: "_search.organizationType"
+        referenceType: type
+      - field: "organization.reference"
+        referenceType: full
+
+  location:
+    type: reference
+    description: "One of the locations at which this practitioner provides care (PractitionerRole.location)"
+    fields:
+      - field: "_search.locationId"
+        referenceType: id
+      - field: "_search.locationType"
+        referenceType: type
+      - field: "location.reference"
+        referenceType: full
+
+  service:
+    type: reference
+    description: "The list of healthcare services that this worker provides for this role's Organization/Location(s) (PractitionerRole.healthcareService)"
+    fields:
+      - field: "_search.healthcareServiceId"
+        referenceType: id
+      - field: "_search.healthcareServiceType"
+        referenceType: type
+      - field: "healthcareService.reference"
+        referenceType: full
+
+  endpoint:
+    type: reference
+    description: "Technical endpoints providing access to services operated for the practitioner with this role (PractitionerRole.endpoint)"
+    fields:
+      - field: "_search.endpointId"
+        referenceType: id
+      - field: "_search.endpointType"
+        referenceType: type
+      - field: "endpoint.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters (8 total — `_id` listed under common at bottom)
+  # ─────────────────────────────────────────────────────────────
+  active:
+    type: token
+    description: "Whether this practitioner role record is in active use (PractitionerRole.active)"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  identifier:
+    type: token
+    description: "A practitioner's identifier (PractitionerRole.identifier)"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  role:
+    type: token
+    description: "The practitioner can perform this role at for the organization (PractitionerRole.code)"
+    fields:
+      - field: "_search.role_systemCode"
+        tokenType: systemCode
+      - field: "_search.role_codes"
+        tokenType: code
+
+  specialty:
+    type: token
+    description: "The practitioner has this specialty at an organization (PractitionerRole.specialty)"
+    fields:
+      - field: "_search.specialty_systemCode"
+        tokenType: systemCode
+      - field: "_search.specialty_codes"
+        tokenType: code
+
+  characteristic:
+    type: token
+    description: "One of the PractitionerRole's characteristics (PractitionerRole.characteristic)"
+    fields:
+      - field: "_search.characteristic_systemCode"
+        tokenType: systemCode
+      - field: "_search.characteristic_codes"
+        tokenType: code
+
+  communication:
+    type: token
+    description: |
+      One of the languages that the practitioner can communicate with
+      (PractitionerRole.communication). R5 stores the language as a
+      CodeableConcept (was `code` in R4); the denormalization rule
+      flattens the coding[] codes into `_search.language` for an
+      index-friendly token lookup, matching the pattern used by
+      Practitioner.communication.
+    fields:
+      - field: "_search.language"
+        tokenType: code
+
+  email:
+    type: token
+    description: "A value in an email contact (PractitionerRole.contact.telecom.where(system='email'))"
+    fields:
+      - field: "_search.email"
+        tokenType: code
+
+  phone:
+    type: token
+    description: "A value in a phone contact (PractitionerRole.contact.telecom.where(system='phone'))"
+    fields:
+      - field: "_search.phone"
+        tokenType: code
+
+  telecom:
+    type: token
+    description: "The value in any kind of contact (PractitionerRole.contact.telecom)"
+    fields:
+      - field: "_search.telecom_systemCode"
+        tokenType: systemCode
+      - field: "_search.telecom_values"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters (1 resource-specific + `_lastUpdated` common)
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: |
+      The period during which the practitioner is authorized to
+      perform in these role(s) (PractitionerRole.period).
+      Per FHIR R5 the comparators eq/ne/gt/ge/lt/le/sa/eb/ap are all
+      allowed; the date parser routes them through PeriodConverter
+      against `_search.period.start` / `.end`.
+    fields:
+      - field: "_search.period"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters (2 — applied to every FHIR resource)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+
+# Denormalization Configuration
+# Only fields explicitly listed here are denormalized (100% config-driven).
+# The denormalizer writes everything to `_search.*` (and `_compartments.*`
+# for the compartment_membership rule); the original FHIR resource fields
+# are left intact so resource purity is preserved.
+denormalization:
+  # FHIR R5: `PractitionerRole.identifier`. Standard Identifier
+  # denormalization — both bare values and `system|value` pairs so the
+  # token search supports the `system|code` modifier.
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Bare identifier values (powers `identifier=<value>`)"
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "system|value pairs (powers `identifier=<system>|<value>`)"
+
+  # FHIR R5: `PractitionerRole.code` is a CodeableConcept[] of role
+  # codes (e.g. http://terminology.hl7.org/CodeSystem/practitioner-role
+  # codes like `doctor`, `nurse`, `pharmacist`). The `role` search
+  # parameter binds to this element.
+  role:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code[*].coding[*].code
+        target_field: role_codes
+        datatype: array[string]
+        comment: "Role codes (e.g. doctor, nurse) — powers `role=<code>`"
+      - source_path: code[*].coding[*]
+        target_field: role_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the role parameter"
+
+  # FHIR R5: `PractitionerRole.specialty` is a CodeableConcept[] of
+  # practice settings (e.g. cardiology, oncology) — bound to the
+  # `specialty` search parameter.
+  specialty:
+    source: specialty
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialty[*].coding[*].code
+        target_field: specialty_codes
+        datatype: array[string]
+        comment: "Specialty codes (e.g. 394814009 for general practice)"
+      - source_path: specialty[*].coding[*]
+        target_field: specialty_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the specialty parameter"
+
+  # FHIR R5: `PractitionerRole.characteristic` is a CodeableConcept[]
+  # describing the role's characteristics (e.g. service mode codes
+  # like `in-person`, `telehealth`). New in R5.
+  characteristic:
+    source: characteristic
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: characteristic[*].coding[*].code
+        target_field: characteristic_codes
+        datatype: array[string]
+        comment: "Characteristic codes (e.g. in-person, telehealth)"
+      - source_path: characteristic[*].coding[*]
+        target_field: characteristic_systemCode
+        datatype: array[string]
+        comment: "system|code pairs for the characteristic parameter"
+
+  # FHIR R5: `PractitionerRole.communication` is a CodeableConcept[]
+  # of language codes the practitioner can use in patient-facing
+  # communication. R5 changed the type from `code[]` (R4) to
+  # `CodeableConcept[]` — see the detailed-descriptions doc,
+  # §PractitionerRole.communication. The path expression
+  # `communication[*].coding[*].code` mirrors Practitioner.yaml's
+  # treatment of Practitioner.communication so a single search like
+  # `communication=en-US` works identically for both resources.
+  communication:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: communication[*].coding[*].code
+        target_field: language
+        datatype: array[string]
+        comment: "Language codes (e.g. en-US, es-MX)"
+
+  # FHIR R5: `PractitionerRole.contact` is `ExtendedContactDetail[]`
+  # (replaces the flat `ContactPoint[]` from R4). The actual
+  # ContactPoints live at `contact[*].telecom[*]`. ContactPointExtractor
+  # in `$resource` mode resolves the path internally, so a single rule
+  # populates `_search.email`, `_search.phone`, `_search.telecom_*`
+  # consistently across all PractitionerRole.contact entries.
+  contact_telecom:
+    source: $resource
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: contact[*].telecom
+        target_field: email
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Emails extracted from contact[*].telecom where system='email' — powers `email` token search"
+      - source_path: contact[*].telecom
+        target_field: phone
+        datatype: array[string]
+        comment: "Phones extracted from contact[*].telecom where system='phone' — powers `phone` token search"
+      - source_path: contact[*].telecom
+        target_field: telecom_values
+        datatype: array[string]
+        comment: "All telecom values regardless of system — powers the unfiltered `telecom` token search"
+      - source_path: contact[*].telecom
+        target_field: telecom_systemCode
+        datatype: array[string]
+        comment: "Telecom values for the systemCode field of `telecom` token search"
+
+  # FHIR R5: `PractitionerRole.period` is `Period` (cardinality 0..1).
+  # Pre-resolved mode (`source: period`) feeds the Period dict directly
+  # to PeriodExtractor, which projects it as `{start, end}` for the
+  # `object` datatype so date range queries hit `_search.period.start` /
+  # `.end` directly. The `date` search parameter (eq/ne/gt/ge/lt/le/
+  # sa/eb/ap comparators) routes through this projection.
+  # `$resource` mode would also work but only when the `source_path`
+  # is a navigable path expression — bare `period` doesn't qualify
+  # (path_resolver.is_path_expression requires `.` / `[*]` / `|`),
+  # so it would silently no-op.
+  period:
+    source: period
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: period
+        target_field: period
+        datatype: object
+        comment: "Role validity Period as {start, end} — powers the `date` parameter"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference denormalization (for the 5 reference search params)
+  # ─────────────────────────────────────────────────────────────
+  practitioner:
+    source: practitioner
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: practitioner.reference
+        target_field: practitionerId
+        datatype: string
+        extractType: id
+        comment: "Bare ID extracted from practitioner reference (e.g., 'Practitioner/123' -> '123')"
+      - source_path: practitioner.reference
+        target_field: practitionerType
+        datatype: string
+        extractType: type
+        comment: "Resource type from practitioner reference (always 'Practitioner')"
+
+  organization:
+    source: organization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: organization.reference
+        target_field: organizationId
+        datatype: string
+        extractType: id
+        comment: "Bare ID from organization reference"
+      - source_path: organization.reference
+        target_field: organizationType
+        datatype: string
+        extractType: type
+        comment: "Resource type from organization reference (always 'Organization')"
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location[*].reference
+        target_field: locationId
+        datatype: array[string]
+        extractType: id
+        comment: "Bare IDs from location[] references"
+      - source_path: location[*].reference
+        target_field: locationType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from location[] references (always 'Location')"
+
+  healthcareService:
+    source: healthcareService
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: healthcareService[*].reference
+        target_field: healthcareServiceId
+        datatype: array[string]
+        extractType: id
+        comment: "Bare IDs from healthcareService[] references — powers the `service` parameter"
+      - source_path: healthcareService[*].reference
+        target_field: healthcareServiceType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from healthcareService[] references"
+
+  endpoint:
+    source: endpoint
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: endpoint[*].reference
+        target_field: endpointId
+        datatype: array[string]
+        extractType: id
+        comment: "Bare IDs from endpoint[] references"
+      - source_path: endpoint[*].reference
+        target_field: endpointType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from endpoint[] references (always 'Endpoint')"
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3 from
+  # analysis_documents/FHIR_TO_MQL_COMPARTMENT.md). PractitionerRole is
+  # NOT a compartment-defining resource itself, but it IS a member of
+  # the Practitioner compartment via `practitioner` (per FHIR R5
+  # CompartmentDefinition for Practitioner —
+  # https://www.hl7.org/fhir/compartmentdefinition-practitioner.html
+  # and the resource page's "Compartments: Practitioner" header on
+  # https://www.hl7.org/fhir/practitionerrole.html).
+  #
+  # The extractor walks `practitioner` (a single Reference, target
+  # Practitioner), filters to `Practitioner/*` entries via
+  # `reference_type`, and writes the bare id into
+  # `_compartments.Practitioner`. `include_self: false` because a
+  # PractitionerRole is never the root of its own Practitioner
+  # compartment.
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Practitioner
+        source_paths:
+          - practitioner
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: "Practitioner compartment IDs (PractitionerRole.practitioner refs filtered to Practitioner/*)"
+
+# Compartment fast-path opt-in. The CompartmentResolver consults this
+# list and, for the Practitioner compartment, emits the precomputed
+# `_compartments.Practitioner: id` query instead of the dynamic
+# resolution against `practitioner.reference`.
+compartments:
+  precomputed:
+    - Practitioner
+
+# Recommended MongoDB Indexes
+indexes:
+  # Compartment fast-path index (Hybrid Approach 3). Single-field
+  # indexed lookup that powers `Practitioner/<id>/PractitionerRole`
+  # queries through the resolver's precomputed branch.
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+
+  - fields:
+      - "active": 1
+    options:
+      name: idx_active
+
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+
+  - fields:
+      - "_search.role_systemCode": 1
+    options:
+      name: idx_role_system_code
+      sparse: true
+  - fields:
+      - "_search.role_codes": 1
+    options:
+      name: idx_role_codes
+      sparse: true
+
+  - fields:
+      - "_search.specialty_systemCode": 1
+    options:
+      name: idx_specialty_system_code
+      sparse: true
+  - fields:
+      - "_search.specialty_codes": 1
+    options:
+      name: idx_specialty_codes
+      sparse: true
+
+  - fields:
+      - "_search.characteristic_systemCode": 1
+    options:
+      name: idx_characteristic_system_code
+      sparse: true
+  - fields:
+      - "_search.characteristic_codes": 1
+    options:
+      name: idx_characteristic_codes
+      sparse: true
+
+  - fields:
+      - "_search.language": 1
+    options:
+      name: idx_communication_language
+      sparse: true
+
+  - fields:
+      - "_search.email": 1
+    options:
+      name: idx_email
+      sparse: true
+  - fields:
+      - "_search.phone": 1
+    options:
+      name: idx_phone
+      sparse: true
+  - fields:
+      - "_search.telecom_systemCode": 1
+    options:
+      name: idx_telecom_system_code
+      sparse: true
+
+  - fields:
+      - "_search.period.start": 1
+    options:
+      name: idx_period_start
+      sparse: true
+  - fields:
+      - "_search.period.end": 1
+    options:
+      name: idx_period_end
+      sparse: true
+
+  - fields:
+      - "_search.practitionerId": 1
+    options:
+      name: idx_practitioner_id
+      sparse: true
+  - fields:
+      - "_search.organizationId": 1
+    options:
+      name: idx_organization_id
+      sparse: true
+  - fields:
+      - "_search.locationId": 1
+    options:
+      name: idx_location_id
+      sparse: true
+  - fields:
+      - "_search.healthcareServiceId": 1
+    options:
+      name: idx_healthcare_service_id
+      sparse: true
+  - fields:
+      - "_search.endpointId": 1
+    options:
+      name: idx_endpoint_id
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

@@ -2,6 +2,7 @@
 
 from typing import Any, Dict, Optional, Tuple, List
 from motor.motor_asyncio import AsyncIOMotorDatabase
+import os
 import re
 import logging
 
@@ -23,6 +24,8 @@ class ArchetypeResolver:
         composition_collection: str | None = None,
         separator: str | None = None,
         atcode_strategy: str | None = None,
+        code_items: Dict[str, Any] | None = None,
+        data_driven_path_discovery: bool | None = None,
     ):
         self.db = db
         self.codes_collection = codes_collection or "_codes"
@@ -31,10 +34,17 @@ class ArchetypeResolver:
         self.composition_collection = composition_collection or "compositions"
         self.separator = separator or ":"
         self.atcode_strategy = (atcode_strategy or "negative_int").strip().lower()
+        if data_driven_path_discovery is None:
+            raw = os.getenv("KEHRNEL_RPS_DUAL_DATA_DRIVEN_PATH_DISCOVERY", "false").lower()
+            data_driven_path_discovery = raw in {"1", "true", "yes"}
+        self.data_driven_path_discovery = data_driven_path_discovery
         self._archetype_to_code_cache: Dict[str, Any] = {}
         self._at_code_to_int_cache: Dict[str, Any] = {}
         self._structural_pattern_cache: Dict[str, List[str]] = {}
+        self._nested_path_pattern_cache: Dict[str, str] = {}
         self._codes_loaded = False
+        if code_items:
+            self.seed_code_items(code_items)
 
     def _escaped_separator(self) -> str:
         return re.escape(self.separator)
@@ -52,6 +62,32 @@ class ArchetypeResolver:
         escaped_sep = self._escaped_separator()
         not_sep = self._not_separator_class()
         return rf"(?:{escaped_sep}{not_sep}+)*$"
+
+    def seed_code_items(self, code_items: Dict[str, Any]) -> None:
+        """Seed resolver caches from the strategy-level dictionary cache."""
+        for selector, code in (code_items or {}).items():
+            if not isinstance(selector, str):
+                continue
+            if selector.lower().startswith("at"):
+                self._at_code_to_int_cache[selector] = code
+                self._at_code_to_int_cache[selector.lower()] = code
+            else:
+                self._archetype_to_code_cache[selector] = code
+        self._codes_loaded = True
+
+    def _nested_path_pattern_from_codes(
+        self,
+        *,
+        at_code_sequence: List[str],
+        base_archetype_code: Any,
+    ) -> str:
+        fallback_pattern = self._join_tokens(
+            at_code_sequence[-1],
+            *reversed(at_code_sequence[:-1]),
+            base_archetype_code,
+        )
+        escaped_fallback = re.escape(fallback_pattern)
+        return rf"^{escaped_fallback}{self._path_suffix_regex()}"
 
     @staticmethod
     def _candidate_code_values(code: Any) -> List[Any]:
@@ -295,6 +331,23 @@ class ArchetypeResolver:
         # If no AT codes found in path, fall back to base archetype pattern
         if not at_code_sequence:
             return str(base_archetype_code)
+
+        nested_cache_key = self._join_tokens(
+            variable_alias,
+            archetype_id,
+            *at_code_sequence,
+        )
+        cached_pattern = self._nested_path_pattern_cache.get(nested_cache_key)
+        if cached_pattern is not None:
+            return cached_pattern
+
+        deterministic_pattern = self._nested_path_pattern_from_codes(
+            at_code_sequence=at_code_sequence,
+            base_archetype_code=base_archetype_code,
+        )
+        if not self.data_driven_path_discovery:
+            self._nested_path_pattern_cache[nested_cache_key] = deterministic_pattern
+            return deterministic_pattern
         
         # Now query actual documents to find patterns that match our AT code sequence
         try:
@@ -342,11 +395,15 @@ class ArchetypeResolver:
                         # Create a pattern that matches the AT code sequence exactly
                         # but is flexible about what comes after
                         escaped_start = re.escape(expected_start)
-                        return rf"^{escaped_start}{self._path_suffix_regex()}"
+                        resolved_pattern = rf"^{escaped_start}{self._path_suffix_regex()}"
+                        self._nested_path_pattern_cache[nested_cache_key] = resolved_pattern
+                        return resolved_pattern
                     else:
                         # Fallback to exact match if pattern is shorter than expected
                         escaped_pattern = re.escape(sample_pattern)
-                        return f"^{escaped_pattern}$"
+                        resolved_pattern = f"^{escaped_pattern}$"
+                        self._nested_path_pattern_cache[nested_cache_key] = resolved_pattern
+                        return resolved_pattern
                 else:
                     logger.warning(f"Warning: Found documents but no matching p-values for pattern {expected_start}")
             else:
@@ -355,11 +412,10 @@ class ArchetypeResolver:
         except Exception as e:
             logger.warning(f"Error during data-driven pattern discovery: {e}")
         
-        # Fallback: if no data-driven pattern found, create a basic pattern
-        # This should match the AT code sequence + base archetype
-        fallback_pattern = self._join_tokens(at_code_sequence[-1], *reversed(at_code_sequence[:-1]), base_archetype_code)
-        escaped_fallback = re.escape(fallback_pattern)
-        return rf"^{escaped_fallback}{self._path_suffix_regex()}"
+        # Fallback: if no data-driven pattern found, use the deterministic
+        # dictionary-coded path. This matches the runtime encoded path contract.
+        self._nested_path_pattern_cache[nested_cache_key] = deterministic_pattern
+        return deterministic_pattern
     
     async def _build_containment_chain(self, variable_alias: str, context_map: Dict[str, Dict]) -> List[Dict]:
         """

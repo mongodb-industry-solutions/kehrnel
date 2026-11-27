@@ -1,0 +1,204 @@
+{
+  "_schemaVersion": "1.0",
+  "_strategy": "contextobjects.rps",
+  "_description": "Full storage model specification for the ContextObjects RPS dual-collection strategy.",
+
+  "storageModel": {
+    "layout": "dual-collection",
+    "description": "Two synchronised collections: context_objects holds complete instances, context_objects_search holds denormalised path→value pairs for AQL queries.",
+    "stores": [
+      {
+        "alias": "objects",
+        "configKey": "collections.objects.name",
+        "defaultName": "context_objects",
+        "purpose": "primary",
+        "description": "Full ContextObject instances. Each document is one instance, with the complete content-node tree stored in the cn array.",
+        "documentShape": {
+          "ot":   { "fieldKey": "fields.object_type",   "default": "ot",   "type": "string",  "description": "objectType — semantic model identifier" },
+          "rid":  { "fieldKey": "fields.record_id",     "default": "rid",  "type": "string",  "description": "recordId — unique instance identifier used as _id" },
+          "ver":  { "fieldKey": "fields.version",       "default": "ver",  "type": "string",  "description": "Semantic version of the instance" },
+          "meta": { "fieldKey": "fields.meta",          "default": "meta", "type": "object",  "description": "Instance metadata (source, created, etc.)" },
+          "cn":   {
+            "fieldKey": "fields.content_nodes",
+            "default": "cn",
+            "type": "array",
+            "description": "Content nodes — one entry per data node, in document order",
+            "items": {
+              "p":   { "fieldKey": "node_fields.path",      "default": "p",   "type": "string",        "description": "Full path to this node, e.g. /data[co0001][co0002]" },
+              "nid": { "fieldKey": "node_fields.node_id",   "default": "nid", "type": "string",        "description": "Node ID (e.g. co0001)" },
+              "anc": { "fieldKey": "node_fields.ancestors", "default": "anc", "type": "array<string>", "description": "Ancestor node IDs from root to this node" },
+              "v":   { "fieldKey": "node_fields.value",     "default": "v",   "type": "any",           "description": "Leaf value; null for structural nodes" },
+              "dt":  { "fieldKey": "node_fields.data_type", "default": "dt",  "type": "string",        "description": "Data type: string | integer | number | boolean | datetime | coded_text | quantity | object" }
+            }
+          }
+        },
+        "indexes": [
+          {
+            "alias": "idx_ot",
+            "keys": [["fields.object_type", 1]],
+            "options": { "name": "idx_ot" },
+            "purpose": "objectType filter on primary collection"
+          },
+          {
+            "alias": "idx_rid",
+            "keys": [["fields.record_id", 1]],
+            "options": { "name": "idx_rid", "unique": true },
+            "purpose": "Unique record lookup and upsert filter"
+          },
+          {
+            "alias": "idx_cn_path",
+            "keys": [["fields.content_nodes + '.' + node_fields.path", 1]],
+            "options": { "name": "idx_cn_path" },
+            "purpose": "Path prefix queries on the content node array"
+          },
+          {
+            "alias": "idx_cn_nid",
+            "keys": [["fields.content_nodes + '.' + node_fields.node_id", 1]],
+            "options": { "name": "idx_cn_nid" },
+            "purpose": "Node-ID lookup in the content node array"
+          },
+          {
+            "alias": "idx_created",
+            "keys": [["meta.created", 1]],
+            "options": { "name": "idx_created" },
+            "purpose": "Time-range queries using ingestion timestamp"
+          }
+        ]
+      },
+      {
+        "alias": "search",
+        "configKey": "collections.search.name",
+        "defaultName": "context_objects_search",
+        "enabledKey": "collections.search.enabled",
+        "purpose": "search",
+        "description": "Denormalised search collection. One document per instance, with sn[] containing one entry per leaf node. All AQL queries target this collection.",
+        "documentShape": {
+          "ot":  { "fieldKey": "fields.object_type", "default": "ot",  "type": "string", "description": "objectType — top-level $match target" },
+          "rid": { "fieldKey": "fields.record_id",   "default": "rid", "type": "string", "description": "recordId — used as _id for upserts" },
+          "sn":  {
+            "fieldKey": "fields.search_nodes",
+            "default": "sn",
+            "type": "array",
+            "description": "Search nodes — one entry per leaf node across the entire instance tree. Used by AQL $elemMatch predicates.",
+            "items": {
+              "p":   { "fieldKey": "node_fields.path",      "default": "p",   "type": "string", "description": "Full path, e.g. /data[co0001][co0002]" },
+              "nid": { "fieldKey": "node_fields.node_id",   "default": "nid", "type": "string", "description": "Node ID (e.g. co0001)" },
+              "v":   { "fieldKey": "node_fields.value",     "default": "v",   "type": "any",    "description": "Leaf value (scalar or structured for coded_text/quantity)" },
+              "dt":  { "fieldKey": "node_fields.data_type", "default": "dt",  "type": "string", "description": "Data type shorthand" }
+            }
+          }
+        },
+        "indexes": [
+          {
+            "alias": "idx_search_ot",
+            "keys": [["fields.object_type", 1]],
+            "options": { "name": "idx_search_ot" },
+            "purpose": "Primary AQL objectType filter on search collection"
+          },
+          {
+            "alias": "idx_search_rid",
+            "keys": [["fields.record_id", 1]],
+            "options": { "name": "idx_search_rid" },
+            "purpose": "Record lookup and upsert filter on search collection"
+          },
+          {
+            "alias": "idx_search_nid_val",
+            "keys": [
+              ["fields.search_nodes + '.' + node_fields.node_id", 1],
+              ["fields.search_nodes + '.' + node_fields.value", 1]
+            ],
+            "options": { "name": "idx_search_nid_val" },
+            "purpose": "Core AQL index: nodeId + value compound. Covers WHERE c/data[nodeId]/value = x predicates.",
+            "required": true
+          },
+          {
+            "alias": "idx_search_path_val",
+            "keys": [
+              ["fields.search_nodes + '.' + node_fields.path", 1],
+              ["fields.search_nodes + '.' + node_fields.value", 1]
+            ],
+            "options": { "name": "idx_search_path_val" },
+            "purpose": "Path + value compound. Covers WHERE c/path/value = x and LIKE predicates.",
+            "required": true
+          }
+        ]
+      }
+    ]
+  },
+
+  "queryModel": {
+    "language": "AQL",
+    "dialect": "contextobjects",
+    "description": "SQL-style query language targeting ContextObject instances. FROM clause must reference ContextObject; WHERE clauses filter by objectType and node predicates.",
+    "targetCollection": "search",
+    "compilationTarget": "mongodb-aggregation",
+    "syntax": {
+      "from":  "FROM ContextObject c",
+      "where": "WHERE c/data[nodeId]/value <op> <literal> AND c/objectType = '<type>'",
+      "ops":   ["=", "!=", "<", "<=", ">", ">=", "LIKE", "IN"],
+      "logic": ["AND", "OR", "NOT"],
+      "order": "ORDER BY c/data[nodeId]/value ASC|DESC",
+      "limit": "LIMIT <n> OFFSET <m>"
+    },
+    "compilationSteps": [
+      "1. Hoist objectType predicate to top-level $match for index coverage.",
+      "2. Each node predicate becomes an $elemMatch on the sn array, matching nid and/or p alongside v.",
+      "3. ORDER BY compiles to $project (extracting value via $let/$filter/$arrayElemAt) + $sort.",
+      "4. LIMIT/OFFSET compile to $limit/$skip."
+    ],
+    "examples": [
+      {
+        "label": "Filter by objectType",
+        "aql": "SELECT * FROM ContextObject c WHERE c/objectType = 'patient-demographics'"
+      },
+      {
+        "label": "Node value equality",
+        "aql": "SELECT * FROM ContextObject c WHERE c/data[co0001]/value = 'Alice Smith'"
+      },
+      {
+        "label": "Numeric range",
+        "aql": "SELECT * FROM ContextObject c WHERE c/objectType = 'vital-signs' AND c/data[co0010]/value > 37.5"
+      },
+      {
+        "label": "LIKE text search",
+        "aql": "SELECT * FROM ContextObject c WHERE c/data[co0020]/value LIKE 'Smith%'"
+      },
+      {
+        "label": "Multi-condition",
+        "aql": "SELECT * FROM ContextObject c WHERE c/objectType = 'patient' AND c/data[co0001]/value = 'Alice' AND c/data[co0010]/value > 30 LIMIT 50"
+      }
+    ]
+  },
+
+  "instanceShape": {
+    "description": "Shape of a ContextObject instance as accepted by transform/ingest.",
+    "required": ["objectType", "recordId"],
+    "properties": {
+      "objectType": { "type": "string", "description": "Semantic model identifier (must match schema id for validation)" },
+      "recordId":   { "type": "string", "description": "Unique instance identifier — used as _id in both collections" },
+      "version":    { "type": "string", "default": "1.0", "description": "Instance version string" },
+      "data": {
+        "type": "object",
+        "description": "Node tree. Keys are nodeIds; values are node objects with _type, _value, and optional _code/_unit/_system.",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "_type":   { "type": "string", "description": "Data type: string | integer | number | boolean | datetime | coded_text | quantity | object" },
+            "_value":  { "description": "Leaf value (scalar, coded_text object, or quantity object)" },
+            "_code":   { "type": "string", "description": "Code value for coded_text nodes" },
+            "_system": { "type": "string", "description": "Coding system for coded_text nodes" },
+            "_unit":   { "type": "string", "description": "Unit for quantity nodes" }
+          }
+        }
+      },
+      "meta": {
+        "type": "object",
+        "description": "Optional metadata attached to the instance",
+        "properties": {
+          "source":    { "type": "string" },
+          "created":   { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

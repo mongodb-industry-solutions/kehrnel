@@ -1,0 +1,277 @@
+resource: Medication
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Medication)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — Medication is not listed in any R5 compartment
+#   definition (see compartments/definitions/*.json).
+#
+# Total parameters: 12 (10 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Medication.code` and `Medication.doseForm` are CodeableConcept
+#     (0..1). Search param `form` targets `doseForm` (R5 index leaves
+#     the FHIR expression empty; dose form is the clinical binding).
+#   * `Medication.ingredient[]` is BackboneElement with `item`
+#     (CodeableReference) — `ingredient` searches `.reference`,
+#     `ingredient-code` searches `.concept`.
+#   * `Medication.batch` is BackboneElement (0..1) with `lotNumber` and
+#     `expirationDate` — `lot-number` and `expiration-date` search params.
+#   * `serial-number` shares `Medication.identifier` per the R5 search
+#     expression (same denorm bucket as `identifier`).
+#   * Top-level scalar `status` queries the FHIR root field directly.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  ingredient:
+    type: reference
+    description: "Returns medications for this ingredient reference"
+    fields:
+      - field: "_search.ingredientIds"
+        referenceType: id
+      - field: "_search.ingredientTypes"
+        referenceType: type
+      - field: "ingredient.item.reference"
+        referenceType: full
+
+  marketingauthorizationholder:
+    type: reference
+    description: "Returns medications made or sold for this marketing authorization holder"
+    fields:
+      - field: "_search.marketingAuthorizationHolderId"
+        referenceType: id
+      - field: "_search.marketingAuthorizationHolderType"
+        referenceType: type
+      - field: "marketingAuthorizationHolder.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  code:
+    type: token
+    description: "Returns medications for a specific code"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  form:
+    type: token
+    description: "Returns medications for a specific dose form"
+    fields:
+      - field: "_search.form_systemCode"
+        tokenType: systemCode
+      - field: "_search.form_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Returns medications with this external identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  ingredient-code:
+    type: token
+    description: "Returns medications for this ingredient code"
+    fields:
+      - field: "_search.ingredientCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.ingredientCode_codes"
+        tokenType: code
+
+  lot-number:
+    type: token
+    description: "Returns medications in a batch with this lot number"
+    fields:
+      - field: "_search.lotNumber_values"
+        tokenType: code
+
+  serial-number:
+    type: token
+    description: "Returns medications with this serial identifier value"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  status:
+    type: token
+    description: "Returns medications for this status"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  expiration-date:
+    type: date
+    description: "Returns medications in a batch with this expiration date"
+    fields:
+      - field: "_search.batchExpirationDate"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  dose_form:
+    source: doseForm
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: doseForm.coding[*].code
+        target_field: form_codes
+        datatype: array[string]
+      - source_path: doseForm.coding[*]
+        target_field: form_systemCode
+        datatype: array[string]
+
+  ingredient_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: ingredient[*].item.concept.coding[*].code
+        target_field: ingredientCode_codes
+        datatype: array[string]
+      - source_path: ingredient[*].item.concept.coding[*]
+        target_field: ingredientCode_systemCode
+        datatype: array[string]
+
+  ingredient_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: ingredient[*].item.reference.reference
+        target_field: ingredientIds
+        datatype: array[string]
+        extractType: id
+      - source_path: ingredient[*].item.reference.reference
+        target_field: ingredientTypes
+        datatype: array[string]
+        extractType: type
+
+  marketing_authorization_holder:
+    source: marketingAuthorizationHolder
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: marketingAuthorizationHolder.reference
+        target_field: marketingAuthorizationHolderId
+        datatype: string
+        extractType: id
+      - source_path: marketingAuthorizationHolder.reference
+        target_field: marketingAuthorizationHolderType
+        datatype: string
+        extractType: type
+
+  batch_lot_number:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: batch.lotNumber
+        target_field: lotNumber_values
+        datatype: array[string]
+
+  batch_expiration:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: batch.expirationDate
+        target_field: batchExpirationDate
+        datatype: date
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+      sparse: true
+
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code
+      sparse: true
+
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  - fields:
+      - "_search.ingredientIds": 1
+    options:
+      name: idx_ingredient_ids
+      sparse: true
+
+  - fields:
+      - "_search.marketingAuthorizationHolderId": 1
+    options:
+      name: idx_marketing_authorization_holder_id
+      sparse: true
+
+  - fields:
+      - "_search.batchExpirationDate": 1
+    options:
+      name: idx_batch_expiration
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

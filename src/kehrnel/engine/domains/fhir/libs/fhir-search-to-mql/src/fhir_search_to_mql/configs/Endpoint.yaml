@@ -1,0 +1,177 @@
+resource: Endpoint
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Endpoint)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — not listed in compartments/definitions/*.json
+#
+# Total parameters: 8 (6 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `connectionType` is required CodeableConcept[].
+#   * `payload[].type[]` powers `payload-type` token search.
+#   * Top-level scalar `status` queries the FHIR root.
+
+search_parameters:
+  connection-type:
+    type: token
+    description: "Protocol/Profile/Standard to be used with this endpoint"
+    fields:
+      - field: "_search.connectionType_systemCode"
+        tokenType: systemCode
+      - field: "_search.connectionType_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Identifies this endpoint across multiple systems"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  name:
+    type: string
+    description: "A name that this endpoint can be identified by"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+
+  organization:
+    type: reference
+    description: "Organization that manages this endpoint"
+    fields:
+      - field: "_search.managingOrganizationId"
+        referenceType: id
+      - field: "managingOrganization.reference"
+        referenceType: full
+
+  payload-type:
+    type: token
+    description: "The type of content that may be used at this endpoint"
+    fields:
+      - field: "_search.payloadType_systemCode"
+        tokenType: systemCode
+      - field: "_search.payloadType_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "active | suspended | error | off | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  connectionType:
+    source: connectionType
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: connectionType[*].coding[*].code
+        target_field: connectionType_codes
+        datatype: array[string]
+      - source_path: connectionType[*].coding[*]
+        target_field: connectionType_systemCode
+        datatype: array[string]
+
+  name:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+
+  managingOrganization:
+    source: managingOrganization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: managingOrganization.reference
+        target_field: managingOrganizationId
+        datatype: string
+        extractType: id
+
+  payload_type:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: payload[*].type[*].coding[*].code
+        target_field: payloadType_codes
+        datatype: array[string]
+      - source_path: payload[*].type[*].coding[*]
+        target_field: payloadType_systemCode
+        datatype: array[string]
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_name_lower
+      sparse: true
+
+  - fields:
+      - "_search.managingOrganizationId": 1
+    options:
+      name: idx_managing_organization_id
+      sparse: true
+
+  - fields:
+      - "_search.connectionType_codes": 1
+    options:
+      name: idx_connection_type_codes
+      sparse: true
+
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

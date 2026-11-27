@@ -9,6 +9,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import Dict, Any, List, Optional
 from fastapi import HTTPException, status
 
+from kehrnel.api.bridge.app.core.config_models import CompositionCollectionNames
 from kehrnel.api.domains.openehr.ehr.service import create_ehr
 from kehrnel.api.domains.openehr.composition.service import add_composition
 from kehrnel.api.domains.openehr.composition.models import CompositionCreate
@@ -212,6 +213,7 @@ async def generate_synthetic_data(
     base_composition: Dict[str, Any],
     count: int,
     flattener: CompositionFlattener,
+    config: CompositionCollectionNames,
     merge_search_docs: bool = False
 ) -> List[Dict[str, Any]]:
     """
@@ -273,6 +275,7 @@ async def generate_synthetic_data(
                 ehr_id=ehr_response.ehr_id.value,
                 composition_create=composition_create,
                 db=db,
+                config=config,
                 flattener=flattener,
                 merge_search_docs=merge_search_docs,
                 committer_name="SyntheticDataGenerator"
@@ -293,7 +296,7 @@ async def generate_synthetic_data(
             # and include error information
             error_record = {
                 "record_number": i + 1,
-                "error": f"Failed to create record {i+1}: {str(e)}",
+                "error": "Synthetic record generation failed.",
                 "ehr_id": None,
                 "subject_id": None,
                 "composition_uid": None,
@@ -302,6 +305,6 @@ async def generate_synthetic_data(
             created_records.append(error_record)
             
             # Log the error but continue with next record
-            logger.exception("Failed creating synthetic record %s", i + 1)
+            logger.error("Failed creating synthetic record %s (%s)", i + 1, type(e).__name__)
     
     return created_records

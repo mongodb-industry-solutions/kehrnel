@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fhir-gen"
+version = "1.0.0"
+description = "FHIR R5 Synthetic Healthcare Data Generator"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "FHIR Data Generation Contributors" }]
+keywords = ["fhir", "healthcare", "synthetic-data", "hl7", "r5"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Healthcare Industry",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "pydantic>=2.0",
+  "pydantic-settings>=2.0",
+  "pymongo>=4.6",
+  "click>=8.1",
+  "faker>=24.0",
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "pytest-asyncio>=0.21",
+  "pytest-cov>=4.1",
+  "mongomock>=4.1",
+  "ruff>=0.1",
+  "mypy>=1.5",
+]
+
+[project.scripts]
+fhir-gen = "fhir_gen.cli.main:main"
+
+[project.urls]
+Repository = "https://github.com/your-org/fhir-data-generation"
+Documentation = "https://github.com/your-org/fhir-data-generation#readme"
+
+[tool.setuptools.packages.find]
+include = ["fhir_gen*"]
+
+[tool.setuptools.package-data]
+fhir_gen = [
+  "schema/fhir.schema.v5.json",
+  "hl7_codes/healthcare_codes.yaml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=fhir_gen --cov-report=term-missing --cov-fail-under=75"
+asyncio_mode = "auto"
+markers = [
+    "integration: cross-module or schema-wide integration tests",
+    "e2e: end-to-end CLI_COMMANDS scenarios (requires MongoDB)",
+    "mongodb: requires MongoDB at localhost:27017",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true

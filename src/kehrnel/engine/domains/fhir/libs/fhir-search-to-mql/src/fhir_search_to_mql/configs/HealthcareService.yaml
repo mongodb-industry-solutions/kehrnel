@@ -1,0 +1,395 @@
+resource: HealthcareService
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec HealthcareService)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — HealthcareService is not in any R5 compartment
+#   definition (see compartments/definitions/*.json).
+#
+# Total parameters: 17 (15 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `HealthcareService.name` is a scalar string (0..1).
+#   * `service-category` searches `category[]`; `service-type` searches
+#     `type[]` (param name differs from element name).
+#   * `organization` searches `providedBy` (Organization).
+#   * `eligibility` searches `eligibility[].code` (CodeableConcept).
+#   * Top-level scalar `active` queries the FHIR root field.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  name:
+    type: string
+    description: "A portion of the healthcare service name"
+    fields:
+      default:
+        - field: "_search.name_lower"
+          query_type: range
+      exact:
+        - field: "_search.name"
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  coverage-area:
+    type: reference
+    description: "Location(s) covered by this service"
+    fields:
+      - field: "_search.coverageAreaIds"
+        referenceType: id
+      - field: "_search.coverageAreaTypes"
+        referenceType: type
+      - field: "coverageArea.reference"
+        referenceType: full
+
+  endpoint:
+    type: reference
+    description: "Technical endpoints providing access to this service"
+    fields:
+      - field: "_search.endpointIds"
+        referenceType: id
+      - field: "endpoint.reference"
+        referenceType: full
+
+  location:
+    type: reference
+    description: "Location(s) where this service is provided"
+    fields:
+      - field: "_search.locationIds"
+        referenceType: id
+      - field: "_search.locationTypes"
+        referenceType: type
+      - field: "location.reference"
+        referenceType: full
+
+  offered-in:
+    type: reference
+    description: "The service within which this service is offered"
+    fields:
+      - field: "_search.offeredInIds"
+        referenceType: id
+      - field: "_search.offeredInTypes"
+        referenceType: type
+
+  organization:
+    type: reference
+    description: "Organization that provides this service"
+    fields:
+      - field: "_search.organizationId"
+        referenceType: id
+      - field: "providedBy.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  active:
+    type: token
+    description: "Whether the healthcare service record is active"
+    fields:
+      - field: "active"
+        tokenType: boolean
+
+  characteristic:
+    type: token
+    description: "One of the characteristics of the service"
+    fields:
+      - field: "_search.characteristic_systemCode"
+        tokenType: systemCode
+      - field: "_search.characteristic_codes"
+        tokenType: code
+
+  communication:
+    type: token
+    description: "Language(s) that may be used in communication"
+    fields:
+      - field: "_search.communication_systemCode"
+        tokenType: systemCode
+      - field: "_search.communication_codes"
+        tokenType: code
+
+  eligibility:
+    type: token
+    description: "Eligibility code for this service"
+    fields:
+      - field: "_search.eligibility_systemCode"
+        tokenType: systemCode
+      - field: "_search.eligibility_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "External identifiers for this service"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  program:
+    type: token
+    description: "Program(s) that this service is part of"
+    fields:
+      - field: "_search.program_systemCode"
+        tokenType: systemCode
+      - field: "_search.program_codes"
+        tokenType: code
+
+  service-category:
+    type: token
+    description: "Service category (HealthcareService.category)"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  service-type:
+    type: token
+    description: "Service type (HealthcareService.type)"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  specialty:
+    type: token
+    description: "Specialties available at this service"
+    fields:
+      - field: "_search.specialty_systemCode"
+        tokenType: systemCode
+      - field: "_search.specialty_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  name:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: name
+        target_field: name
+        datatype: string
+      - source_path: name
+        target_field: name_lower
+        datatype: string
+        normalize: lowercase
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type[*].coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type[*].coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  specialty:
+    source: specialty
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: specialty[*].coding[*].code
+        target_field: specialty_codes
+        datatype: array[string]
+      - source_path: specialty[*].coding[*]
+        target_field: specialty_systemCode
+        datatype: array[string]
+
+  characteristic:
+    source: characteristic
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: characteristic[*].coding[*].code
+        target_field: characteristic_codes
+        datatype: array[string]
+      - source_path: characteristic[*].coding[*]
+        target_field: characteristic_systemCode
+        datatype: array[string]
+
+  communication:
+    source: communication
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: communication[*].coding[*].code
+        target_field: communication_codes
+        datatype: array[string]
+      - source_path: communication[*].coding[*]
+        target_field: communication_systemCode
+        datatype: array[string]
+
+  program:
+    source: program
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: program[*].coding[*].code
+        target_field: program_codes
+        datatype: array[string]
+      - source_path: program[*].coding[*]
+        target_field: program_systemCode
+        datatype: array[string]
+
+  eligibility:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: eligibility[*].code.coding[*].code
+        target_field: eligibility_codes
+        datatype: array[string]
+      - source_path: eligibility[*].code.coding[*]
+        target_field: eligibility_systemCode
+        datatype: array[string]
+
+  provided_by:
+    source: providedBy
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: providedBy.reference
+        target_field: organizationId
+        datatype: string
+        extractType: id
+
+  location:
+    source: location
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: location[*].reference
+        target_field: locationIds
+        datatype: array[string]
+        extractType: id
+      - source_path: location[*].reference
+        target_field: locationTypes
+        datatype: array[string]
+        extractType: type
+
+  coverage_area:
+    source: coverageArea
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: coverageArea[*].reference
+        target_field: coverageAreaIds
+        datatype: array[string]
+        extractType: id
+      - source_path: coverageArea[*].reference
+        target_field: coverageAreaTypes
+        datatype: array[string]
+        extractType: type
+
+  offered_in:
+    source: offeredIn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: offeredIn[*].reference
+        target_field: offeredInIds
+        datatype: array[string]
+        extractType: id
+      - source_path: offeredIn[*].reference
+        target_field: offeredInTypes
+        datatype: array[string]
+        extractType: type
+
+  endpoint:
+    source: endpoint
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: endpoint[*].reference
+        target_field: endpointIds
+        datatype: array[string]
+        extractType: id
+
+indexes:
+  - fields:
+      - "_search.name_lower": 1
+    options:
+      name: idx_name_lower
+      sparse: true
+  - fields:
+      - "_search.organizationId": 1
+    options:
+      name: idx_organization_id
+      sparse: true
+  - fields:
+      - "_search.category_codes": 1
+    options:
+      name: idx_category_codes
+      sparse: true
+  - fields:
+      - "_search.type_codes": 1
+    options:
+      name: idx_type_codes
+      sparse: true
+  - fields:
+      - "_search.specialty_codes": 1
+    options:
+      name: idx_specialty_codes
+      sparse: true
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+  - fields:
+      - "active": 1
+    options:
+      name: idx_active
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

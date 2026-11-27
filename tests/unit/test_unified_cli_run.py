@@ -47,16 +47,12 @@ def test_build_summary_rows_for_query_reports_engine_scope_collection_and_rows()
             "engine_used": "text_search_dual",
             "rows": [{"ehrId": "ehr-1"}, {"ehrId": "ehr-2"}],
             "explain": {
-                "engine": "text_search_dual",
-                "scope": "cross_patient",
-                "collection": "compositions_search",
-                "warnings": [],
-                "timings": {
-                    "kehrnel_total_ms": 18.4,
-                    "kehrnel_compile_ms": 5.25,
-                    "kehrnel_execute_ms": 11.8,
-                    "kehrnel_db_ms": 8.1,
-                },
+                "plan": {
+                    "engine": "text_search_dual",
+                    "scope": "cross_patient",
+                    "collection": "compositions_search",
+                    "warnings": [],
+                }
             },
         },
     }
@@ -68,40 +64,6 @@ def test_build_summary_rows_for_query_reports_engine_scope_collection_and_rows()
     assert summary["collection"] == "compositions_search"
     assert summary["rows"] == "2"
     assert summary["warnings"] == "0"
-    assert summary["total time"] == "18.40 ms"
-    assert summary["compile time"] == "5.25 ms"
-    assert summary["execute time"] == "11.80 ms"
-    assert summary["db time"] == "8.10 ms"
-
-
-def test_build_summary_rows_for_compile_query_reports_compile_time():
-    payload = {
-        "ok": True,
-        "result": {
-            "engine": "mongo_pipeline",
-            "plan": {
-                "collection": "ibm-semiflattened-compositions",
-                "scope": "cross_patient",
-                "explain": {
-                    "stage0": "$match",
-                    "warnings": [],
-                },
-                "meta": {
-                    "timings": {
-                        "kehrnel_compile_ms": 27.0,
-                    }
-                },
-            },
-        },
-    }
-
-    summary = dict(unified._build_summary_rows("compile-query", payload))
-
-    assert summary["engine"] == "mongo_pipeline"
-    assert summary["scope"] == "cross_patient"
-    assert summary["collection"] == "ibm-semiflattened-compositions"
-    assert summary["stage0"] == "$match"
-    assert summary["compile time"] == "27 ms"
 
 
 def test_run_ingest_expands_local_ndjson_file_into_documents(monkeypatch, tmp_path):

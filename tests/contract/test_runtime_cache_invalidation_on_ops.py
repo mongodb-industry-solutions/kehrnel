@@ -1,8 +1,8 @@
 import asyncio
 from pathlib import Path
 
-from kehrnel.core.runtime import StrategyRuntime
-from kehrnel.core.registry import FileActivationRegistry
+from kehrnel.engine.core.runtime import StrategyRuntime
+from kehrnel.engine.core.registry import FileActivationRegistry
 from kehrnel.strategy_sdk import StrategyBindings
 
 
@@ -19,7 +19,7 @@ def test_cache_invalidation_on_maintenance_op(tmp_path: Path):
     manifest = next(m for m in manifests if "rps_dual" in m.id)
     rt.register_manifest(manifest)
     env_id = "env-cache"
-    asyncio.get_event_loop().run_until_complete(_activate(rt, manifest, env_id))
+    asyncio.run(_activate(rt, manifest, env_id))
     rt._env_cache[env_id] = {"dict_cache": {"codes": {"a": 1}}, "adapters": {}}
 
     # simulate maintenance invalidation

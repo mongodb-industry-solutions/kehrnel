@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import json
 
-from fastapi import APIRouter, Body, HTTPException, Request, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
 
 from kehrnel.api.bridge.app.utils.config_runtime import apply_ingestion_config, DEFAULT_MAPPINGS_PATH
@@ -13,8 +13,21 @@ from kehrnel.api.bridge.app.core.config import settings
 from kehrnel.api.common.models import ErrorResponse
 from kehrnel.persistence import load_strategy_from_json, PersistenceStrategy
 from kehrnel.engine.core.redaction import redact_sensitive
+from kehrnel.api.core.admin.routes import _require_global_admin_access
+from kehrnel.engine.core.errors import KehrnelError
 
 router = APIRouter()
+
+
+def _require_runtime_config_access(request: Request) -> None:
+    """Route dependency: unscoped admin key required (runs before body validation)."""
+    try:
+        _require_global_admin_access(request)
+    except KehrnelError as exc:
+        raise HTTPException(
+            status_code=exc.status,
+            detail={"code": exc.code, "message": str(exc)},
+        ) from None
 
 
 def _allow_local_file_inputs() -> bool:
@@ -208,6 +221,10 @@ set_ingestion_config_responses = {
     "Mappings can be inline or file-based.",
     responses=set_ingestion_config_responses,
     operation_id="set_rps_dual_ingestion_config",
+    # Mutates process-global search settings and the shared ingestion runtime for every
+    # environment, so only an unscoped admin key may call it. As a dependency it runs
+    # before body validation, so unauthorized callers cannot probe the payload schema.
+    dependencies=[Depends(_require_runtime_config_access)],
 )
 async def set_ingestion_config(
     request: Request,

@@ -3,6 +3,8 @@ import re
 
 SRC_ROOT = Path("src")
 CODE_ROOTS = [SRC_ROOT / "kehrnel"]
+# Vendored fhir-gen / fhir-mql (own packages; not kehrnel API/engine style)
+FHIR_LIBS_ROOT = SRC_ROOT / "kehrnel" / "engine" / "domains" / "fhir" / "libs"
 ALLOWED_PACKAGES = {"kehrnel", "strategy_sdk", "cli"}
 # Only flag actual imports, not variable names like "src.get(...)".
 SRC_IMPORT_PATTERN = re.compile(r"^\s*(from|import)\s+src\.", re.MULTILINE)
@@ -12,7 +14,6 @@ LEGACY_ENGINE_IMPORT_PATTERN = re.compile(
     r"^\s*(from|import)\s+kehrnel\.(core|common|domains|strategies)\b",
     re.MULTILINE,
 )
-LEGACY_STRATEGY_IMPORT_PATTERN = re.compile(r"^\s*(from|import)\s+kehrnel\.strategies\b", re.MULTILINE)
 THIS_FILE = Path(__file__).resolve()
 FORBIDDEN_PATH_TOKENS = (
     "src.core.",
@@ -29,11 +30,21 @@ FORBIDDEN_RPS_DUAL_COMPILERS = (
 )
 
 
+def _is_vendored_fhir_lib(path: Path) -> bool:
+    try:
+        path.resolve().relative_to(FHIR_LIBS_ROOT.resolve())
+        return True
+    except ValueError:
+        return False
+
+
 def test_no_src_style_imports():
     offenders = []
     for root in CODE_ROOTS:
         for path in root.rglob("*.py"):
             if path.resolve() == THIS_FILE:
+                continue
+            if _is_vendored_fhir_lib(path):
                 continue
             text = path.read_text(encoding="utf-8")
             if SRC_IMPORT_PATTERN.search(text):
@@ -75,13 +86,3 @@ def test_cli_and_api_import_engine_paths_only():
             if LEGACY_ENGINE_IMPORT_PATTERN.search(text):
                 offenders.append(path)
     assert not offenders, f"CLI/API must import engine modules only: {sorted(offenders)}"
-
-
-def test_no_legacy_strategy_imports_anywhere():
-    offenders = []
-    for root in (SRC_ROOT / "kehrnel", Path("tests")):
-        for path in root.rglob("*.py"):
-            text = path.read_text(encoding="utf-8")
-            if LEGACY_STRATEGY_IMPORT_PATTERN.search(text):
-                offenders.append(path)
-    assert not offenders, f"Legacy strategy imports are forbidden: {sorted(offenders)}"

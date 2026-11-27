@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict
 
@@ -32,7 +33,7 @@ class RPSDualIBMStrategy(RPSDualStrategy):
     """IBM-exact variant of the openEHR RPS dual strategy."""
 
     def __init__(self, manifest: StrategyManifest = MANIFEST):
-        self.manifest = manifest
+        super().__init__(manifest)
         self.strategy_base_dir = Path(__file__).parent
         self.schema = load_json(SCHEMA_PATH)
         self.defaults = load_json(DEFAULTS_PATH)
@@ -86,3 +87,58 @@ class RPSDualIBMStrategy(RPSDualStrategy):
         if not isinstance(base_doc, dict):
             raise ValueError("Payload must include flattened base document under 'base'")
         return {"composition": unflattener.unflatten(base_doc)}
+
+
+    def _coerce_ibm_config(self, config: dict[str, Any] | None) -> dict[str, Any]:
+        coerced = deepcopy(config or self.defaults)
+        fields = coerced.setdefault("fields", {})
+        document_fields = fields.setdefault("document", {})
+        version_field = document_fields.get("v")
+        comp_id_field = document_fields.get("comp_id")
+        if comp_id_field in (None, "", "comp_id", "version", version_field):
+            document_fields["comp_id"] = "_id"
+        node_fields = fields.setdefault("node", {})
+        if node_fields.get("pi") in (None, "", "pi"):
+            node_fields["pi"] = "li"
+        return coerced
+
+
+
+    def _coerce_ibm_context(self, ctx: StrategyContext) -> StrategyContext:
+        return StrategyContext(
+            environment_id=ctx.environment_id,
+            config=self._coerce_ibm_config(ctx.config),
+            bindings=ctx.bindings,
+            adapters=ctx.adapters,
+            manifest=ctx.manifest,
+            trace_id=ctx.trace_id,
+            logger=ctx.logger,
+            meta=ctx.meta,
+        )
+
+
+
+    async def validate_config(self, ctx: StrategyContext | dict[str, Any]) -> None:
+        if isinstance(ctx, StrategyContext):
+            return await super().validate_config(self._coerce_ibm_context(ctx))
+        return await super().validate_config(self._coerce_ibm_config(ctx))
+
+
+
+    async def plan(self, ctx: StrategyContext):
+        return await super().plan(self._coerce_ibm_context(ctx))
+
+
+
+    async def apply(self, ctx: StrategyContext, plan):
+        return await super().apply(self._coerce_ibm_context(ctx), plan)
+
+
+
+    async def compile_query(self, ctx: StrategyContext, domain: str, query: dict[str, Any]):
+        return await super().compile_query(self._coerce_ibm_context(ctx), domain, query)
+
+
+
+    async def run_op(self, ctx: StrategyContext, op: str, payload: dict[str, Any]):
+        return await super().run_op(self._coerce_ibm_context(ctx), op, payload)

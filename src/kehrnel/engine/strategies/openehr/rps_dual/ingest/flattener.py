@@ -645,6 +645,8 @@ class CompositionFlattener:
             },
             "search_nodes": {
                 "path": "p",
+                "keyPath": "kp",
+                "path_instance": "pi",
                 "data": "data"
             },
         }

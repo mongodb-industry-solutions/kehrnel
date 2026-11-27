@@ -1,0 +1,362 @@
+resource: Invoice
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Invoice)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, relatedperson.json
+#
+# Total parameters: 15 (13 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Invoice.subject` is Reference(0..1); `patient` search is the
+#     Patient/* shortcut on subject.
+#   * `Invoice.participant[]` backbone; `participant` searches
+#     `participant.actor`, `participant-role` searches `participant.role`.
+#   * `totalGross` / `totalNet` are Money (quantity search on root).
+#   * Top-level scalar `status` queries the FHIR root.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  account:
+    type: reference
+    description: "Account that is being balanced"
+    fields:
+      - field: "_search.accountId"
+        referenceType: id
+      - field: "_search.accountType"
+        referenceType: type
+      - field: "account.reference"
+        referenceType: full
+
+  issuer:
+    type: reference
+    description: "Issuing Organization of Invoice"
+    fields:
+      - field: "_search.issuerId"
+        referenceType: id
+      - field: "_search.issuerType"
+        referenceType: type
+      - field: "issuer.reference"
+        referenceType: full
+
+  participant:
+    type: reference
+    description: "Individual who was involved"
+    fields:
+      - field: "_search.participantIds"
+        referenceType: id
+      - field: "_search.participantTypes"
+        referenceType: type
+      - field: "participant.actor.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Recipient(s) of goods and services (Patient subject)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  recipient:
+    type: reference
+    description: "Recipient of this invoice"
+    fields:
+      - field: "_search.recipientId"
+        referenceType: id
+      - field: "_search.recipientType"
+        referenceType: type
+      - field: "recipient.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "Recipient(s) of goods and services"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  identifier:
+    type: token
+    description: "Business Identifier for item"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  participant-role:
+    type: token
+    description: "Type of involvement in creation of this Invoice"
+    fields:
+      - field: "_search.participantRole_systemCode"
+        tokenType: systemCode
+      - field: "_search.participantRole_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "draft | issued | balanced | cancelled | entered-in-error"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  type:
+    type: token
+    description: "Type of Invoice"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Quantity Parameters
+  # ─────────────────────────────────────────────────────────────
+  totalgross:
+    type: quantity
+    description: "Gross total of this Invoice"
+    fields:
+      - field: "totalGross"
+        quantityType: full
+
+  totalnet:
+    type: quantity
+    description: "Net total of this Invoice"
+    fields:
+      - field: "totalNet"
+        quantityType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "Invoice date / posting date"
+    fields:
+      - field: "date"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type.coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+        filterType: Patient
+        comment: "Patient/* subject only — powers `patient` search parameter"
+
+  recipient:
+    source: recipient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: recipient.reference
+        target_field: recipientId
+        datatype: string
+        extractType: id
+      - source_path: recipient.reference
+        target_field: recipientType
+        datatype: string
+        extractType: type
+
+  account:
+    source: account
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: account.reference
+        target_field: accountId
+        datatype: string
+        extractType: id
+      - source_path: account.reference
+        target_field: accountType
+        datatype: string
+        extractType: type
+
+  issuer:
+    source: issuer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: issuer.reference
+        target_field: issuerId
+        datatype: string
+        extractType: id
+      - source_path: issuer.reference
+        target_field: issuerType
+        datatype: string
+        extractType: type
+
+  participant:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: participant[*].actor.reference
+        target_field: participantIds
+        datatype: array[string]
+        extractType: id
+      - source_path: participant[*].actor.reference
+        target_field: participantTypes
+        datatype: array[string]
+        extractType: type
+
+  participant_role:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: participant[*].role.coding[*].code
+        target_field: participantRole_codes
+        datatype: array[string]
+      - source_path: participant[*].role.coding[*]
+        target_field: participantRole_systemCode
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - patient
+          - recipient
+        reference_type: Patient
+        datatype: array[string]
+        comment: |
+          Patient compartment (subject, patient, recipient linking
+          params). Patient/* refs only.
+      - target_field: Practitioner
+        source_paths:
+          - participant
+          - participant[*].actor
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment (`participant` linking param on
+          participant.actor where Practitioner/*).
+      - target_field: RelatedPerson
+        source_paths:
+          - recipient
+          - participant
+          - participant[*].actor
+        reference_type: RelatedPerson
+        datatype: array[string]
+        comment: |
+          RelatedPerson compartment (recipient, participant linking
+          params).
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - RelatedPerson
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.RelatedPerson": 1
+    options:
+      name: idx_compartment_relatedperson
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.participantIds": 1
+    options:
+      name: idx_participant_ids
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "date": 1
+    options:
+      name: idx_date
+      sparse: true
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true

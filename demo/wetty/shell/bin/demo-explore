@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cat <<'EOF'
+Suggested openEHR CLI exploration path
+
+1. Inspect strategy inventory
+   kehrnel strategy list --domain openehr
+
+2. Inspect packaged samples
+   demo-assets
+
+3. Generate and validate a composition from a template
+   kehrnel common generate -- -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt -o .kehrnel/demo.composition.json
+   kehrnel common validate -- -c .kehrnel/demo.composition.json -t samples/templates/T-IGR-TUMOUR-SUMMARY.opt --stats
+
+4. Flatten the composition
+   kehrnel common transform -- flatten .kehrnel/demo.composition.json -o .kehrnel/demo.flattened.json
+
+5. Inspect available runtime operations
+   kehrnel op list --domain openehr
+   kehrnel op capabilities --env dev
+
+6. If runtime bindings are configured, run the full workflow
+   demo-smoke
+
+7. After activation, inspect the guided workflow docs from inside the runtime
+   open http://localhost:8080/guide/
+EOF

@@ -1,6 +1,7 @@
 # src/kehrnel/api/strategies/openehr/rps_dual/synthetic/routes.py
 
 import json
+import logging
 import time
 from functools import lru_cache
 from pathlib import Path
@@ -23,24 +24,19 @@ from kehrnel.engine.strategies.openehr.rps_dual.ingest.flattener import Composit
 from kehrnel.api.bridge.app.core.database import get_mongodb_ehr_db, resolve_active_openehr_context
 
 
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
+from kehrnel.api.strategies.openehr.rps_dual.synthetic.context import request_flattener
+
+logger = logging.getLogger(__name__)
+
 router = APIRouter(
     prefix="/synthetic",
     tags=["Synthetic Data"]
 )
 
 
-async def get_flattener(request: Request) -> CompositionFlattener:
-    """
-    Dependency to retrieve the globally initialized CompositionFlattener
-    """
-    await resolve_active_openehr_context(request, ensure_ingestion=True)
-    flattener = getattr(request.app.state, "flattener", None)
-    if flattener is None:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Ingestion runtime is not initialized. Configure strategy ingestion first.",
-        )
-    return flattener
+async def get_flattener(request: Request) -> Any:
+    return await request_flattener(request)
 
 
 @lru_cache(maxsize=1)
@@ -147,12 +143,12 @@ async def generate_synthetic_data_endpoint(
         base_composition = get_default_vaccination_composition()
     
     # Get merge_search_docs configuration
-    target_search = request.app.state.config.get("target", {})
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+    db = context["db"]
+    target_search = (context["activation"].config or {}).get("target", {})
     merge_search = target_search.get("search_compositions_merge", False)
+    config = await get_composition_config(request)
 
-    # Use runtime target DB if available
-    db = getattr(request.app.state, "target_db", db)
-    
     try:
         # Generate the synthetic data
         created_records = await generate_synthetic_data(
@@ -160,6 +156,7 @@ async def generate_synthetic_data_endpoint(
             base_composition=base_composition,
             count=synthetic_request.count,
             flattener=flattener,
+            config=config,
             merge_search_docs=merge_search
         )
         
@@ -184,9 +181,10 @@ async def generate_synthetic_data_endpoint(
         return response
         
     except Exception as e:
+        logger.error("Synthetic generation failed (%s)", type(e).__name__)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to generate synthetic data: {str(e)}"
+            detail="Failed to generate synthetic data. Check the environment configuration."
         )
 
 

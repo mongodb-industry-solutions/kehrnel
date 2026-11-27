@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from kehrnel.api.app import create_app
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.runtime import StrategyRuntime
 
 
 @pytest.fixture
@@ -13,7 +13,7 @@ def client(tmp_path):
 
 def test_activation_records_digest_and_version(client):
     app, cl = client
-    res = cl.post("/v1/environments/envI/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    res = cl.post("/v1/environments/envI/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     assert res.status_code == 200
     act = cl.get("/v1/environments/envI/activations").json()["activations"]
     any_act = list(act.values())[0]
@@ -23,14 +23,17 @@ def test_activation_records_digest_and_version(client):
 
 def test_manifest_mismatch_triggers_conflict(client, monkeypatch):
     app, cl = client
-    cl.post("/v1/environments/envM/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envM/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.resource_first")
+    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
     # simulate manifest version change
     manifest.version = "9.9.9"
     res = cl.post(
         "/v1/environments/envM/compile_query",
-        json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": [{"path": "id", "alias": "id"}]}},
+        json={
+            "domain": "fhir",
+            "query": {"resource_type": "Patient", "criteria": {"gender": "female"}, "explain_only": True},
+        },
         params={"debug": "true"},
     )
     assert res.status_code == 409
@@ -40,7 +43,7 @@ def test_manifest_mismatch_triggers_conflict(client, monkeypatch):
 
 def test_upgrade_endpoint_refreshes_digest(client):
     app, cl = client
-    cl.post("/v1/environments/envU/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envU/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     res_before = cl.get("/v1/environments/envU/activations").json()
     before_digest = list(res_before["activations"].values())[0]["manifest_digest"]
     # no manifest change but upgrade should produce new activation_id
@@ -53,12 +56,12 @@ def test_upgrade_endpoint_refreshes_digest(client):
 
 def test_upgrade_changes_digest_when_manifest_changes(client):
     app, cl = client
-    cl.post("/v1/environments/envUpgrade/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envUpgrade/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     before = cl.get("/v1/environments/envUpgrade/activations").json()
     before_act = list(before["activations"].values())[0]
     # mutate manifest so digest should change
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.resource_first")
+    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
     manifest.version = "9.9.9"
 
     res = cl.post("/v1/environments/envUpgrade/activations/fhir/upgrade")
@@ -72,7 +75,7 @@ def test_reactivate_same_config_refreshes_digest_when_manifest_changes(client):
     cl.post(
         "/v1/environments/envReactivate/activate",
         json={
-            "strategy_id": "fhir.resource_first",
+            "strategy_id": "fhir.clinical_cdr",
             "version": "0.1.0",
             "config": {},
             "bindings": {},
@@ -84,13 +87,13 @@ def test_reactivate_same_config_refreshes_digest_when_manifest_changes(client):
     before_act = list(before["activations"].values())[0]
 
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.resource_first")
+    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
     manifest.version = "9.9.9"
 
     res = cl.post(
         "/v1/environments/envReactivate/activate",
         json={
-            "strategy_id": "fhir.resource_first",
+            "strategy_id": "fhir.clinical_cdr",
             "version": "latest",
             "config": {},
             "bindings": {},
@@ -105,7 +108,10 @@ def test_reactivate_same_config_refreshes_digest_when_manifest_changes(client):
 
     res_query = cl.post(
         "/v1/environments/envReactivate/compile_query",
-        json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": [{"path": "id", "alias": "id"}]}},
+        json={
+            "domain": "fhir",
+            "query": {"resource_type": "Patient", "criteria": {"gender": "female"}, "explain_only": True},
+        },
         params={"debug": "true"},
     )
     assert res_query.status_code == 200
@@ -117,7 +123,7 @@ def test_reactivate_same_config_refreshes_when_bindings_change(client):
     res1 = cl.post(
         "/v1/environments/envBindings/activate",
         json={
-            "strategy_id": "fhir.resource_first",
+            "strategy_id": "fhir.clinical_cdr",
             "version": "latest",
             "config": {},
             "bindings": {
@@ -139,7 +145,7 @@ def test_reactivate_same_config_refreshes_when_bindings_change(client):
     res2 = cl.post(
         "/v1/environments/envBindings/activate",
         json={
-            "strategy_id": "fhir.resource_first",
+            "strategy_id": "fhir.clinical_cdr",
             "version": "latest",
             "config": {},
             "bindings": {
@@ -162,11 +168,11 @@ def test_reactivate_same_config_refreshes_when_bindings_change(client):
 
 def test_rollback_restores_previous_digest_and_hash(client):
     app, cl = client
-    cl.post("/v1/environments/envRollback/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envRollback/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     before = cl.get("/v1/environments/envRollback/activations").json()
     before_act = list(before["activations"].values())[0]
     rt: StrategyRuntime = app.state.strategy_runtime
-    manifest = rt.registry.get_manifest("fhir.resource_first")
+    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
     manifest.version = "2.0.0"
     res_up = cl.post("/v1/environments/envRollback/activations/fhir/upgrade")
     assert res_up.status_code == 200
@@ -180,12 +186,61 @@ def test_rollback_restores_previous_digest_and_hash(client):
     assert rolled["config_hash"] == before_act["config_hash"]
 
 
+def test_dispatch_auto_heals_digest_drift_without_reactivate(client, monkeypatch):
+    app, cl = client
+    cl.post(
+        "/v1/environments/envHeal/activate",
+        json={
+            "strategy_id": "fhir.clinical_cdr",
+            "version": "0.1.0",
+            "config": {},
+            "bindings": {},
+            "allow_plaintext_bindings": True,
+            "domain": "fhir",
+        },
+    )
+    rt: StrategyRuntime = app.state.strategy_runtime
+    manifest = rt.registry.get_manifest("fhir.clinical_cdr")
+    before_digest = rt._manifest_digest(manifest)
+    # Simulate runtime hydration drift (recipes/defaults merged into manifest).
+    manifest.default_config = dict(manifest.default_config or {})
+    manifest.default_config["recipes"] = {"clinical_dev": {"resource_types": ["Patient"]}}
+    assert rt._manifest_digest(manifest) == before_digest
+
+    act = list(cl.get("/v1/environments/envHeal/activations").json()["activations"].values())[0]
+    rt.registry.update_activation_fields(
+        "envHeal",
+        "fhir",
+        manifest_digest="legacy-full-model-digest",
+    )
+
+    res = cl.post(
+        "/v1/environments/envHeal/compile_query",
+        json={
+            "domain": "fhir",
+            "query": {"resource_type": "Patient", "criteria": {"gender": "female"}, "explain_only": True},
+        },
+        params={"debug": "true"},
+    )
+    assert res.status_code == 200
+    assert res.json().get("ok") is True
+    healed = list(cl.get("/v1/environments/envHeal/activations").json()["activations"].values())[0]
+    assert healed["manifest_digest"] == before_digest
+
+
 def test_delete_activation_blocks_future_queries(client):
     app, cl = client
-    cl.post("/v1/environments/envDelete/activate", json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
+    cl.post("/v1/environments/envDelete/activate", json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"})
     res_del = cl.delete("/v1/environments/envDelete/activations/fhir")
     assert res_del.status_code == 200
 
-    res_query = cl.post("/v1/environments/envDelete/compile_query", json={"domain": "fhir", "query": {"scope": "patient", "predicates": [], "select": [{"path": "id", "alias": "id"}]}}, params={"debug": "true"})
+    res_query = cl.post(
+        "/v1/environments/envDelete/compile_query",
+        json={
+            "domain": "fhir",
+            "query": {"resource_type": "Patient", "criteria": {"gender": "female"}, "explain_only": True},
+        },
+        params={"debug": "true"},
+    )
     assert res_query.status_code == 404
     assert res_query.json().get("error", {}).get("code") == "ACTIVATION_NOT_FOUND"

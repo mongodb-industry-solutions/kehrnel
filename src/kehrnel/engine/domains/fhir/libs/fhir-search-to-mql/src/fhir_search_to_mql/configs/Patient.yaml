@@ -1,0 +1,643 @@
+resource: Patient
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/patient-definitions.html
+# Search Parameters Configuration
+# Reference: https://www.hl7.org/fhir/R5/patient.html#search
+# Total Parameters: 25 (23 resource-specific per FHIR R5 + 2 common: _id, _lastUpdated)
+# Validated against the canonical R5 search parameter table at
+# https://hl7.org/fhir/R5/patient.html (2026-05).
+
+search_parameters:
+  # Per-modifier `fields` routing follows the converter contract in
+  # `BaseConverter._get_fields_for_modifier`: when `fields` is a dict
+  # keyed by modifier name (`default`, `exact`, `contains`, …), the
+  # converter picks the matching list. Modifiers not enumerated fall
+  # through to `default`.
+  #
+  # FHIR R5 §3.1.1.5.3 (string parameter type) defines two semantics
+  # we have to satisfy with disjoint storage:
+  #
+  #   * **default** — case-insensitive starts-with match. The
+  #     converter (`StringConverter.convert`) lowercases the input
+  #     and emits a range query `[value, value+\uffff)` against the
+  #     `_lower` field. The denormalizer stores the case-folded
+  #     value in `_search.<name>_lower` (e.g. `familyName_lower =
+  #     "smith"`). Both sides are case-folded → matches regardless
+  #     of input casing (`family=SMITH`, `family=Smith`, and
+  #     `family=smith` all hit the same documents). Prefix-only by
+  #     spec, so `family=ith` correctly misses "Smith".
+  #
+  #   * **`:exact`** — case-sensitive equality (FHIR §3.1.1.5.4).
+  #     The converter emits a literal equality against the
+  #     case-preserved `_search.<name>` field. `family:exact=Smith`
+  #     matches; `family:exact=SMITH` and `family:exact=smith` both
+  #     miss, as required by the spec.
+  #
+  # NOTE: FHIR also requires the default string match to be
+  # accent-insensitive (NFD-fold before comparison). This config
+  # does case-folding only; combining-character normalization is
+  # tracked separately and would require a `fold_lower` companion
+  # field at the denormalization layer.
+  name:
+    type: string
+    description: "A server-defined search that may match any of the string fields in the HumanName"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+        - field: "_search.givenNames_lower"
+          query_type: range
+        - field: "_search.fullName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+        - field: "_search.givenNames"
+        - field: "_search.fullName"
+        - field: "_search.nameText"
+
+  family:
+    type: string
+    description: "A portion of the family name of the patient"
+    fields:
+      default:
+        - field: "_search.familyName_lower"
+          query_type: range
+      exact:
+        - field: "_search.familyName"
+
+  given:
+    type: string
+    description: "A portion of the given name of the patient"
+    fields:
+      default:
+        - field: "_search.givenNames_lower"
+          query_type: range
+      exact:
+        - field: "_search.givenNames"
+  
+  gender:
+    type: token
+    description: "Gender of the patient"
+    fields:
+      - field: "gender"
+        tokenType: code
+  
+  birthdate:
+    type: date
+    description: "The patient's date of birth"
+    fields:
+      - field: "birthDate"
+        type: date
+  
+  identifier:
+    type: token
+    description: "A patient identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+  
+  email:
+    type: token
+    description: "A value in an email contact"
+    fields:
+      - field: "_search.email"
+        tokenType: code
+  
+  phone:
+    type: token
+    description: "A value in a phone contact"
+    fields:
+      - field: "_search.phone"
+        tokenType: code
+  
+  address:
+    type: string
+    description: "A server-defined search that may match any of the string fields in the Address"
+    fields:
+      default:
+        - field: "_search.addressFull_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressFull"
+        - field: "_search.addressText"
+
+  address-city:
+    type: string
+    description: "A city specified in an address"
+    fields:
+      default:
+        - field: "_search.addressCity_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCity"
+
+  address-state:
+    type: string
+    description: "A state specified in an address"
+    fields:
+      default:
+        - field: "_search.addressState_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressState"
+  
+  address-postalcode:
+    type: string
+    description: "A postal code specified in an address"
+    fields:
+      - field: "_search.addressPostalCode"
+        query_type: exact
+  
+  address-use:
+    type: token
+    description: "A use code specified in an address"
+    fields:
+      - field: "_search.addressUse"
+        tokenType: code
+  
+  active:
+    type: token
+    description: "Whether the patient record is active"
+    fields:
+      - field: "active"
+        tokenType: boolean
+  
+  deceased:
+    type: token
+    description: "This patient has been marked as deceased, or has a death date entered"
+    fields:
+      - field: "_search.deceased"
+        tokenType: boolean
+  
+  death-date:
+    type: date
+    description: "The date of death has been provided and satisfies this search value"
+    fields:
+      - field: "_search.deathDate"
+        type: date
+  
+  address-country:
+    type: string
+    description: "A country specified in an address"
+    fields:
+      default:
+        - field: "_search.addressCountry_lower"
+          query_type: range
+      exact:
+        - field: "_search.addressCountry"
+  
+  telecom:
+    type: token
+    description: "The value in any kind of telecom details of the patient"
+    fields:
+      - field: "_search.telecom_systemCode"
+        tokenType: systemCode
+      - field: "_search.telecom_values"
+        tokenType: code
+  
+  language:
+    type: token
+    description: "Language code (irrespective of use value)"
+    fields:
+      - field: "_search.language"
+        tokenType: code
+  
+  general-practitioner:
+    type: reference
+    description: "Patient's nominated general practitioner, not the organization that manages the record"
+    fields:
+      - field: "_search.generalPractitionerId"
+        referenceType: id
+      - field: "_search.generalPractitionerType"
+        referenceType: type
+      - field: "generalPractitioner.reference"
+        referenceType: full
+  
+  organization:
+    type: reference
+    description: "The organization that is the custodian of the patient record"
+    fields:
+      - field: "_search.managingOrganizationId"
+        referenceType: id
+      - field: "managingOrganization.reference"
+        referenceType: full
+  
+  link:
+    type: reference
+    description: "All patients/related persons linked to the given patient"
+    fields:
+      - field: "_search.linkOtherId"
+        referenceType: id
+      - field: "_search.linkOtherType"
+        referenceType: type
+      - field: "link.other.reference"
+        referenceType: full
+
+  phonetic:
+    type: token
+    description: "A portion of either family or given name using some kind of phonetic matching algorithm"
+    # The denormalizer's PhoneticExtractor populates _search.phonetic_codes
+    # with American Soundex codes (e.g. "S530") for every family and given
+    # name. Treating the parameter as a token gives us an exact array match
+    # against that pre-computed code, which is the canonical behavior for
+    # phonetic search and stays index-friendly.
+    #
+    # Callers must Soundex-encode the search term themselves before issuing
+    # the query (e.g. `phonetic=S530`); the spec leaves the encoding choice
+    # to the server and we expose Soundex via the PhoneticExtractor utility.
+    fields:
+      - field: "_search.phonetic_codes"
+        tokenType: code
+
+  # Common Parameters (apply to every FHIR resource)
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  name:
+    source: name
+    target: _search
+    extractor: HumanNameExtractor
+    field_mappings:
+      - source_path: name[*].family
+        target_field: familyName
+        datatype: array[string]
+        comment: "Family name(s) from every HumanName — Patient.name is 0..*; each HumanName.family is 0..1 string (FHIR R5)"
+      - source_path: name[*].family
+        target_field: familyName_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Family name(s) lowercased for case-insensitive prefix search"
+      - source_path: name[*].given
+        target_field: givenNames
+        datatype: array[string]
+        comment: "Given names (first name, middle names) - array per name"
+      - source_path: name[*].given
+        target_field: givenNames_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Given names lowercased for case-insensitive search"
+      - source_path: name[*]
+        target_field: fullName
+        datatype: array[string]
+        comment: "Full name constructed by extractor from prefix + given + family + suffix"
+      - source_path: name[*]
+        target_field: fullName_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Full name constructed by extractor, lowercased for search"
+      - source_path: name[*].text
+        target_field: nameText
+        datatype: array[string]
+        comment: "Text representation of full name as provided in FHIR resource"
+
+  phonetic:
+    source: name
+    target: _search
+    extractor: PhoneticExtractor
+    field_mappings:
+      - source_path: name[*]
+        target_field: phonetic_codes
+        datatype: array[string]
+        comment: "American Soundex codes (4-char) for every family and given name token. Powers the FHIR `phonetic` search parameter."
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+        comment: "Identifier values extracted from identifier array"
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+        comment: "System|value pairs constructed by extractor (e.g., 'http://hospital.org|MRN123')"
+  
+  telecom:
+    source: telecom
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: telecom[*].value
+        target_field: email
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Email addresses extracted by extractor filtering system='email'"
+      - source_path: telecom[*].value
+        target_field: phone
+        datatype: array[string]
+        comment: "Phone numbers extracted by extractor filtering system='phone'"
+  
+  address:
+    source: address
+    target: _search
+    extractor: AddressExtractor
+    field_mappings:
+      - source_path: address[*]
+        target_field: addressFull
+        datatype: array[string]
+        comment: "Full address constructed by extractor from line + city + state + postalCode + country, or uses address.text if available"
+      - source_path: address[*]
+        target_field: addressFull_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Full address constructed by extractor, lowercased for search"
+      - source_path: address[*].city
+        target_field: addressCity
+        datatype: array[string]
+        comment: "City name from Address.city field"
+      - source_path: address[*].city
+        target_field: addressCity_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "City name lowercased for case-insensitive search"
+      - source_path: address[*].state
+        target_field: addressState
+        datatype: array[string]
+        comment: "State/province from Address.state field"
+      - source_path: address[*].state
+        target_field: addressState_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "State lowercased for case-insensitive search"
+      - source_path: address[*].postalCode
+        target_field: addressPostalCode
+        datatype: array[string]
+        comment: "Postal/ZIP code from Address.postalCode field"
+      - source_path: address[*].country
+        target_field: addressCountry
+        datatype: array[string]
+        comment: "Country from Address.country field"
+      - source_path: address[*].country
+        target_field: addressCountry_lower
+        datatype: array[string]
+        normalize: lowercase
+        comment: "Country lowercased for case-insensitive search"
+      - source_path: address[*].use
+        target_field: addressUse
+        datatype: array[string]
+        comment: "Address use codes: home, work, temp, old, billing (from Address.use)"
+      - source_path: address[*].text
+        target_field: addressText
+        datatype: array[string]
+        comment: "Text representation of address if provided in resource"
+  
+  # Patient.deceased[x] is a polymorphic CHOICE element per FHIR R5
+  # (https://www.hl7.org/fhir/R5/patient.html#search) — it appears
+  # on a resource as either `deceasedBoolean` OR `deceasedDateTime`,
+  # never as a key literally named `deceased`. The previous version
+  # of this rule used `source: deceased` which silently
+  # short-circuited on every Patient (the denormalizer's
+  # `if source not in resource: continue` guard) AND named a
+  # nonexistent `DirectFieldExtractor`. We now use `source: $resource`
+  # with the real DirectFieldExtractor so each polymorphic mapping's
+  # `source_path` is resolved against the resource directly.
+  deceased:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: deceasedBoolean
+        target_field: deceased
+        datatype: boolean
+        comment: "Boolean indicator of deceased status (powers the `deceased` token search parameter)"
+      - source_path: deceasedDateTime
+        target_field: deceased
+        datatype: boolean
+        transform: presence
+        comment: |
+          Per FHIR R5, a `deceasedDateTime` value implies the
+          patient is deceased — the dateTime string itself cannot
+          be coerced to boolean. `transform: presence` writes a
+          literal `True` when the path resolves so the `deceased`
+          search parameter (type=token) returns a positive match
+          for both polymorphic variants.
+      - source_path: deceasedDateTime
+        target_field: deathDate
+        datatype: date
+        comment: "Date of death if provided (powers the `death-date` date search parameter)"
+  
+  telecom_all:
+    source: telecom
+    target: _search
+    extractor: ContactPointExtractor
+    field_mappings:
+      - source_path: telecom[*].value
+        target_field: telecom_values
+        datatype: array[string]
+        comment: "All telecom values regardless of system (phone, email, fax, etc.)"
+      - source_path: telecom[*]
+        target_field: telecom_systemCode
+        datatype: array[string]
+        comment: "System|value pairs constructed by extractor (e.g., 'phone|555-1234', 'email|john@example.com')"
+  
+  # `Patient.communication[].language` is a CodeableConcept nested
+  # inside the BackboneElement `communication`. Pre-resolved mode
+  # (`source: communication`) hands the extractor a list of
+  # `{language: {coding: [...]}}` dicts — which it tries to flatten
+  # as if THEY were the CodeableConcepts, missing the `.language`
+  # wrapper entirely. Resource-rooted (`source: $resource`) lets the
+  # extractor's path resolver follow the actual `.coding[*]` path
+  # through the wrapper, correctly producing the language codes.
+  communication:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: communication[*].language.coding[*].code
+        target_field: language
+        datatype: array[string]
+        comment: "Language codes from communication.language"
+  
+  generalPractitioner:
+    source: generalPractitioner
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: generalPractitioner[*].reference
+        target_field: generalPractitionerId
+        datatype: array[string]
+        extractType: id
+        comment: "IDs extracted from generalPractitioner references (e.g., 'Practitioner/123' -> '123')"
+      - source_path: generalPractitioner[*].reference
+        target_field: generalPractitionerType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from generalPractitioner references (e.g., 'Practitioner/123' -> 'Practitioner')"
+  
+  managingOrganization:
+    source: managingOrganization
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: managingOrganization.reference
+        target_field: managingOrganizationId
+        datatype: string
+        extractType: id
+        comment: "ID extracted from managingOrganization reference (e.g., 'Organization/456' -> '456')"
+  
+  link:
+    source: link
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: link[*].other.reference
+        target_field: linkOtherId
+        datatype: array[string]
+        extractType: id
+        comment: "IDs extracted from link.other references (Patient or RelatedPerson)"
+      - source_path: link[*].other.reference
+        target_field: linkOtherType
+        datatype: array[string]
+        extractType: type
+        comment: "Resource types from link.other references (Patient or RelatedPerson)"
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3 from
+  # analysis_documents/FHIR_TO_MQL_COMPARTMENT.md). Powers the Patient
+  # compartment fast-path: queries become a single field lookup
+  # `{"_compartments.Patient": id}` instead of an `$or` over linking
+  # parameters.
+  #
+  # FHIR R5 Patient compartment membership rule for the Patient resource
+  # (https://www.hl7.org/fhir/compartmentdefinition-patient.html):
+  #   - `[base]`  → the Patient itself is in its own Patient compartment
+  #   - `link`    → linked Patient/RelatedPerson resources extend membership,
+  #                 but only when the link target is itself a Patient.
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - link[*].other
+        reference_type: Patient
+        include_self: true
+        datatype: array[string]
+        comment: "Patient compartment IDs (own id + Patient-typed link.other refs)"
+      # Practitioner compartment membership for Patient resources. Per
+      # FHIR R5 (https://www.hl7.org/fhir/compartmentdefinition-practitioner.html)
+      # the linking parameter that pulls a Patient into a Practitioner's
+      # compartment is `general-practitioner`. The extractor walks
+      # `generalPractitioner[].reference`, keeps only entries whose
+      # resourceType is `Practitioner` (filtered by `reference_type`),
+      # and writes the bare ids into `_compartments.Practitioner`.
+      # `include_self: false` because a Patient is never its own
+      # Practitioner-compartment root.
+      - target_field: Practitioner
+        source_paths:
+          - generalPractitioner
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: "Practitioner compartment IDs (Patient.generalPractitioner refs filtered to Practitioner/*)"
+
+# Compartment fast-path opt-in. The CompartmentResolver consults this list
+# and, for every compartment named here, emits the precomputed-field query
+# instead of the dynamic `$or` over linking parameters.
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+
+# Recommended MongoDB Indexes
+indexes:
+  # Compartment fast-path index (Hybrid Approach 3). A single-field index
+  # that turns the highest-volume compartment query into an indexed lookup.
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_search.familyName_lower": 1
+    options:
+      name: idx_family_name_lower
+  - fields:
+      - "_search.givenNames_lower": 1
+    options:
+      name: idx_given_names_lower
+  - fields:
+      - "birthDate": 1
+    options:
+      name: idx_birth_date
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+  - fields:
+      - "gender": 1
+    options:
+      name: idx_gender
+  - fields:
+      - "_search.addressPostalCode": 1
+    options:
+      name: idx_address_postal_code
+  - fields:
+      - "_search.deceased": 1
+    options:
+      name: idx_deceased
+  - fields:
+      - "_search.deathDate": 1
+    options:
+      name: idx_death_date
+  - fields:
+      - "_search.addressCountry_lower": 1
+    options:
+      name: idx_address_country_lower
+  - fields:
+      - "_search.telecom_systemCode": 1
+    options:
+      name: idx_telecom_system_code
+  - fields:
+      - "_search.language": 1
+    options:
+      name: idx_language
+  - fields:
+      - "_search.addressUse": 1
+    options:
+      name: idx_address_use
+  - fields:
+      - "_search.generalPractitionerId": 1
+    options:
+      name: idx_general_practitioner_id
+  - fields:
+      - "_search.managingOrganizationId": 1
+    options:
+      name: idx_managing_organization_id
+  - fields:
+      - "_search.linkOtherId": 1
+    options:
+      name: idx_link_other_id
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated
+  - fields:
+      - "_search.phonetic_codes": 1
+    options:
+      name: idx_phonetic_codes
+      sparse: true

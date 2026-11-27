@@ -13,7 +13,7 @@ def client(tmp_path):
 def test_invalid_config_missing_required(client):
     res = client.post(
         "/v1/environments/env-config/activate",
-        json={"strategy_id": "fhir.resource_first", "version": "0.1.0", "config": {"database": 123}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
+        json={"strategy_id": "fhir.clinical_cdr", "version": "0.1.0", "config": {"database": 123}, "bindings": {}, "allow_plaintext_bindings": True, "domain": "fhir"},
     )
     assert res.status_code == 400
     body = res.json()

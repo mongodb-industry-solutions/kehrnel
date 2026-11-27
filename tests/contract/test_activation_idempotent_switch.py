@@ -8,7 +8,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     # first activation
     res1 = client.put(
         "/v1/environments/strategy",
-        json={"envId": "env-switch", "strategyId": "fhir.resource_first", "domain": "FHIR", "configOverrides": {}},
+        json={"envId": "env-switch", "strategyId": "fhir.clinical_cdr", "domain": "FHIR", "configOverrides": {}},
     )
     assert res1.status_code == 200
     act1 = res1.json().get("activation") or {}
@@ -16,7 +16,7 @@ def test_activation_idempotent_and_switchable(tmp_path):
     # second activation same strategy/domain -> alreadyActive
     res2 = client.put(
         "/v1/environments/strategy",
-        json={"envId": "env-switch", "strategyId": "fhir.resource_first", "domain": "fhir", "configOverrides": {}},
+        json={"envId": "env-switch", "strategyId": "fhir.clinical_cdr", "domain": "fhir", "configOverrides": {}},
     )
     assert res2.status_code == 200
     act2 = res2.json().get("activation") or {}

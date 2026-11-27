@@ -1,0 +1,1 @@
+"""Independent openEHR analytics strategy."""

@@ -1,0 +1,10 @@
+{
+  "label": "clinical-cdr",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "FHIR Clinical CDR",
+    "description": "Native FHIR R5 storage with fhir-gen synthetic data and fhir-mql search translation.",
+    "slug": "/strategies/fhir/clinical-cdr"
+  }
+}

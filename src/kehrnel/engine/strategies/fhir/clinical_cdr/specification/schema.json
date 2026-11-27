@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FHIR Clinical CDR Strategy Configuration",
+  "description": "MongoDB layout, fhir-gen generation, and fhir-mql search settings for native FHIR R5 resources.",
+  "type": "object",
+  "properties": {
+    "database": {
+      "type": "string",
+      "description": "MongoDB database name for FHIR resource collections"
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["R5", "R6"],
+      "default": "R5",
+      "description": "FHIR schema version passed to fhir-gen"
+    },
+    "collection_prefix": {
+      "type": "string",
+      "description": "Optional prefix for per-resource-type collection names"
+    },
+    "collections": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["per_resource_type"],
+          "description": "One MongoDB collection per FHIR resource type"
+        }
+      },
+      "required": ["mode"],
+      "additionalProperties": false
+    },
+    "search": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "denormalize_on_generate": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run fhir-mql denormalization after synthetic generation"
+        },
+        "config_dir": {
+          "type": ["string", "null"],
+          "description": "Override fhir-mql resource YAML directory; null uses bundled configs"
+        },
+        "compartment_definitions_dir": {
+          "type": ["string", "null"],
+          "description": "Override compartment definitions; null uses bundled paths"
+        },
+        "auto_index": {
+          "type": "boolean",
+          "default": true,
+          "description": "After fhir_denormalize, run fhir_ensure_indexes for processed types"
+        }
+      },
+      "additionalProperties": false
+    },
+    "generation": {
+      "type": "object",
+      "properties": {
+        "seed": { "type": "integer", "description": "Default RNG seed for synthetic generation" },
+        "use_enrichers": {
+          "type": "boolean",
+          "default": true,
+          "description": "Apply fhir-gen enrichers when generating resources"
+        },
+        "recipes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "resources": {
+                "type": "object",
+                "additionalProperties": { "type": "integer", "minimum": 0 }
+              },
+              "scenarios": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "seed": { "type": "integer" }
+            },
+            "additionalProperties": false
+          },
+          "description": "Named generation recipes; merged from specification/recipes.json at load time"
+        },
+        "watermark": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Add Kehrnel synthetic meta.tag and extension before MongoDB save"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["database", "schema_version", "collections"],
+  "additionalProperties": false
+}

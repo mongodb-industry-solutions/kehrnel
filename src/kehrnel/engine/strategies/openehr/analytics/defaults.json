@@ -1,0 +1,15 @@
+{
+  "database": "openehr_analytics",
+  "source_namespace": "openehr-canonical",
+  "collection_prefix": "analytics_",
+  "rollup_partitions": 64,
+  "max_transaction_bytes": 33554432,
+  "max_transaction_facts": 50000,
+  "source": {
+    "format": "canonical",
+    "fields": {},
+    "nodes": {},
+    "mode": "upload"
+  },
+  "rules": []
+}

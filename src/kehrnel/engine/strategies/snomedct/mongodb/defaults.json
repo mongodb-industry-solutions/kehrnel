@@ -1,0 +1,38 @@
+{
+  "database": "snomedct",
+  "release": {
+    "id": "20260601",
+    "label": "SNOMED CT International + Spain + Medicines extension"
+  },
+  "source": {
+    "local_dir": ".kehrnel/snomedct/releases",
+    "file_name": "",
+    "file_pattern": "*.json"
+  },
+  "collections": {
+    "concepts": "snomed_concepts",
+    "terms": "snomed_terms",
+    "sidecar_enabled": true
+  },
+  "languages": ["es", "en"],
+  "ingest": {
+    "batch_size": 1000,
+    "include_descendants": false,
+    "drop_before_ingest": false,
+    "rebuild_sidecar": true,
+    "create_indexes_before_ingest": true
+  },
+  "indexes": {
+    "canonical": true,
+    "sidecar": true,
+    "text": false,
+    "atlas_search": false
+  },
+  "search": {
+    "default_limit": 20,
+    "max_limit": 100,
+    "default_language": "es",
+    "use_sidecar": true,
+    "lexical_strategy": "normalized_regex"
+  }
+}

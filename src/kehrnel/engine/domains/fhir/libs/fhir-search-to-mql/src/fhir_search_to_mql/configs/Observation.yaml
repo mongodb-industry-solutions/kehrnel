@@ -1,0 +1,1182 @@
+resource: Observation
+fhir_version: R5
+
+# Definition: https://www.hl7.org/fhir/observation-definitions.html
+# Search Parameters Configuration
+# Reference: https://hl7.org/fhir/R5/observation.html#search
+# Total Parameters: 44 (42 resource-specific per FHIR R5 + 2 common: _id, _lastUpdated)
+# Validated against the canonical R5 search parameter table at
+# https://hl7.org/fhir/R5/observation.html (2026-05).
+#
+# R5 spec parameter coverage (alphabetical):
+#   based-on (reference), category (token), code (token), code-value-concept (composite),
+#   code-value-date (composite), code-value-quantity (composite), code-value-string (composite),
+#   combo-code (token), combo-code-value-concept (composite), combo-code-value-quantity (composite),
+#   combo-data-absent-reason (token), combo-value-concept (token), combo-value-quantity (quantity),
+#   component-code (token), component-code-value-concept (composite),
+#   component-code-value-quantity (composite), component-data-absent-reason (token),
+#   component-value-canonical (uri), component-value-concept (token),
+#   component-value-quantity (quantity), component-value-reference (reference),
+#   data-absent-reason (token), date (date), derived-from (reference), device (reference),
+#   encounter (reference), focus (reference), has-member (reference), identifier (token),
+#   method (token), part-of (reference), patient (reference), performer (reference),
+#   specimen (reference), status (token), subject (reference), value-canonical (uri),
+#   value-concept (token), value-date (date), value-markdown (string),
+#   value-quantity (quantity), value-reference (reference)
+#
+# Cross-cutting aggregates (combo-*, component-*, effectiveTimingBounds,
+# valueText_lower) are populated via GENERIC, data-type-specific extractors
+# (CodeableConceptExtractor, ReferenceExtractor, TimingExtractor,
+# TextExtractor) using ``source: $resource`` + path expressions. There is
+# NO Observation-specific extractor in the codebase.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  based-on:
+    type: reference
+    description: "Reference to the service request"
+    fields:
+      - field: "_search.basedOnId"
+        referenceType: id
+      - field: "_search.basedOnType"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  derived-from:
+    type: reference
+    description: "Related measurements the observation is made from"
+    fields:
+      - field: "_search.derivedFromId"
+        referenceType: id
+      - field: "_search.derivedFromType"
+        referenceType: type
+      - field: "derivedFrom.reference"
+        referenceType: full
+
+  device:
+    type: reference
+    description: "The Device that generated the observation data"
+    fields:
+      - field: "_search.deviceId"
+        referenceType: id
+      - field: "_search.deviceType"
+        referenceType: type
+      - field: "device.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Encounter related to the observation"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  focus:
+    type: reference
+    description: "The focus of an observation when the focus is not the patient of record"
+    fields:
+      - field: "_search.focusId"
+        referenceType: id
+      - field: "_search.focusType"
+        referenceType: type
+      - field: "focus.reference"
+        referenceType: full
+
+  has-member:
+    type: reference
+    description: "Related resource that belongs to the Observation group"
+    fields:
+      - field: "_search.hasMemberId"
+        referenceType: id
+      - field: "_search.hasMemberType"
+        referenceType: type
+      - field: "hasMember.reference"
+        referenceType: full
+
+  part-of:
+    type: reference
+    description: "Part of referenced event"
+    fields:
+      - field: "_search.partOfId"
+        referenceType: id
+      - field: "_search.partOfType"
+        referenceType: type
+      - field: "partOf.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "The subject that the observation is about (if Patient)"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "subject.reference"
+        referenceType: full
+
+  performer:
+    type: reference
+    description: "Who performed the observation"
+    fields:
+      - field: "_search.performerId"
+        referenceType: id
+      - field: "_search.performerType"
+        referenceType: type
+      - field: "performer.reference"
+        referenceType: full
+
+  specimen:
+    type: reference
+    description: "Specimen used for this observation"
+    fields:
+      - field: "_search.specimenId"
+        referenceType: id
+      - field: "specimen.reference"
+        referenceType: full
+
+  subject:
+    type: reference
+    description: "The subject that the observation is about"
+    fields:
+      - field: "_search.subjectId"
+        referenceType: id
+      - field: "_search.subjectType"
+        referenceType: type
+      - field: "subject.reference"
+        referenceType: full
+
+  component-value-reference:
+    type: reference
+    description: "Reference contained in component.valueReference"
+    fields:
+      - field: "_search.componentValueReferenceId"
+        referenceType: id
+      - field: "_search.componentValueReferenceType"
+        referenceType: type
+      - field: "component.valueReference.reference"
+        referenceType: full
+
+  value-reference:
+    type: reference
+    description: "Reference contained in valueReference"
+    fields:
+      - field: "_search.valueReferenceId"
+        referenceType: id
+      - field: "_search.valueReferenceType"
+        referenceType: type
+      - field: "valueReference.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  category:
+    type: token
+    description: "The classification of the type of observation"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "The code of the observation type"
+    # Per-modifier `fields` routing: the FHIR R5 `:text` modifier on a
+    # token searches the human-readable display values rather than the
+    # coded `system|code` tuple, so it must be pointed at the
+    # CodeableConcept's display + text projections (lowercased for the
+    # default case-insensitive prefix-match path the token converter
+    # uses for `:text`). See FHIR R5 spec §3.1.1.5.4 (search modifiers).
+    fields:
+      default:
+        - field: "_search.code_systemCode"
+          tokenType: systemCode
+        - field: "_search.code_codes"
+          tokenType: code
+      text:
+        - field: "_search.code_displays_lower"
+        - field: "_search.code_text_lower"
+
+  combo-code:
+    type: token
+    description: "The code of the observation type or component type"
+    fields:
+      - field: "_search.comboCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.comboCode_codes"
+        tokenType: code
+
+  combo-data-absent-reason:
+    type: token
+    description: "The reason why the expected value in Observation.value[x] or Observation.component.value[x] is missing"
+    fields:
+      - field: "_search.comboDataAbsentReason_systemCode"
+        tokenType: systemCode
+      - field: "_search.comboDataAbsentReason_codes"
+        tokenType: code
+
+  combo-value-concept:
+    type: token
+    description: "The value or component value of the observation, if the value is a CodeableConcept"
+    fields:
+      - field: "_search.comboValueConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.comboValueConcept_codes"
+        tokenType: code
+
+  component-code:
+    type: token
+    description: "The component code of the observation type"
+    fields:
+      - field: "_search.componentCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.componentCode_codes"
+        tokenType: code
+
+  component-data-absent-reason:
+    type: token
+    description: "The reason why the expected value in Observation.component.value[x] is missing"
+    fields:
+      - field: "_search.componentDataAbsentReason_systemCode"
+        tokenType: systemCode
+      - field: "_search.componentDataAbsentReason_codes"
+        tokenType: code
+
+  component-value-concept:
+    type: token
+    description: "The value of the component observation, if the value is a CodeableConcept"
+    fields:
+      - field: "_search.componentValueConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.componentValueConcept_codes"
+        tokenType: code
+
+  data-absent-reason:
+    type: token
+    description: "The reason why the expected value in Observation.value[x] is missing"
+    fields:
+      - field: "_search.dataAbsentReason_systemCode"
+        tokenType: systemCode
+      - field: "_search.dataAbsentReason_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "The unique id for a particular observation"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  method:
+    type: token
+    description: "The method used for the observation"
+    fields:
+      - field: "_search.method_systemCode"
+        tokenType: systemCode
+      - field: "_search.method_codes"
+        tokenType: code
+
+  status:
+    type: token
+    description: "The status of the observation"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  value-concept:
+    type: token
+    description: "The value of the observation, if the value is a CodeableConcept"
+    fields:
+      - field: "_search.valueConcept_systemCode"
+        tokenType: systemCode
+      - field: "_search.valueConcept_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "Clinically relevant time/time-period for observation"
+    fields:
+      - field: "effectiveDateTime"
+        type: date
+      - field: "effectiveInstant"
+        type: date
+      - field: "_search.effectivePeriod"
+        type: period
+      - field: "_search.effectiveTimingBounds"
+        type: period
+
+  value-date:
+    type: date
+    description: "The value of the observation, if the value is a date or period of time"
+    fields:
+      - field: "valueDateTime"
+        type: date
+      - field: "_search.valuePeriod"
+        type: period
+
+  # ─────────────────────────────────────────────────────────────
+  # Quantity Parameters
+  # ─────────────────────────────────────────────────────────────
+  value-quantity:
+    type: quantity
+    description: "The value of the observation, if the value is a Quantity"
+    fields:
+      - field: "valueQuantity"
+        quantityType: full
+
+  combo-value-quantity:
+    type: quantity
+    description: "Quantity value or component quantity value of the observation"
+    fields:
+      - field: "valueQuantity"
+        quantityType: full
+      - field: "component.valueQuantity"
+        quantityType: full
+
+  component-value-quantity:
+    type: quantity
+    description: "Quantity value of a component"
+    fields:
+      - field: "component.valueQuantity"
+        quantityType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # URI Parameters
+  # ─────────────────────────────────────────────────────────────
+  value-canonical:
+    type: uri
+    description: "URL contained in valueCanonical"
+    fields:
+      - field: "valueCanonical"
+
+  component-value-canonical:
+    type: uri
+    description: "URL contained in component.valueCanonical"
+    fields:
+      - field: "component.valueCanonical"
+
+  # ─────────────────────────────────────────────────────────────
+  # String Parameters
+  # ─────────────────────────────────────────────────────────────
+  value-markdown:
+    type: string
+    description: "The value of the observation when the value is a string/markdown, including CodeableConcept.text"
+    fields:
+      - field: "_search.valueText_lower"
+        query_type: range
+      - field: "valueString"
+        query_type: range
+      - field: "valueMarkdown"
+        query_type: range
+
+  # ─────────────────────────────────────────────────────────────
+  # Composite Parameters (FHIR composite type — components combined with $)
+  # ─────────────────────────────────────────────────────────────
+  code-value-concept:
+    type: composite
+    description: "Code and coded value parameter pair"
+    components:
+      - name: code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.code_systemCode"
+            tokenType: systemCode
+          - field: "_search.code_codes"
+            tokenType: code
+      - name: value-concept
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.valueConcept_systemCode"
+            tokenType: systemCode
+          - field: "_search.valueConcept_codes"
+            tokenType: code
+
+  code-value-date:
+    type: composite
+    description: "Code and date/time value parameter pair"
+    components:
+      - name: code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.code_systemCode"
+            tokenType: systemCode
+          - field: "_search.code_codes"
+            tokenType: code
+      - name: value-date
+        type: date
+        converter: DateConverter
+        fields:
+          - field: "valueDateTime"
+            type: date
+          - field: "_search.valuePeriod"
+            type: period
+
+  code-value-quantity:
+    type: composite
+    description: "Code and quantity value parameter pair"
+    components:
+      - name: code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.code_systemCode"
+            tokenType: systemCode
+          - field: "_search.code_codes"
+            tokenType: code
+      - name: value-quantity
+        type: quantity
+        converter: QuantityConverter
+        fields:
+          - field: "valueQuantity"
+            quantityType: full
+
+  code-value-string:
+    type: composite
+    description: "Code and string value parameter pair"
+    components:
+      - name: code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.code_systemCode"
+            tokenType: systemCode
+          - field: "_search.code_codes"
+            tokenType: code
+      - name: value-string
+        type: string
+        converter: StringConverter
+        fields:
+          - field: "_search.valueText_lower"
+            query_type: range
+          - field: "valueString"
+            query_type: range
+
+  combo-code-value-concept:
+    type: composite
+    description: "Code and coded value parameter pair, including in components"
+    components:
+      - name: combo-code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.comboCode_systemCode"
+            tokenType: systemCode
+          - field: "_search.comboCode_codes"
+            tokenType: code
+      - name: combo-value-concept
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.comboValueConcept_systemCode"
+            tokenType: systemCode
+          - field: "_search.comboValueConcept_codes"
+            tokenType: code
+
+  combo-code-value-quantity:
+    type: composite
+    description: "Code and quantity value parameter pair, including in components"
+    components:
+      - name: combo-code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.comboCode_systemCode"
+            tokenType: systemCode
+          - field: "_search.comboCode_codes"
+            tokenType: code
+      - name: combo-value-quantity
+        type: quantity
+        converter: QuantityConverter
+        fields:
+          - field: "valueQuantity"
+            quantityType: full
+          - field: "component.valueQuantity"
+            quantityType: full
+
+  component-code-value-concept:
+    type: composite
+    description: "Component code and component coded value parameter pair"
+    components:
+      - name: component-code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.componentCode_systemCode"
+            tokenType: systemCode
+          - field: "_search.componentCode_codes"
+            tokenType: code
+      - name: component-value-concept
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.componentValueConcept_systemCode"
+            tokenType: systemCode
+          - field: "_search.componentValueConcept_codes"
+            tokenType: code
+
+  component-code-value-quantity:
+    type: composite
+    description: "Component code and component quantity value parameter pair"
+    components:
+      - name: component-code
+        type: token
+        converter: TokenConverter
+        fields:
+          - field: "_search.componentCode_systemCode"
+            tokenType: systemCode
+          - field: "_search.componentCode_codes"
+            tokenType: code
+      - name: component-value-quantity
+        type: quantity
+        converter: QuantityConverter
+        fields:
+          - field: "component.valueQuantity"
+            quantityType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters (apply to every FHIR resource)
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+# Only fields explicitly listed here are denormalized (100% config-driven).
+denormalization:
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*].system_code
+        target_field: code_systemCode
+        datatype: array[string]
+      # Lowercased display + text projections power the FHIR R5
+      # `code:text=…` modifier (see the per-modifier `fields` block on
+      # the `code` search parameter above). The token converter does a
+      # case-insensitive prefix range query against `_lower` fields, so
+      # storing the case-preserved variants alongside would be dead
+      # weight — only the `_lower` projections are ever queried.
+      - source_path: code.coding[*].display
+        target_field: code_displays_lower
+        datatype: array[string]
+        normalize: lowercase
+      - source_path: code.text
+        target_field: code_text_lower
+        datatype: string
+        normalize: lowercase
+        optional: true
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*].system_code
+        target_field: category_systemCode
+        datatype: array[string]
+
+  method:
+    source: method
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: method.coding[*].code
+        target_field: method_codes
+        datatype: array[string]
+      - source_path: method.coding[*].system_code
+        target_field: method_systemCode
+        datatype: array[string]
+
+  dataAbsentReason:
+    source: dataAbsentReason
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: dataAbsentReason.coding[*].code
+        target_field: dataAbsentReason_codes
+        datatype: array[string]
+      - source_path: dataAbsentReason.coding[*].system_code
+        target_field: dataAbsentReason_systemCode
+        datatype: array[string]
+
+  valueCodeableConcept:
+    source: valueCodeableConcept
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: valueCodeableConcept.coding[*].code
+        target_field: valueConcept_codes
+        datatype: array[string]
+      - source_path: valueCodeableConcept.coding[*].system_code
+        target_field: valueConcept_systemCode
+        datatype: array[string]
+
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  subject:
+    source: subject
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: subject.reference
+        target_field: subjectId
+        datatype: string
+        extractType: id
+      - source_path: subject.reference
+        target_field: subjectType
+        datatype: string
+        extractType: type
+      - source_path: subject.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  performer:
+    source: performer
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: performer[*].reference
+        target_field: performerId
+        datatype: array[string]
+        extractType: id
+      - source_path: performer[*].reference
+        target_field: performerType
+        datatype: array[string]
+        extractType: type
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  basedOn:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnId
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnType
+        datatype: array[string]
+        extractType: type
+
+  derivedFrom:
+    source: derivedFrom
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: derivedFrom[*].reference
+        target_field: derivedFromId
+        datatype: array[string]
+        extractType: id
+      - source_path: derivedFrom[*].reference
+        target_field: derivedFromType
+        datatype: array[string]
+        extractType: type
+
+  device:
+    source: device
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: device.reference
+        target_field: deviceId
+        datatype: string
+        extractType: id
+      - source_path: device.reference
+        target_field: deviceType
+        datatype: string
+        extractType: type
+
+  focus:
+    source: focus
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: focus[*].reference
+        target_field: focusId
+        datatype: array[string]
+        extractType: id
+      - source_path: focus[*].reference
+        target_field: focusType
+        datatype: array[string]
+        extractType: type
+
+  hasMember:
+    source: hasMember
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: hasMember[*].reference
+        target_field: hasMemberId
+        datatype: array[string]
+        extractType: id
+      - source_path: hasMember[*].reference
+        target_field: hasMemberType
+        datatype: array[string]
+        extractType: type
+
+  partOf:
+    source: partOf
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: partOf[*].reference
+        target_field: partOfId
+        datatype: array[string]
+        extractType: id
+      - source_path: partOf[*].reference
+        target_field: partOfType
+        datatype: array[string]
+        extractType: type
+
+  specimen:
+    source: specimen
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: specimen.reference
+        target_field: specimenId
+        datatype: string
+        extractType: id
+
+  valueReference:
+    source: valueReference
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: valueReference.reference
+        target_field: valueReferenceId
+        datatype: string
+        extractType: id
+      - source_path: valueReference.reference
+        target_field: valueReferenceType
+        datatype: string
+        extractType: type
+
+  effectivePeriod:
+    source: effectivePeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: effectivePeriod.start
+        target_field: effectivePeriod.start
+        datatype: string
+        optional: true
+      - source_path: effectivePeriod.end
+        target_field: effectivePeriod.end
+        datatype: string
+        optional: true
+
+  valuePeriod:
+    source: valuePeriod
+    target: _search
+    extractor: PeriodExtractor
+    field_mappings:
+      - source_path: valuePeriod.start
+        target_field: valuePeriod.start
+        datatype: string
+        optional: true
+      - source_path: valuePeriod.end
+        target_field: valuePeriod.end
+        datatype: string
+        optional: true
+
+  # ---------------------------------------------------------------------
+  # Cross-cutting aggregates expressed entirely with GENERIC extractors.
+  #
+  # These rules use ``source: $resource`` so the extractor receives the full
+  # Observation and walks one or more paths via the project's FHIRPath-lite
+  # resolver (dot, [*], `|` union). No resource-specific extractor is
+  # required — the same extractors can populate analogous fields for any
+  # other resource that needs cross-field aggregates.
+  # ---------------------------------------------------------------------
+
+  # component-code: codes / system|code pairs across Observation.component[].
+  component_code_aggregate:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: component[*].code
+        target_field: componentCode_codes
+        datatype: array[string]
+      - source_path: component[*].code
+        target_field: componentCode_systemCode
+        datatype: array[string]
+
+  # component-value-concept: codes / system|code pairs across
+  # Observation.component[].valueCodeableConcept.
+  component_value_concept_aggregate:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: component[*].valueCodeableConcept
+        target_field: componentValueConcept_codes
+        datatype: array[string]
+      - source_path: component[*].valueCodeableConcept
+        target_field: componentValueConcept_systemCode
+        datatype: array[string]
+
+  # component-data-absent-reason: codes / system|code pairs across
+  # Observation.component[].dataAbsentReason.
+  component_data_absent_reason_aggregate:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: component[*].dataAbsentReason
+        target_field: componentDataAbsentReason_codes
+        datatype: array[string]
+      - source_path: component[*].dataAbsentReason
+        target_field: componentDataAbsentReason_systemCode
+        datatype: array[string]
+
+  # component-value-reference: ids / types across
+  # Observation.component[].valueReference.
+  component_value_reference_aggregate:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: component[*].valueReference
+        target_field: componentValueReferenceId
+        datatype: array[string]
+        extractType: id
+      - source_path: component[*].valueReference
+        target_field: componentValueReferenceType
+        datatype: array[string]
+        extractType: type
+
+  # combo-code: top-level Observation.code ∪ Observation.component[].code.
+  combo_code_aggregate:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code | component[*].code
+        target_field: comboCode_codes
+        datatype: array[string]
+      - source_path: code | component[*].code
+        target_field: comboCode_systemCode
+        datatype: array[string]
+
+  # combo-value-concept: top-level valueCodeableConcept ∪
+  # component[].valueCodeableConcept.
+  combo_value_concept_aggregate:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: valueCodeableConcept | component[*].valueCodeableConcept
+        target_field: comboValueConcept_codes
+        datatype: array[string]
+      - source_path: valueCodeableConcept | component[*].valueCodeableConcept
+        target_field: comboValueConcept_systemCode
+        datatype: array[string]
+
+  # combo-data-absent-reason: top-level dataAbsentReason ∪
+  # component[].dataAbsentReason.
+  combo_data_absent_reason_aggregate:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: dataAbsentReason | component[*].dataAbsentReason
+        target_field: comboDataAbsentReason_codes
+        datatype: array[string]
+      - source_path: dataAbsentReason | component[*].dataAbsentReason
+        target_field: comboDataAbsentReason_systemCode
+        datatype: array[string]
+
+  # effectiveTiming bounds: chronological min/max of event[]. The TimingExtractor
+  # receives the Timing object directly (no $resource needed) and synthesises
+  # a Period {start,end} into ``effectiveTimingBounds``. Reusable for any other
+  # resource that exposes a Timing field.
+  effective_timing_bounds:
+    source: effectiveTiming
+    target: _search
+    extractor: TimingExtractor
+    field_mappings:
+      - source_path: event[*]
+        target_field: effectiveTimingBounds
+        datatype: object
+        optional: true
+
+  # value-markdown: lowercased concatenation of any value-bearing text fields.
+  # Generic TextExtractor — applicable to any resource with markdown / string
+  # value fields that should be searchable case-insensitively.
+  value_text_lower:
+    source: $resource
+    target: _search
+    extractor: TextExtractor
+    field_mappings:
+      - source_path: valueString | valueMarkdown | valueCodeableConcept.text
+        target_field: valueText_lower
+        datatype: string
+        normalize: lowercase
+        separator: " "
+        optional: true
+
+  # ---------------------------------------------------------------------
+  # Compartment membership precompute (Hybrid Approach 3). Patient
+  # compartment for Observation per FHIR R5 is `subject or performer`,
+  # filtered to references whose resourceType is `Patient` (a Group or
+  # Practitioner subject does NOT add the Observation to the Patient
+  # compartment — see compartmentdefinition-patient.html).
+  # ---------------------------------------------------------------------
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - subject
+          - performer
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment IDs (subject ∪ performer where ref is Patient/*)"
+      # Practitioner compartment for Observation. Per FHIR R5
+      # CompartmentDefinition for Practitioner the linking parameter
+      # set is `performer`. We deliberately DO NOT include `subject`
+      # here — even though `subject` is a (Patient | Group | Device |
+      # Location) reference, `subject` never points at a Practitioner;
+      # walking it would just add zero hits and slow the extractor.
+      # `reference_type: Practitioner` filters performer entries that
+      # are practitioners (the slot can also be PractitionerRole,
+      # CareTeam, Organization, Patient, RelatedPerson, Device — only
+      # the literal Practitioner refs participate in the compartment).
+      - target_field: Practitioner
+        source_paths:
+          - performer
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: "Practitioner compartment IDs (performer where ref is Practitioner/*)"
+      # Device compartment for Observation. Per FHIR R5
+      # compartmentdefinition-device.html, Observation participates
+      # in the Device compartment via THREE linking parameters:
+      # `subject or performer or device`. We project Device-typed
+      # refs from all three paths into `_compartments.Device` so a
+      # query like `Device/dev-9/Observation` collapses to a single
+      # indexed `_compartments.Device = "dev-9"` lookup instead of
+      # the dynamic-resolver fallback's 3-field $or. The
+      # `reference_type: Device` filter routes only literal Device
+      # refs to this bucket — Patient / Practitioner / CareTeam /
+      # Organization entries on the same paths are routed to their
+      # own `_compartments.<Type>` buckets above (or correctly
+      # ignored when no compartment opts in for that type).
+      - target_field: Device
+        source_paths:
+          - subject
+          - performer
+          - device
+        reference_type: Device
+        datatype: array[string]
+        comment: "Device compartment IDs (subject ∪ performer ∪ device where ref is Device/*)"
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+
+# Recommended MongoDB Indexes
+indexes:
+  # Compartment fast-path index (Hybrid Approach 3). Single-field index
+  # consulted when CompartmentResolver routes a Patient compartment query
+  # to the precomputed `_compartments.Patient` field.
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  # Core token searches
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+  - fields:
+      - "_search.code_systemCode": 1
+    options:
+      name: idx_code_system_code
+  - fields:
+      - "_search.category_codes": 1
+    options:
+      name: idx_category_codes
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.identifier_systemCode": 1
+    options:
+      name: idx_identifier_system_code
+      sparse: true
+  - fields:
+      - "_search.method_systemCode": 1
+    options:
+      name: idx_method_system_code
+      sparse: true
+  - fields:
+      - "_search.dataAbsentReason_codes": 1
+    options:
+      name: idx_data_absent_reason_codes
+      sparse: true
+  - fields:
+      - "_search.valueConcept_codes": 1
+    options:
+      name: idx_value_concept_codes
+      sparse: true
+  - fields:
+      - "_search.componentCode_codes": 1
+    options:
+      name: idx_component_code_codes
+      sparse: true
+  - fields:
+      - "_search.comboCode_codes": 1
+    options:
+      name: idx_combo_code_codes
+      sparse: true
+
+  # Reference searches
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.subjectId": 1
+    options:
+      name: idx_subject_id
+      sparse: true
+  - fields:
+      - "_search.performerId": 1
+    options:
+      name: idx_performer_id
+      sparse: true
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+  - fields:
+      - "_search.basedOnId": 1
+    options:
+      name: idx_based_on_id
+      sparse: true
+  - fields:
+      - "_search.derivedFromId": 1
+    options:
+      name: idx_derived_from_id
+      sparse: true
+  - fields:
+      - "_search.deviceId": 1
+    options:
+      name: idx_device_id
+      sparse: true
+  - fields:
+      - "_search.specimenId": 1
+    options:
+      name: idx_specimen_id
+      sparse: true
+
+  # Date searches
+  - fields:
+      - "effectiveDateTime": 1
+    options:
+      name: idx_effective_date_time
+  - fields:
+      - "valueDateTime": 1
+    options:
+      name: idx_value_date_time
+      sparse: true
+
+  # Quantity searches (numeric component for value-quantity)
+  - fields:
+      - "valueQuantity.value": 1
+    options:
+      name: idx_value_quantity_value
+      sparse: true
+
+  # Compound: per-patient longitudinal time series
+  - fields:
+      - "_search.patientId": 1
+      - "effectiveDateTime": -1
+    options:
+      name: idx_patient_date_compound
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+      - "_search.code_codes": 1
+      - "effectiveDateTime": -1
+    options:
+      name: idx_patient_code_date_compound
+      sparse: true
+
+  # Common metadata
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_last_updated

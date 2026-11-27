@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+pane="${1:-}"
+
+runtime_url="${RUNTIME_URL:-http://127.0.0.1:8080}"
+samples_root="${SAMPLES_ROOT:-/workspace/kehrnel/src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference}"
+
+if [[ "${pane}" == "--pane" ]]; then
+  target="${2:-}"
+  if [[ "${target}" == "runtime" ]]; then
+    cat <<EOF
+Kehrnel CLI Demo: runtime pane
+
+This pane is the best place to keep the runtime running.
+
+Type:
+  demo-runtime
+
+That starts:
+  ./startKehrnel --host 0.0.0.0
+
+When it is ready:
+  - root redirects to ${runtime_url}/guide/
+  - health is at ${runtime_url}/health
+  - docs are at ${runtime_url}/guide/
+
+If you need a quick check:
+  demo-status
+EOF
+    exit 0
+  fi
+
+  if [[ "${target}" == "hands-on" ]]; then
+    cat <<EOF
+Kehrnel CLI Demo: hands-on pane
+
+Recommended first commands:
+  demo-help
+  demo-bindings
+  demo-smoke
+
+Useful exploration commands:
+  demo-assets
+  demo-explore
+  demo-status
+
+Packaged sample root:
+  ${samples_root}
+EOF
+    exit 0
+  fi
+fi
+
+cat <<'EOF'
+Kehrnel Embedded CLI Demo
+
+Core helpers:
+  demo-runtime   Start the kehrnel runtime on 0.0.0.0:8080
+  demo-smoke     Run the packaged openEHR smoke flow
+  demo-assets    Show the sample templates, queries, and mappings
+  demo-explore   Print a deeper openEHR CLI exploration path
+  demo-bindings  Explain the current MongoDB / bindings setup
+  demo-status    Show runtime status and current demo variables
+  demo-reset     Remove local demo artifacts inside this container
+
+Shortcuts:
+  croot          cd /workspace/kehrnel
+  k              kehrnel
+  ll             ls -lah
+
+Suggested path:
+  1. demo-bindings
+  2. demo-runtime
+  3. demo-smoke
+  4. demo-assets
+  5. demo-explore
+EOF
