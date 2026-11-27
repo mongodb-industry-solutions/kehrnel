@@ -7,6 +7,7 @@ import os
 import random
 import tempfile
 import uuid
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict
 
@@ -42,6 +43,7 @@ from kehrnel.engine.strategies.openehr.rps_dual.query.compiler import (
     build_query_pipeline_from_ast,
     build_runtime_strategy,
 )
+from kehrnel.engine.strategies.openehr.rps_dual.query.pagination import render_effective_aql
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -62,7 +64,10 @@ _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES = {
     "profile.search_shortcuts",
 }
 
-_RAW_AQL_AST_CACHE_LIMIT = 128
+# Path separators the query compiler can safely escape and round-trip. ":" is the
+# default; "." is retained for backward compatibility. "/" is used by IBM
+# exact-model HDL environments.
+_SUPPORTED_QUERY_SAFE_SEPARATORS = {".", "/", ":"}
 
 _INGEST_CONTROL_KEYS = {
     "data_mode",
@@ -113,62 +118,17 @@ def _bind_query_params(node: Any, params: Dict[str, Any], missing: set[str]) -> 
     return node
 
 
-def _query_compile_cache(ctx: StrategyContext) -> Dict[str, Any] | None:
-    meta = ctx.meta if isinstance(ctx.meta, dict) else None
-    if not isinstance(meta, dict):
-        return None
-    cache = meta.get("query_compile_cache")
-    if isinstance(cache, dict):
-        return cache
-    cache = {}
-    meta["query_compile_cache"] = cache
-    return cache
-
-
-def _compile_cache_bucket(
-    compile_cache: Dict[str, Any] | None,
-    name: str,
-) -> Dict[str, Any] | None:
-    if not isinstance(compile_cache, dict):
-        return None
-    bucket = compile_cache.get(name)
-    if isinstance(bucket, dict):
-        return bucket
-    bucket = {}
-    compile_cache[name] = bucket
-    return bucket
-
-
-def _remember_cached_value(
-    cache: Dict[str, Any] | None,
-    key: str,
-    value: Any,
-    *,
-    limit: int,
-) -> None:
-    if not isinstance(cache, dict):
-        return
-    if key in cache:
-        cache.pop(key, None)
-    elif len(cache) >= limit:
-        oldest_key = next(iter(cache), None)
-        if oldest_key is not None:
-            cache.pop(oldest_key, None)
-    cache[key] = value
-
-
-def _get_or_parse_raw_aql_ast(raw_aql: str, ctx: StrategyContext) -> tuple[Dict[str, Any], str]:
-    compile_cache = _query_compile_cache(ctx)
-    bucket = _compile_cache_bucket(compile_cache, "raw_aql_ast")
-    cache_key = str(raw_aql or "").strip()
-    cached = bucket.get(cache_key) if isinstance(bucket, dict) else None
-    if isinstance(cached, dict):
-        _remember_cached_value(bucket, cache_key, cached, limit=_RAW_AQL_AST_CACHE_LIMIT)
-        return cached, "hit"
-
-    parsed = AQLToASTParser(cache_key).parse()
-    _remember_cached_value(bucket, cache_key, parsed, limit=_RAW_AQL_AST_CACHE_LIMIT)
-    return parsed, "miss"
+def _extract_query_pagination_options(query: Dict[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(query, dict):
+        return {}
+    pagination = query.get("pagination") if isinstance(query.get("pagination"), dict) else {}
+    options: Dict[str, Any] = {}
+    if pagination:
+        options["pagination"] = pagination
+    for key in ("pageToken", "searchAfter", "searchBefore"):
+        if query.get(key) is not None:
+            options[key] = query.get(key)
+    return options
 
 
 def _allow_local_file_ingest() -> bool:
@@ -261,6 +221,20 @@ class RPSDualStrategy(StrategyPlugin):
         self.manifest.default_config = self.defaults
         self.normalized_config: RPSDualConfig | None = None
         self.normalized_bulk_config: BulkConfig | None = None
+        self._query_compile_caches: Dict[str, Dict[str, Any]] = {}
+
+    def _compile_cache_for_context(self, ctx: StrategyContext) -> Dict[str, Any]:
+        env_id = getattr(ctx, "environment_id", None) or "default"
+        cache = self._query_compile_caches.get(env_id)
+        if isinstance(cache, dict):
+            return cache
+        if len(self._query_compile_caches) >= 16:
+            oldest_key = next(iter(self._query_compile_caches), None)
+            if oldest_key is not None:
+                self._query_compile_caches.pop(oldest_key, None)
+        cache = {}
+        self._query_compile_caches[env_id] = cache
+        return cache
 
     def _strategy_root_dir(self) -> Path:
         base_dir = getattr(self, "strategy_base_dir", None)
@@ -270,10 +244,18 @@ class RPSDualStrategy(StrategyPlugin):
             return Path(base_dir)
         return Path(__file__).parent
 
+
     async def validate_config(self, ctx: StrategyContext | Dict[str, Any]) -> None:
         raw_config = ctx.config if isinstance(ctx, StrategyContext) else ctx
         strategy_cfg = normalize_config(raw_config or {})
         errors: list[str] = []
+
+        if strategy_cfg.paths.separator not in _SUPPORTED_QUERY_SAFE_SEPARATORS:
+            errors.append(
+                "paths.separator must be one of "
+                f"{sorted(_SUPPORTED_QUERY_SAFE_SEPARATORS)} because query compilation must be able to "
+                "round-trip stored paths."
+            )
 
         comp_profile = (strategy_cfg.collections.compositions.encodingProfile or "").strip().lower()
         if comp_profile not in _SUPPORTED_QUERY_SAFE_ENCODING_PROFILES:
@@ -594,6 +576,39 @@ class RPSDualStrategy(StrategyPlugin):
         stores = (spec.get("storage") or {}).get("stores") or (spec.get("storageModel") or {}).get("stores") or []
         store_profiles = (ctx.meta or {}).get("store_profiles") or {}
         collections_cfg = ctx.config.get("collections", {}) if isinstance(ctx.config, dict) else {}
+        try:
+            strategy_cfg = normalize_config(ctx.config or {})
+        except Exception:
+            strategy_cfg = None
+        document_fields = getattr(getattr(strategy_cfg, "fields", None), "document", None)
+        node_fields = getattr(getattr(strategy_cfg, "fields", None), "node", None)
+
+        document_aliases = {
+            "ehr_id": getattr(document_fields, "ehr_id", "ehr_id"),
+            "comp_id": getattr(document_fields, "comp_id", "comp_id"),
+            "tid": getattr(document_fields, "tid", "tid"),
+            "v": getattr(document_fields, "v", "v"),
+            "time_c": getattr(document_fields, "time_committed", "time_c"),
+            "time_committed": getattr(document_fields, "time_committed", "time_c"),
+            "sort_time": getattr(document_fields, "sort_time", "sort_time"),
+            "cn": getattr(document_fields, "cn", "cn"),
+            "sn": getattr(document_fields, "sn", "sn"),
+        }
+        node_aliases = {
+            "p": getattr(node_fields, "p", "p"),
+            "pi": getattr(node_fields, "pi", "pi"),
+            "data": getattr(node_fields, "data", "data"),
+        }
+        node_array_fields = {document_aliases["cn"], document_aliases["sn"]}
+
+        def resolve_index_field(field: str) -> str:
+            if not isinstance(field, str) or not field:
+                return field
+            parts = field.split(".")
+            parts[0] = document_aliases.get(parts[0], parts[0])
+            if len(parts) > 1 and parts[0] in node_array_fields:
+                parts[1] = node_aliases.get(parts[1], parts[1])
+            return ".".join(parts)
 
         def resolve_collection(store: Dict[str, Any]) -> str | None:
             role = store.get("role") or store.get("id")
@@ -606,23 +621,69 @@ class RPSDualStrategy(StrategyPlugin):
                 return (collections_cfg.get("search") or {}).get("name")
             return store.get("destinationType")
 
+        def plan_metadata(idx: Dict[str, Any], logical_fields: list[str] | None = None) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "id": idx.get("id"),
+                "type": idx.get("type"),
+                "requirement": idx.get("requirement"),
+                "purpose": idx.get("purpose"),
+                "workloads": idx.get("workloads"),
+                "configResolved": idx.get("configResolved"),
+                "fieldsFromConfig": idx.get("fieldsFromConfig"),
+            }
+            if logical_fields:
+                metadata["logicalFields"] = logical_fields
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
+        def search_plan_metadata(search: Dict[str, Any]) -> Dict[str, Any]:
+            metadata: Dict[str, Any] = {
+                "kind": search.get("kind"),
+                "requirement": search.get("requirement"),
+                "condition": search.get("condition"),
+                "purpose": search.get("purpose"),
+                "workloads": search.get("workloads"),
+                "configResolved": search.get("configResolved"),
+            }
+            return {key: value for key, value in metadata.items() if value not in (None, [], {})}
+
         for store in stores:
             if not isinstance(store, dict):
                 continue
             coll = resolve_collection(store)
+            search_contract = store.get("search")
+            if coll and isinstance(search_contract, dict):
+                for search_index in artifacts.get("search_indexes", []):
+                    if search_index.get("collection") == coll:
+                        search_index.update(search_plan_metadata(search_contract))
             for idx in store.get("indexes") or []:
                 if not isinstance(idx, dict):
+                    continue
+                if idx.get("autoCreate") is False:
                     continue
                 idx_type = idx.get("type")
                 if idx_type == "btree":
                     fields = idx.get("fields") or []
-                    keys = [(f, 1) for f in fields]
+                    keys = [(resolve_index_field(f), 1) for f in fields]
                     if coll and keys:
-                        artifacts["indexes"].append({"collection": coll, "keys": keys, "options": idx.get("options", {})})
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": keys,
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, fields),
+                            }
+                        )
                 elif idx_type == "wildcard":
-                    field = idx.get("field") or "data"
+                    field = resolve_index_field(idx.get("field") or "data")
                     if coll:
-                        artifacts["indexes"].append({"collection": coll, "keys": [(f"{field}.$**", 1)], "options": idx.get("options", {})})
+                        artifacts["indexes"].append(
+                            {
+                                "collection": coll,
+                                "keys": [(f"{field}.$**", 1)],
+                                "options": idx.get("options", {}),
+                                **plan_metadata(idx, [idx.get("field") or "data"]),
+                            }
+                        )
                 elif idx_type == "search":
                     if coll:
                         artifacts["search_indexes"].append(
@@ -631,6 +692,7 @@ class RPSDualStrategy(StrategyPlugin):
                                 "name": idx.get("name") or store.get("role") or "search_index",
                                 "definition": idx.get("definition", {}),
                                 "storedSource": idx.get("storedSource"),
+                                **plan_metadata(idx),
                             }
                         )
         return artifacts
@@ -649,7 +711,7 @@ class RPSDualStrategy(StrategyPlugin):
         coding_cfg = build_coding_opts(strategy_cfg)
         mappings_content = await self._resolve_mappings_content(ctx, strategy_cfg)
 
-        mappings_path = str(self._strategy_root_dir() / "ingest" / "config" / "flattener_mappings_f.jsonc")
+        mappings_path = str(Path(__file__).parent / "ingest" / "config" / "flattener_mappings_f.jsonc")
 
         # Try to reuse raw motor database from the storage adapter if available
         db = getattr(storage, "db", None)
@@ -839,7 +901,7 @@ class RPSDualStrategy(StrategyPlugin):
         runtime_strategy = build_runtime_strategy(cfg_model)
         storage = (ctx.adapters or {}).get("storage") if ctx else None
         motor_db = getattr(storage, "db", None) if storage else None
-        compile_cache = _query_compile_cache(ctx)
+        compile_cache = self._compile_cache_for_context(ctx)
 
         def _execution_contract(stage_name: str, schema_cfgs: Dict[str, Any]) -> tuple[str, str | None]:
             if stage_name == "$search":
@@ -848,11 +910,12 @@ class RPSDualStrategy(StrategyPlugin):
 
         if isinstance(query, dict):
             debug = bool(query.get("debug"))
+            pagination_options = _extract_query_pagination_options(query)
             raw_aql = query.get("raw_aql")
             if isinstance(raw_aql, str) and raw_aql.strip():
                 params = query.get("params") or query.get("parameters") or {}
                 try:
-                    raw_ast, raw_aql_cache_status = _get_or_parse_raw_aql_ast(raw_aql, ctx)
+                    raw_ast = AQLToASTParser(raw_aql).parse()
                 except Exception as exc:
                     raise KehrnelError(
                         code="INVALID_AQL",
@@ -862,7 +925,7 @@ class RPSDualStrategy(StrategyPlugin):
                     ) from exc
 
                 missing_params: set[str] = set()
-                ast_doc = _bind_query_params(raw_ast, params, missing_params)
+                ast_doc = _bind_query_params(deepcopy(raw_ast), params, missing_params)
                 if missing_params:
                     raise KehrnelError(
                         code="MISSING_QUERY_PARAMETERS",
@@ -880,11 +943,12 @@ class RPSDualStrategy(StrategyPlugin):
                     db=motor_db,
                     shortcut_map=shortcuts_res.get("items") or {},
                     strategy=runtime_strategy,
-                    raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
                     compile_cache=compile_cache,
+                    pagination_options=pagination_options,
+                    code_items=codes_res.get("items") or {},
                 )
-                builder_cache = builder_info.setdefault("cache", {})
-                builder_cache["raw_aql_ast"] = raw_aql_cache_status
+                pagination_info = builder_info.get("pagination") or {}
+                warnings.extend(pagination_info.get("warnings") or [])
                 scope = builder_info.get("scope") or "patient"
                 if scope == "cross_patient":
                     post_match = [stage for stage in pipeline[1:] if "$match" in stage]
@@ -896,6 +960,9 @@ class RPSDualStrategy(StrategyPlugin):
                     "pipeline": pipeline,
                     "scope": scope,
                     "collection": collection,
+                }
+                plan_dict["pagination"] = {
+                    key: value for key, value in pagination_info.items() if key != "warnings"
                 }
                 plan_dict["dicts"] = {
                     "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -912,7 +979,9 @@ class RPSDualStrategy(StrategyPlugin):
                     "ast": ast_doc if debug else None,
                     "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
                     "rawAql": raw_aql if debug else None,
+                    "effectiveAql": render_effective_aql(raw_aql, pagination_info) if debug else None,
                     "parameters": params if debug else None,
+                    "pagination": plan_dict["pagination"],
                     "mode": "raw_aql_strategy",
                 }
                 explain = enrich_explain(
@@ -925,7 +994,13 @@ class RPSDualStrategy(StrategyPlugin):
                 plan_dict["explain"] = explain
                 return QueryPlan(engine=plan_dict["engine"], plan=plan_dict, explain=explain)
             # The IR dataclass does not accept extra keys like "debug".
-            query_payload = {k: v for k, v in query.items() if k != "debug"}
+            query_payload = {
+                k: v
+                for k, v in query.items()
+                if k not in {"debug", "pageToken", "searchAfter", "searchBefore", "pagination"}
+            }
+        else:
+            pagination_options = {}
 
         ir = AqlQueryIR(**query_payload) if not isinstance(query, AqlQueryIR) else query
         # Build query pipeline using the query compiler
@@ -935,9 +1010,12 @@ class RPSDualStrategy(StrategyPlugin):
             db=motor_db,
             shortcut_map=shortcuts_res.get("items") or {},
             strategy=runtime_strategy,
-            raw_cfg=ctx.config if isinstance(ctx.config, dict) else None,
             compile_cache=compile_cache,
+            pagination_options=pagination_options,
+            code_items=codes_res.get("items") or {},
         )
+        pagination_info = builder_info.get("pagination") or {}
+        warnings.extend(pagination_info.get("warnings") or [])
         if ir.scope == "cross_patient":
             post_match = [stage for stage in pipeline[1:] if "$match" in stage]
             if post_match:
@@ -947,6 +1025,9 @@ class RPSDualStrategy(StrategyPlugin):
             "engine": execution_engine,
             "pipeline": pipeline,
             "collection": collection,
+        }
+        plan_dict["pagination"] = {
+            key: value for key, value in pagination_info.items() if key != "warnings"
         }
         plan_dict["dicts"] = {
             "codes": {"source": codes_res.get("source"), "missing": codes_res.get("missing", False)},
@@ -962,6 +1043,7 @@ class RPSDualStrategy(StrategyPlugin):
             "schema": schema_cfgs,
             "ast": ast_doc if debug else None,
             "builder": {**builder_info, "compiler_engine": engine, "execution_engine": execution_engine},
+            "pagination": plan_dict["pagination"],
         }
         explain = enrich_explain(
             explain,
@@ -1432,9 +1514,13 @@ class RPSDualStrategy(StrategyPlugin):
             progress_cb = (ctx.meta or {}).get("progress_cb")
             should_cancel = (ctx.meta or {}).get("should_cancel")
 
+            # Prefer model_source from metadata (has defaults) over payload
+            model_source_from_meta = (ctx.meta or {}).get("model_source") if ctx and ctx.meta else None
+            model_source_from_payload = payload.get("model_source") if isinstance(payload.get("model_source"), dict) else {}
+            model_source = model_source_from_meta if model_source_from_meta else model_source_from_payload
+
             models = payload.get("models")
             templates = payload.get("templates")
-            model_source = payload.get("model_source") or {}
             source_templates = payload.get("source_templates")
             source_sample_size = int(payload.get("source_sample_size", 200) or 200)
             source_min_per_patient = int(payload.get("source_min_per_patient", 1) or 1)
@@ -1452,32 +1538,30 @@ class RPSDualStrategy(StrategyPlugin):
                     strategy_id=getattr(ctx.manifest, "id", None),
                 )
             elif isinstance(templates, list) and templates:
+                # Convert templates to models format and resolve with catalog
+                template_models = []
                 for entry in templates:
                     if not isinstance(entry, dict):
                         raise KehrnelError(code="INVALID_INPUT", status=400, message="each template entry must be an object")
                     template_id = str(entry.get("template_id") or entry.get("templateId") or "").strip()
                     if not template_id:
                         raise KehrnelError(code="INVALID_INPUT", status=400, message="template_id is required in each template entry")
-                    min_per = int(entry.get("min_per_patient", entry.get("min", 1)))
-                    max_per = int(entry.get("max_per_patient", entry.get("max", min_per)))
-                    if min_per < 0 or max_per < min_per:
-                        raise KehrnelError(
-                            code="INVALID_INPUT",
-                            status=400,
-                            message=f"invalid range for template {template_id}: min={min_per}, max={max_per}",
-                        )
-                    sample_size = int(entry.get("sample_pool_size", 25) or 25)
-                    model_specs.append(
-                        {
-                            "model_id": template_id,
-                            "template_id": template_id,
-                            "min": min_per,
-                            "max": max_per,
-                            "weight": float(entry.get("weight", 1.0)),
-                            "sample_size": max(1, sample_size),
-                            "catalog": {},
-                        }
-                    )
+                    template_models.append({
+                        "model_id": template_id,
+                        "template_id": template_id,
+                        "min_per_patient": int(entry.get("min_per_patient", entry.get("min", 1))),
+                        "max_per_patient": int(entry.get("max_per_patient", entry.get("max", entry.get("min_per_patient", entry.get("min", 1))))),
+                        "weight": float(entry.get("weight", 1.0)),
+                        "sample_pool_size": int(entry.get("sample_pool_size", 25) or 25),
+                    })
+                # Resolve models to fetch catalog documents
+                model_specs = await resolve_model_specs(
+                    storage,
+                    model_source=model_source if isinstance(model_source, dict) else {},
+                    requested_models=template_models,
+                    domain=(getattr(ctx.manifest, "domain", "") or "openEHR"),
+                    strategy_id=getattr(ctx.manifest, "id", None),
+                )
             elif str(generation_mode or "").lower() in ("from_source", "source", "auto"):
                 # Source-instance mode: derive templates from existing source collection.
                 discovered_template_ids: list[str] = []
@@ -1990,6 +2074,7 @@ def _build_canonical_generator_from_model(model_doc: Dict[str, Any]):
         (((model_doc.get("domainData") or {}).get("source") or {}).get("xml") if isinstance(model_doc.get("domainData"), dict) else None)
         or model_doc.get("opt")
         or model_doc.get("template")
+        or model_doc.get("content")
     )
     if not isinstance(xml_payload, str) or "<" not in xml_payload:
         return None

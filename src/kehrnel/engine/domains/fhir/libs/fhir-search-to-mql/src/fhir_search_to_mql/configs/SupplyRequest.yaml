@@ -1,0 +1,254 @@
+resource: SupplyRequest
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec SupplyRequest)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json
+#
+# Total parameters: 10 (8 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `patient` searches `deliverFor`; `subject` searches `deliverTo`.
+#   * Patient compartment linking param `subject` maps to `deliverTo`.
+#   * `item` is required CodeableReference — not searchable in R5 index.
+
+search_parameters:
+  category:
+    type: token
+    description: "The kind of supply (central, non-stock, etc.)"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  date:
+    type: date
+    description: "When the request was made"
+    fields:
+      - field: "authoredOn"
+        type: date
+
+  identifier:
+    type: token
+    description: "Business Identifier for SupplyRequest"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  patient:
+    type: reference
+    description: "The patient or subject for whom the supply is destined"
+    fields:
+      - field: "_search.deliverForId"
+        referenceType: id
+      - field: "deliverFor.reference"
+        referenceType: full
+
+  requester:
+    type: reference
+    description: "Individual making the request"
+    fields:
+      - field: "_search.requesterId"
+        referenceType: id
+      - field: "_search.requesterType"
+        referenceType: type
+      - field: "requester.reference"
+        referenceType: full
+
+  status:
+    type: token
+    description: "draft | active | suspended +"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  subject:
+    type: reference
+    description: "The destination of the supply"
+    fields:
+      - field: "_search.deliverToId"
+        referenceType: id
+      - field: "_search.deliverToType"
+        referenceType: type
+      - field: "deliverTo.reference"
+        referenceType: full
+
+  supplier:
+    type: reference
+    description: "Who is intended to fulfill the request"
+    fields:
+      - field: "_search.supplierIds"
+        referenceType: id
+      - field: "_search.supplierTypes"
+        referenceType: type
+      - field: "supplier.reference"
+        referenceType: full
+
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category.coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category.coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  deliverFor:
+    source: deliverFor
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: deliverFor.reference
+        target_field: deliverForId
+        datatype: string
+        extractType: id
+
+  deliverTo:
+    source: deliverTo
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: deliverTo.reference
+        target_field: deliverToId
+        datatype: string
+        extractType: id
+      - source_path: deliverTo.reference
+        target_field: deliverToType
+        datatype: string
+        extractType: type
+
+  requester:
+    source: requester
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: requester.reference
+        target_field: requesterId
+        datatype: string
+        extractType: id
+      - source_path: requester.reference
+        target_field: requesterType
+        datatype: string
+        extractType: type
+
+  supplier:
+    source: supplier
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: supplier[*].reference
+        target_field: supplierIds
+        datatype: array[string]
+        extractType: id
+      - source_path: supplier[*].reference
+        target_field: supplierTypes
+        datatype: array[string]
+        extractType: type
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - deliverTo
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param subject → deliverTo)"
+      - target_field: Practitioner
+        source_paths:
+          - requester
+        reference_type: Practitioner
+        datatype: array[string]
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+  - fields:
+      - "_search.deliverForId": 1
+    options:
+      name: idx_deliver_for_id
+      sparse: true
+  - fields:
+      - "_search.deliverToId": 1
+    options:
+      name: idx_deliver_to_id
+      sparse: true
+  - fields:
+      - "_search.requesterId": 1
+    options:
+      name: idx_requester_id
+      sparse: true
+  - fields:
+      - "_search.supplierIds": 1
+    options:
+      name: idx_supplier_ids
+      sparse: true
+  - fields:
+      - "authoredOn": 1
+    options:
+      name: idx_authored_on
+      sparse: true
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

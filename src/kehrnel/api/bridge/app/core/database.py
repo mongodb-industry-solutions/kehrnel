@@ -166,6 +166,10 @@ def _parse_api_key_env_scopes() -> dict[str, object]:
 
 
 def _is_env_access_allowed(request: Request, env_id: str) -> bool:
+    auth_enabled = (os.getenv("KEHRNEL_AUTH_ENABLED", "true") or "").strip().lower() in ("1", "true", "yes")
+    if not auth_enabled:
+        return True
+
     scopes = _parse_api_key_env_scopes()
     api_key = (request.headers.get("x-api-key") or "").strip()
     if scopes:
@@ -229,7 +233,7 @@ def _get_activation(request: Request, env_id: str, domain: str):
 def _is_rps_dual_activation(activation) -> bool:
     strategy_id = (getattr(activation, "strategy_id", None) or "").strip().lower()
     domain = (getattr(activation, "domain", None) or "").strip().lower()
-    return domain == "openehr" and strategy_id == "openehr.rps_dual"
+    return domain == "openehr" and strategy_id in {"openehr.rps_dual", "openehr.rps_dual_ibm"}
 
 
 def _dictionary_bootstrap_payload(activation) -> dict[str, str]:

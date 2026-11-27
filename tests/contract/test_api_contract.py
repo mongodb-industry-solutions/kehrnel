@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from kehrnel.api.app import create_app, _load_manifests
-from kehrnel.core.runtime import StrategyRuntime
+from kehrnel.engine.core.runtime import StrategyRuntime
 from kehrnel.strategy_sdk import StrategyBindings
 from tests.helpers.fixture_storage import FixtureStorage
 

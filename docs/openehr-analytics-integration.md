@@ -124,7 +124,9 @@ belong to the executor. Approving a new rule does not automatically backfill.
 Production throughput and clinical reconciliation require representative testing;
 synthetic acceptance is proof of integration, not clinical approval.
 
-Deploy the Kehrnel PR first, then HDL. Existing environments and operational
+Merge the feature PRs into `staging` first and validate them there, deploying
+Kehrnel before HDL. Promote the reviewed `staging` branches to `main` through
+separate PRs, then verify Drone production deployment before tenant activation. Existing environments and operational
 activations are not migrated or replaced automatically. See the
 [rule reference](openehr-analytics-rule-reference.md),
 [maintenance contract](openehr-analytics-maintenance.md), and

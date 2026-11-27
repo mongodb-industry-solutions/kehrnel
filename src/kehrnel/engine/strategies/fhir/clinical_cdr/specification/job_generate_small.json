@@ -1,0 +1,16 @@
+{
+  "domain": "fhir",
+  "op": "synthetic_generate_batch",
+  "payload": {
+    "seed": 1,
+    "schema_version": "R5",
+    "resources": {
+      "Patient": 2,
+      "Observation": 5
+    },
+    "store_canonical": true,
+    "write_batch_size": 250,
+    "dry_run": false,
+    "plan_only": false
+  }
+}

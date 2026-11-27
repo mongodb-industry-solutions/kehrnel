@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-from kehrnel.core.types import StrategyContext
-from kehrnel.domains.openehr.aql.parse import parse_aql
+from kehrnel.engine.core.types import StrategyContext
+from kehrnel.engine.domains.openehr.aql.parse import parse_aql
 from kehrnel.engine.strategies.openehr.rps_dual.strategy import DEFAULTS_PATH, MANIFEST as RPS_MANIFEST, RPSDualStrategy, load_json
-from kehrnel.engine.strategies.fhir.resource_first.strategy import FHIRResourceFirstStrategy
+from kehrnel.engine.strategies.fhir.clinical_cdr.strategy import FHIRClinicalCDRStrategy
 from kehrnel.engine.strategies.genomics.variant_first.strategy import GenomicsVariantFirstStrategy
 from tests.helpers.fixture_storage import FixtureStorage
 
@@ -36,14 +36,20 @@ async def test_explain_keys_rps_dual():
 
 
 @pytest.mark.asyncio
-async def test_explain_keys_fhir_resource_first():
-    strat_manifest = strat_manifest_loader("fhir.resource_first")
-    strat = FHIRResourceFirstStrategy(manifest=strat_manifest)
-    ctx = StrategyContext(environment_id="env", config={}, manifest=strat_manifest, meta={"activation_id": "act-fhir"})
-    plan = await strat.compile_query(ctx, "fhir", {"scope": "patient"})
+async def test_explain_keys_fhir_clinical_cdr():
+    pytest.importorskip("fhir_search_to_mql")
+    strat_manifest = strat_manifest_loader("fhir.clinical_cdr")
+    strat = FHIRClinicalCDRStrategy(manifest=strat_manifest)
+    cfg = dict(strat_manifest.default_config or {})
+    ctx = StrategyContext(environment_id="env", config=cfg, manifest=strat_manifest, meta={"activation_id": "act-fhir"})
+    plan = await strat.compile_query(
+        ctx,
+        "fhir",
+        {"resource_type": "Patient", "criteria": {"gender": "female"}},
+    )
     _assert_keys(plan.explain)
     assert plan.explain["domain"] == "fhir"
-    assert plan.explain["engine"] == "fhir_dummy"
+    assert plan.explain["engine"] == "fhir_mql"
 
 
 @pytest.mark.asyncio

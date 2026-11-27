@@ -4,8 +4,14 @@
   "version": "0.1.0",
   "maturity": "published",
   "pack_format": "strategy-pack/v1",
-  "spec": { "path": "spec.json", "version": "1.1" },
-  "variants": ["composition.ibm_exact", "search.ibm_exact"],
+  "spec": {
+    "path": "spec.json",
+    "version": "1.1"
+  },
+  "variants": [
+    "composition.ibm_exact",
+    "search.ibm_exact"
+  ],
   "domain": "openEHR",
   "summary": "Compatibility pack for the IBM openEHR reversed-path persistence model, preserving IBM field names, compact tokens, and envelope layout.",
   "description": "This strategy reuses the shared openEHR RPS compiler and maintenance plumbing, but emits and reads the IBM document model exactly as stored: slash-separated reversed paths, compact atcodes, li sibling indexes, prefixed value tokens, and IBM envelope metadata.",
@@ -33,9 +39,16 @@
   "entrypoint": "kehrnel.engine.strategies.openehr.rps_dual_ibm.strategy:RPSDualIBMStrategy",
   "ui": {
     "docs": "/guide/docs/strategies/openehr/rps-dual-ibm",
-    "tags": ["openEHR", "reversed-paths", "ibm", "compatibility"],
+    "tags": [
+      "openEHR",
+      "reversed-paths",
+      "ibm",
+      "compatibility"
+    ],
     "domain_badge": "openEHR",
-    "works_with": ["atlas_search_dual"],
+    "works_with": [
+      "atlas_search_dual"
+    ],
     "links": {
       "strategy_synthetic_generate": "/api/strategies/openehr/rps_dual_ibm/synthetic/generate",
       "strategy_synthetic_stats": "/api/strategies/openehr/rps_dual_ibm/synthetic/stats",
@@ -91,17 +104,50 @@
     "tabs": {
       "overview": {
         "cards": [
-          { "title": "Compatibility", "body": "Targets IBM exact persistence: slash paths, compact atcodes, `$>` values, `li`, and IBM envelope fields." },
-          { "title": "Querying", "body": "Reuses the shared RPS query compiler while rebinding document paths to IBM fields such as `version`, `template`, and `creation_date`." },
-          { "title": "Compare To Default", "body": "Use this pack to preserve an installed IBM model. For greenfield deployments, the default `openehr.rps_dual` profile remains the better starting point." }
+          {
+            "title": "Compatibility",
+            "body": "Targets IBM exact persistence: slash paths, compact atcodes, `$>` values, `li`, and IBM envelope fields."
+          },
+          {
+            "title": "Querying",
+            "body": "Reuses the shared RPS query compiler while rebinding document paths to IBM fields such as `version`, `template`, and `creation_date`."
+          },
+          {
+            "title": "Compare To Default",
+            "body": "Use this pack to preserve an installed IBM model. For greenfield deployments, the default `openehr.rps_dual` profile remains the better starting point."
+          }
         ]
       },
       "activation": {
         "cards": [
-          { "title": "Configure First", "body": "Before first activation, review `collections.compositions.name`, `collections.search.name`, `collections.codes.name`, and `collections.shortcuts.name` so Kehrnel points at the correct IBM collections." },
-          { "title": "Safer Bootstrap", "body": "Compatibility defaults are ensure-only for dictionaries, so existing IBM dictionary documents are not replaced unless you explicitly choose seed/rebuild operations." }
+          {
+            "title": "Configure First",
+            "body": "Before first activation, review `collections.compositions.name`, `collections.search.name`, `collections.codes.name`, and `collections.shortcuts.name` so Kehrnel points at the correct IBM collections."
+          },
+          {
+            "title": "Safer Bootstrap",
+            "body": "Compatibility defaults are ensure-only for dictionaries, so existing IBM dictionary documents are not replaced unless you explicitly choose seed/rebuild operations."
+          }
         ]
       }
+    },
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "searchSpecPath": "storageModel.stores[].search",
+      "configResolved": true,
+      "summary": "Required and recommended MongoDB indexes are declared in the IBM strategy spec with logical field aliases. Runtime plan/apply resolves the IBM collection names, UUID settings, and field aliases from the active environment config.",
+      "requiredForOptimizedAql": [
+        "idx_patient_path",
+        "idx_template_commit_version"
+      ],
+      "recommendedForOptimizedAql": [
+        "idx_template_node_commit",
+        "idx_patient_sort"
+      ],
+      "optionalForOptimizedAql": [
+        "idx_template_commit"
+      ],
+      "conditionalSearchIndex": "collections.search.atlasIndex"
     }
   },
   "ops": [
@@ -114,12 +160,20 @@
         "properties": {
           "codes": {
             "type": "string",
-            "enum": ["none", "ensure", "seed"],
+            "enum": [
+              "none",
+              "ensure",
+              "seed"
+            ],
             "description": "Bootstrap mode for the codes dictionary"
           },
           "shortcuts": {
             "type": "string",
-            "enum": ["none", "ensure", "seed"],
+            "enum": [
+              "none",
+              "ensure",
+              "seed"
+            ],
             "description": "Bootstrap mode for the shortcuts dictionary"
           }
         },
@@ -128,21 +182,31 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
+          "ok": {
+            "type": "boolean"
+          },
           "created": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "seeded": {
             "type": "object",
             "properties": {
-              "codes": { "type": "integer" },
-              "shortcuts": { "type": "integer" }
+              "codes": {
+                "type": "integer"
+              },
+              "shortcuts": {
+                "type": "integer"
+              }
             }
           },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -164,11 +228,17 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "updated": { "type": "integer" },
+          "ok": {
+            "type": "boolean"
+          },
+          "updated": {
+            "type": "integer"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -190,11 +260,17 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "updated": { "type": "integer" },
+          "ok": {
+            "type": "boolean"
+          },
+          "updated": {
+            "type": "integer"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -216,12 +292,20 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "definition": { "type": "object" },
-          "metadata": { "type": "object" },
+          "ok": {
+            "type": "boolean"
+          },
+          "definition": {
+            "type": "object"
+          },
+          "metadata": {
+            "type": "object"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -233,7 +317,9 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "index_name": { "type": "string" },
+          "index_name": {
+            "type": "string"
+          },
           "recreate": {
             "type": "boolean",
             "default": false
@@ -244,11 +330,17 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "result": { "type": "object" },
+          "ok": {
+            "type": "boolean"
+          },
+          "result": {
+            "type": "object"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -274,13 +366,23 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "processed": { "type": "integer" },
-          "inserted": { "type": "integer" },
-          "cleared": { "type": "boolean" },
+          "ok": {
+            "type": "boolean"
+          },
+          "processed": {
+            "type": "integer"
+          },
+          "inserted": {
+            "type": "integer"
+          },
+          "cleared": {
+            "type": "boolean"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -311,7 +413,9 @@
           },
           "source_templates": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "source_sample_size": {
             "type": "integer",
@@ -334,7 +438,13 @@
           },
           "generation_mode": {
             "type": "string",
-            "enum": ["auto", "from_source", "from_models", "source", "models"]
+            "enum": [
+              "auto",
+              "from_source",
+              "from_models",
+              "source",
+              "models"
+            ]
           },
           "dry_run": {
             "type": "boolean",
@@ -360,9 +470,15 @@
           "model_source": {
             "type": "object",
             "properties": {
-              "database_name": { "type": "string" },
-              "catalog_collection": { "type": "string" },
-              "links_collection": { "type": "string" }
+              "database_name": {
+                "type": "string"
+              },
+              "catalog_collection": {
+                "type": "string"
+              },
+              "links_collection": {
+                "type": "string"
+              }
             },
             "additionalProperties": true
           },
@@ -372,14 +488,33 @@
             "items": {
               "type": "object",
               "properties": {
-                "model_id": { "type": "string" },
-                "template_id": { "type": "string" },
-                "min_per_patient": { "type": "integer", "minimum": 0 },
-                "max_per_patient": { "type": "integer", "minimum": 0 },
-                "weight": { "type": "number", "minimum": 0 },
-                "sample_pool_size": { "type": "integer", "minimum": 0, "default": 25 }
+                "model_id": {
+                  "type": "string"
+                },
+                "template_id": {
+                  "type": "string"
+                },
+                "min_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sample_pool_size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 25
+                }
               },
-              "required": ["model_id"],
+              "required": [
+                "model_id"
+              ],
               "additionalProperties": false
             }
           },
@@ -389,8 +524,12 @@
             "items": {
               "type": "object",
               "properties": {
-                "template_id": { "type": "string" },
-                "templateId": { "type": "string" },
+                "template_id": {
+                  "type": "string"
+                },
+                "templateId": {
+                  "type": "string"
+                },
                 "min_per_patient": {
                   "type": "integer",
                   "minimum": 0
@@ -425,60 +564,143 @@
             "items": {
               "type": "object",
               "properties": {
-                "from": { "type": "string" },
-                "from_model_id": { "type": "string" },
-                "to": { "type": "string" },
-                "to_model_id": { "type": "string" },
-                "probability": { "type": "number", "minimum": 0, "maximum": 1 },
-                "min_to_per_patient": { "type": "integer", "minimum": 0 },
-                "type": { "type": "string" }
+                "from": {
+                  "type": "string"
+                },
+                "from_model_id": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "to_model_id": {
+                  "type": "string"
+                },
+                "probability": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "min_to_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "type": {
+                  "type": "string"
+                }
               },
               "additionalProperties": true
             }
           }
         },
         "anyOf": [
-          { "required": ["patient_count"] },
-          { "required": ["patients"] }
+          {
+            "required": [
+              "patient_count"
+            ]
+          },
+          {
+            "required": [
+              "patients"
+            ]
+          }
         ],
         "additionalProperties": false
       },
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "dry_run": { "type": "boolean" },
-          "plan_only": { "type": "boolean" },
-          "source_collection": { "type": "string" },
-          "source_database": { "type": ["string", "null"] },
+          "ok": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "plan_only": {
+            "type": "boolean"
+          },
+          "source_collection": {
+            "type": "string"
+          },
+          "source_database": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "target": {
             "type": "object",
             "properties": {
-              "canonical": { "type": ["string", "null"] },
-              "compositions": { "type": ["string", "null"] },
-              "search": { "type": ["string", "null"] }
+              "canonical": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "compositions": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "search": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
             }
           },
-          "patients": { "type": "integer" },
-          "estimated_docs": { "type": "integer" },
-          "generated_docs": { "type": "integer" },
-          "inserted_canonical": { "type": "integer" },
-          "inserted_base": { "type": "integer" },
-          "inserted_search": { "type": "integer" },
-          "estimated_canonical_bytes": { "type": "integer" },
-          "estimated_base_bytes": { "type": "integer" },
-          "estimated_search_bytes": { "type": "integer" },
-          "estimated_total_bytes": { "type": "integer" },
-          "links_applied": { "type": "integer" },
+          "patients": {
+            "type": "integer"
+          },
+          "estimated_docs": {
+            "type": "integer"
+          },
+          "generated_docs": {
+            "type": "integer"
+          },
+          "inserted_canonical": {
+            "type": "integer"
+          },
+          "inserted_base": {
+            "type": "integer"
+          },
+          "inserted_search": {
+            "type": "integer"
+          },
+          "estimated_canonical_bytes": {
+            "type": "integer"
+          },
+          "estimated_base_bytes": {
+            "type": "integer"
+          },
+          "estimated_search_bytes": {
+            "type": "integer"
+          },
+          "estimated_total_bytes": {
+            "type": "integer"
+          },
+          "links_applied": {
+            "type": "integer"
+          },
           "models": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "model_id": { "type": "string" },
-                "template_id": { "type": "string" },
-                "min": { "type": "integer" },
-                "max": { "type": "integer" }
+                "model_id": {
+                  "type": "string"
+                },
+                "template_id": {
+                  "type": "string"
+                },
+                "min": {
+                  "type": "integer"
+                },
+                "max": {
+                  "type": "integer"
+                }
               }
             }
           },
@@ -489,8 +711,12 @@
               "additionalProperties": true
             }
           },
-          "by_template": { "type": "object" },
-          "by_model": { "type": "object" }
+          "by_template": {
+            "type": "object"
+          },
+          "by_model": {
+            "type": "object"
+          }
         }
       }
     }

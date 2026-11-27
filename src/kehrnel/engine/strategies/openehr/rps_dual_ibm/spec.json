@@ -6,16 +6,28 @@
     "title": "Reversed Path Search - IBM Exact Model",
     "summary": "Logical openEHR model for the IBM exact reversed-path document shape.",
     "domain": "openEHR",
-    "tags": ["openEHR", "reversed-path", "ibm", "compatibility", "atlas-search"],
-    "owners": ["Francesc Mateu Amengual"],
+    "tags": [
+      "openEHR",
+      "reversed-path",
+      "ibm",
+      "compatibility",
+      "atlas-search"
+    ],
+    "owners": [
+      "Francesc Mateu Amengual"
+    ],
     "compat": {
       "packFormat": "strategy-pack/v1",
-      "requires": ["storage.mongo"],
-      "optional": ["search.atlas", "search.lucene"],
+      "requires": [
+        "storage.mongo"
+      ],
+      "optional": [
+        "search.atlas",
+        "search.lucene"
+      ],
       "minRuntime": "0.9.0"
     }
   },
-
   "glossary": {
     "terms": {
       "canonical": "Lossless representation of the source clinical document.",
@@ -24,7 +36,6 @@
       "projection": "A derived record containing only the attributes required for a specific workload (e.g., cross-patient filters)."
     }
   },
-
   "logicalModel": {
     "source": {
       "types": [
@@ -34,17 +45,35 @@
           "kind": "document",
           "description": "Headers plus a composition payload.",
           "fields": {
-            "ehr_id": {"type": "string|uuid", "role": "identity.patient"},
-            "composition_uid": {"type": "string|uuid", "role": "identity.document"},
-            "template_id": {"type": "string", "role": "identity.template"},
-            "version": {"type": "string|number", "role": "version"},
-            "ingest_time": {"type": "date", "role": "event.time"},
-            "payload": {"type": "json", "path": "$.composition", "role": "payload"}
+            "ehr_id": {
+              "type": "string|uuid",
+              "role": "identity.patient"
+            },
+            "composition_uid": {
+              "type": "string|uuid",
+              "role": "identity.document"
+            },
+            "template_id": {
+              "type": "string",
+              "role": "identity.template"
+            },
+            "version": {
+              "type": "string|number",
+              "role": "version"
+            },
+            "ingest_time": {
+              "type": "date",
+              "role": "event.time"
+            },
+            "payload": {
+              "type": "json",
+              "path": "$.composition",
+              "role": "payload"
+            }
           }
         }
       ]
     },
-
     "concepts": [
       {
         "id": "openehr.node.v1",
@@ -52,14 +81,29 @@
         "kind": "record",
         "meaning": "Flattened locatable subtree with lineage + payload.",
         "fields": {
-          "p": {"type": "string", "role": "path.reversed", "required": true},
-          "kp": {"type": "string[]", "role": "path.keypath", "required": false},
-          "li": {"type": "number", "role": "lineage.siblingIndex", "required": false},
-          "data": {"type": "json", "role": "payload.fragment", "required": true}
+          "p": {
+            "type": "string",
+            "role": "path.reversed",
+            "required": true
+          },
+          "kp": {
+            "type": "string[]",
+            "role": "path.keypath",
+            "required": false
+          },
+          "li": {
+            "type": "number",
+            "role": "lineage.siblingIndex",
+            "required": false
+          },
+          "data": {
+            "type": "json",
+            "role": "payload.fragment",
+            "required": true
+          }
         }
       }
     ],
-
     "destinations": {
       "types": [
         {
@@ -67,13 +111,38 @@
           "title": "Semi-flattened compositions",
           "kind": "collectionRecord",
           "fields": {
-            "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "objectId|uuid|string", "role": "fk.patient", "required": true},
-            "version": {"type": "string", "role": "identity.document"},
-            "template": {"type": "string", "role": "identity.template"},
-            "creation_date": {"type": "date", "role": "version.commit_time", "required": false},
-            "template_id": {"type": "uuid|string", "role": "identity.template_internal", "required": false},
-            "cn": {"type": "openehr.node.v1[]", "role": "nodes.canonical", "required": true}
+            "_id": {
+              "type": "objectId|uuid|string",
+              "role": "pk"
+            },
+            "ehr_id": {
+              "type": "objectId|uuid|string",
+              "role": "fk.patient",
+              "required": true
+            },
+            "version": {
+              "type": "string",
+              "role": "identity.document"
+            },
+            "template": {
+              "type": "string",
+              "role": "identity.template"
+            },
+            "creation_date": {
+              "type": "date",
+              "role": "version.commit_time",
+              "required": false
+            },
+            "template_id": {
+              "type": "uuid|string",
+              "role": "identity.template_internal",
+              "required": false
+            },
+            "cn": {
+              "type": "openehr.node.v1[]",
+              "role": "nodes.canonical",
+              "required": true
+            }
           }
         },
         {
@@ -81,50 +150,100 @@
           "title": "Slim projection for cross-patient search",
           "kind": "collectionRecord",
           "fields": {
-            "_id": {"type": "objectId|uuid|string", "role": "pk"},
-            "ehr_id": {"type": "objectId|uuid|string", "role": "fk.patient", "required": true},
-            "version": {"type": "string", "role": "identity.document"},
-            "template": {"type": "string", "role": "identity.template"},
-            "creation_date": {"type": "date", "role": "sort.primary", "required": false},
-            "template_id": {"type": "uuid|string", "role": "identity.template_internal", "required": false},
-            "sn": {"type": "openehr.node.v1[]", "role": "nodes.search", "required": true}
+            "_id": {
+              "type": "objectId|uuid|string",
+              "role": "pk"
+            },
+            "ehr_id": {
+              "type": "objectId|uuid|string",
+              "role": "fk.patient",
+              "required": true
+            },
+            "version": {
+              "type": "string",
+              "role": "identity.document"
+            },
+            "template": {
+              "type": "string",
+              "role": "identity.template"
+            },
+            "creation_date": {
+              "type": "date",
+              "role": "sort.primary",
+              "required": false
+            },
+            "template_id": {
+              "type": "uuid|string",
+              "role": "identity.template_internal",
+              "required": false
+            },
+            "sn": {
+              "type": "openehr.node.v1[]",
+              "role": "nodes.search",
+              "required": true
+            }
           }
         }
       ]
     }
   },
-
   "physicalProfiles": {
     "encodingProfiles": [
       {
         "id": "profile.codedpath",
         "title": "Coded paths",
         "description": "Numeric coded path segments using dictionary.",
-        "paths": {"mode": "coded", "separator": "/", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
-        "keys": {"mode": "verbatim"},
-        "payload": {"mode": "full"},
-        "dictionaries": {"at_codes": "required", "archetype_ids": "optional"},
-        "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
+        "paths": {
+          "mode": "coded",
+          "separator": "/",
+          "order": "leaf_to_root",
+          "dictRef": "bundles.dictionaries"
+        },
+        "keys": {
+          "mode": "verbatim"
+        },
+        "payload": {
+          "mode": "full"
+        },
+        "dictionaries": {
+          "at_codes": "required",
+          "archetype_ids": "optional"
+        },
+        "ids": {
+          "ehr_id": "objectId|string|uuidBin",
+          "composition_id": "objectId|string|uuidBin"
+        }
       },
       {
         "id": "profile.search_shortcuts",
         "title": "Search shortcuts",
         "description": "Coded paths + key/value shortcuts + minimized payload.",
-        "paths": {"mode": "coded", "separator": "/", "order": "leaf_to_root", "dictRef": "bundles.dictionaries"},
-        "keys": {"mode": "shortcuts", "dictRef": "bundles.shortcuts"},
-        "payload": {"mode": "minimized"},
-        "ids": {"ehr_id": "objectId|string|uuidBin", "composition_id": "objectId|string|uuidBin"}
+        "paths": {
+          "mode": "coded",
+          "separator": "/",
+          "order": "leaf_to_root",
+          "dictRef": "bundles.dictionaries"
+        },
+        "keys": {
+          "mode": "shortcuts",
+          "dictRef": "bundles.shortcuts"
+        },
+        "payload": {
+          "mode": "minimized"
+        },
+        "ids": {
+          "ehr_id": "objectId|string|uuidBin",
+          "composition_id": "objectId|string|uuidBin"
+        }
       }
     ]
   },
-
   "seeds": {
     "description": "Seed data for collections, referenced via file:// URIs in config",
     "codes": "file://bundles/dictionaries/_codes.json",
     "shortcuts": "file://bundles/shortcuts/shortcuts.json",
     "atlasSearchIndex": null
   },
-
   "storageModel": {
     "stores": [
       {
@@ -138,8 +257,138 @@
           {
             "id": "idx_patient_path",
             "type": "btree",
-            "fields": ["ehr_id", "cn.p", "creation_date"],
-            "purpose": "Fast patient-scoped path resolution with commit-time filtering (optional if too large)"
+            "fields": [
+              "ehr_id",
+              "cn.p",
+              "time_c"
+            ],
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": [
+              "patient_scope",
+              "path_predicate",
+              "commit_time_filter"
+            ],
+            "fieldsFromConfig": [
+              {
+                "field": "ehr_id",
+                "configPath": "fields.document.ehr_id"
+              },
+              {
+                "field": "cn.p",
+                "configPath": "fields.document.cn + fields.node.p"
+              },
+              {
+                "field": "time_c",
+                "configPath": "fields.document.time_committed"
+              }
+            ],
+            "purpose": "Patient-scoped path resolution and optional commit-time filtering for AQL queries with an EHR ID predicate."
+          },
+          {
+            "id": "idx_template_commit",
+            "type": "btree",
+            "fields": [
+              "tid",
+              "time_c"
+            ],
+            "options": {
+              "name": "idx_template_commit"
+            },
+            "requirement": "optional",
+            "autoCreate": false,
+            "configResolved": true,
+            "workloads": [
+              "cross_patient_match",
+              "template_filter",
+              "commit_time_filter",
+              "default_pagination"
+            ],
+            "fieldsFromConfig": [
+              {
+                "field": "tid",
+                "configPath": "fields.document.tid"
+              },
+              {
+                "field": "time_c",
+                "configPath": "fields.document.time_committed"
+              }
+            ],
+            "purpose": "Small planner-friendly index for simple template/date filters. The versioned template/date index covers this prefix, so this index is optional and is not created automatically."
+          },
+          {
+            "id": "idx_template_commit_version",
+            "type": "btree",
+            "fields": [
+              "tid",
+              "time_c",
+              "v"
+            ],
+            "options": {
+              "name": "idx_template_commit_version"
+            },
+            "requirement": "required",
+            "configResolved": true,
+            "workloads": [
+              "cross_patient_match",
+              "stable_pagination",
+              "commit_time_sort"
+            ],
+            "fieldsFromConfig": [
+              {
+                "field": "tid",
+                "configPath": "fields.document.tid"
+              },
+              {
+                "field": "time_c",
+                "configPath": "fields.document.time_committed"
+              },
+              {
+                "field": "v",
+                "configPath": "fields.document.v"
+              }
+            ],
+            "purpose": "Primary cross-patient template/date index with version as a stable pagination tie-breaker; covers the template/date prefix used by simple filters."
+          },
+          {
+            "id": "idx_template_node_commit",
+            "type": "btree",
+            "fields": [
+              "tid",
+              "cn.data.ani",
+              "cn.p",
+              "time_c"
+            ],
+            "options": {
+              "name": "idx_template_node_commit"
+            },
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": [
+              "cross_patient_match",
+              "template_filter",
+              "archetype_node_filter",
+              "commit_time_filter"
+            ],
+            "fieldsFromConfig": [
+              {
+                "field": "tid",
+                "configPath": "fields.document.tid"
+              },
+              {
+                "field": "cn.data.ani",
+                "configPath": "fields.document.cn + fields.node.data + archetype node id payload"
+              },
+              {
+                "field": "cn.p",
+                "configPath": "fields.document.cn + fields.node.p"
+              },
+              {
+                "field": "time_c",
+                "configPath": "fields.document.time_committed"
+              }
+            ],
+            "purpose": "Fast cross-patient template/date/node predicates on the composition store when AQL filters bind a contained archetype. Keep when these contained-node filters are part of the expected workload."
           }
         ]
       },
@@ -154,7 +403,27 @@
           {
             "id": "idx_patient_sort",
             "type": "btree",
-            "fields": ["ehr_id", "creation_date"],
+            "fields": [
+              "ehr_id",
+              "sort_time"
+            ],
+            "requirement": "recommended",
+            "configResolved": true,
+            "workloads": [
+              "search_patient_scope",
+              "search_pagination",
+              "commit_time_sort"
+            ],
+            "fieldsFromConfig": [
+              {
+                "field": "ehr_id",
+                "configPath": "fields.document.ehr_id"
+              },
+              {
+                "field": "sort_time",
+                "configPath": "fields.document.sort_time"
+              }
+            ],
             "purpose": "Patient+time ordering, quick paging"
           }
         ],
@@ -162,6 +431,14 @@
           "kind": "atlas_search",
           "indexNameFromConfig": "collections.search.atlasIndex.name",
           "definitionFromConfig": "collections.search.atlasIndex.definition",
+          "requirement": "conditional",
+          "condition": "Required when the search collection is enabled and AQL predicates need analytics sidecar fields not covered by EHR ID, template, or commit-time B-tree filters.",
+          "configResolved": true,
+          "workloads": [
+            "analytics_sidecar_filter",
+            "cross_patient_search",
+            "token_pagination"
+          ],
           "purpose": "Cross-patient filtered retrieval using embeddedDocument + wildcard/range"
         }
       },
@@ -171,7 +448,10 @@
         "engine": "mongo",
         "collectionNameFromConfig": "collections.codes.name",
         "seedFromConfig": "collections.codes.seed",
-        "contains": ["at_codes", "archetype_ids"],
+        "contains": [
+          "at_codes",
+          "archetype_ids"
+        ],
         "purpose": "Coded path compaction (at-codes, archetype IDs)"
       },
       {
@@ -184,7 +464,6 @@
       }
     ]
   },
-
   "transformModel": {
     "pipeline": [
       {
@@ -196,7 +475,12 @@
         "params": {
           "nodeConcept": "openehr.node.v1",
           "pathMode": "fromEncodingProfile.paths",
-          "emit": ["p", "kp", "li", "data"],
+          "emit": [
+            "p",
+            "kp",
+            "li",
+            "data"
+          ],
           "includeRootNode": true
         },
         "visual": {
@@ -213,11 +497,28 @@
         "nodeArrayField": "cn",
         "from": "nodes_full",
         "extraFields": [
-          {"field": "ehr_id", "from": "$.headers.ehr_id"},
-          {"field": "version", "from": "$.headers.version"},
-          {"field": "template", "from": "$.headers.template_id"},
-          {"field": "template_id", "from": "$.headers.template_uuid", "optional": true},
-          {"field": "creation_date", "from": "$.headers.time_committed", "optional": true}
+          {
+            "field": "ehr_id",
+            "from": "$.headers.ehr_id"
+          },
+          {
+            "field": "version",
+            "from": "$.headers.version"
+          },
+          {
+            "field": "template",
+            "from": "$.headers.template_id"
+          },
+          {
+            "field": "template_id",
+            "from": "$.headers.template_uuid",
+            "optional": true
+          },
+          {
+            "field": "creation_date",
+            "from": "$.headers.time_committed",
+            "optional": true
+          }
         ],
         "visual": {
           "group": "Materialize",
@@ -251,11 +552,28 @@
         "nodeArrayField": "sn",
         "from": "nodes_search",
         "extraFields": [
-          {"field": "ehr_id", "from": "$.headers.ehr_id"},
-          {"field": "version", "from": "$.headers.version"},
-          {"field": "template", "from": "$.headers.template_id"},
-          {"field": "template_id", "from": "$.headers.template_uuid", "optional": true},
-          {"field": "creation_date", "from": "$.headers.time_committed", "optional": true}
+          {
+            "field": "ehr_id",
+            "from": "$.headers.ehr_id"
+          },
+          {
+            "field": "version",
+            "from": "$.headers.version"
+          },
+          {
+            "field": "template",
+            "from": "$.headers.template_id"
+          },
+          {
+            "field": "template_id",
+            "from": "$.headers.template_uuid",
+            "optional": true
+          },
+          {
+            "field": "creation_date",
+            "from": "$.headers.time_committed",
+            "optional": true
+          }
         ],
         "visual": {
           "group": "Materialize",
@@ -264,7 +582,6 @@
         }
       }
     ],
-
     "invariants": [
       {
         "id": "inv.keys",
@@ -280,32 +597,44 @@
       }
     ]
   },
-
   "queryModel": {
     "modes": [
       {
         "id": "patient_scoped",
         "title": "Patient-scoped",
-        "uses": ["store:compositions"],
+        "uses": [
+          "store:compositions"
+        ],
         "pattern": "match",
-        "primaryFilters": ["ehr_id"],
-        "pathPredicate": {"field": "cn.p", "operator": "regex|prefix|equals"},
+        "primaryFilters": [
+          "ehr_id"
+        ],
+        "pathPredicate": {
+          "field": "cn.p",
+          "operator": "regex|prefix|equals"
+        },
         "notes": "Prefer B-tree / shard-local filtering when patient context is known."
       },
       {
         "id": "cross_patient",
         "title": "Cross-patient",
-        "uses": ["store:search"],
+        "uses": [
+          "store:search"
+        ],
         "pattern": "search",
         "searchEngine": "atlas_search",
-        "pathPredicate": {"field": "sn.p", "operator": "wildcard|equals"},
+        "pathPredicate": {
+          "field": "sn.p",
+          "operator": "wildcard|equals"
+        },
         "notes": "Use slim search docs for range/equality filters + sorting + limit."
       }
     ]
   },
-
   "samples": {
-    "inputs": ["samples/composition.envelope.json"],
+    "inputs": [
+      "samples/composition.envelope.json"
+    ],
     "outputs": {
       "store:compositions": [
         "samples/compositions.fullpath.json",
@@ -320,11 +649,14 @@
         "id": "scenario.vaccination",
         "title": "Vaccination list",
         "inputRef": "samples/composition.envelope.json",
-        "show": ["transformGraph", "collectionModel", "pathLegend"]
+        "show": [
+          "transformGraph",
+          "collectionModel",
+          "pathLegend"
+        ]
       }
     ]
   },
-
   "visualization": {
     "canvas": {
       "defaultView": "overview",
@@ -332,30 +664,48 @@
         {
           "id": "overview",
           "title": "Overview",
-          "shows": ["collectionModel", "transformGraph"],
-          "layout": {"type": "grid", "columns": 2}
+          "shows": [
+            "collectionModel",
+            "transformGraph"
+          ],
+          "layout": {
+            "type": "grid",
+            "columns": 2
+          }
         },
         {
           "id": "collections",
           "title": "Collections",
-          "shows": ["collectionModel"],
-          "layout": {"type": "free"}
+          "shows": [
+            "collectionModel"
+          ],
+          "layout": {
+            "type": "free"
+          }
         },
         {
           "id": "transform",
           "title": "Transform",
-          "shows": ["transformGraph"],
-          "layout": {"type": "dag", "direction": "LR"}
+          "shows": [
+            "transformGraph"
+          ],
+          "layout": {
+            "type": "dag",
+            "direction": "LR"
+          }
         },
         {
           "id": "indexes",
           "title": "Indexes & Search",
-          "shows": ["indexOverlay"],
-          "layout": {"type": "free"}
+          "shows": [
+            "indexOverlay"
+          ],
+          "layout": {
+            "type": "free"
+          }
         }
       ]
     },
-
     "collectionModel": {
       "entities": [
         {
@@ -363,13 +713,34 @@
           "kind": "collection",
           "store": "store:compositions",
           "label": "compositions",
-          "fields": ["_id", "ehr_id", "version", "template", "template_id", "creation_date", "cn"],
+          "fields": [
+            "_id",
+            "ehr_id",
+            "version",
+            "template",
+            "template_id",
+            "creation_date",
+            "cn"
+          ],
           "expand": {
-            "cn": ["p", "kp", "li", "data"]
+            "cn": [
+              "p",
+              "kp",
+              "li",
+              "data"
+            ]
           },
-          "badges": ["canonical", "patient", "hydration"],
+          "badges": [
+            "canonical",
+            "patient",
+            "hydration"
+          ],
           "links": [
-            {"type": "joinsTo", "target": "coll.search", "on": "_id"}
+            {
+              "type": "joinsTo",
+              "target": "coll.search",
+              "on": "_id"
+            }
           ]
         },
         {
@@ -377,13 +748,32 @@
           "kind": "collection",
           "store": "store:search",
           "label": "search",
-          "fields": ["_id", "ehr_id", "version", "template", "template_id", "creation_date", "sn"],
+          "fields": [
+            "_id",
+            "ehr_id",
+            "version",
+            "template",
+            "template_id",
+            "creation_date",
+            "sn"
+          ],
           "expand": {
-            "sn": ["p", "data"]
+            "sn": [
+              "p",
+              "data"
+            ]
           },
-          "badges": ["slim", "cross-patient", "search-indexed"],
+          "badges": [
+            "slim",
+            "cross-patient",
+            "search-indexed"
+          ],
           "links": [
-            {"type": "joinsTo", "target": "coll.compositions", "on": "_id"}
+            {
+              "type": "joinsTo",
+              "target": "coll.compositions",
+              "on": "_id"
+            }
           ]
         },
         {
@@ -391,20 +781,35 @@
           "kind": "collection",
           "store": "store:codes",
           "label": "_codes",
-          "fields": ["_id", "_min", "_max", "at", "ar_code"],
-          "badges": ["dictionary", "seed:file://"]
+          "fields": [
+            "_id",
+            "_min",
+            "_max",
+            "at",
+            "ar_code"
+          ],
+          "badges": [
+            "dictionary",
+            "seed:file://"
+          ]
         },
         {
           "id": "coll.shortcuts",
           "kind": "collection",
           "store": "store:shortcuts",
           "label": "_shortcuts",
-          "fields": ["_id", "keys", "values"],
-          "badges": ["dictionary", "seed:file://"]
+          "fields": [
+            "_id",
+            "keys",
+            "values"
+          ],
+          "badges": [
+            "dictionary",
+            "seed:file://"
+          ]
         }
       ]
     },
-
     "transformGraph": {
       "nodes": [
         {
@@ -416,7 +821,7 @@
         {
           "id": "op.flatten",
           "kind": "transform",
-          "label": "Flatten → nodes_full",
+          "label": "Flatten \u2192 nodes_full",
           "stepRef": "step.flatten"
         },
         {
@@ -429,7 +834,7 @@
         {
           "id": "op.project.search",
           "kind": "transform",
-          "label": "Project → nodes_search",
+          "label": "Project \u2192 nodes_search",
           "stepRef": "step.project.search"
         },
         {
@@ -441,49 +846,128 @@
         }
       ],
       "edges": [
-        {"from": "src.envelope", "to": "op.flatten"},
-        {"from": "op.flatten", "to": "op.materialize.cn"},
-        {"from": "op.flatten", "to": "op.project.search"},
-        {"from": "op.project.search", "to": "op.materialize.sn"}
+        {
+          "from": "src.envelope",
+          "to": "op.flatten"
+        },
+        {
+          "from": "op.flatten",
+          "to": "op.materialize.cn"
+        },
+        {
+          "from": "op.flatten",
+          "to": "op.project.search"
+        },
+        {
+          "from": "op.project.search",
+          "to": "op.materialize.sn"
+        }
       ]
     },
-
     "indexOverlay": {
       "indexGroups": [
         {
           "id": "idxgrp.compositions",
           "entityRef": "coll.compositions",
-          "items": ["idx_patient_version", "idx_patient_path"]
+          "items": [
+            "idx_patient_version",
+            "idx_patient_path"
+          ]
         },
         {
           "id": "idxgrp.search",
           "entityRef": "coll.search",
-          "items": ["idx_patient_sort"],
-          "search": {"kind": "atlas_search", "ref": "bundles.atlas_search"}
+          "items": [
+            "idx_patient_sort"
+          ],
+          "search": {
+            "kind": "atlas_search",
+            "ref": "bundles.atlas_search"
+          }
         }
       ]
     },
-
     "legends": {
       "pathLegend": {
         "entries": [
-          {"label": "p", "meaning": "reversed path (leaf → root)", "example": "at0014/at0007/.../COMPOSITION", "configPath": "fields.node.p"},
-          {"label": "kp", "meaning": "key-path in JSON (for reconstruction/projection)", "example": "[\"context\",\"other_context\"]"},
-          {"label": "li", "meaning": "IBM sibling list index", "example": 2, "configPath": "fields.node.pi"},
-          {"label": "data", "meaning": "node payload fragment", "example": "{\"value\": {...}}", "configPath": "fields.node.data"},
-          {"label": "cn", "meaning": "canonical node array", "example": "composition nodes", "configPath": "fields.document.cn"},
-          {"label": "sn", "meaning": "search node array", "example": "projection nodes", "configPath": "fields.document.sn"},
-          {"label": "ehr_id", "meaning": "patient/EHR identifier", "example": "ehr-123", "configPath": "fields.document.ehr_id"},
-          {"label": "version", "meaning": "IBM version UID", "example": "comp-456::server::1", "configPath": "fields.document.comp_id"},
-          {"label": "template", "meaning": "template identifier", "example": "PO_Obstetric_process_v0.8_FORMULARIS", "configPath": "fields.document.tid"},
-          {"label": "creation_date", "meaning": "IBM commit/create time", "example": "2026-04-14T20:25:43.412Z", "configPath": "fields.document.time_committed"}
+          {
+            "label": "p",
+            "meaning": "reversed path (leaf \u2192 root)",
+            "example": "at0014/at0007/.../COMPOSITION",
+            "configPath": "fields.node.p"
+          },
+          {
+            "label": "kp",
+            "meaning": "key-path in JSON (for reconstruction/projection)",
+            "example": "[\"context\",\"other_context\"]"
+          },
+          {
+            "label": "li",
+            "meaning": "IBM sibling list index",
+            "example": 2,
+            "configPath": "fields.node.pi"
+          },
+          {
+            "label": "data",
+            "meaning": "node payload fragment",
+            "example": "{\"value\": {...}}",
+            "configPath": "fields.node.data"
+          },
+          {
+            "label": "cn",
+            "meaning": "canonical node array",
+            "example": "composition nodes",
+            "configPath": "fields.document.cn"
+          },
+          {
+            "label": "sn",
+            "meaning": "search node array",
+            "example": "projection nodes",
+            "configPath": "fields.document.sn"
+          },
+          {
+            "label": "ehr_id",
+            "meaning": "patient/EHR identifier",
+            "example": "ehr-123",
+            "configPath": "fields.document.ehr_id"
+          },
+          {
+            "label": "version",
+            "meaning": "IBM version UID",
+            "example": "comp-456::server::1",
+            "configPath": "fields.document.comp_id"
+          },
+          {
+            "label": "template",
+            "meaning": "template identifier",
+            "example": "PO_Obstetric_process_v0.8_FORMULARIS",
+            "configPath": "fields.document.tid"
+          },
+          {
+            "label": "creation_date",
+            "meaning": "IBM commit/create time",
+            "example": "2026-04-14T20:25:43.412Z",
+            "configPath": "fields.document.time_committed"
+          }
         ]
       },
       "uriLegend": {
         "entries": [
-          {"scheme": "file://", "meaning": "Load from local file (relative to strategy root)", "example": "file://bundles/dictionaries/_codes.json"},
-          {"scheme": "collection://", "meaning": "Load from MongoDB collection", "example": "collection://mappings"},
-          {"scheme": "collection://?", "meaning": "Load with filter query", "example": "collection://mappings?template_id=vacc.v0"}
+          {
+            "scheme": "file://",
+            "meaning": "Load from local file (relative to strategy root)",
+            "example": "file://bundles/dictionaries/_codes.json"
+          },
+          {
+            "scheme": "collection://",
+            "meaning": "Load from MongoDB collection",
+            "example": "collection://mappings"
+          },
+          {
+            "scheme": "collection://?",
+            "meaning": "Load with filter query",
+            "example": "collection://mappings?template_id=vacc.v0"
+          }
         ]
       }
     }

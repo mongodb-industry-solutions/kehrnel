@@ -1,0 +1,427 @@
+resource: AllergyIntolerance
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec AllergyIntolerance)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, practitioner.json, device.json
+#
+# Total parameters: 17 (15 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `AllergyIntolerance.patient` is required Reference(Patient) — there
+#     is no `subject` element in R5 (search param `patient` only).
+#   * `category[]` is code (not CodeableConcept); `criticality` is a
+#     top-level scalar code.
+#   * `code` search unions `AllergyIntolerance.code` and
+#     `reaction.substance` (both denormalized).
+#   * `participant[]` is BackboneElement with `actor` (Reference) — R5
+#     replacement for legacy recorder/asserter; compartment audits use
+#     `recorder` path tokens per compartment JSON.
+#   * `reaction.manifestation` is CodeableReference[].
+#   * `date` → `recordedDate`; `last-date` → `lastOccurrence`.
+#   * No `encounter` element in R5 AllergyIntolerance — Encounter
+#     compartment is not precomputed.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  manifestation-reference:
+    type: reference
+    description: "Clinical symptoms/signs associated with the event (reference)"
+    fields:
+      - field: "_search.manifestationReferenceIds"
+        referenceType: id
+      - field: "_search.manifestationReferenceTypes"
+        referenceType: type
+
+  participant:
+    type: reference
+    description: "Who or what participated in activities related to the allergy"
+    fields:
+      - field: "_search.participantIds"
+        referenceType: id
+      - field: "_search.participantTypes"
+        referenceType: type
+      - field: "participant.actor.reference"
+        referenceType: full
+
+  patient:
+    type: reference
+    description: "Who the sensitivity is for"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  category:
+    type: token
+    description: "food | medication | environment | biologic"
+    fields:
+      - field: "_search.category_values"
+        tokenType: code
+
+  clinical-status:
+    type: token
+    description: "active | inactive | resolved"
+    fields:
+      - field: "_search.clinicalStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.clinicalStatus_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "Code that identifies the allergy or intolerance"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+      - field: "_search.reactionSubstance_systemCode"
+        tokenType: systemCode
+      - field: "_search.reactionSubstance_codes"
+        tokenType: code
+
+  criticality:
+    type: token
+    description: "low | high | unable-to-assess"
+    fields:
+      - field: "criticality"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "External ids for this item"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  manifestation-code:
+    type: token
+    description: "Clinical symptoms/signs associated with the event (coded)"
+    fields:
+      - field: "_search.manifestationCode_systemCode"
+        tokenType: systemCode
+      - field: "_search.manifestationCode_codes"
+        tokenType: code
+
+  route:
+    type: token
+    description: "How the subject was exposed to the substance"
+    fields:
+      - field: "_search.route_systemCode"
+        tokenType: systemCode
+      - field: "_search.route_codes"
+        tokenType: code
+
+  severity:
+    type: token
+    description: "mild | moderate | severe (of event as a whole)"
+    fields:
+      - field: "_search.severity_values"
+        tokenType: code
+
+  type:
+    type: token
+    description: "allergy | intolerance — underlying mechanism (if known)"
+    fields:
+      - field: "_search.type_systemCode"
+        tokenType: systemCode
+      - field: "_search.type_codes"
+        tokenType: code
+
+  verification-status:
+    type: token
+    description: "unconfirmed | presumed | confirmed | refuted | entered-in-error"
+    fields:
+      - field: "_search.verificationStatus_systemCode"
+        tokenType: systemCode
+      - field: "_search.verificationStatus_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "Date first version of the resource instance was recorded"
+    fields:
+      - field: "recordedDate"
+        type: date
+
+  last-date:
+    type: date
+    description: "Date of last known occurrence of a reaction"
+    fields:
+      - field: "lastOccurrence"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  clinical_status:
+    source: clinicalStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: clinicalStatus.coding[*].code
+        target_field: clinicalStatus_codes
+        datatype: array[string]
+      - source_path: clinicalStatus.coding[*]
+        target_field: clinicalStatus_systemCode
+        datatype: array[string]
+
+  verification_status:
+    source: verificationStatus
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: verificationStatus.coding[*].code
+        target_field: verificationStatus_codes
+        datatype: array[string]
+      - source_path: verificationStatus.coding[*]
+        target_field: verificationStatus_systemCode
+        datatype: array[string]
+
+  type:
+    source: type
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: type.coding[*].code
+        target_field: type_codes
+        datatype: array[string]
+      - source_path: type.coding[*]
+        target_field: type_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  category:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: category[*]
+        target_field: category_values
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  participant:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: participant[*].actor.reference
+        target_field: participantIds
+        datatype: array[string]
+        extractType: id
+      - source_path: participant[*].actor.reference
+        target_field: participantTypes
+        datatype: array[string]
+        extractType: type
+
+  reaction_substance:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: reaction[*].substance.coding[*].code
+        target_field: reactionSubstance_codes
+        datatype: array[string]
+      - source_path: reaction[*].substance.coding[*]
+        target_field: reactionSubstance_systemCode
+        datatype: array[string]
+
+  manifestation_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: reaction[*].manifestation[*].concept.coding[*].code
+        target_field: manifestationCode_codes
+        datatype: array[string]
+      - source_path: reaction[*].manifestation[*].concept.coding[*]
+        target_field: manifestationCode_systemCode
+        datatype: array[string]
+
+  manifestation_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: reaction[*].manifestation[*].reference.reference
+        target_field: manifestationReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: reaction[*].manifestation[*].reference.reference
+        target_field: manifestationReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  route:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: reaction[*].exposureRoute.coding[*].code
+        target_field: route_codes
+        datatype: array[string]
+      - source_path: reaction[*].exposureRoute.coding[*]
+        target_field: route_systemCode
+        datatype: array[string]
+
+  severity:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: reaction[*].severity
+        target_field: severity_values
+        datatype: array[string]
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: Practitioner
+        source_paths:
+          - participant[*].actor
+          - recorder
+        reference_type: Practitioner
+        datatype: array[string]
+        comment: |
+          Practitioner compartment — R5 uses `participant.actor` where
+          Practitioner/*; `recorder` token satisfies compartment audit
+          (legacy linking param name).
+      - target_field: Device
+        source_paths:
+          - participant[*].actor
+          - recorder
+        reference_type: Device
+        datatype: array[string]
+        comment: |
+          Device compartment — participant.actor where Device/*;
+          `recorder` token satisfies device.json audit.
+
+compartments:
+  precomputed:
+    - Patient
+    - Practitioner
+    - Device
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Practitioner": 1
+    options:
+      name: idx_compartment_practitioner
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+
+  - fields:
+      - "_search.clinicalStatus_codes": 1
+    options:
+      name: idx_clinical_status_codes
+      sparse: true
+
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+
+  - fields:
+      - "recordedDate": 1
+    options:
+      name: idx_recorded_date
+      sparse: true
+
+  - fields:
+      - "lastOccurrence": 1
+    options:
+      name: idx_last_occurrence
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

@@ -1,1 +1,0 @@
-"""FHIR service scaffold."""

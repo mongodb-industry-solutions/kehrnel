@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SNOMED CT on MongoDB Strategy Configuration",
+  "description": "Canonical SNOMED CT concept storage plus optional term sidecar search collection.",
+  "type": "object",
+  "properties": {
+    "database": {
+      "type": "string",
+      "description": "Logical MongoDB database name. The actual database is supplied by activation bindings."
+    },
+    "release": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" }
+      },
+      "required": ["id"],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "description": "Local location where the customer places the licensed official SNOMED CT JSON release.",
+      "properties": {
+        "local_dir": { "type": "string" },
+        "file_name": { "type": "string" },
+        "file_pattern": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "collections": {
+      "type": "object",
+      "properties": {
+        "concepts": { "type": "string" },
+        "terms": { "type": "string" },
+        "sidecar_enabled": { "type": "boolean" }
+      },
+      "required": ["concepts", "terms", "sidecar_enabled"],
+      "additionalProperties": false
+    },
+    "languages": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "ingest": {
+      "type": "object",
+      "properties": {
+        "batch_size": { "type": "integer", "minimum": 1 },
+        "include_descendants": { "type": "boolean" },
+        "drop_before_ingest": { "type": "boolean" },
+        "rebuild_sidecar": { "type": "boolean" },
+        "create_indexes_before_ingest": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "indexes": {
+      "type": "object",
+      "description": "Index families managed by snomed_ensure_indexes.",
+      "properties": {
+        "canonical": { "type": "boolean" },
+        "sidecar": { "type": "boolean" },
+        "text": { "type": "boolean" },
+        "atlas_search": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "search": {
+      "type": "object",
+      "properties": {
+        "default_limit": { "type": "integer", "minimum": 1 },
+        "max_limit": { "type": "integer", "minimum": 1 },
+        "default_language": { "type": "string" },
+        "use_sidecar": { "type": "boolean" },
+        "lexical_strategy": { "type": "string", "enum": ["normalized_regex"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["database", "release", "collections", "languages"],
+  "additionalProperties": false
+}

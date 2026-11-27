@@ -325,7 +325,7 @@ async def test_ibm_query_pipeline_uses_ibm_document_fields():
             },
         ],
         select=[
-            {"path": "c/uid/value", "alias": "CompositionVersion"},
+            {"path": "c/uid/value", "alias": "CompositionId"},
             {"path": "v/commit_audit/time_committed/value", "alias": "CreationDate"},
         ],
         sort={"v/commit_audit/time_committed/value": 1},
@@ -338,8 +338,8 @@ async def test_ibm_query_pipeline_uses_ibm_document_fields():
     assert match_stage["template"] == "IBM_TEMPLATE"
     assert match_stage["creation_date"]["$gte"] == datetime(2026, 4, 21, 0, 0, tzinfo=timezone.utc)
     assert match_stage["cn"]["$elemMatch"] == {"p": {"$regex": r"^[^/]+$"}}
-    assert pipeline[1]["$project"]["CompositionVersion"] == "$version"
-    assert pipeline[1]["$project"]["CreationDate"] == "$creation_date"
+    assert next(stage["$project"] for stage in pipeline if "$project" in stage)["CompositionId"] == "$_id"
+    assert next(stage["$project"] for stage in pipeline if "$project" in stage)["CreationDate"] == "$creation_date"
 
 
 @pytest.mark.asyncio
@@ -486,7 +486,7 @@ async def test_ibm_raw_aql_nested_projections_resolve_against_cn_nodes():
         },
     )
 
-    project_stage = plan.plan["pipeline"][1]["$project"]
+    project_stage = next(stage["$project"] for stage in plan.plan["pipeline"] if "$project" in stage)
 
     expected = {
         "ProcesId": ("$$node.data.v.id", "^D3/4/D1/1(?:/[^/]+)*$"),
@@ -504,9 +504,9 @@ async def test_ibm_raw_aql_nested_projections_resolve_against_cn_nodes():
 
     for field_name, (expected_value_path, expected_regex) in expected.items():
         assert isinstance(project_stage[field_name], dict)
-        field_map = project_stage[field_name]["$first"]["$map"]
+        field_map = project_stage[field_name]["$let"]
         assert field_map["in"] == expected_value_path
-        assert field_map["input"]["$filter"]["cond"]["$regexMatch"]["regex"] == expected_regex
+        assert field_map["vars"]["node"]["$first"]["$filter"]["cond"]["$regexMatch"]["regex"] == expected_regex
 
 
 @pytest.mark.asyncio
@@ -589,15 +589,15 @@ async def test_ibm_raw_aql_nested_projections_fall_back_when_at_dictionary_is_em
         },
     )
 
-    project_stage = plan.plan["pipeline"][1]["$project"]
+    project_stage = next(stage["$project"] for stage in plan.plan["pipeline"] if "$project" in stage)
 
-    centre_map = project_stage["centre"]["$first"]["$map"]
+    centre_map = project_stage["centre"]["$let"]
     assert centre_map["in"] == "$$node.data.v.df.cs"
-    assert centre_map["input"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^C11/D5/25/D1/1(?:/[^/]+)*$"
+    assert centre_map["vars"]["node"]["$first"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^C11/D5/25/D1/1(?:/[^/]+)*$"
 
-    age_map = project_stage["EdatDonaInici"]["$first"]["$map"]
+    age_map = project_stage["EdatDonaInici"]["$let"]
     assert age_map["in"] == "$$node.data.v.magnitude"
-    assert age_map["input"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^D7/5/D3/D2/D1/3/1(?:/[^/]+)*$"
+    assert age_map["vars"]["node"]["$first"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^D7/5/D3/D2/D1/3/1(?:/[^/]+)*$"
 
 
 @pytest.mark.asyncio
@@ -684,9 +684,9 @@ async def test_ibm_raw_aql_respects_configured_codes_doc_id_for_nested_paths():
         },
     )
 
-    result_map = plan.plan["pipeline"][1]["$project"]["ResultatUltimHPVCodi"]["$first"]["$map"]
+    result_map = next(stage["$project"] for stage in plan.plan["pipeline"] if "$project" in stage)["ResultatUltimHPVCodi"]["$let"]
     assert result_map["in"] == "$$node.data.v.df.cs"
-    assert result_map["input"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^C23/17/D3/D2/D1/3/1(?:/[^/]+)*$"
+    assert result_map["vars"]["node"]["$first"]["$filter"]["cond"]["$regexMatch"]["regex"] == "^C23/17/D3/D2/D1/3/1(?:/[^/]+)*$"
 
 
 @pytest.mark.asyncio
@@ -774,8 +774,8 @@ async def test_ibm_nested_contains_fanout_does_not_add_exact_row_correlation_sta
     )
 
     pipeline = plan.plan["pipeline"]
-    assert "__fanout_paths" in pipeline[3]["$addFields"]
-    assert "__fanout_instances" not in pipeline[3]["$addFields"]
+    assert "__fanout_paths" in next(stage["$addFields"] for stage in pipeline if "__fanout_paths" in stage.get("$addFields", {}))
+    assert "__fanout_instances" not in next(stage["$addFields"] for stage in pipeline if "__fanout_paths" in stage.get("$addFields", {}))
     assert not any("$match" in stage and "$expr" in stage["$match"] for stage in pipeline)
 
 

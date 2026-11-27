@@ -1,6 +1,8 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/ast_validator.py
 from typing import Dict, Any
 
+from ..metadata_paths import is_version_commit_time_path
+
 
 class ASTValidator:
     """
@@ -95,8 +97,10 @@ class ASTValidator:
         def _scan_path(value: Any) -> str | None:
             if isinstance(value, dict):
                 path = value.get("path")
-                if isinstance(path, str) and path.endswith("/commit_audit/time_committed/value") and "/" in path:
-                    return path.split("/", 1)[0]
+                if isinstance(path, str) and "/" in path:
+                    alias = path.split("/", 1)[0]
+                    if is_version_commit_time_path(path, alias):
+                        return alias
                 inner = value.get("value")
                 if isinstance(inner, dict):
                     return _scan_path(inner)

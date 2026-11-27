@@ -1,0 +1,180 @@
+{
+  "resourceType": "CompartmentDefinition",
+  "id": "device",
+  "url": "http://hl7.org/fhir/CompartmentDefinition/device",
+  "version": "5.0.0",
+  "name": "Device",
+  "status": "active",
+  "experimental": false,
+  "date": "2024-03-26T10:00:00Z",
+  "publisher": "FHIR Project Team",
+  "description": "The set of resources associated with a particular device",
+  "code": "Device",
+  "search": true,
+  "resource": [
+    {
+      "code": "Account",
+      "param": ["subject"]
+    },
+    {
+      "code": "AdverseEvent",
+      "param": ["recorder"]
+    },
+    {
+      "code": "AllergyIntolerance",
+      "param": ["recorder"]
+    },
+    {
+      "code": "Appointment",
+      "param": ["actor"]
+    },
+    {
+      "code": "AppointmentResponse",
+      "param": ["actor"]
+    },
+    {
+      "code": "AuditEvent",
+      "param": ["agent"]
+    },
+    {
+      "code": "Basic",
+      "param": ["author"]
+    },
+    {
+      "code": "ChargeItem",
+      "param": ["enterer", "performer-actor"]
+    },
+    {
+      "code": "ClinicalImpression",
+      "param": ["performer"]
+    },
+    {
+      "code": "Communication",
+      "param": ["sender", "recipient"]
+    },
+    {
+      "code": "CommunicationRequest",
+      "param": ["sender", "recipient", "requester"]
+    },
+    {
+      "code": "Composition",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "Condition",
+      "param": ["participant"]
+    },
+    {
+      "code": "DetectedIssue",
+      "param": ["author"]
+    },
+    {
+      "code": "DeviceRequest",
+      "param": ["requester", "performer", "subject", "device"]
+    },
+    {
+      "code": "DeviceUsage",
+      "param": ["device"]
+    },
+    {
+      "code": "DiagnosticReport",
+      "param": ["performer"]
+    },
+    {
+      "code": "DocumentManifest",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "DocumentReference",
+      "param": ["subject", "author"]
+    },
+    {
+      "code": "Encounter",
+      "param": ["participant"]
+    },
+    {
+      "code": "Flag",
+      "param": ["author"]
+    },
+    {
+      "code": "Group",
+      "param": ["member", "managing-entity"]
+    },
+    {
+      "code": "ImagingStudy",
+      "param": ["performer"]
+    },
+    {
+      "code": "List",
+      "param": ["subject", "source"]
+    },
+    {
+      "code": "Media",
+      "param": ["subject"]
+    },
+    {
+      "code": "MedicationAdministration",
+      "param": ["performer", "device"]
+    },
+    {
+      "code": "MedicationRequest",
+      "param": ["requester"]
+    },
+    {
+      "code": "MedicationStatement",
+      "param": ["source"]
+    },
+    {
+      "code": "MolecularSequence",
+      "param": ["subject"]
+    },
+    {
+      "code": "NutritionIntake",
+      "param": ["source"]
+    },
+    {
+      "code": "Observation",
+      "param": ["subject", "performer", "device"]
+    },
+    {
+      "code": "Procedure",
+      "param": ["performer"]
+    },
+    {
+      "code": "Provenance",
+      "param": ["agent"]
+    },
+    {
+      "code": "QuestionnaireResponse",
+      "param": ["author", "source"]
+    },
+    {
+      "code": "RequestOrchestration",
+      "param": ["participant", "author"]
+    },
+    {
+      "code": "Schedule",
+      "param": ["actor"]
+    },
+    {
+      "code": "ServiceRequest",
+      "param": ["requester", "performer"]
+    },
+    {
+      "code": "Specimen",
+      "param": ["subject"]
+    },
+    {
+      "code": "SupplyDelivery",
+      "param": ["supplier"]
+    },
+    {
+      "code": "SupplyRequest",
+      "param": ["requester"]
+    },
+    {
+      "code": "Task",
+      "param": ["owner", "requester"]
+    }
+  ]
+}

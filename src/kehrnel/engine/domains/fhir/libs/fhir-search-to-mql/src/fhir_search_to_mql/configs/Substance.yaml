@@ -1,0 +1,220 @@
+resource: Substance
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec Substance)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: none — Substance is not listed in any R5 compartment
+#   definition (see compartments/definitions/*.json).
+#
+# Total parameters: 10 (8 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `Substance.code` is required CodeableReference — `code` searches
+#     `code.concept` and `ingredient.substanceCodeableConcept`.
+#   * `code-reference` searches `code.reference` (SubstanceDefinition).
+#   * `substance-reference` searches `ingredient.substanceReference`.
+#   * `Substance.quantity` is Quantity (0..1) — `quantity` uses full
+#     quantity projection on the root field.
+#   * Top-level scalar `status` queries the FHIR root field.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  expiry:
+    type: date
+    description: "When no longer valid to use"
+    fields:
+      - field: "expiry"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  code-reference:
+    type: reference
+    description: "Returns substances for a specific substance definition reference"
+    fields:
+      - field: "_search.codeReferenceIds"
+        referenceType: id
+      - field: "_search.codeReferenceTypes"
+        referenceType: type
+      - field: "code.reference"
+        referenceType: full
+
+  substance-reference:
+    type: reference
+    description: "Returns substances that contain the specified ingredient substance"
+    fields:
+      - field: "_search.substanceReferenceIds"
+        referenceType: id
+      - field: "_search.substanceReferenceTypes"
+        referenceType: type
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  category:
+    type: token
+    description: "The category of the substance"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "Returns substances for a specific code (concept or ingredient)"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  identifier:
+    type: token
+    description: "Returns substances with this external identifier"
+    fields:
+      - field: "_search.identifier_systemCode"
+        tokenType: systemCode
+      - field: "_search.identifier_values"
+        tokenType: code
+
+  status:
+    type: token
+    description: "Returns substances for this status"
+    fields:
+      - field: "status"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Quantity Parameters
+  # ─────────────────────────────────────────────────────────────
+  quantity:
+    type: quantity
+    description: "Amount of substance in the package"
+    fields:
+      - field: "quantity"
+        quantityType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+# Denormalization Configuration
+denormalization:
+  identifier:
+    source: identifier
+    target: _search
+    extractor: IdentifierExtractor
+    field_mappings:
+      - source_path: identifier[*].value
+        target_field: identifier_values
+        datatype: array[string]
+      - source_path: identifier[*]
+        target_field: identifier_systemCode
+        datatype: array[string]
+
+  code_concept:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.concept.coding[*] | ingredient[*].substanceCodeableConcept.coding[*]
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.concept.coding[*] | ingredient[*].substanceCodeableConcept.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  code_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: code.reference.reference
+        target_field: codeReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: code.reference.reference
+        target_field: codeReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  ingredient_substance_reference:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: ingredient[*].substanceReference.reference
+        target_field: substanceReferenceIds
+        datatype: array[string]
+        extractType: id
+      - source_path: ingredient[*].substanceReference.reference
+        target_field: substanceReferenceTypes
+        datatype: array[string]
+        extractType: type
+
+indexes:
+  - fields:
+      - "status": 1
+    options:
+      name: idx_status
+      sparse: true
+
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code
+      sparse: true
+
+  - fields:
+      - "_search.identifier_values": 1
+    options:
+      name: idx_identifier_values
+      sparse: true
+
+  - fields:
+      - "_search.substanceReferenceIds": 1
+    options:
+      name: idx_substance_reference_ids
+      sparse: true
+
+  - fields:
+      - "expiry": 1
+    options:
+      name: idx_expiry
+      sparse: true
+
+  - fields:
+      - "meta.lastUpdated": 1
+    options:
+      name: idx_meta_last_updated
+      sparse: true

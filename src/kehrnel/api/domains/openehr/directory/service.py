@@ -25,7 +25,7 @@ async def retrieve_directory_by_version_id(
     version_uid: str,
     path: Optional[str],
     db: AsyncIOMotorDatabase
-) -> Folder:
+) -> Tuple[Folder, Optional[datetime]]:
     """
     Retrieves a specific version of a directory for an EHR, optionally at a sub-path.
 
@@ -51,28 +51,29 @@ async def retrieve_directory_by_version_id(
         )
 
     # 2. Find the specific folder version within that EHR.
-    folder_dict = await find_folder_in_contribution_by_uid(ehr_id, version_uid, db)
+    folder_result = await find_folder_in_contribution_by_uid(ehr_id, version_uid, db)
 
-    if not folder_dict:
+    if not folder_result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Directory with version_uid '{version_uid}' not found for EHR '{ehr_id}'.",
         )
 
+    folder_dict, time_committed = folder_result
     root_folder = Folder.model_validate(folder_dict)
 
     # 3. If a path is provided, traverse to the sub-folder (reuses existing helper).
     if path:
-        return _find_subfolder_by_path(root_folder, path)
+        return _find_subfolder_by_path(root_folder, path), time_committed
 
-    return root_folder
+    return root_folder, time_committed
 
 async def create_directory(
     ehr_id: str,
     directory_payload: FolderCreate,
     db: AsyncIOMotorDatabase,
     committer_name: str = "System"
-) -> Folder:
+) -> Tuple[Folder, datetime]:
     """
     Creates a directory for a given EHR
 
@@ -158,7 +159,7 @@ async def create_directory(
             detail=f"Could not create directory due to a database error: {e}",
         )
 
-    return created_directory
+    return created_directory, time_created
 
 
 def _parse_and_increment_version_uid(version_uid: str) -> Tuple[str, str]:
@@ -188,7 +189,7 @@ async def update_directory(
     directory_payload: FolderCreate,
     db: AsyncIOMotorDatabase,
     committer_name: str = "System",
-) -> Folder:
+) -> Tuple[Folder, datetime]:
     """
     Updates the directory for a given EHR.
 
@@ -287,7 +288,7 @@ async def update_directory(
             detail=f"Could not update directory due to a database error: {e}",
         )
 
-    return updated_directory
+    return updated_directory, time_committed
 
 
 def _find_subfolder_by_path(root_folder: Folder, path: str) -> Folder:
@@ -335,7 +336,7 @@ async def retrieve_directory(
     version_at_time: Optional[str],
     path: Optional[str],
     db: AsyncIOMotorDatabase,
-) -> Tuple[Folder, str]:
+) -> Tuple[Folder, str, Optional[datetime]]:
     """
     Retrieves a directory for an EHR, optionally at a specific time and sub-path.
 
@@ -361,6 +362,7 @@ async def retrieve_directory(
         )
     
     folder_dict = None
+    time_committed: Optional[datetime] = None
     # 2. Decide how to fetch the directory (latest vs at_time)
     if version_at_time:
         try:
@@ -370,7 +372,7 @@ async def retrieve_directory(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid 'version_at_time' format: '{version_at_time}'. Please use ISO 8601 format."
             )
-        folder_dict = await find_folder_in_contribution_at_time(ehr_id, timestamp, db)
+        folder_result = await find_folder_in_contribution_at_time(ehr_id, timestamp, db)
     # Retrieve the latest version
     else:
         if "directory" not in ehr_document or ehr_document["directory"] is None:
@@ -379,8 +381,11 @@ async def retrieve_directory(
                 detail=f"EHR with id '{ehr_id}' does not have a directory.",
             )
         latest_version_uid = ehr_document["directory"]["id"]["value"]
-        folder_dict = await find_folder_in_contribution_by_uid(ehr_id, latest_version_uid, db)
-    
+        folder_result = await find_folder_in_contribution_by_uid(ehr_id, latest_version_uid, db)
+
+    if folder_result:
+        folder_dict, time_committed = folder_result
+
     # 3. Check if a directory version was found
     if not folder_dict:
         raise HTTPException(
@@ -396,9 +401,9 @@ async def retrieve_directory(
     # 4. If a path is provided, traverse the folder structure
     if path:
         target_folder = _find_subfolder_by_path(root_folder, path)
-        return target_folder, root_version_uid
+        return target_folder, root_version_uid, time_committed
 
-    return root_folder, root_version_uid
+    return root_folder, root_version_uid, time_committed
 
 
 async def delete_directory(

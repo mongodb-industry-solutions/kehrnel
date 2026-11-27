@@ -31,7 +31,7 @@
   "fields": {
     "document": {
       "ehr_id": "ehr_id",
-      "comp_id": "version",
+      "comp_id": "_id",
       "tid": "template",
       "v": "version",
       "time_committed": "creation_date",

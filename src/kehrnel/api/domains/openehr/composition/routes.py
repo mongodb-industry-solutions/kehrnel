@@ -23,6 +23,7 @@ from kehrnel.api.domains.openehr.composition.service import (
     retrieve_revision_history,
     retrieve_versioned_composition,
     retrieve_composition_version,
+    retrieve_composition_version_by_uid,
 )
 
 from kehrnel.api.common.models import RevisionHistory, OriginalVersionResponse
@@ -511,6 +512,39 @@ async def get_revision_history_endpoint(
     )
 
     return revision_history
+
+
+@router.get(
+    "/versioned_composition/{versioned_object_uid}/version/{version_uid}",
+    response_model=OriginalVersionResponse,
+    response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
+    summary="Get Composition version by version UID",
+    responses=get_composition_version_at_time_responses,
+)
+async def get_composition_version_by_uid_endpoint(
+    ehr_id: str,
+    versioned_object_uid: str,
+    version_uid: str,
+    response: Response,
+    db: AsyncIOMotorDatabase = Depends(get_mongodb_ehr_db),
+    config: CompositionCollectionNames = Depends(get_composition_config),
+):
+    """
+    Retrieves a specific VERSION from the VERSIONED_COMPOSITION identified by
+    `versioned_object_uid`, using the explicit `version_uid`.
+    """
+    version_response = await retrieve_composition_version_by_uid(
+        ehr_id=ehr_id,
+        versioned_object_uid=versioned_object_uid,
+        version_uid=version_uid,
+        db=db,
+        config=config,
+    )
+
+    response.headers["ETag"] = f'"{version_response.uid.value}"'
+    response.headers["Location"] = f"/v1/ehr/{ehr_id}/composition/{version_response.uid.value}"
+    return version_response
 
 
 @router.get(

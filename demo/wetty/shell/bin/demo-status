@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+runtime_url="${RUNTIME_URL:-http://127.0.0.1:8080}"
+
+echo "Demo variables"
+echo "  RUNTIME_URL=${runtime_url}"
+echo "  ENV_ID=${ENV_ID:-dev}"
+echo "  DOMAIN=${DOMAIN:-openehr}"
+echo "  STRATEGY_ID=${STRATEGY_ID:-openehr.rps_dual}"
+echo "  WORKDIR=${WORKDIR:-/home/demo/.kehrnel-demo/workflow-smoke}"
+
+if [[ -n "${BINDINGS_REF:-}" ]]; then
+  echo "  BINDINGS_REF=${BINDINGS_REF}"
+elif [[ -n "${MONGODB_URI:-}" ]]; then
+  echo "  MONGODB_URI=configured"
+  echo "  MONGODB_DB=${MONGODB_DB:-openEHR_demo}"
+else
+  echo "  runtime bindings=not configured"
+fi
+
+echo
+if curl -fsS "${runtime_url}/health" >/dev/null 2>&1; then
+  echo "Runtime status: reachable at ${runtime_url}"
+else
+  echo "Runtime status: not reachable yet"
+  echo "Start it with: demo-runtime"
+fi

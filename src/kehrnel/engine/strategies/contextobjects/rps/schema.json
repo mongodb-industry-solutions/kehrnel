@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContextObjects RPS Strategy Configuration",
+  "description": "Storage and query configuration for the ContextObjects Reversed-Path Search dual-collection strategy. Controls collection names, document field shorthands, and AQL query limits.",
+  "type": "object",
+  "required": ["database_name"],
+  "additionalProperties": false,
+  "properties": {
+    "database_name": {
+      "type": "string",
+      "title": "Target Database",
+      "description": "MongoDB database where context_objects and context_objects_search will be created. Must match the database in the connection binding."
+    },
+    "collections": {
+      "type": "object",
+      "title": "Collections",
+      "description": "MongoDB collection names for the dual-collection layout.",
+      "additionalProperties": false,
+      "properties": {
+        "objects": {
+          "type": "object",
+          "title": "Primary Collection",
+          "description": "Stores full ContextObject instances with the complete content-node tree (cn[]).",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Collection Name",
+              "default": "context_objects",
+              "description": "Name of the primary collection. Defaults to context_objects."
+            }
+          }
+        },
+        "search": {
+          "type": "object",
+          "title": "Search Collection",
+          "description": "Stores denormalised path→value pairs (sn[]) for fast AQL queries across large populations.",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Collection Name",
+              "default": "context_objects_search",
+              "description": "Name of the search collection. Defaults to context_objects_search."
+            },
+            "enabled": {
+              "type": "boolean",
+              "title": "Enabled",
+              "default": true,
+              "description": "When false, the search collection is not maintained. AQL queries will fail if disabled."
+            }
+          }
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "title": "Document Field Names",
+      "description": "Shorthand field names used in stored documents. Change these only when integrating with an existing collection that uses different names.",
+      "additionalProperties": false,
+      "properties": {
+        "object_type": {
+          "type": "string",
+          "title": "objectType Field",
+          "default": "ot",
+          "description": "Top-level field that stores the semantic model identifier (objectType). Default: ot"
+        },
+        "record_id": {
+          "type": "string",
+          "title": "recordId Field",
+          "default": "rid",
+          "description": "Top-level field that stores the unique instance identifier, also used as _id. Default: rid"
+        },
+        "version": {
+          "type": "string",
+          "title": "version Field",
+          "default": "ver",
+          "description": "Top-level field that stores the instance version string. Default: ver"
+        },
+        "content_nodes": {
+          "type": "string",
+          "title": "Content Nodes Array",
+          "default": "cn",
+          "description": "Field name for the content-node array in the primary collection. Default: cn"
+        },
+        "search_nodes": {
+          "type": "string",
+          "title": "Search Nodes Array",
+          "default": "sn",
+          "description": "Field name for the search-node array in the search collection. Default: sn"
+        },
+        "meta": {
+          "type": "string",
+          "title": "Meta Field",
+          "default": "meta",
+          "description": "Field name for the instance metadata object. Default: meta"
+        }
+      }
+    },
+    "node_fields": {
+      "type": "object",
+      "title": "Node-Level Field Names",
+      "description": "Shorthand field names used inside each node entry in cn[] and sn[] arrays.",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "title": "Path Field",
+          "default": "p",
+          "description": "Field name for the full node path inside each cn/sn entry, e.g. /data[co0001][co0002]. Default: p"
+        },
+        "node_id": {
+          "type": "string",
+          "title": "Node ID Field",
+          "default": "nid",
+          "description": "Field name for the node identifier inside each cn/sn entry, e.g. co0001. Default: nid"
+        },
+        "ancestors": {
+          "type": "string",
+          "title": "Ancestors Field",
+          "default": "anc",
+          "description": "Field name for the ancestor node-ID array in cn[] entries. Default: anc"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value Field",
+          "default": "v",
+          "description": "Field name for the leaf value inside each cn/sn entry. Default: v"
+        },
+        "data_type": {
+          "type": "string",
+          "title": "Data Type Field",
+          "default": "dt",
+          "description": "Field name for the data type shorthand inside each cn/sn entry (string, integer, coded_text, etc.). Default: dt"
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "title": "Query Limits",
+      "description": "AQL result set size controls.",
+      "additionalProperties": false,
+      "properties": {
+        "default_limit": {
+          "type": "integer",
+          "title": "Default Limit",
+          "minimum": 1,
+          "default": 100,
+          "description": "Default number of results returned when LIMIT is not specified in AQL. Default: 100"
+        },
+        "max_limit": {
+          "type": "integer",
+          "title": "Maximum Limit",
+          "minimum": 1,
+          "default": 1000,
+          "description": "Hard cap on result set size regardless of LIMIT clause. Default: 1000"
+        }
+      }
+    }
+  }
+}

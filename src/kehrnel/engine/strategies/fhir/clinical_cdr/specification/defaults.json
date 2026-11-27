@@ -1,0 +1,20 @@
+{
+  "database": "fhir_synthetic",
+  "schema_version": "R5",
+  "collection_prefix": "",
+  "collections": { "mode": "per_resource_type" },
+  "search": {
+    "enabled": true,
+    "denormalize_on_generate": false,
+    "auto_index": true,
+    "config_dir": null,
+    "compartment_definitions_dir": null
+  },
+  "generation": {
+    "seed": 42,
+    "use_enrichers": true,
+    "watermark": {
+      "enabled": true
+    }
+  }
+}

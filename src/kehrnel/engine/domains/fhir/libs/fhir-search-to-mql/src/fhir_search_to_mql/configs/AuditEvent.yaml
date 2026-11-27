@@ -1,0 +1,414 @@
+resource: AuditEvent
+fhir_version: R5
+
+# Structure: schema/indexes/resources.r5.json (resource_spec AuditEvent)
+# Search params: schema/indexes/search-parameters.r5.json
+# Compartments: src/fhir_search_to_mql/compartments/definitions/
+#   patient.json, device.json
+#
+# Total parameters: 17 (15 resource-specific per R5 index + 2 common:
+# `_id`, `_lastUpdated`).
+#
+# R5 structural notes:
+#   * `AuditEvent.patient` is a dedicated Reference(Patient) (not
+#     `subject`).
+#   * `agent[]` is required backbone; `agent` search targets `who`,
+#     `agent-role` targets `role`, `policy` targets `policy[]`.
+#   * `entity[]` backbone; `entity` searches `what`, `entity-role`
+#     searches `role`.
+#   * `outcome.code` is a single Coding (not CodeableConcept).
+#   * `purpose` searches `authorization` and `agent.authorization`.
+#   * `date` searches `recorded` (instant), not `occurred[x]`.
+#   * `source` searches `source.observer`.
+#   * Top-level scalar `action` queries the FHIR root.
+
+search_parameters:
+  # ─────────────────────────────────────────────────────────────
+  # Reference Parameters
+  # ─────────────────────────────────────────────────────────────
+  agent:
+    type: reference
+    description: "Identifier of who"
+    fields:
+      - field: "_search.agentIds"
+        referenceType: id
+      - field: "_search.agentTypes"
+        referenceType: type
+
+  based-on:
+    type: reference
+    description: "What the activity was defined by"
+    fields:
+      - field: "_search.basedOnIds"
+        referenceType: id
+      - field: "_search.basedOnTypes"
+        referenceType: type
+      - field: "basedOn.reference"
+        referenceType: full
+
+  encounter:
+    type: reference
+    description: "Encounter related to the activity"
+    fields:
+      - field: "_search.encounterId"
+        referenceType: id
+      - field: "encounter.reference"
+        referenceType: full
+
+  entity:
+    type: reference
+    description: "Specific instance of resource involved"
+    fields:
+      - field: "_search.entityWhatIds"
+        referenceType: id
+      - field: "_search.entityWhatTypes"
+        referenceType: type
+
+  patient:
+    type: reference
+    description: "The patient for this audit event"
+    fields:
+      - field: "_search.patientId"
+        referenceType: id
+      - field: "patient.reference"
+        referenceType: full
+
+  source:
+    type: reference
+    description: "The identity of the source detecting the event"
+    fields:
+      - field: "_search.sourceObserverId"
+        referenceType: id
+      - field: "_search.sourceObserverType"
+        referenceType: type
+      - field: "source.observer.reference"
+        referenceType: full
+
+  # ─────────────────────────────────────────────────────────────
+  # Token Parameters
+  # ─────────────────────────────────────────────────────────────
+  action:
+    type: token
+    description: "Type of action performed during the event"
+    fields:
+      - field: "action"
+        tokenType: code
+
+  agent-role:
+    type: token
+    description: "Agent role in the event"
+    fields:
+      - field: "_search.agentRole_systemCode"
+        tokenType: systemCode
+      - field: "_search.agentRole_codes"
+        tokenType: code
+
+  category:
+    type: token
+    description: "Category of the event"
+    fields:
+      - field: "_search.category_systemCode"
+        tokenType: systemCode
+      - field: "_search.category_codes"
+        tokenType: code
+
+  code:
+    type: token
+    description: "More specific type/id for the event"
+    fields:
+      - field: "_search.code_systemCode"
+        tokenType: systemCode
+      - field: "_search.code_codes"
+        tokenType: code
+
+  entity-role:
+    type: token
+    description: "Entity role in the event"
+    fields:
+      - field: "_search.entityRole_systemCode"
+        tokenType: systemCode
+      - field: "_search.entityRole_codes"
+        tokenType: code
+
+  outcome:
+    type: token
+    description: "Whether the operation succeeded"
+    fields:
+      - field: "_search.outcome_systemCode"
+        tokenType: systemCode
+      - field: "_search.outcome_codes"
+        tokenType: code
+
+  purpose:
+    type: token
+    description: "The purposeOfUse of the event"
+    fields:
+      - field: "_search.purpose_systemCode"
+        tokenType: systemCode
+      - field: "_search.purpose_codes"
+        tokenType: code
+
+  # ─────────────────────────────────────────────────────────────
+  # Date Parameters
+  # ─────────────────────────────────────────────────────────────
+  date:
+    type: date
+    description: "Time when the event was recorded"
+    fields:
+      - field: "recorded"
+        type: date
+
+  # ─────────────────────────────────────────────────────────────
+  # URI Parameters
+  # ─────────────────────────────────────────────────────────────
+  policy:
+    type: uri
+    description: "Policy that authorized event"
+    fields:
+      - field: "_search.policy_values"
+
+  # ─────────────────────────────────────────────────────────────
+  # Common Parameters
+  # ─────────────────────────────────────────────────────────────
+  _id:
+    type: token
+    description: "Logical id of this artifact"
+    fields:
+      - field: "id"
+        tokenType: code
+
+  _lastUpdated:
+    type: date
+    description: "When the resource version last changed"
+    fields:
+      - field: "meta.lastUpdated"
+        type: date
+
+denormalization:
+  category:
+    source: category
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: category[*].coding[*].code
+        target_field: category_codes
+        datatype: array[string]
+      - source_path: category[*].coding[*]
+        target_field: category_systemCode
+        datatype: array[string]
+
+  code:
+    source: code
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: code.coding[*].code
+        target_field: code_codes
+        datatype: array[string]
+      - source_path: code.coding[*]
+        target_field: code_systemCode
+        datatype: array[string]
+
+  patient:
+    source: patient
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: patient.reference
+        target_field: patientId
+        datatype: string
+        extractType: id
+
+  encounter:
+    source: encounter
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: encounter.reference
+        target_field: encounterId
+        datatype: string
+        extractType: id
+
+  agent_who:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: agent[*].who.reference
+        target_field: agentIds
+        datatype: array[string]
+        extractType: id
+      - source_path: agent[*].who.reference
+        target_field: agentTypes
+        datatype: array[string]
+        extractType: type
+
+  agent_role:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: agent[*].role[*].coding[*].code
+        target_field: agentRole_codes
+        datatype: array[string]
+      - source_path: agent[*].role[*].coding[*]
+        target_field: agentRole_systemCode
+        datatype: array[string]
+
+  entity_what:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: entity[*].what.reference
+        target_field: entityWhatIds
+        datatype: array[string]
+        extractType: id
+      - source_path: entity[*].what.reference
+        target_field: entityWhatTypes
+        datatype: array[string]
+        extractType: type
+
+  entity_role:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: entity[*].role.coding[*].code
+        target_field: entityRole_codes
+        datatype: array[string]
+      - source_path: entity[*].role.coding[*]
+        target_field: entityRole_systemCode
+        datatype: array[string]
+
+  outcome_code:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: outcome.code.code
+        target_field: outcome_codes
+        datatype: array[string]
+      - source_path: outcome.code
+        target_field: outcome_systemCode
+        datatype: array[string]
+
+  purpose:
+    source: $resource
+    target: _search
+    extractor: CodeableConceptExtractor
+    field_mappings:
+      - source_path: authorization[*].coding[*].code | agent[*].authorization[*].coding[*].code
+        target_field: purpose_codes
+        datatype: array[string]
+      - source_path: authorization[*].coding[*] | agent[*].authorization[*].coding[*]
+        target_field: purpose_systemCode
+        datatype: array[string]
+
+  agent_policy:
+    source: $resource
+    target: _search
+    extractor: DirectFieldExtractor
+    field_mappings:
+      - source_path: agent[*].policy[*]
+        target_field: policy_values
+        datatype: array[string]
+
+  source_observer:
+    source: $resource
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: source.observer.reference
+        target_field: sourceObserverId
+        datatype: string
+        extractType: id
+      - source_path: source.observer.reference
+        target_field: sourceObserverType
+        datatype: string
+        extractType: type
+
+  based_on:
+    source: basedOn
+    target: _search
+    extractor: ReferenceExtractor
+    field_mappings:
+      - source_path: basedOn[*].reference
+        target_field: basedOnIds
+        datatype: array[string]
+        extractType: id
+      - source_path: basedOn[*].reference
+        target_field: basedOnTypes
+        datatype: array[string]
+        extractType: type
+
+  compartment_membership:
+    source: $resource
+    target: _compartments
+    extractor: CompartmentMembershipExtractor
+    field_mappings:
+      - target_field: Patient
+        source_paths:
+          - patient
+        reference_type: Patient
+        datatype: array[string]
+        comment: "Patient compartment (patient.json linking param patient)"
+      - target_field: Device
+        source_paths:
+          - agent[*].who
+        reference_type: Device
+        datatype: array[string]
+        comment: |
+          Device compartment (device.json linking param agent).
+          Membership extracted from agent.who references.
+
+compartments:
+  precomputed:
+    - Patient
+    - Device
+
+indexes:
+  - fields:
+      - "_compartments.Patient": 1
+    options:
+      name: idx_compartment_patient
+      sparse: true
+  - fields:
+      - "_compartments.Device": 1
+    options:
+      name: idx_compartment_device
+      sparse: true
+  - fields:
+      - "_search.patientId": 1
+    options:
+      name: idx_patient_id
+      sparse: true
+  - fields:
+      - "_search.encounterId": 1
+    options:
+      name: idx_encounter_id
+      sparse: true
+  - fields:
+      - "_search.agentIds": 1
+    options:
+      name: idx_agent_ids
+      sparse: true
+  - fields:
+      - "_search.code_codes": 1
+    options:
+      name: idx_code_codes
+      sparse: true
+  - fields:
+      - "recorded": 1
+    options:
+      name: idx_recorded
+      sparse: true
+  - fields:
+      - "action": 1
+    options:
+      name: idx_action
+      sparse: true
+  - fields:
+      - "meta.lastUpdated": -1
+    options:
+      name: idx_meta_last_updated

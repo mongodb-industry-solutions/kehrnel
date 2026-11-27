@@ -23,3 +23,16 @@ def test_strategies_include_defaults_and_schema():
     assert rps_single.get("default_config"), "default_config should be present for rps_single"
     schema_single = rps_single.get("config_schema") or {}
     assert schema_single.get("properties"), "config_schema.properties should not be empty for rps_single"
+
+
+def test_rps_dual_ibm_compat_strategy_endpoint():
+    client = TestClient(create_app())
+
+    res = client.get("/api/persistence-strategies/openehr.rps_dual_ibm")
+
+    assert res.status_code == 200
+    body = res.json()
+    assert body["id"] == "openehr.rps_dual_ibm"
+    assert body["strategy_id"] == "openehr.rps_dual_ibm"
+    assert body["default_config"]
+    assert (body["config_schema"] or {}).get("properties")

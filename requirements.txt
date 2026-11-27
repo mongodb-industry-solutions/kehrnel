@@ -1,0 +1,10 @@
+# Kehrnel local development bootstrap.
+#
+# Install from the repository root after activating your virtual environment:
+#   python -m pip install -r requirements.txt
+#
+# ./startKehrnel performs the equivalent dependency sync automatically via uv.
+uv>=0.5
+-e ./src/kehrnel/engine/domains/fhir/libs/fhir-data-generation
+-e ./src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql
+-e .[all]

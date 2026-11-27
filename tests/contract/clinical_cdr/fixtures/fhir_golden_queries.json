@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "patient_gender_female",
+      "resource_type": "Patient",
+      "criteria": { "gender": "female" },
+      "expected_mql_keys": ["gender"],
+      "min_row_count": 1,
+      "seed": 42,
+      "seed_resources": {
+        "Patient": 12,
+        "Organization": 1
+      },
+      "denormalize_resource_types": ["Patient"]
+    },
+    {
+      "id": "patient_name_family",
+      "resource_type": "Patient",
+      "criteria": { "name": "Smith" },
+      "expected_mql_keys": ["familyName_lower"],
+      "min_row_count": 0,
+      "seed": 42,
+      "seed_resources": {
+        "Patient": 12,
+        "Organization": 1
+      },
+      "denormalize_resource_types": ["Patient"]
+    },
+    {
+      "id": "schedule_active",
+      "resource_type": "Schedule",
+      "criteria": { "active": "true" },
+      "expected_mql_keys": ["active"],
+      "min_row_count": 0,
+      "seed": 42,
+      "seed_resources": {
+        "Patient": 4,
+        "Practitioner": 2,
+        "Schedule": 3,
+        "Slot": 6
+      },
+      "denormalize_resource_types": ["Schedule", "Slot"]
+    },
+    {
+      "id": "slot_status_free",
+      "resource_type": "Slot",
+      "criteria": { "status": "free" },
+      "expected_mql_keys": ["status"],
+      "min_row_count": 0,
+      "seed": 42,
+      "seed_resources": {
+        "Patient": 4,
+        "Schedule": 3,
+        "Slot": 8
+      },
+      "denormalize_resource_types": ["Slot", "Schedule"]
+    },
+    {
+      "id": "appointment_status",
+      "resource_type": "Appointment",
+      "criteria": { "status": "booked" },
+      "expected_mql_keys": ["status"],
+      "min_row_count": 0,
+      "seed": 42,
+      "seed_resources": {
+        "Patient": 4,
+        "Practitioner": 2,
+        "Schedule": 2,
+        "Slot": 6,
+        "Appointment": 5
+      },
+      "denormalize_resource_types": ["Appointment", "Slot"]
+    }
+  ]
+}

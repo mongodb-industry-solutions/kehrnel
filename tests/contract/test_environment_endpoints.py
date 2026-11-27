@@ -39,7 +39,7 @@ def test_endpoints_introspection_is_canonical(client):
 
 
 def test_activations_endpoint_includes_history_summary(client):
-    _activate(client, "envHist", domain="fhir", strategy_id="fhir.resource_first")
+    _activate(client, "envHist", domain="fhir", strategy_id="fhir.clinical_cdr")
     # create a history entry via upgrade
     res_up = client.post("/v1/environments/envHist/activations/fhir/upgrade")
     assert res_up.status_code == 200

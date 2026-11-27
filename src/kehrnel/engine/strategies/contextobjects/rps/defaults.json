@@ -1,0 +1,31 @@
+{
+  "database_name": "",
+  "collections": {
+    "objects": {
+      "name": "context_objects"
+    },
+    "search": {
+      "name": "context_objects_search",
+      "enabled": true
+    }
+  },
+  "fields": {
+    "object_type":   "ot",
+    "record_id":     "rid",
+    "version":       "ver",
+    "content_nodes": "cn",
+    "search_nodes":  "sn",
+    "meta":          "meta"
+  },
+  "node_fields": {
+    "path":      "p",
+    "node_id":   "nid",
+    "ancestors": "anc",
+    "value":     "v",
+    "data_type": "dt"
+  },
+  "query": {
+    "default_limit": 100,
+    "max_limit":     1000
+  }
+}

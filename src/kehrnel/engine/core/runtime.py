@@ -6,11 +6,11 @@ import importlib.util
 import json
 import hashlib
 from datetime import datetime
-from time import perf_counter
 from typing import Dict, Optional, Any
 from dataclasses import is_dataclass, asdict, replace
 
 from .manifest import StrategyManifest
+from .manifest_digest import activation_version_compatible, compute_manifest_digest
 from .config import validate_config
 from .activation import EnvironmentActivation
 from .environment import EnvironmentRecord
@@ -34,7 +34,7 @@ class StrategyRuntime:
         self.bundle_store = bundle_store
         self.bindings_resolver = bindings_resolver
         self.env_manifests: Dict[str, StrategyManifest] = {}
-        # per-env cache: {"adapters": {...}, "dict_cache": {...}, "query_compile_cache": {...}}
+        # per-env cache: {"adapters": {...}, "dict_cache": {...}}
         self._env_cache: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
@@ -103,6 +103,7 @@ class StrategyRuntime:
         domain: str | None = None,
         reason: str = "activate",
         manifest_digest_override: str | None = None,
+        config_hash_override: str | None = None,
         force: bool = False,
         replace_reason: str | None = None,
         bindings_ref: str | None = None,
@@ -135,18 +136,22 @@ class StrategyRuntime:
         existing_hash = existing.config_hash if existing else None
         current_manifest_digest = manifest_digest_override or self._manifest_digest(manifest)
         # idempotent: if same strategy and config hash matches, return existing
-        merged_config: dict = {}
-        defaults = manifest.default_config or self._load_defaults_from_entrypoint(manifest)
-        if defaults:
-            merged_config = self._deep_merge(merged_config, defaults)
-        merged_config = self._deep_merge(merged_config, config or {})
+        restore_snapshot = replace_reason == "rollback" and bool(config)
+        if restore_snapshot:
+            merged_config = dict(config or {})
+        else:
+            merged_config = {}
+            defaults = manifest.default_config or self._load_defaults_from_entrypoint(manifest)
+            if defaults:
+                merged_config = self._deep_merge(merged_config, defaults)
+            merged_config = self._deep_merge(merged_config, config or {})
         # simple required validation from schema if present
         schema = getattr(manifest, "config_schema", None) or self._load_schema_from_entrypoint(manifest) or {}
         validate_config(schema, merged_config)
         self._validate_pack_config(manifest, merged_config)
         store_profiles = self._build_store_profiles(manifest, merged_config)
         bundle_refs = self._validate_bundle_refs(merged_config, manifest)
-        new_config_hash = self._config_hash(merged_config)
+        new_config_hash = config_hash_override or self._config_hash(merged_config)
         bdict = self._bindings_payload(bindings)
         uri = (bdict.get("db") or {}).get("uri")
         redacted_uri = self._redact_uri(uri) if uri else None
@@ -159,17 +164,6 @@ class StrategyRuntime:
         }
         new_bindings_hash = self._bindings_hash(bindings, bindings_ref)
         if existing and not force:
-            existing_version = (existing.version or "").strip()
-            existing_is_latest_alias = existing_version.lower() in ("latest", "current")
-            digest_matches = bool(existing.manifest_digest and existing.manifest_digest == current_manifest_digest)
-            version_matches = bool(
-                not existing.manifest_digest
-                and (
-                    not existing_version
-                    or existing_is_latest_alias
-                    or existing_version == manifest.version
-                )
-            )
             existing_bindings_hash = (getattr(existing, "bindings_hash", None) or "").strip()
             if existing_bindings_hash and new_bindings_hash:
                 bindings_match = existing_bindings_hash == new_bindings_hash
@@ -178,14 +172,24 @@ class StrategyRuntime:
                     (getattr(existing, "bindings_ref", None) or None) == ((bindings_ref or "").strip() or None)
                     and (getattr(existing, "bindings_meta", None) or {}) == bindings_meta
                 )
+            digest_matches = bool(existing.manifest_digest and existing.manifest_digest == current_manifest_digest)
             if (
                 existing.strategy_id == strategy_id
                 and existing_hash == new_config_hash
-                and (digest_matches or version_matches)
                 and bindings_match
+                and activation_version_compatible(existing, manifest)
             ):
+                if digest_matches:
+                    return replace(
+                        existing,
+                        already_active=True,
+                        replaced=False,
+                        previous_activation_id=None,
+                        replaced_from=None,
+                    )
+                synced = self._sync_activation_digest(existing, current_manifest_digest)
                 return replace(
-                    existing,
+                    synced,
                     already_active=True,
                     replaced=False,
                     previous_activation_id=None,
@@ -287,6 +291,7 @@ class StrategyRuntime:
             domain=prev_activation.domain or domain,
             reason="rollback",
             manifest_digest_override=prev_activation.manifest_digest,
+            config_hash_override=prev_activation.config_hash,
             force=True,
             replace_reason="rollback",
             bindings_ref=prev_activation.bindings_ref,
@@ -374,14 +379,22 @@ class StrategyRuntime:
             and activation_version != manifest.version
         )
         if digest_mismatch or version_mismatch:
-            details = {
-                "expected_version": activation.version,
-                "actual_version": manifest.version,
-                "expected_digest": activation.manifest_digest,
-                "actual_digest": current_digest,
-            }
-            if not allow_mismatch:
-                raise KehrnelError(code="ACTIVATION_STRATEGY_MISMATCH", status=409, message="Active strategy differs from current manifest", details=details)
+            if not allow_mismatch and activation_version_compatible(activation, manifest):
+                activation = self._sync_activation_digest(activation, current_digest)
+            else:
+                details = {
+                    "expected_version": activation.version,
+                    "actual_version": manifest.version,
+                    "expected_digest": activation.manifest_digest,
+                    "actual_digest": current_digest,
+                }
+                if not allow_mismatch:
+                    raise KehrnelError(
+                        code="ACTIVATION_STRATEGY_MISMATCH",
+                        status=409,
+                        message="Active strategy differs from current manifest",
+                        details=details,
+                    )
 
         bindings_payload = (payload or {}).get("bindings") if isinstance(payload, dict) else None
         if bindings_payload:
@@ -449,14 +462,11 @@ class StrategyRuntime:
                 },
             )
 
-        env_cache = self._env_cache.setdefault(env_id, {})
-        cache = env_cache.setdefault("dict_cache", {})
-        query_compile_cache = env_cache.setdefault("query_compile_cache", {})
+        cache = self._env_cache.setdefault(env_id, {}).setdefault("dict_cache", {})
         config_hash = activation.config_hash or self._config_hash(activation.config)
         manifest_digest = activation.manifest_digest or self._manifest_digest(manifest)
         meta = {
             "dict_cache": cache,
-            "query_compile_cache": query_compile_cache,
             "activation_id": activation.activation_id,
             "config_hash": config_hash,
             "manifest_digest": manifest_digest,
@@ -534,9 +544,7 @@ class StrategyRuntime:
                         "params": payload.get("parameters") or payload.get("params") or {},
                         "debug": bool(payload.get("debug")),
                     }
-                compile_started = perf_counter()
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
-                compile_ms = _elapsed_ms(compile_started)
                 plan_dict = _to_dict(plan)
                 # unwrap nested plan if present
                 if isinstance(plan_dict, dict) and "plan" in plan_dict and isinstance(plan_dict["plan"], dict) and "pipeline" in plan_dict["plan"]:
@@ -544,11 +552,6 @@ class StrategyRuntime:
                     inner.setdefault("engine", plan_dict.get("engine"))
                     inner.setdefault("explain", plan_dict.get("explain", inner.get("explain")))
                     plan_dict = inner
-                plan_meta = plan_dict.get("meta") if isinstance(plan_dict.get("meta"), dict) else {}
-                plan_timings = dict(plan_meta.get("timings") or {})
-                plan_timings["kehrnel_compile_ms"] = compile_ms
-                plan_meta["timings"] = plan_timings
-                plan_dict["meta"] = plan_meta
                 explain = plan_dict.get("explain") or {}
                 explain.setdefault("activation_id", activation.activation_id)
                 explain.setdefault("strategy_id", activation.strategy_id)
@@ -558,9 +561,6 @@ class StrategyRuntime:
                 explain.setdefault("manifest_digest", activation.manifest_digest or self._manifest_digest(manifest))
                 explain.setdefault("engine", plan_dict.get("engine"))
                 explain.setdefault("scope", plan_dict.get("scope") or explain.get("scope"))
-                explain_timings = dict(explain.get("timings") or {})
-                explain_timings.setdefault("kehrnel_compile_ms", compile_ms)
-                explain["timings"] = explain_timings
                 if allow_mismatch:
                     explain.setdefault("warnings", []).append("activation_manifest_mismatch_allowed")
                 plan_dict["explain"] = explain
@@ -588,31 +588,9 @@ class StrategyRuntime:
                         "params": payload.get("parameters") or payload.get("params") or {},
                         "debug": bool(payload.get("debug")),
                     }
-                query_started = perf_counter()
-                compile_started = perf_counter()
                 plan = await handle.plugin.compile_query(ctx, domain=domain, query=query)
-                compile_ms = _elapsed_ms(compile_started)
-                execute_started = perf_counter()
                 res = await handle.plugin.execute_query(ctx, plan)
-                execute_ms = _elapsed_ms(execute_started)
-                res_dict = _to_dict(res)
-                result_meta = res_dict.get("meta") if isinstance(res_dict.get("meta"), dict) else {}
-                result_timings = dict(result_meta.get("timings") or {})
-                explain_dict = res_dict.get("explain") if isinstance(res_dict.get("explain"), dict) else {}
-                explain_timings = dict(explain_dict.get("timings") or {})
-                result_timings.update(explain_timings)
-                result_timings["kehrnel_compile_ms"] = compile_ms
-                result_timings["kehrnel_execute_ms"] = execute_ms
-                result_timings["kehrnel_total_ms"] = _elapsed_ms(query_started)
-                result_meta["timings"] = result_timings
-                if isinstance(res_dict.get("rows"), list):
-                    result_meta.setdefault("row_count", len(res_dict["rows"]))
-                res_dict["meta"] = result_meta
-                if explain_dict:
-                    explain_timings.update(result_timings)
-                    explain_dict["timings"] = explain_timings
-                    res_dict["explain"] = explain_dict
-                return res_dict
+                return _to_dict(res)
             if op_lower in ("op", "extensions"):
                 op_name = payload.get("op") if payload else None
                 op_payload = payload.get("payload") if payload else {}
@@ -639,12 +617,17 @@ class StrategyRuntime:
             return ""
 
     def _manifest_digest(self, manifest: StrategyManifest) -> str:
-        try:
-            payload = manifest.model_dump()
-            blob = json.dumps(payload, sort_keys=True).encode("utf-8")
-            return hashlib.sha256(blob).hexdigest()
-        except Exception:
-            return ""
+        return compute_manifest_digest(manifest)
+
+    def _sync_activation_digest(self, activation: EnvironmentActivation, manifest_digest: str) -> EnvironmentActivation:
+        now = datetime.utcnow().isoformat()
+        synced = self.registry.update_activation_fields(
+            activation.env_id,
+            activation.domain,
+            manifest_digest=manifest_digest,
+            updated_at=now,
+        )
+        return synced or replace(activation, manifest_digest=manifest_digest, updated_at=now)
 
     def _deep_merge(self, base: Dict[str, Any], overlay: Dict[str, Any]) -> Dict[str, Any]:
         result = dict(base or {})
@@ -715,9 +698,8 @@ class StrategyRuntime:
 
     def invalidate_env_cache(self, env_id: str, dict_only: bool = False):
         if dict_only:
-            if env_id in self._env_cache:
+            if env_id in self._env_cache and "dict_cache" in self._env_cache[env_id]:
                 self._env_cache[env_id]["dict_cache"] = {}
-                self._env_cache[env_id]["query_compile_cache"] = {}
             return
         self._env_cache.pop(env_id, None)
 
@@ -844,10 +826,6 @@ def _to_dict(obj: Any) -> Any:
     if isinstance(obj, dict):
         return {k: _to_dict(v) for k, v in obj.items()}
     return obj
-
-
-def _elapsed_ms(started_at: float) -> float:
-    return round((perf_counter() - started_at) * 1000, 2)
 
 
 async def _maybe_await(fn, *args, **kwargs):

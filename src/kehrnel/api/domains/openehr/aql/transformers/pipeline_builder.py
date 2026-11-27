@@ -1,5 +1,6 @@
 # src/kehrnel/api/compatibility/v1/aql/transformers/pipeline_builder.py
 
+import re
 from typing import Dict, Any, List, Optional
 from .condition_processor import ConditionProcessor
 from .value_formatter import ValueFormatter
@@ -315,6 +316,10 @@ class PipelineBuilder:
                 # Use the field name created by the LET stage
                 field_name = variable.lstrip('$')
             elif aql_path:
+                if "/" not in aql_path:
+                    raise ValueError(
+                        f"ORDER BY projection alias '{aql_path}' is not supported; use the full AQL path instead."
+                    )
                 # Convert AQL path to MongoDB field name using same logic as projection
                 path_parts = aql_path.split('/')
                 if len(path_parts) >= 2:
@@ -611,8 +616,16 @@ class PipelineBuilder:
             value = condition.get("value")
             
             if operator == "LIKE":
-                # Convert LIKE to regex
-                regex_pattern = value.replace("%", ".*")
+                parts = ["^"]
+                for char in str(value):
+                    if char == "*":
+                        parts.append(".*")
+                    elif char == "?":
+                        parts.append(".")
+                    else:
+                        parts.append(re.escape(char))
+                parts.append("$")
+                regex_pattern = "".join(parts)
                 return {"$regexMatch": {"input": field, "regex": regex_pattern, "options": "i"}}
             else:
                 mongo_op = OPERATOR_MAP.get(operator, "$eq")

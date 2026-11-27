@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /workspace/kehrnel
+
+rm -rf .kehrnel
+rm -f .kehrnel_registry.json
+mkdir -p .kehrnel
+
+echo "Local demo artifacts removed from the container copy of the repo."

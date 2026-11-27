@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="${SAMPLES_ROOT:-/workspace/kehrnel/src/kehrnel/engine/strategies/openehr/rps_dual/samples/reference}"
+
+cat <<EOF
+Packaged openEHR RPS Dual sample assets
+
+Root:
+  ${root}
+
+Useful paths:
+  ${root}/templates
+  ${root}/queries
+  ${root}/canonical
+  ${root}/envelopes
+  ${root}/projection_mappings.json
+  ${root}/search_index.definition.json
+
+Try:
+  ls "${root}/templates"
+  ls "${root}/queries"
+  head -n 5 "${root}/projection_mappings.json"
+EOF

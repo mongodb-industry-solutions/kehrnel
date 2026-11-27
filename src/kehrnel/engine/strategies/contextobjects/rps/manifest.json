@@ -1,0 +1,223 @@
+{
+  "id": "contextobjects.rps",
+  "name": "ContextObjects RPS",
+  "version": "1.0.0",
+  "maturity": "published",
+  "pack_format": "strategy-pack/v1",
+  "spec": { "path": "spec.json", "version": "1.0" },
+  "domain": "context",
+  "summary": "Dual-collection Reversed-Path Search for multi-industry semantic object instances. Full objects in context_objects, denormalised path→value pairs in context_objects_search for fast AQL queries. No dictionaries — meaning lives in the model schema.",
+  "description": "Stores ContextObject instances using the Reversed-Path Search dual-collection layout adapted for multi-industry semantic models. Every data point carries a unique node ID. Instances are queried via an AQL dialect that compiles to MongoDB aggregation pipelines targeting the search collection with compound indexes on sn.nid and sn.v.",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Collection names, field shorthands, and query limits"
+    }
+  },
+  "capabilities": [
+    "transform",
+    "ingest",
+    "validate",
+    "query",
+    "synthetic",
+    "plan",
+    "apply"
+  ],
+  "entrypoint": "kehrnel.engine.strategies.contextobjects.rps.strategy:ContextObjectsRPSStrategy",
+  "adapters": {
+    "storage": ["mongo"],
+    "search": []
+  },
+  "ui": {
+    "tags": ["contextobjects", "rps", "dual-collection", "multi-industry", "semantic-model", "aql"],
+    "domain_badge": "ContextObjects",
+    "accent_color": "#00ED64",
+    "docs": "/guide/docs/strategies/contextobjects/rps",
+    "links": {
+      "runtime_activate":          "/environments/{env_id}/activate",
+      "runtime_capabilities":      "/environments/{env_id}/capabilities",
+      "runtime_run":               "/environments/{env_id}/run",
+      "runtime_plan":              "/environments/{env_id}/plan",
+      "runtime_apply":             "/environments/{env_id}/apply",
+      "runtime_transform":         "/environments/{env_id}/transform",
+      "runtime_ingest":            "/environments/{env_id}/ingest",
+      "runtime_query":             "/environments/{env_id}/query",
+      "runtime_compile_query":     "/environments/{env_id}/compile_query",
+      "runtime_strategy_op":       "/environments/{env_id}/activations/{domain}/ops/{op}",
+      "runtime_synthetic_jobs":    "/environments/{env_id}/synthetic/jobs",
+      "runtime_synthetic_job":     "/environments/{env_id}/synthetic/jobs/{job_id}",
+      "runtime_synthetic_job_cancel": "/environments/{env_id}/synthetic/jobs/{job_id}/cancel",
+      "strategy_manifest":         "/strategies/contextobjects.rps",
+      "strategy_spec":             "/strategies/contextobjects.rps/spec",
+      "strategy_endpoints":        "/strategies/contextobjects.rps/endpoints",
+      "catalog_ops":               "/ops"
+    },
+    "index_contract": {
+      "specPath": "storageModel.stores[].indexes",
+      "configResolved": true,
+      "summary": "Required MongoDB indexes are declared in the strategy spec with logical field aliases. Runtime plan/apply resolves collection names and field shorthands from the active environment config.",
+      "requiredForOptimizedAql": ["idx_search_nid_val", "idx_search_path_val"],
+      "recommendedForAql": ["idx_search_ot", "idx_search_rid"]
+    },
+    "story": "Any team that works with structured semantic data faces the same tension: record-level operations need the full object, while population-level queries need to scan across thousands of records efficiently. Traditional document stores force you to choose — either keep complete records and accept slow cross-record searches, or flatten everything into rows and lose the richness of your model.\n\nContextObjects RPS solves this with a dual-collection layout that serves both workloads simultaneously. The primary collection holds every instance exactly as created, making individual record retrieval instant. The search collection maintains a compact, denormalised view of every path→value pair across all instances, enabling sub-millisecond AQL queries over large populations.\n\nBecause semantic meaning lives entirely in the model schema — not in dictionaries, not in code tables — the system works for any domain. A clinical trial schema, a financial instrument definition, a supply chain event model: each produces the same dual-collection layout, queried by the same AQL syntax.",
+    "how_it_works": "On ingest, the strategy validates the instance against its semantic model schema, then walks the data tree to extract every node along its path. The primary document is written to context_objects with the full content nodes array (cn). A denormalised projection is written in parallel to context_objects_search — one entry per leaf node in the sn array, each carrying its path, nodeId, value, and dataType.\n\nAt query time, AQL compiles to a MongoDB aggregation pipeline. The objectType predicate is hoisted to a top-level $match for index coverage. Remaining WHERE clauses become $elemMatch conditions on the sn array, matched by nodeId for precision or by path for hierarchy traversal. The pipeline is always targeted at context_objects_search — the primary collection is never touched by queries.",
+    "benefits": [
+      "Domain-agnostic — the same layout works for any industry vertical. No clinical vocabulary required.",
+      "Dual-collection layout gives sub-millisecond path queries at scale without sacrificing record completeness.",
+      "No dictionaries and no code tables — semantic meaning lives in the model schema, which means zero bootstrap overhead on activation.",
+      "AQL syntax mirrors the openEHR AQL dialect so teams already familiar with it can query immediately.",
+      "Instances are first-class records: generate, validate, ingest, query, and export them independently of the model.",
+      "Compound indexes on sn.nid+sn.v and sn.p+sn.v are declared in the spec and applied automatically on plan/apply."
+    ],
+    "ideal_for": "Any domain with explicit semantic models where node IDs are stable and you need fast path-based queries across large populations. Particularly well suited for clinical trial data, IoT telemetry with structured schemas, financial instrument lifecycle events, and supply chain object tracking.",
+    "consider_alternatives": [
+      "If your data is clinical EHR archetypes (openEHR), use openehr.rps_dual instead — it includes dictionary compression and Atlas Search support.",
+      "If your data is HL7 FHIR R5 resources, use fhir.clinical_cdr instead.",
+      "If you only need record-level lookups and never query across instances, a single-collection layout is simpler."
+    ],
+    "scorecard": {
+      "read_patient":    4,
+      "read_population": 4,
+      "writes":          3,
+      "storage":         3,
+      "index_cost":      2,
+      "migration_ease":  4
+    },
+    "tabs": {
+      "overview": {
+        "cards": [
+          {
+            "title": "AQL Queries",
+            "body": "WHERE clauses compile to $elemMatch on the sn array. objectType is hoisted to a top-level $match for index coverage."
+          },
+          {
+            "title": "Dual-Collection Ingest",
+            "body": "Every instance writes to context_objects (full cn[]) and context_objects_search (flat sn[]) in a single operation."
+          },
+          {
+            "title": "Zero Bootstrap",
+            "body": "No dictionaries, no code tables. Activation creates two collections and their indexes — nothing else."
+          }
+        ]
+      }
+    }
+  },
+  "ops": [
+    {
+      "name": "co_ingest",
+      "kind": "ingest",
+      "summary": "Ingest one or more ContextObject instances into the dual-collection layout",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "instances": {
+            "type": "array",
+            "items": { "type": "object" },
+            "description": "List of ContextObject instances to ingest"
+          },
+          "instance": {
+            "type": "object",
+            "description": "Single ContextObject instance (alternative to instances[])"
+          },
+          "dry_run": { "type": "boolean", "default": false }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok":       { "type": "boolean" },
+          "dry_run":  { "type": "boolean" },
+          "inserted": { "type": "integer" },
+          "updated":  { "type": "integer" },
+          "warnings": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    {
+      "name": "co_validate",
+      "kind": "validation",
+      "summary": "Validate a ContextObject instance against its semantic model schema",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "instance": { "type": "object", "description": "ContextObject instance to validate" },
+          "schema":   { "type": "object", "description": "Semantic model schema (nodes map)" }
+        },
+        "required": ["instance", "schema"],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok":       { "type": "boolean" },
+          "errors":   { "type": "array", "items": { "type": "object" } },
+          "warnings": { "type": "array", "items": { "type": "object" } }
+        }
+      }
+    },
+    {
+      "name": "synthetic_generate_batch",
+      "kind": "synthetic",
+      "summary": "Generate synthetic ContextObject instances from a semantic model schema",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 10,
+            "description": "Number of instances to generate"
+          },
+          "schema": {
+            "type": "object",
+            "description": "Semantic model schema (id + nodes map). Required unless object_type resolves from catalog."
+          },
+          "object_type": {
+            "type": "string",
+            "description": "objectType (schema id) to look up from the model catalog"
+          },
+          "model_source": {
+            "type": "object",
+            "properties": {
+              "database_name":      { "type": "string" },
+              "catalog_collection": { "type": "string", "default": "user-data-models" }
+            },
+            "additionalProperties": false
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed for reproducible generation"
+          },
+          "include_optional": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include optional nodes in generated instances"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "default": false
+          },
+          "ingest": {
+            "type": "boolean",
+            "default": true,
+            "description": "Write generated instances to MongoDB (true) or return only (false)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok":        { "type": "boolean" },
+          "dry_run":   { "type": "boolean" },
+          "count":     { "type": "integer" },
+          "inserted":  { "type": "integer" },
+          "instances": { "type": "array" },
+          "warnings":  { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  ]
+}

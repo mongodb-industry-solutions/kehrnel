@@ -1,0 +1,6750 @@
+{
+  "fhir_version": "R5",
+  "resource_count": 84,
+  "resources": {
+    "Account": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "guarantor",
+        "description": "The parties ultimately responsible for balancing the account",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Account number",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "Human-readable label",
+        "type": "string"
+      },
+      {
+        "code": "owner",
+        "description": "Entity managing the account",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The entity that caused the expenses (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "period",
+        "description": "Transaction window",
+        "type": "date"
+      },
+      {
+        "code": "relatedaccount",
+        "description": "Parent and other related accounts",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "active | inactive | entered-in-error | on-hold | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The entity that caused the expenses",
+        "type": "reference"
+      },
+      {
+        "code": "type",
+        "description": "E.g. patient, expense, depreciation",
+        "type": "token"
+      }
+    ],
+    "AdverseEvent": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "actuality",
+        "description": "actual | potential",
+        "type": "token"
+      },
+      {
+        "code": "category",
+        "description": "wrong-patient | procedure-mishap | medication-mishap | ...",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Event or incident that occurred or was averted",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "When the event occurred",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter during which event occurred",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier for the event",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "Location where adverse event occurred",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Subject impacted by event (Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "recorder",
+        "description": "Who recorded the adverse event",
+        "type": "reference"
+      },
+      {
+        "code": "resultingeffect",
+        "description": "Effect on the subject due to this event",
+        "type": "reference"
+      },
+      {
+        "code": "seriousness",
+        "description": "Seriousness or gravity of the event",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "in-progress | completed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "study",
+        "description": "Research study that the subject is enrolled in",
+        "type": "reference"
+      },
+      {
+        "code": "subject",
+        "description": "Subject impacted by event",
+        "type": "reference"
+      },
+      {
+        "code": "substance",
+        "description": "Refers to the specific entity that caused the adverse event",
+        "type": "reference"
+      }
+    ],
+    "AllergyIntolerance": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "category",
+        "description": "food | medication | environment | biologic",
+        "type": "token"
+      },
+      {
+        "code": "clinical-status",
+        "description": "active | inactive | resolved",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Code that identifies the allergy or intolerance",
+        "type": "token"
+      },
+      {
+        "code": "criticality",
+        "description": "low | high | unable-to-assess",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Date first version of the resource instance was recorded",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "External ids for this item",
+        "type": "token"
+      },
+      {
+        "code": "last-date",
+        "description": "Date of last known occurrence of a reaction",
+        "type": "date"
+      },
+      {
+        "code": "manifestation-code",
+        "description": "Clinical symptoms/signs associated with the event (coded)",
+        "type": "token"
+      },
+      {
+        "code": "manifestation-reference",
+        "description": "Clinical symptoms/signs associated with the event (reference)",
+        "type": "reference"
+      },
+      {
+        "code": "participant",
+        "description": "Who or what participated in activities related to the allergy",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Who the sensitivity is for",
+        "type": "reference"
+      },
+      {
+        "code": "route",
+        "description": "How the subject was exposed to the substance",
+        "type": "token"
+      },
+      {
+        "code": "severity",
+        "description": "mild | moderate | severe (of event as a whole)",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "allergy | intolerance \u2014 underlying mechanism (if known)",
+        "type": "token"
+      },
+      {
+        "code": "verification-status",
+        "description": "unconfirmed | presumed | confirmed | refuted | entered-in-error",
+        "type": "token"
+      }
+    ],
+    "Appointment": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "actor",
+        "description": "Any one of the individuals participating in the appointment",
+        "type": "reference"
+      },
+      {
+        "code": "appointment-type",
+        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
+        "type": "token"
+      },
+      {
+        "code": "based-on",
+        "description": "The service request this appointment is allocated to assess",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "Appointment date/time",
+        "type": "date"
+      },
+      {
+        "code": "group",
+        "description": "One of the individuals of the appointment is this patient (when subject is a Group)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "An Identifier of the Appointment",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "This location is listed in the participants of the appointment",
+        "type": "reference"
+      },
+      {
+        "code": "part-status",
+        "description": "The Participation status of the subject, or other participant on the appointment",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "One of the individuals of the appointment is this patient",
+        "type": "reference"
+      },
+      {
+        "code": "practitioner",
+        "description": "One of the individuals of the appointment is this practitioner",
+        "type": "reference"
+      },
+      {
+        "code": "reason-code",
+        "description": "Reference to a concept (by class)",
+        "type": "token"
+      },
+      {
+        "code": "reason-reference",
+        "description": "Reference to a resource (by instance)",
+        "type": "reference"
+      },
+      {
+        "code": "requested-period",
+        "description": "During what period was the Appointment requested to take place",
+        "type": "date"
+      },
+      {
+        "code": "service-category",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "The specific service (by coding) that is to be performed during this appointment",
+        "type": "token"
+      },
+      {
+        "code": "service-type-reference",
+        "description": "The specific service (by HealthcareService) that is to be performed during this appointment",
+        "type": "reference"
+      },
+      {
+        "code": "slot",
+        "description": "The slots that this appointment is filling",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "The overall status of the appointment",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "One of the individuals of the appointment is this patient",
+        "type": "reference"
+      },
+      {
+        "code": "supporting-info",
+        "description": "Additional information to support the appointment",
+        "type": "reference"
+      }
+    ],
+    "AuditEvent": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "action",
+        "description": "Type of action performed during the event",
+        "type": "token"
+      },
+      {
+        "code": "agent",
+        "description": "Identifier of who",
+        "type": "reference"
+      },
+      {
+        "code": "agent-role",
+        "description": "Agent role in the event",
+        "type": "token"
+      },
+      {
+        "code": "based-on",
+        "description": "What the activity was defined by",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Category of the event",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "More specific type/id for the event",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Time when the event was recorded",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter related to the activity",
+        "type": "reference"
+      },
+      {
+        "code": "entity",
+        "description": "Specific instance of resource involved",
+        "type": "reference"
+      },
+      {
+        "code": "entity-role",
+        "description": "Entity role in the event",
+        "type": "token"
+      },
+      {
+        "code": "outcome",
+        "description": "Whether the operation succeeded",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient for this audit event",
+        "type": "reference"
+      },
+      {
+        "code": "policy",
+        "description": "Policy that authorized event",
+        "type": "uri"
+      },
+      {
+        "code": "purpose",
+        "description": "The purposeOfUse of the event",
+        "type": "token"
+      },
+      {
+        "code": "source",
+        "description": "The identity of the source detecting the event",
+        "type": "reference"
+      }
+    ],
+    "Basic": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "author",
+        "description": "Who created the basic resource",
+        "type": "reference"
+      },
+      {
+        "code": "code",
+        "description": "Kind of Resource",
+        "type": "token"
+      },
+      {
+        "code": "created",
+        "description": "When created",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Identifies the focus of this resource (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "subject",
+        "description": "Identifies the focus of this resource",
+        "type": "reference"
+      }
+    ],
+    "BiologicallyDerivedProduct": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "biological-source-event",
+        "description": "The biological source for the biologically derived product",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "A code that identifies the kind of this biologically derived product",
+        "type": "token"
+      },
+      {
+        "code": "collector",
+        "description": "Who collected the product",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifier",
+        "type": "token"
+      },
+      {
+        "code": "product-category",
+        "description": "Broad category of this product",
+        "type": "token"
+      },
+      {
+        "code": "product-status",
+        "description": "Whether the product is currently available",
+        "type": "token"
+      },
+      {
+        "code": "request",
+        "description": "Procedure request to obtain this biologically derived product",
+        "type": "reference"
+      },
+      {
+        "code": "serial-number",
+        "description": "Identifier (serial number search alias)",
+        "type": "token"
+      }
+    ],
+    "BodyStructure": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "excluded_structure",
+        "description": "Body site excludedStructure structure",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Bodystructure identifier",
+        "type": "token"
+      },
+      {
+        "code": "included_structure",
+        "description": "Body site includedStructure structure",
+        "type": "token"
+      },
+      {
+        "code": "morphology",
+        "description": "Kind of Structure",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who this is about",
+        "type": "reference"
+      }
+    ],
+    "CarePlan": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "activity-reference",
+        "description": "Activity that is intended to be part of the care plan",
+        "type": "reference"
+      },
+      {
+        "code": "based-on",
+        "description": "Fulfills CarePlan",
+        "type": "reference"
+      },
+      {
+        "code": "care-team",
+        "description": "Who's involved in plan",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Type of plan",
+        "type": "token"
+      },
+      {
+        "code": "condition",
+        "description": "Condition addressed by this care plan (addresses.reference)",
+        "type": "reference"
+      },
+      {
+        "code": "custodian",
+        "description": "Who is the designated responsible party",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "Time period plan covers",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "The Encounter during which this CarePlan was created",
+        "type": "reference"
+      },
+      {
+        "code": "goal",
+        "description": "Desired outcome of plan",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "External Ids for this plan",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "Instantiates FHIR protocol or definition",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "Instantiates external protocol or definition",
+        "type": "uri"
+      },
+      {
+        "code": "intent",
+        "description": "proposal | plan | order | option | directive",
+        "type": "token"
+      },
+      {
+        "code": "part-of",
+        "description": "Part of referenced CarePlan",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Who the care plan is for (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "replaces",
+        "description": "CarePlan replaced by this CarePlan",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who the care plan is for",
+        "type": "reference"
+      }
+    ],
+    "CareTeam": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "category",
+        "description": "Type of team",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "A date within the coverage time period",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "External Ids for this team",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "Name of the team, such as crisis assessment team",
+        "type": "string"
+      },
+      {
+        "code": "participant",
+        "description": "Who is involved",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Who care team is for (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "proposed | active | suspended | inactive | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who care team is for",
+        "type": "reference"
+      }
+    ],
+    "ChargeItem": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "account",
+        "description": "Account to place this charge",
+        "type": "reference"
+      },
+      {
+        "code": "code",
+        "description": "A code that identifies the charge, like a billing code",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter associated with event",
+        "type": "reference"
+      },
+      {
+        "code": "entered-date",
+        "description": "Date the charge item was entered",
+        "type": "date"
+      },
+      {
+        "code": "enterer",
+        "description": "Individual who was entering",
+        "type": "reference"
+      },
+      {
+        "code": "factor-override",
+        "description": "Factor overriding the associated rules",
+        "type": "number"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier for item",
+        "type": "token"
+      },
+      {
+        "code": "occurrence",
+        "description": "When the charged service was applied",
+        "type": "date"
+      },
+      {
+        "code": "patient",
+        "description": "Individual service was done for/to (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "performer-actor",
+        "description": "Individual who was performing",
+        "type": "reference"
+      },
+      {
+        "code": "performer-function",
+        "description": "What type of performance was done",
+        "type": "token"
+      },
+      {
+        "code": "performing-organization",
+        "description": "Organization providing the charged service",
+        "type": "reference"
+      },
+      {
+        "code": "price-override",
+        "description": "Price overriding the associated rules",
+        "type": "quantity"
+      },
+      {
+        "code": "quantity",
+        "description": "Quantity of which the charge item has been serviced",
+        "type": "quantity"
+      },
+      {
+        "code": "requesting-organization",
+        "description": "Organization requesting the charged service",
+        "type": "reference"
+      },
+      {
+        "code": "service",
+        "description": "Which rendered service is being charged",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "planned | billable | not-billable | aborted | billed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Individual service was done for/to",
+        "type": "reference"
+      }
+    ],
+    "ChargeItemDefinition": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "context",
+        "description": "A use context assigned to the charge item definition",
+        "type": "token"
+      },
+      {
+        "code": "context-type",
+        "description": "A type of use context assigned to the charge item definition",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The charge item definition publication date",
+        "type": "date"
+      },
+      {
+        "code": "description",
+        "description": "Natural language description of the charge item definition",
+        "type": "string"
+      },
+      {
+        "code": "effective",
+        "description": "The time during which the charge item definition is intended to be in use",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifiers for the charge item definition",
+        "type": "token"
+      },
+      {
+        "code": "jurisdiction",
+        "description": "Intended jurisdiction for the charge item definition",
+        "type": "token"
+      },
+      {
+        "code": "publisher",
+        "description": "Name of the publisher of the charge item definition",
+        "type": "string"
+      },
+      {
+        "code": "status",
+        "description": "The current status of the charge item definition",
+        "type": "token"
+      },
+      {
+        "code": "title",
+        "description": "Name for this charge item definition (human friendly)",
+        "type": "string"
+      },
+      {
+        "code": "url",
+        "description": "The uri that identifies the charge item definition",
+        "type": "uri"
+      },
+      {
+        "code": "version",
+        "description": "The business version of the charge item definition",
+        "type": "token"
+      }
+    ],
+    "Claim": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "care-team",
+        "description": "Member of the CareTeam",
+        "type": "reference"
+      },
+      {
+        "code": "created",
+        "description": "The creation date for the Claim",
+        "type": "date"
+      },
+      {
+        "code": "detail-udi",
+        "description": "UDI associated with a line item, detail product or service",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounters associated with a billed line item",
+        "type": "reference"
+      },
+      {
+        "code": "enterer",
+        "description": "The party responsible for the entry of the Claim",
+        "type": "reference"
+      },
+      {
+        "code": "facility",
+        "description": "Facility where the products or services have been or will be provided",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The primary identifier of the financial resource",
+        "type": "token"
+      },
+      {
+        "code": "insurer",
+        "description": "The target payor/insurer for the Claim",
+        "type": "reference"
+      },
+      {
+        "code": "item-udi",
+        "description": "UDI associated with a line item product or service",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Patient receiving the products or services",
+        "type": "reference"
+      },
+      {
+        "code": "payee",
+        "description": "The party receiving any payment for the Claim",
+        "type": "reference"
+      },
+      {
+        "code": "priority",
+        "description": "Processing priority requested",
+        "type": "token"
+      },
+      {
+        "code": "procedure-udi",
+        "description": "UDI associated with a procedure",
+        "type": "reference"
+      },
+      {
+        "code": "provider",
+        "description": "Provider responsible for the Claim",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the Claim instance",
+        "type": "token"
+      },
+      {
+        "code": "subdetail-udi",
+        "description": "UDI associated with a line item, detail, subdetail product or service",
+        "type": "reference"
+      },
+      {
+        "code": "use",
+        "description": "The kind of financial resource",
+        "type": "token"
+      }
+    ],
+    "ClaimResponse": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "created",
+        "description": "The creation date",
+        "type": "date"
+      },
+      {
+        "code": "disposition",
+        "description": "The contents of the disposition message",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "The identity of the ClaimResponse",
+        "type": "token"
+      },
+      {
+        "code": "insurer",
+        "description": "The organization which generated this resource",
+        "type": "reference"
+      },
+      {
+        "code": "outcome",
+        "description": "The processing outcome",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The subject of care",
+        "type": "reference"
+      },
+      {
+        "code": "payment-date",
+        "description": "The expected payment date",
+        "type": "date"
+      },
+      {
+        "code": "request",
+        "description": "The claim reference",
+        "type": "reference"
+      },
+      {
+        "code": "requestor",
+        "description": "The Provider of the claim",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the ClaimResponse",
+        "type": "token"
+      },
+      {
+        "code": "use",
+        "description": "The type of claim",
+        "type": "token"
+      }
+    ],
+    "ClinicalImpression": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "date",
+        "description": "When the assessment was documented",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "The encounter during which this clinical impression was created",
+        "type": "reference"
+      },
+      {
+        "code": "finding-code",
+        "description": "Finding concept code",
+        "type": "token"
+      },
+      {
+        "code": "finding-ref",
+        "description": "Reference to a finding resource instance",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient assessed",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "The clinician performing the assessment",
+        "type": "reference"
+      },
+      {
+        "code": "previous",
+        "description": "Reference to last clinical impression assessment",
+        "type": "reference"
+      },
+      {
+        "code": "problem",
+        "description": "Relevant impressions of patient state",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Patient or group assessed",
+        "type": "reference"
+      },
+      {
+        "code": "supporting-info",
+        "description": "Information supporting the clinical impression",
+        "type": "reference"
+      }
+    ],
+    "Communication": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Request fulfilled by this communication",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Message category",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter created as part of",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Unique identifier",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "Instantiates FHIR protocol or definition",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "Instantiates external protocol or definition",
+        "type": "uri"
+      },
+      {
+        "code": "medium",
+        "description": "Communication medium",
+        "type": "token"
+      },
+      {
+        "code": "part-of",
+        "description": "Part of this action",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Focus of this communication when Patient",
+        "type": "reference"
+      },
+      {
+        "code": "received",
+        "description": "When received",
+        "type": "date"
+      },
+      {
+        "code": "recipient",
+        "description": "Message recipient",
+        "type": "reference"
+      },
+      {
+        "code": "sender",
+        "description": "Message sender",
+        "type": "reference"
+      },
+      {
+        "code": "sent",
+        "description": "When sent",
+        "type": "date"
+      },
+      {
+        "code": "status",
+        "description": "preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Focus of this communication",
+        "type": "reference"
+      },
+      {
+        "code": "topic",
+        "description": "Description of the purpose/content",
+        "type": "token"
+      }
+    ],
+    "Composition": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "attester",
+        "description": "Who attested the composition",
+        "type": "reference"
+      },
+      {
+        "code": "author",
+        "description": "Who and/or what authored the composition",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Categorization of Composition",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Composition editing time",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Context of the Composition",
+        "type": "reference"
+      },
+      {
+        "code": "entry",
+        "description": "A reference to data that is part of the composition",
+        "type": "reference"
+      },
+      {
+        "code": "event-code",
+        "description": "Code for the event the documentation is about",
+        "type": "token"
+      },
+      {
+        "code": "event-reference",
+        "description": "The event resource that the documentation is about",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Composition unique identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who and/or what the composition is about (Patient/*)",
+        "type": "reference"
+      },
+      {
+        "code": "period",
+        "description": "The period covered by the documentation",
+        "type": "date"
+      },
+      {
+        "code": "related",
+        "description": "Target of the relationship",
+        "type": "reference"
+      },
+      {
+        "code": "section",
+        "description": "Classification of section (recommended)",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "preliminary | final | amended | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who and/or what the composition is about",
+        "type": "reference"
+      },
+      {
+        "code": "title",
+        "description": "Human readable label",
+        "type": "string"
+      },
+      {
+        "code": "type",
+        "description": "Kind of composition (LOINC if possible)",
+        "type": "token"
+      },
+      {
+        "code": "url",
+        "description": "The logical URL of the composition",
+        "type": "uri"
+      },
+      {
+        "code": "version",
+        "description": "The business version of the composition",
+        "type": "token"
+      }
+    ],
+    "Condition": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "abatement-age",
+        "description": "Abatement as age or age range",
+        "type": "quantity"
+      },
+      {
+        "code": "abatement-date",
+        "description": "Date-related abatements (dateTime and Period variants)",
+        "type": "date"
+      },
+      {
+        "code": "abatement-string",
+        "description": "Abatement as a string (Condition.abatement.ofType(string))",
+        "type": "string"
+      },
+      {
+        "code": "body-site",
+        "description": "Anatomical location, if relevant",
+        "type": "token"
+      },
+      {
+        "code": "category",
+        "description": "The category of the condition",
+        "type": "token"
+      },
+      {
+        "code": "clinical-status",
+        "description": "The clinical status of the condition",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Code for the condition (Condition.code)",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "The Encounter during which this Condition was created",
+        "type": "reference"
+      },
+      {
+        "code": "evidence",
+        "description": "Manifestation/symptom (Condition.evidence.concept)",
+        "type": "token"
+      },
+      {
+        "code": "evidence-detail",
+        "description": "Supporting information found elsewhere (Condition.evidence.reference)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "A unique identifier of the condition record",
+        "type": "token"
+      },
+      {
+        "code": "onset-age",
+        "description": "Onsets as age or age range",
+        "type": "quantity"
+      },
+      {
+        "code": "onset-date",
+        "description": "Date-related onsets (dateTime and Period variants)",
+        "type": "date"
+      },
+      {
+        "code": "onset-info",
+        "description": "Onsets as a string (Condition.onset.ofType(string))",
+        "type": "string"
+      },
+      {
+        "code": "participant-actor",
+        "description": "Who or what participated in activities related to the condition",
+        "type": "reference"
+      },
+      {
+        "code": "participant-function",
+        "description": "Type of involvement of the actor in activities related to the condition",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who has the condition? (subject when resolved as Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "recorded-date",
+        "description": "Date record was first recorded (Condition.recordedDate)",
+        "type": "date"
+      },
+      {
+        "code": "severity",
+        "description": "The severity of the condition",
+        "type": "token"
+      },
+      {
+        "code": "stage",
+        "description": "Simple summary (disease specific) \u2014 Condition.stage.summary",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who has the condition? (Patient or Group)",
+        "type": "reference"
+      },
+      {
+        "code": "verification-status",
+        "description": "unconfirmed | provisional | differential | confirmed | refuted | entered-in-error",
+        "type": "token"
+      }
+    ],
+    "Consent": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "action",
+        "description": "Action controlled by this provision",
+        "type": "token"
+      },
+      {
+        "code": "actor",
+        "description": "Who is granting rights (provision.actor.reference)",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Classification of the consent statement",
+        "type": "token"
+      },
+      {
+        "code": "controller",
+        "description": "Consent Enforcer",
+        "type": "reference"
+      },
+      {
+        "code": "data",
+        "description": "Data that is controlled by this provision",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "When this Consent was created or indexed",
+        "type": "date"
+      },
+      {
+        "code": "grantee",
+        "description": "Who is agreeing to the policy",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifier for this record",
+        "type": "token"
+      },
+      {
+        "code": "manager",
+        "description": "Consent workflow management",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Who the consent applies to (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "period",
+        "description": "Timeframe for this rule (provision.period)",
+        "type": "date"
+      },
+      {
+        "code": "purpose",
+        "description": "Context of activities covered by this provision",
+        "type": "token"
+      },
+      {
+        "code": "security-label",
+        "description": "Security Labels that apply to this provision",
+        "type": "token"
+      },
+      {
+        "code": "source-reference",
+        "description": "Source from which this consent is taken",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "draft | active | inactive | not-done | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who the consent applies to",
+        "type": "reference"
+      },
+      {
+        "code": "verified",
+        "description": "Whether verification was performed",
+        "type": "token"
+      },
+      {
+        "code": "verified-date",
+        "description": "When consent was verified",
+        "type": "date"
+      }
+    ],
+    "Contract": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "authority",
+        "description": "Authority with whom this contract is associated",
+        "type": "reference"
+      },
+      {
+        "code": "domain",
+        "description": "Domain in which this contract applies",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Contract number",
+        "type": "token"
+      },
+      {
+        "code": "instantiates",
+        "description": "Source for Contract template",
+        "type": "uri"
+      },
+      {
+        "code": "issued",
+        "description": "When this contract was issued",
+        "type": "date"
+      },
+      {
+        "code": "patient",
+        "description": "The patient bound to the contract (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "signer",
+        "description": "Contract Signatory party",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "amended | appended | cancelled | disputed | entered-in-error | executable | executed | negotiable | offered | policy | rejected | renewed | revoked | resolved |",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of the subject of the contract",
+        "type": "reference"
+      },
+      {
+        "code": "url",
+        "description": "Computer friendly representation",
+        "type": "uri"
+      }
+    ],
+    "Coverage": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "beneficiary",
+        "description": "Covered party",
+        "type": "reference"
+      },
+      {
+        "code": "class-type",
+        "description": "Coverage class (e.g. plan, group)",
+        "type": "token"
+      },
+      {
+        "code": "class-value",
+        "description": "Value of the class (e.g. plan number, group number)",
+        "type": "token"
+      },
+      {
+        "code": "dependent",
+        "description": "Dependent number",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "The primary identifier of the insured and the coverage",
+        "type": "token"
+      },
+      {
+        "code": "insurer",
+        "description": "The identity of the insurer",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Retrieve coverages for a patient (alias for beneficiary)",
+        "type": "reference"
+      },
+      {
+        "code": "paymentby-party",
+        "description": "Parties who will pay for services",
+        "type": "reference"
+      },
+      {
+        "code": "policy-holder",
+        "description": "Reference to the policyholder",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "active | cancelled | draft | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subscriber",
+        "description": "Reference to the subscriber",
+        "type": "reference"
+      },
+      {
+        "code": "subscriberid",
+        "description": "Identifier of the subscriber",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
+        "type": "token"
+      }
+    ],
+    "CoverageEligibilityRequest": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "created",
+        "description": "The creation date for the request",
+        "type": "date"
+      },
+      {
+        "code": "enterer",
+        "description": "The party who entered the request",
+        "type": "reference"
+      },
+      {
+        "code": "facility",
+        "description": "Facility where services are intended to be provided",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier of the eligibility request",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient for whom eligibility is requested",
+        "type": "reference"
+      },
+      {
+        "code": "provider",
+        "description": "The practitioner or organization provider",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the eligibility request",
+        "type": "token"
+      }
+    ],
+    "CoverageEligibilityResponse": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "created",
+        "description": "The creation date for the response",
+        "type": "date"
+      },
+      {
+        "code": "disposition",
+        "description": "A description of the status of the adjudication",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier of the eligibility response",
+        "type": "token"
+      },
+      {
+        "code": "insurer",
+        "description": "The organization responsible for the response",
+        "type": "reference"
+      },
+      {
+        "code": "outcome",
+        "description": "The outcome of the eligibility assessment",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient for whom eligibility is assessed",
+        "type": "reference"
+      },
+      {
+        "code": "request",
+        "description": "The eligibility request this is a response to",
+        "type": "reference"
+      },
+      {
+        "code": "requestor",
+        "description": "The party who submitted the original request",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the eligibility response",
+        "type": "token"
+      }
+    ],
+    "DetectedIssue": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "author",
+        "description": "The provider or device that identified the issue",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Issue category, e.g. drug-drug, duplicate therapy",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Issue type, e.g. drug-drug, duplicate therapy",
+        "type": "token"
+      },
+      {
+        "code": "identified",
+        "description": "When identified",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Unique id for the detected issue",
+        "type": "token"
+      },
+      {
+        "code": "implicated",
+        "description": "Problem resource",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Associated patient",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "preliminary | final | entered-in-error | mitigated",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Associated subject",
+        "type": "reference"
+      }
+    ],
+    "Device": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "biological-source-event",
+        "description": "The biological source for the device (Device.biologicalSourceEvent \u2014 single Identifier)",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "The definition / type of the device, by code\n(Device.definition.concept). Targets the CodeableConcept side\nof the R5 CodeableReference; the Reference side is se",
+        "type": "token"
+      },
+      {
+        "code": "definition",
+        "description": "The definition / type of the device (Device.definition.reference).\nTargets the Reference side of the R5 CodeableReference. The\n`code` parameter targets the Code",
+        "type": "reference"
+      },
+      {
+        "code": "device-name",
+        "description": "A server defined search that may match any of the string fields in\nDevice.name or Device.type. FHIR R5 expression:\n`Device.name.value | Device.type.coding.displ",
+        "type": "string"
+      },
+      {
+        "code": "expiration-date",
+        "description": "The expiration date of the device (Device.expirationDate)",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Instance id from manufacturer, owner, and others (Device.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "A location, where the resource is found (Device.location)",
+        "type": "reference"
+      },
+      {
+        "code": "lot-number",
+        "description": "The lot number of the device (Device.lotNumber)",
+        "type": "string"
+      },
+      {
+        "code": "manufacture-date",
+        "description": "The manufacture date of the device (Device.manufactureDate)",
+        "type": "date"
+      },
+      {
+        "code": "manufacturer",
+        "description": "The manufacturer of the device (Device.manufacturer)",
+        "type": "string"
+      },
+      {
+        "code": "model",
+        "description": "The model of the device (Device.modelNumber)",
+        "type": "string"
+      },
+      {
+        "code": "organization",
+        "description": "The organization responsible for the device (Device.owner)",
+        "type": "reference"
+      },
+      {
+        "code": "parent",
+        "description": "The parent device (Device.parent) \u2014 recursive reference to another Device",
+        "type": "reference"
+      },
+      {
+        "code": "serial-number",
+        "description": "The serial number of the device. FHIR R5 expression:\n`Device.serialNumber | Device.identifier.where(type='SNO')` \u2014\na path union over the top-level scalar AND an",
+        "type": "string"
+      },
+      {
+        "code": "specification",
+        "description": "The standards, specifications, or formal guidances (Device.conformsTo.specification)",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "Device status: `active | inactive | entered-in-error | unknown`\n(Device.status). Top-level scalar code \u2014 same shape as\nAppointment.status.\n",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "The type of the device (Device.type \u2014 CodeableConcept[])",
+        "type": "token"
+      },
+      {
+        "code": "udi-carrier",
+        "description": "UDI Barcode (RFID or other technology) string in HRF format (Device.udiCarrier.carrierHRF)",
+        "type": "string"
+      },
+      {
+        "code": "udi-di",
+        "description": "The udi Device Identifier (DI) (Device.udiCarrier.deviceIdentifier)",
+        "type": "string"
+      },
+      {
+        "code": "url",
+        "description": "Network address to contact device (Device.url)",
+        "type": "uri"
+      },
+      {
+        "code": "version",
+        "description": "The specific version of the device (Device.version.value)",
+        "type": "string"
+      }
+    ],
+    "DeviceDispense": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "code",
+        "description": "Search for devices that match this code",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "The identifier of the dispense",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Returns device dispenses for a specific patient",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the dispense",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a patient for whom to list dispenses",
+        "type": "reference"
+      }
+    ],
+    "DeviceRequest": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "authored-on",
+        "description": "When the request transitioned to being actionable",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Plan/proposal/order fulfilled by this request",
+        "type": "reference"
+      },
+      {
+        "code": "code",
+        "description": "Code for what is being requested/ordered",
+        "type": "token"
+      },
+      {
+        "code": "device",
+        "description": "Reference to resource that is being requested/ordered",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter during which request was created",
+        "type": "reference"
+      },
+      {
+        "code": "event-date",
+        "description": "When service should occur",
+        "type": "date"
+      },
+      {
+        "code": "group-identifier",
+        "description": "Composite request this is part of",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier for request/order",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "Instantiates FHIR protocol or definition",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "Instantiates external protocol or definition",
+        "type": "uri"
+      },
+      {
+        "code": "insurance",
+        "description": "Associated insurance coverage",
+        "type": "reference"
+      },
+      {
+        "code": "intent",
+        "description": "proposal | plan | original-order | reflex-order",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Individual the service is ordered for",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Desired performer for service",
+        "type": "reference"
+      },
+      {
+        "code": "performer-code",
+        "description": "Desired performer for service (concept arm)",
+        "type": "token"
+      },
+      {
+        "code": "prior-request",
+        "description": "Request takes the place of referenced completed or terminated requests",
+        "type": "reference"
+      },
+      {
+        "code": "requester",
+        "description": "Who/what is requesting service",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "entered-in-error | draft | active | suspended | completed",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Search by subject",
+        "type": "reference"
+      }
+    ],
+    "DeviceUsage": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "device",
+        "description": "Search by device (concept arm of CodeableReference)",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Search by identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Search by patient who used / uses the device",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the device usage",
+        "type": "token"
+      }
+    ],
+    "DiagnosticReport": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Reference to the service request",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Which diagnostic discipline/department created the report",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "The code for the report (as opposed to atomic result codes)",
+        "type": "token"
+      },
+      {
+        "code": "conclusion",
+        "description": "A coded conclusion (interpretation/impression) on the report",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The clinically relevant time of the report",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "The Encounter when the order was made",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "An identifier for the report",
+        "type": "token"
+      },
+      {
+        "code": "issued",
+        "description": "When the report was issued",
+        "type": "date"
+      },
+      {
+        "code": "media",
+        "description": "A reference to the image source",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The subject of the report if a patient",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Who is responsible for the report",
+        "type": "reference"
+      },
+      {
+        "code": "result",
+        "description": "Link to an atomic result (observation resource)",
+        "type": "reference"
+      },
+      {
+        "code": "results-interpreter",
+        "description": "Who was the source of the report",
+        "type": "reference"
+      },
+      {
+        "code": "specimen",
+        "description": "The specimen details",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "registered | partial | preliminary | final | amended | corrected | appended | cancelled | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "study",
+        "description": "Studies associated with the diagnostic report",
+        "type": "reference"
+      },
+      {
+        "code": "subject",
+        "description": "The subject of the report",
+        "type": "reference"
+      }
+    ],
+    "DocumentReference": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "attester",
+        "description": "Who attested the document",
+        "type": "reference"
+      },
+      {
+        "code": "author",
+        "description": "Who and/or what authored the document",
+        "type": "reference"
+      },
+      {
+        "code": "based-on",
+        "description": "Procedure that caused this document",
+        "type": "reference"
+      },
+      {
+        "code": "bodysite",
+        "description": "Target body site concept",
+        "type": "token"
+      },
+      {
+        "code": "bodysite-reference",
+        "description": "Target body site reference",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Categorization of document",
+        "type": "token"
+      },
+      {
+        "code": "contenttype",
+        "description": "Mime type of the attachment",
+        "type": "token"
+      },
+      {
+        "code": "context",
+        "description": "Context of the document content",
+        "type": "reference"
+      },
+      {
+        "code": "creation",
+        "description": "When the document was created",
+        "type": "date"
+      },
+      {
+        "code": "custodian",
+        "description": "Organization which maintains the document",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "When this document reference was created",
+        "type": "date"
+      },
+      {
+        "code": "description",
+        "description": "Human-readable description",
+        "type": "string"
+      },
+      {
+        "code": "doc-status",
+        "description": "preliminary | final | amended | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "event-code",
+        "description": "Related event concept",
+        "type": "token"
+      },
+      {
+        "code": "event-reference",
+        "description": "Related event resource",
+        "type": "reference"
+      },
+      {
+        "code": "facility",
+        "description": "Kind of facility where patient was seen",
+        "type": "token"
+      },
+      {
+        "code": "format-canonical",
+        "description": "Profile canonical content rules for the document",
+        "type": "reference"
+      },
+      {
+        "code": "format-code",
+        "description": "Format code content rules for the document",
+        "type": "token"
+      },
+      {
+        "code": "format-uri",
+        "description": "Profile URI content rules for the document",
+        "type": "uri"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifier of the attachment binary",
+        "type": "token"
+      },
+      {
+        "code": "language",
+        "description": "Human language of the content (BCP-47)",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "Uri where the data can be found",
+        "type": "uri"
+      },
+      {
+        "code": "modality",
+        "description": "The modality used",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who/what is the subject of the document (Patient/*)",
+        "type": "reference"
+      },
+      {
+        "code": "period",
+        "description": "Time of service that is being documented",
+        "type": "date"
+      },
+      {
+        "code": "relatesto",
+        "description": "Target of the relationship",
+        "type": "reference"
+      },
+      {
+        "code": "relation",
+        "description": "replaces | transforms | signs | appends",
+        "type": "token"
+      },
+      {
+        "code": "security-label",
+        "description": "Document security-tags",
+        "type": "token"
+      },
+      {
+        "code": "setting",
+        "description": "Additional details about where content was created",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "current | superseded | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who/what is the subject of the document",
+        "type": "reference"
+      },
+      {
+        "code": "type",
+        "description": "Kind of document (LOINC if possible)",
+        "type": "token"
+      },
+      {
+        "code": "version",
+        "description": "The business version identifier",
+        "type": "string"
+      }
+    ],
+    "Encounter": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "account",
+        "description": "The set of accounts that may be used for billing for this Encounter",
+        "type": "reference"
+      },
+      {
+        "code": "appointment",
+        "description": "The appointment that scheduled this encounter",
+        "type": "reference"
+      },
+      {
+        "code": "based-on",
+        "description": "The ServiceRequest that initiated this encounter",
+        "type": "reference"
+      },
+      {
+        "code": "careteam",
+        "description": "Careteam allocated to participate in the encounter",
+        "type": "reference"
+      },
+      {
+        "code": "class",
+        "description": "Classification of patient encounter",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "A date within the actualPeriod the Encounter lasted",
+        "type": "date"
+      },
+      {
+        "code": "date-start",
+        "description": "The actual start date of the Encounter",
+        "type": "date"
+      },
+      {
+        "code": "diagnosis-code",
+        "description": "The diagnosis or procedure relevant to the encounter (coded)",
+        "type": "token"
+      },
+      {
+        "code": "diagnosis-reference",
+        "description": "The diagnosis or procedure relevant to the encounter (resource reference)",
+        "type": "reference"
+      },
+      {
+        "code": "end-date",
+        "description": "The actual end date of the Encounter",
+        "type": "date"
+      },
+      {
+        "code": "episode-of-care",
+        "description": "Episode(s) of care that this encounter should be recorded against",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifier(s) by which this encounter is known",
+        "type": "token"
+      },
+      {
+        "code": "length",
+        "description": "Length of encounter in days",
+        "type": "quantity"
+      },
+      {
+        "code": "location",
+        "description": "Location the encounter takes place",
+        "type": "reference"
+      },
+      {
+        "code": "part-of",
+        "description": "Another Encounter this encounter is part of",
+        "type": "reference"
+      },
+      {
+        "code": "participant",
+        "description": "Persons involved in the encounter other than the patient",
+        "type": "reference"
+      },
+      {
+        "code": "participant-type",
+        "description": "Role of participant in encounter",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient present at the encounter",
+        "type": "reference"
+      },
+      {
+        "code": "practitioner",
+        "description": "Practitioner participant in the encounter",
+        "type": "reference"
+      },
+      {
+        "code": "reason-code",
+        "description": "Reference to a concept (by class)",
+        "type": "token"
+      },
+      {
+        "code": "reason-reference",
+        "description": "Reference to a resource (by instance)",
+        "type": "reference"
+      },
+      {
+        "code": "service-provider",
+        "description": "The organization (facility) responsible for this encounter",
+        "type": "reference"
+      },
+      {
+        "code": "special-arrangement",
+        "description": "Wheelchair, translator, stretcher, etc.",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "planned | in-progress | on-hold | completed | cancelled | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The patient or group present at the encounter",
+        "type": "reference"
+      },
+      {
+        "code": "subject-status",
+        "description": "The current status of the subject in relation to the Encounter",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "Specific type of encounter",
+        "type": "token"
+      }
+    ],
+    "Endpoint": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "connection-type",
+        "description": "Protocol/Profile/Standard to be used with this endpoint",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifies this endpoint across multiple systems",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A name that this endpoint can be identified by",
+        "type": "string"
+      },
+      {
+        "code": "organization",
+        "description": "Organization that manages this endpoint",
+        "type": "reference"
+      },
+      {
+        "code": "payload-type",
+        "description": "The type of content that may be used at this endpoint",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "active | suspended | error | off | entered-in-error",
+        "type": "token"
+      }
+    ],
+    "EnrollmentRequest": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier of the EnrollmentRequest",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The subject being enrolled (Patient candidate)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the enrollment request",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The subject being enrolled",
+        "type": "reference"
+      }
+    ],
+    "EnrollmentResponse": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier of the EnrollmentResponse",
+        "type": "token"
+      },
+      {
+        "code": "request",
+        "description": "The enrollment request being responded to",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the enrollment response",
+        "type": "token"
+      }
+    ],
+    "EpisodeOfCare": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "care-manager",
+        "description": "Care manager Practitioner for this episode",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "A date within the period the episode covers",
+        "type": "date"
+      },
+      {
+        "code": "diagnosis-code",
+        "description": "Diagnosis coded concept for this episode",
+        "type": "token"
+      },
+      {
+        "code": "diagnosis-reference",
+        "description": "Diagnosis Condition reference for this episode",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier for this episode",
+        "type": "token"
+      },
+      {
+        "code": "incoming-referral",
+        "description": "Incoming ServiceRequest referral for this episode",
+        "type": "reference"
+      },
+      {
+        "code": "organization",
+        "description": "Organization that manages this episode",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The patient who this episode applies to",
+        "type": "reference"
+      },
+      {
+        "code": "reason-code",
+        "description": "Reason coded concept for this episode",
+        "type": "token"
+      },
+      {
+        "code": "reason-reference",
+        "description": "Reference to a resource (by instance) for the reason",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "planned | waitlist | active | onhold | finished | cancelled | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "Type/class of the episode",
+        "type": "token"
+      }
+    ],
+    "ExplanationOfBenefit": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "care-team",
+        "description": "Member of the CareTeam",
+        "type": "reference"
+      },
+      {
+        "code": "claim",
+        "description": "Claim reference",
+        "type": "reference"
+      },
+      {
+        "code": "coverage",
+        "description": "Insurance information",
+        "type": "reference"
+      },
+      {
+        "code": "created",
+        "description": "The creation date for the ExplanationOfBenefit",
+        "type": "date"
+      },
+      {
+        "code": "detail-udi",
+        "description": "UDI associated with a line item detail",
+        "type": "reference"
+      },
+      {
+        "code": "disposition",
+        "description": "Disposition Message",
+        "type": "string"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounters associated with a billed line item",
+        "type": "reference"
+      },
+      {
+        "code": "enterer",
+        "description": "The party responsible for the entry",
+        "type": "reference"
+      },
+      {
+        "code": "facility",
+        "description": "Facility where services were provided",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier of the EOB",
+        "type": "token"
+      },
+      {
+        "code": "item-udi",
+        "description": "UDI associated with a line item",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The reference to the patient",
+        "type": "reference"
+      },
+      {
+        "code": "payee",
+        "description": "The party receiving any payment",
+        "type": "reference"
+      },
+      {
+        "code": "procedure-udi",
+        "description": "UDI associated with a procedure",
+        "type": "reference"
+      },
+      {
+        "code": "provider",
+        "description": "The reference to the provider",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the EOB instance",
+        "type": "token"
+      },
+      {
+        "code": "subdetail-udi",
+        "description": "UDI associated with a line item subdetail",
+        "type": "reference"
+      }
+    ],
+    "FamilyMemberHistory": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "code",
+        "description": "A search by a condition code",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "When history was recorded or last updated",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "A search by a record identifier",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "Instantiates FHIR protocol or definition",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "Instantiates external protocol or definition",
+        "type": "uri"
+      },
+      {
+        "code": "patient",
+        "description": "The patient whose family member history is recorded",
+        "type": "reference"
+      },
+      {
+        "code": "relationship",
+        "description": "A search by a relationship type",
+        "type": "token"
+      },
+      {
+        "code": "sex",
+        "description": "A search by a sex code of a family member",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "partial | completed | entered-in-error | health-unknown",
+        "type": "token"
+      }
+    ],
+    "Flag": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "author",
+        "description": "Flag creator",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Category of flag",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Time period when flag is active",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter associated with this flag",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a subject for whom the flag holds (Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "active | inactive | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a subject for whom the flag holds",
+        "type": "reference"
+      }
+    ],
+    "GenomicStudy": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "focus",
+        "description": "What the genomic study analysis is about, when it is not about the subject of record",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifiers for the Study",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who the study is about (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the study",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who the study is about",
+        "type": "reference"
+      }
+    ],
+    "Goal": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "achievement-status",
+        "description": "in-progress | improving | worsening | no-change | achieved | sustaining | not-achieved | no-progress | not-attainable",
+        "type": "token"
+      },
+      {
+        "code": "addresses",
+        "description": "Issues addressed by this goal",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "E.g. Treatment, dietary, behavioral, etc.",
+        "type": "token"
+      },
+      {
+        "code": "description",
+        "description": "Code or text describing goal",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "External Ids for this goal",
+        "type": "token"
+      },
+      {
+        "code": "lifecycle-status",
+        "description": "proposed | planned | accepted | active | on-hold | completed | cancelled | entered-in-error | rejected",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who this goal is intended for (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "start-date",
+        "description": "When goal pursuit begins",
+        "type": "date"
+      },
+      {
+        "code": "subject",
+        "description": "Who this goal is intended for",
+        "type": "reference"
+      },
+      {
+        "code": "target-date",
+        "description": "Reach goal on or before",
+        "type": "date"
+      },
+      {
+        "code": "target-measure",
+        "description": "The parameter whose value is being tracked",
+        "type": "token"
+      }
+    ],
+    "Group": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "characteristic",
+        "description": "Kind of characteristic (Group.characteristic.code \u2014 a\nCodeableConcept identifying the trait). Often paired with the\ncomposite `characteristic-value` parameter, ",
+        "type": "token"
+      },
+      {
+        "code": "characteristic-reference",
+        "description": "An entity referenced in a characteristic\n(Group.characteristic.value.ofType(Reference)). Targets the\nReference variant of the polymorphic `value[x]` \u2014 the\nCodea",
+        "type": "reference"
+      },
+      {
+        "code": "code",
+        "description": "The kind of resources contained (Group.code \u2014 a CodeableConcept\ndescribing what the group is *of*, e.g. a SNOMED code for\n\"diabetic patients\"). Distinct from `t",
+        "type": "token"
+      },
+      {
+        "code": "exclude",
+        "description": "Group includes or excludes (Group.characteristic.exclude \u2014 a\nboolean per characteristic entry). Searched as a token over the\nnative boolean; only the bare-value",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Unique id (Group.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "managing-entity",
+        "description": "Entity that is the custodian of the Group's definition\n(Group.managingEntity). Targets Organization, RelatedPerson,\nPractitionerRole, or Practitioner per R5.\n",
+        "type": "reference"
+      },
+      {
+        "code": "member",
+        "description": "Reference to the group member (Group.member.entity). Targets\nANY of HealthcareService, CareTeam, Device, Organization,\nRelatedPerson, PractitionerRole, Group, P",
+        "type": "reference"
+      },
+      {
+        "code": "membership",
+        "description": "Definitional or enumerated group (Group.membership). Top-level\nscalar code with R5 fixed bindings:\n`definitional | enumerated`.\n",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the Group's name (Group.name)",
+        "type": "string"
+      },
+      {
+        "code": "type",
+        "description": "The type of resources the group contains (Group.type). Top-level\nscalar code with R5 fixed bindings: `person | animal |\npractitioner | device | careteam | healt",
+        "type": "token"
+      }
+    ],
+    "HealthcareService": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the healthcare service record is active",
+        "type": "token"
+      },
+      {
+        "code": "characteristic",
+        "description": "One of the characteristics of the service",
+        "type": "token"
+      },
+      {
+        "code": "communication",
+        "description": "Language(s) that may be used in communication",
+        "type": "token"
+      },
+      {
+        "code": "coverage-area",
+        "description": "Location(s) covered by this service",
+        "type": "reference"
+      },
+      {
+        "code": "eligibility",
+        "description": "Eligibility code for this service",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to this service",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifiers for this service",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "Location(s) where this service is provided",
+        "type": "reference"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the healthcare service name",
+        "type": "string"
+      },
+      {
+        "code": "offered-in",
+        "description": "The service within which this service is offered",
+        "type": "reference"
+      },
+      {
+        "code": "organization",
+        "description": "Organization that provides this service",
+        "type": "reference"
+      },
+      {
+        "code": "program",
+        "description": "Program(s) that this service is part of",
+        "type": "token"
+      },
+      {
+        "code": "service-category",
+        "description": "Service category (HealthcareService.category)",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "Service type (HealthcareService.type)",
+        "type": "token"
+      },
+      {
+        "code": "specialty",
+        "description": "Specialties available at this service",
+        "type": "token"
+      }
+    ],
+    "ImagingStudy": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "The order for the image (e.g. ServiceRequest)",
+        "type": "reference"
+      },
+      {
+        "code": "body-site",
+        "description": "The body site code studied",
+        "type": "token"
+      },
+      {
+        "code": "body-structure",
+        "description": "The body structure resource associated with the study",
+        "type": "reference"
+      },
+      {
+        "code": "dicom-class",
+        "description": "The type of the instance (SOP class)",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "The context of the study",
+        "type": "reference"
+      },
+      {
+        "code": "endpoint",
+        "description": "The endpoint for the study or series",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Identifiers for the study (e.g. DICOM Study Instance UID)",
+        "type": "token"
+      },
+      {
+        "code": "instance",
+        "description": "SOP Instance UID for an instance",
+        "type": "token"
+      },
+      {
+        "code": "modality",
+        "description": "The modality of the series",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who the study is about (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "The person or device who performed the study",
+        "type": "reference"
+      },
+      {
+        "code": "reason",
+        "description": "The reason for the study",
+        "type": "token"
+      },
+      {
+        "code": "referrer",
+        "description": "The referring physician",
+        "type": "reference"
+      },
+      {
+        "code": "series",
+        "description": "DICOM Series Instance UID for a series",
+        "type": "token"
+      },
+      {
+        "code": "started",
+        "description": "When the study was started",
+        "type": "date"
+      },
+      {
+        "code": "status",
+        "description": "registered | available | cancelled | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who the study is about",
+        "type": "reference"
+      }
+    ],
+    "Immunization": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "date",
+        "description": "Vaccination (non)-Administration Date",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "The service delivery location or facility",
+        "type": "reference"
+      },
+      {
+        "code": "lot-number",
+        "description": "Vaccine Lot Number",
+        "type": "string"
+      },
+      {
+        "code": "manufacturer",
+        "description": "Vaccine Manufacturer (Organization reference)",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The patient for the vaccination record",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Who played a role in the vaccination",
+        "type": "reference"
+      },
+      {
+        "code": "reaction",
+        "description": "Additional information on reaction (manifestation.reference)",
+        "type": "reference"
+      },
+      {
+        "code": "reaction-date",
+        "description": "When reaction started",
+        "type": "date"
+      },
+      {
+        "code": "reason-code",
+        "description": "Reason why the vaccine was administered",
+        "type": "token"
+      },
+      {
+        "code": "reason-reference",
+        "description": "Reference to a resource (by instance)",
+        "type": "reference"
+      },
+      {
+        "code": "series",
+        "description": "The series being followed by the provider",
+        "type": "string"
+      },
+      {
+        "code": "status",
+        "description": "completed | entered-in-error | not-done",
+        "type": "token"
+      },
+      {
+        "code": "status-reason",
+        "description": "Reason why the vaccine was not administered",
+        "type": "token"
+      },
+      {
+        "code": "target-disease",
+        "description": "The target disease the dose is being administered against",
+        "type": "token"
+      },
+      {
+        "code": "vaccine-code",
+        "description": "Vaccine Product Administered",
+        "type": "token"
+      }
+    ],
+    "ImmunizationRecommendation": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "date",
+        "description": "Date recommendation(s) created",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier",
+        "type": "token"
+      },
+      {
+        "code": "information",
+        "description": "Patient observations supporting recommendation",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Who this profile is for",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Vaccine recommendation status",
+        "type": "token"
+      },
+      {
+        "code": "support",
+        "description": "Past immunizations supporting recommendation",
+        "type": "reference"
+      },
+      {
+        "code": "target-disease",
+        "description": "Disease to be immunized against",
+        "type": "token"
+      },
+      {
+        "code": "vaccine-type",
+        "description": "Vaccine or vaccine group recommendation applies to",
+        "type": "token"
+      }
+    ],
+    "InsurancePlan": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that matches any address field",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address",
+        "type": "token"
+      },
+      {
+        "code": "administered-by",
+        "description": "Product administrator",
+        "type": "reference"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoint",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business Identifier for the plan",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the insurance plan's name or alias",
+        "type": "string"
+      },
+      {
+        "code": "owned-by",
+        "description": "Product issuer",
+        "type": "reference"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of the insurance plan's name using Soundex",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "The status of the insurance plan",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "Type of plan",
+        "type": "token"
+      }
+    ],
+    "Invoice": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "account",
+        "description": "Account that is being balanced",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "Invoice date / posting date",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Business Identifier for item",
+        "type": "token"
+      },
+      {
+        "code": "issuer",
+        "description": "Issuing Organization of Invoice",
+        "type": "reference"
+      },
+      {
+        "code": "participant",
+        "description": "Individual who was involved",
+        "type": "reference"
+      },
+      {
+        "code": "participant-role",
+        "description": "Type of involvement in creation of this Invoice",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Recipient(s) of goods and services (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "recipient",
+        "description": "Recipient of this invoice",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "draft | issued | balanced | cancelled | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Recipient(s) of goods and services",
+        "type": "reference"
+      },
+      {
+        "code": "totalgross",
+        "description": "Gross total of this Invoice",
+        "type": "quantity"
+      },
+      {
+        "code": "totalnet",
+        "description": "Net total of this Invoice",
+        "type": "quantity"
+      },
+      {
+        "code": "type",
+        "description": "Type of Invoice",
+        "type": "token"
+      }
+    ],
+    "Location": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "address",
+        "description": "A (part of the) address of the location (Location.address)",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address (Location.address.city)",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address (Location.address.country)",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address (Location.address.postalCode)",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address (Location.address.state)",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address (Location.address.use)",
+        "type": "token"
+      },
+      {
+        "code": "characteristic",
+        "description": "One of the Location's characteristics (Location.characteristic[*].coding)",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for the location (Location.endpoint -> Endpoint)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "An identifier for the location (Location.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the location's name or alias. Per FHIR R5 the spec\nexpression is `Location.name | Location.alias`, so this parameter\nranges over BOTH the canonical",
+        "type": "string"
+      },
+      {
+        "code": "operational-status",
+        "description": "Searches for locations (typically bed/room) that have an\noperational status (e.g. contaminated, housekeeping). The R5\nelement is a single Coding (NOT a Codeable",
+        "type": "token"
+      },
+      {
+        "code": "organization",
+        "description": "Searches for locations that are managed by the provided organization (Location.managingOrganization -> Organization)",
+        "type": "reference"
+      },
+      {
+        "code": "partof",
+        "description": "A location of which this location is a part (Location.partOf -> Location)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Searches for locations with a specific kind of status (Location.status)",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "A code for the type of location (Location.type[*].coding)",
+        "type": "token"
+      }
+    ],
+    "Measure": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "composed-of",
+        "description": "What resource is being referenced (composed-of relatedArtifact)",
+        "type": "reference"
+      },
+      {
+        "code": "context",
+        "description": "A use context assigned to the measure",
+        "type": "token"
+      },
+      {
+        "code": "context-type",
+        "description": "A type of use context assigned to the measure",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The measure publication date",
+        "type": "date"
+      },
+      {
+        "code": "depends-on",
+        "description": "What resource is being referenced (depends-on relatedArtifact or library)",
+        "type": "reference"
+      },
+      {
+        "code": "derived-from",
+        "description": "What resource is being referenced (derived-from relatedArtifact)",
+        "type": "reference"
+      },
+      {
+        "code": "description",
+        "description": "Natural language description of the measure",
+        "type": "string"
+      },
+      {
+        "code": "effective",
+        "description": "The time during which the measure is intended to be in use",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifiers for the measure",
+        "type": "token"
+      },
+      {
+        "code": "jurisdiction",
+        "description": "Intended jurisdiction for the measure",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "Name for this measure (computer friendly)",
+        "type": "string"
+      },
+      {
+        "code": "predecessor",
+        "description": "What resource is being referenced (predecessor relatedArtifact)",
+        "type": "reference"
+      },
+      {
+        "code": "publisher",
+        "description": "Name of the publisher of the measure",
+        "type": "string"
+      },
+      {
+        "code": "status",
+        "description": "The current status of the measure",
+        "type": "token"
+      },
+      {
+        "code": "successor",
+        "description": "What resource is being referenced (successor relatedArtifact)",
+        "type": "reference"
+      },
+      {
+        "code": "title",
+        "description": "Name for this measure (human friendly)",
+        "type": "string"
+      },
+      {
+        "code": "topic",
+        "description": "Topics associated with the measure",
+        "type": "token"
+      },
+      {
+        "code": "url",
+        "description": "The uri that identifies the measure",
+        "type": "uri"
+      },
+      {
+        "code": "version",
+        "description": "The business version of the measure",
+        "type": "token"
+      }
+    ],
+    "MeasureReport": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "date",
+        "description": "The date of the measure report",
+        "type": "date"
+      },
+      {
+        "code": "evaluated-resource",
+        "description": "An evaluated resource referenced by the measure report",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifier of the measure report to be returned",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "The location to return measure report results for",
+        "type": "reference"
+      },
+      {
+        "code": "measure",
+        "description": "The measure to return measure report results for",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a patient to search for individual measure report results for",
+        "type": "reference"
+      },
+      {
+        "code": "period",
+        "description": "The period of the measure report",
+        "type": "date"
+      },
+      {
+        "code": "reporter",
+        "description": "The reporter to return measure report results for",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the measure report",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a subject to search for individual measure report results for",
+        "type": "reference"
+      }
+    ],
+    "Medication": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "code",
+        "description": "Returns medications for a specific code",
+        "type": "token"
+      },
+      {
+        "code": "expiration-date",
+        "description": "Returns medications in a batch with this expiration date",
+        "type": "date"
+      },
+      {
+        "code": "form",
+        "description": "Returns medications for a specific dose form",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Returns medications with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "ingredient",
+        "description": "Returns medications for this ingredient reference",
+        "type": "reference"
+      },
+      {
+        "code": "ingredient-code",
+        "description": "Returns medications for this ingredient code",
+        "type": "token"
+      },
+      {
+        "code": "lot-number",
+        "description": "Returns medications in a batch with this lot number",
+        "type": "token"
+      },
+      {
+        "code": "marketingauthorizationholder",
+        "description": "Returns medications made or sold for this marketing authorization holder",
+        "type": "reference"
+      },
+      {
+        "code": "serial-number",
+        "description": "Returns medications with this serial identifier value",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "Returns medications for this status",
+        "type": "token"
+      }
+    ],
+    "MedicationAdministration": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "code",
+        "description": "Return administrations of this medication code",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Date administration happened (or did not happen)",
+        "type": "date"
+      },
+      {
+        "code": "device",
+        "description": "Return administrations with this administration device identity",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Return administrations that share this encounter",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Return administrations with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "medication",
+        "description": "Return administrations of this medication reference",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a patient to list administrations for",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "The identity of the individual who administered the medication",
+        "type": "reference"
+      },
+      {
+        "code": "performer-device-code",
+        "description": "Performer actor concept (device-as-performer coding)",
+        "type": "token"
+      },
+      {
+        "code": "reason-given",
+        "description": "Reference to a resource (by instance)",
+        "type": "reference"
+      },
+      {
+        "code": "reason-given-code",
+        "description": "Reasons for administering the medication",
+        "type": "token"
+      },
+      {
+        "code": "reason-not-given",
+        "description": "Reasons for not administering the medication",
+        "type": "token"
+      },
+      {
+        "code": "request",
+        "description": "The identity of a request to list administrations from",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "MedicationAdministration event status",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of the individual or group to list administrations for",
+        "type": "reference"
+      }
+    ],
+    "MedicationDispense": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "code",
+        "description": "Returns dispenses of this medicine code",
+        "type": "token"
+      },
+      {
+        "code": "destination",
+        "description": "Returns dispenses that should be sent to a specific destination",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Returns dispenses with a specific encounter",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Returns dispenses with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "Returns dispense for a given location",
+        "type": "reference"
+      },
+      {
+        "code": "medication",
+        "description": "Returns dispenses of this medicine resource",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a patient to list dispenses for",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Returns dispenses performed by a specific individual",
+        "type": "reference"
+      },
+      {
+        "code": "prescription",
+        "description": "The identity of a prescription to list dispenses from",
+        "type": "reference"
+      },
+      {
+        "code": "receiver",
+        "description": "The identity of a receiver to list dispenses for",
+        "type": "reference"
+      },
+      {
+        "code": "recorded",
+        "description": "Returns dispenses where dispensing activity began on this date",
+        "type": "date"
+      },
+      {
+        "code": "responsibleparty",
+        "description": "Returns dispenses with the specified responsible party",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Returns dispenses with a specified dispense status",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a patient for whom to list dispenses",
+        "type": "reference"
+      },
+      {
+        "code": "type",
+        "description": "Returns dispenses of a specific type",
+        "type": "token"
+      },
+      {
+        "code": "whenhandedover",
+        "description": "Returns dispenses handed over on this date",
+        "type": "date"
+      },
+      {
+        "code": "whenprepared",
+        "description": "Returns dispenses prepared on this date",
+        "type": "date"
+      }
+    ],
+    "MedicationRequest": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "authoredon",
+        "description": "Return prescriptions written on this date",
+        "type": "date"
+      },
+      {
+        "code": "category",
+        "description": "Returns prescriptions with different categories",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Return prescriptions of this medication code",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "Return prescriptions with this encounter identifier",
+        "type": "reference"
+      },
+      {
+        "code": "group-identifier",
+        "description": "Composite request this is part of",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Return prescriptions with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "intended-dispenser",
+        "description": "Returns prescriptions intended to be dispensed by this Organization",
+        "type": "reference"
+      },
+      {
+        "code": "intended-performer",
+        "description": "Returns the intended performer of the administration",
+        "type": "reference"
+      },
+      {
+        "code": "intended-performertype",
+        "description": "Returns requests for a specific type of performer",
+        "type": "token"
+      },
+      {
+        "code": "intent",
+        "description": "Returns prescriptions with different intents",
+        "type": "token"
+      },
+      {
+        "code": "medication",
+        "description": "Return prescriptions for this medication reference",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Returns prescriptions for a specific patient",
+        "type": "reference"
+      },
+      {
+        "code": "priority",
+        "description": "Returns prescriptions with different priorities",
+        "type": "token"
+      },
+      {
+        "code": "requester",
+        "description": "Returns prescriptions prescribed by this prescriber",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Status of the prescription",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a patient to list orders for",
+        "type": "reference"
+      }
+    ],
+    "MedicationStatement": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "adherence",
+        "description": "Type of adherence",
+        "type": "token"
+      },
+      {
+        "code": "category",
+        "description": "Returns statements of this category of medication usage",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Return statements of this medication code",
+        "type": "token"
+      },
+      {
+        "code": "effective",
+        "description": "Date when patient was taking (or not taking) the medication",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter associated with this medication statement",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Return statements with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "medication",
+        "description": "Return statements for this medication reference",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a patient to list statements for",
+        "type": "reference"
+      },
+      {
+        "code": "source",
+        "description": "Who or where the information in the statement came from",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Returns statements with this medication status",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a patient or group to list statements for",
+        "type": "reference"
+      }
+    ],
+    "NutritionIntake": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "code",
+        "description": "Returns statements of this code of NutritionIntake",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Date when patient was taking (or not taking) the medication",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Returns statements for a specific encounter",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Return statements with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "nutrition",
+        "description": "Return intakes for a specific consumed item",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Returns statements for a specific patient",
+        "type": "reference"
+      },
+      {
+        "code": "source",
+        "description": "Who or where the information in the statement came from",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Return statements that match the given status",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of a patient, animal or group to list statements for",
+        "type": "reference"
+      }
+    ],
+    "NutritionOrder": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "additive",
+        "description": "Type of module component to add to the feeding",
+        "type": "token"
+      },
+      {
+        "code": "datetime",
+        "description": "Return nutrition orders requested on this date",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Return nutrition orders with this encounter identifier",
+        "type": "reference"
+      },
+      {
+        "code": "formula",
+        "description": "Type of enteral or infant formula",
+        "type": "token"
+      },
+      {
+        "code": "group-identifier",
+        "description": "Composite Request ID",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Return nutrition orders with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "oraldiet",
+        "description": "Type of diet that can be consumed orally",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient who requires the diet, formula or supplement",
+        "type": "reference"
+      },
+      {
+        "code": "provider",
+        "description": "The provider who placed the nutrition order",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Status of the nutrition order",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The identity of the individual or group who requires the order",
+        "type": "reference"
+      },
+      {
+        "code": "supplement",
+        "description": "Type of supplement product requested",
+        "type": "token"
+      }
+    ],
+    "Observation": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Reference to the service request",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "The classification of the type of observation",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "The code of the observation type",
+        "type": "token"
+      },
+      {
+        "code": "code-value-concept",
+        "description": "Code and coded value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "code-value-date",
+        "description": "Code and date/time value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "code-value-quantity",
+        "description": "Code and quantity value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "code-value-string",
+        "description": "Code and string value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "combo-code",
+        "description": "The code of the observation type or component type",
+        "type": "token"
+      },
+      {
+        "code": "combo-code-value-concept",
+        "description": "Code and coded value parameter pair, including in components",
+        "type": "composite"
+      },
+      {
+        "code": "combo-code-value-quantity",
+        "description": "Code and quantity value parameter pair, including in components",
+        "type": "composite"
+      },
+      {
+        "code": "combo-data-absent-reason",
+        "description": "The reason why the expected value in Observation.value[x] or Observation.component.value[x] is missing",
+        "type": "token"
+      },
+      {
+        "code": "combo-value-concept",
+        "description": "The value or component value of the observation, if the value is a CodeableConcept",
+        "type": "token"
+      },
+      {
+        "code": "combo-value-quantity",
+        "description": "Quantity value or component quantity value of the observation",
+        "type": "quantity"
+      },
+      {
+        "code": "component-code",
+        "description": "The component code of the observation type",
+        "type": "token"
+      },
+      {
+        "code": "component-code-value-concept",
+        "description": "Component code and component coded value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "component-code-value-quantity",
+        "description": "Component code and component quantity value parameter pair",
+        "type": "composite"
+      },
+      {
+        "code": "component-data-absent-reason",
+        "description": "The reason why the expected value in Observation.component.value[x] is missing",
+        "type": "token"
+      },
+      {
+        "code": "component-value-canonical",
+        "description": "URL contained in component.valueCanonical",
+        "type": "uri"
+      },
+      {
+        "code": "component-value-concept",
+        "description": "The value of the component observation, if the value is a CodeableConcept",
+        "type": "token"
+      },
+      {
+        "code": "component-value-quantity",
+        "description": "Quantity value of a component",
+        "type": "quantity"
+      },
+      {
+        "code": "component-value-reference",
+        "description": "Reference contained in component.valueReference",
+        "type": "reference"
+      },
+      {
+        "code": "data-absent-reason",
+        "description": "The reason why the expected value in Observation.value[x] is missing",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "Clinically relevant time/time-period for observation",
+        "type": "date"
+      },
+      {
+        "code": "derived-from",
+        "description": "Related measurements the observation is made from",
+        "type": "reference"
+      },
+      {
+        "code": "device",
+        "description": "The Device that generated the observation data",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter related to the observation",
+        "type": "reference"
+      },
+      {
+        "code": "focus",
+        "description": "The focus of an observation when the focus is not the patient of record",
+        "type": "reference"
+      },
+      {
+        "code": "has-member",
+        "description": "Related resource that belongs to the Observation group",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The unique id for a particular observation",
+        "type": "token"
+      },
+      {
+        "code": "method",
+        "description": "The method used for the observation",
+        "type": "token"
+      },
+      {
+        "code": "part-of",
+        "description": "Part of referenced event",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The subject that the observation is about (if Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Who performed the observation",
+        "type": "reference"
+      },
+      {
+        "code": "specimen",
+        "description": "Specimen used for this observation",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the observation",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The subject that the observation is about",
+        "type": "reference"
+      },
+      {
+        "code": "value-canonical",
+        "description": "URL contained in valueCanonical",
+        "type": "uri"
+      },
+      {
+        "code": "value-concept",
+        "description": "The value of the observation, if the value is a CodeableConcept",
+        "type": "token"
+      },
+      {
+        "code": "value-date",
+        "description": "The value of the observation, if the value is a date or period of time",
+        "type": "date"
+      },
+      {
+        "code": "value-markdown",
+        "description": "The value of the observation when the value is a string/markdown, including CodeableConcept.text",
+        "type": "string"
+      },
+      {
+        "code": "value-quantity",
+        "description": "The value of the observation, if the value is a Quantity",
+        "type": "quantity"
+      },
+      {
+        "code": "value-reference",
+        "description": "Reference contained in valueReference",
+        "type": "reference"
+      }
+    ],
+    "Organization": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the organization's record is active (Organization.active)",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that matches any address field (line, city, district, state, country, postalCode, text)",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address (Organization.contact.address.city)",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address (Organization.contact.address.country)",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address (Organization.contact.address.postalCode)",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address (Organization.contact.address.state)",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address (Organization.contact.address.use)",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for the organization (Organization.endpoint -> Endpoint)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Any identifier for the organization (not the accreditation issuer's\nidentifier). Per FHIR R5 the spec expression is\n`Organization.identifier | Organization.qual",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the organization's name or alias. Per FHIR R5 the\nspec expression is `Organization.name | Organization.alias`, so\nthis parameter ranges over BOTH t",
+        "type": "string"
+      },
+      {
+        "code": "partof",
+        "description": "An organization of which this organization forms a part (Organization.partOf -> Organization)",
+        "type": "reference"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of the organization's name encoded with the Soundex phonetic algorithm",
+        "type": "token"
+      },
+      {
+        "code": "type",
+        "description": "A code for the type of organization (Organization.type[*].coding)",
+        "type": "token"
+      }
+    ],
+    "OrganizationAffiliation": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether this organization affiliation record is in active use",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The period during which the participatingOrganization is affiliated",
+        "type": "date"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for this affiliation",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "An organization affiliation's Identifier",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "Location(s) where the participatingOrganization provides services",
+        "type": "reference"
+      },
+      {
+        "code": "network",
+        "description": "Healthcare networks with which the participatingOrganization is associated",
+        "type": "reference"
+      },
+      {
+        "code": "participating-organization",
+        "description": "Organization participating in the network",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact",
+        "type": "token"
+      },
+      {
+        "code": "primary-organization",
+        "description": "Organization that is not the participatingOrganization",
+        "type": "reference"
+      },
+      {
+        "code": "role",
+        "description": "Definition of the role the participatingOrganization plays",
+        "type": "token"
+      },
+      {
+        "code": "service",
+        "description": "Healthcare services provided through this affiliation",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "Specific specialty of the participatingOrganization",
+        "type": "token"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact",
+        "type": "token"
+      }
+    ],
+    "Patient": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the patient record is active",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server-defined search that may match any of the string fields in the Address",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address",
+        "type": "token"
+      },
+      {
+        "code": "birthdate",
+        "description": "The patient's date of birth",
+        "type": "date"
+      },
+      {
+        "code": "death-date",
+        "description": "The date of death has been provided and satisfies this search value",
+        "type": "date"
+      },
+      {
+        "code": "deceased",
+        "description": "This patient has been marked as deceased, or has a death date entered",
+        "type": "token"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact",
+        "type": "token"
+      },
+      {
+        "code": "family",
+        "description": "A portion of the family name of the patient",
+        "type": "string"
+      },
+      {
+        "code": "gender",
+        "description": "Gender of the patient",
+        "type": "token"
+      },
+      {
+        "code": "general-practitioner",
+        "description": "Patient's nominated general practitioner, not the organization that manages the record",
+        "type": "reference"
+      },
+      {
+        "code": "given",
+        "description": "A portion of the given name of the patient",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "A patient identifier",
+        "type": "token"
+      },
+      {
+        "code": "language",
+        "description": "Language code (irrespective of use value)",
+        "type": "token"
+      },
+      {
+        "code": "link",
+        "description": "All patients/related persons linked to the given patient",
+        "type": "reference"
+      },
+      {
+        "code": "name",
+        "description": "A server-defined search that may match any of the string fields in the HumanName",
+        "type": "string"
+      },
+      {
+        "code": "organization",
+        "description": "The organization that is the custodian of the patient record",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact",
+        "type": "token"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of either family or given name using some kind of phonetic matching algorithm",
+        "type": "token"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of telecom details of the patient",
+        "type": "token"
+      }
+    ],
+    "PaymentNotice": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "created",
+        "description": "Creation date for the notice",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier of the notice",
+        "type": "token"
+      },
+      {
+        "code": "payment-status",
+        "description": "The type of payment notice",
+        "type": "token"
+      },
+      {
+        "code": "reporter",
+        "description": "The reference to the reporter",
+        "type": "reference"
+      },
+      {
+        "code": "request",
+        "description": "The Claim",
+        "type": "reference"
+      },
+      {
+        "code": "response",
+        "description": "The ClaimResponse",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "active | cancelled | draft | entered-in-error",
+        "type": "token"
+      }
+    ],
+    "PaymentReconciliation": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "allocation-account",
+        "description": "The account to which payment or adjustment was applied",
+        "type": "reference"
+      },
+      {
+        "code": "allocation-encounter",
+        "description": "The encounter to which payment or adjustment was applied",
+        "type": "reference"
+      },
+      {
+        "code": "created",
+        "description": "The creation date",
+        "type": "date"
+      },
+      {
+        "code": "disposition",
+        "description": "The contents of the disposition message",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "The business identifier",
+        "type": "token"
+      },
+      {
+        "code": "outcome",
+        "description": "The processing outcome",
+        "type": "token"
+      },
+      {
+        "code": "payment-issuer",
+        "description": "The organization which generated this resource",
+        "type": "reference"
+      },
+      {
+        "code": "request",
+        "description": "The reference to the claim",
+        "type": "reference"
+      },
+      {
+        "code": "requestor",
+        "description": "The reference to the provider who submitted the claim",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "active | cancelled | draft | entered-in-error",
+        "type": "token"
+      }
+    ],
+    "Person": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that may match any of the string fields in the Address",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address",
+        "type": "token"
+      },
+      {
+        "code": "birthdate",
+        "description": "The person's date of birth",
+        "type": "date"
+      },
+      {
+        "code": "death-date",
+        "description": "The date of death has been provided and satisfies this search value",
+        "type": "date"
+      },
+      {
+        "code": "deceased",
+        "description": "This person has been marked as deceased, or has a death date entered",
+        "type": "token"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact",
+        "type": "token"
+      },
+      {
+        "code": "family",
+        "description": "A portion of the family name of the person",
+        "type": "string"
+      },
+      {
+        "code": "gender",
+        "description": "The gender of the person",
+        "type": "token"
+      },
+      {
+        "code": "given",
+        "description": "A portion of the given name of the person",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "A person Identifier",
+        "type": "token"
+      },
+      {
+        "code": "link",
+        "description": "Any link has this Patient, Person, RelatedPerson or Practitioner reference",
+        "type": "reference"
+      },
+      {
+        "code": "name",
+        "description": "A server defined search that may match any of the string fields in the HumanName",
+        "type": "string"
+      },
+      {
+        "code": "organization",
+        "description": "The organization at which this person record is being managed",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The Person links to this Patient",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact",
+        "type": "token"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of name using a phonetic matching algorithm",
+        "type": "string"
+      },
+      {
+        "code": "practitioner",
+        "description": "The Person links to this Practitioner",
+        "type": "reference"
+      },
+      {
+        "code": "relatedperson",
+        "description": "The Person links to this RelatedPerson",
+        "type": "reference"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact",
+        "type": "token"
+      }
+    ],
+    "Practitioner": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the practitioner record is active (Practitioner.active)",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that may match any of the string fields\nin the Address \u2014 line, city, district, state, country, postalCode,\nand/or text (FHIR R5: `Practi",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address (Practitioner.address.city)",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address (Practitioner.address.country)",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postalCode specified in an address (Practitioner.address.postalCode)",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address (Practitioner.address.state)",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address (Practitioner.address.use)",
+        "type": "token"
+      },
+      {
+        "code": "communication",
+        "description": "A language to communicate with the practitioner",
+        "type": "token"
+      },
+      {
+        "code": "death-date",
+        "description": "The date of death has been provided and satisfies this search value",
+        "type": "date"
+      },
+      {
+        "code": "deceased",
+        "description": "This Practitioner has been marked as deceased, or has a death date entered",
+        "type": "token"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact (Practitioner.telecom.where(system='email'))",
+        "type": "token"
+      },
+      {
+        "code": "family",
+        "description": "A portion of the family name (Practitioner.name.family)",
+        "type": "string"
+      },
+      {
+        "code": "gender",
+        "description": "Gender of the practitioner (Practitioner.gender)",
+        "type": "token"
+      },
+      {
+        "code": "given",
+        "description": "A portion of the given name (Practitioner.name.given)",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "A practitioner's identifier. Per FHIR R5 the spec expression is\n`Practitioner.identifier | Practitioner.qualification.identifier`,\nso this parameter spans BOTH ",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A server defined search that may match any of the string fields in the\nHumanName, including family, given, prefix, suffix, and/or text\n(FHIR R5 expression: `Pra",
+        "type": "string"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact (Practitioner.telecom.where(system='phone'))",
+        "type": "token"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of either family or given name using a phonetic matching algorithm (Soundex)",
+        "type": "token"
+      },
+      {
+        "code": "qualification-period",
+        "description": "The date(s) during which a qualification is valid\n(Practitioner.qualification.period). Per FHIR R5 the expression\nyields zero or more `Period` objects. The deno",
+        "type": "date"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact (Practitioner.telecom)",
+        "type": "token"
+      }
+    ],
+    "PractitionerRole": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether this practitioner role record is in active use (PractitionerRole.active)",
+        "type": "token"
+      },
+      {
+        "code": "characteristic",
+        "description": "One of the PractitionerRole's characteristics (PractitionerRole.characteristic)",
+        "type": "token"
+      },
+      {
+        "code": "communication",
+        "description": "One of the languages that the practitioner can communicate with\n(PractitionerRole.communication). R5 stores the language as a\nCodeableConcept (was `code` in R4)",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The period during which the practitioner is authorized to\nperform in these role(s) (PractitionerRole.period).\nPer FHIR R5 the comparators eq/ne/gt/ge/lt/le/sa/e",
+        "type": "date"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact (PractitionerRole.contact.telecom.where(system='email'))",
+        "type": "token"
+      },
+      {
+        "code": "endpoint",
+        "description": "Technical endpoints providing access to services operated for the practitioner with this role (PractitionerRole.endpoint)",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "A practitioner's identifier (PractitionerRole.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "location",
+        "description": "One of the locations at which this practitioner provides care (PractitionerRole.location)",
+        "type": "reference"
+      },
+      {
+        "code": "organization",
+        "description": "The identity of the organization the practitioner represents / acts on behalf of (PractitionerRole.organization)",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact (PractitionerRole.contact.telecom.where(system='phone'))",
+        "type": "token"
+      },
+      {
+        "code": "practitioner",
+        "description": "Practitioner that is able to provide the defined services for the organization (PractitionerRole.practitioner)",
+        "type": "reference"
+      },
+      {
+        "code": "role",
+        "description": "The practitioner can perform this role at for the organization (PractitionerRole.code)",
+        "type": "token"
+      },
+      {
+        "code": "service",
+        "description": "The list of healthcare services that this worker provides for this role's Organization/Location(s) (PractitionerRole.healthcareService)",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "The practitioner has this specialty at an organization (PractitionerRole.specialty)",
+        "type": "token"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact (PractitionerRole.contact.telecom)",
+        "type": "token"
+      }
+    ],
+    "Procedure": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "A request for this procedure",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Classification of the procedure",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "A code to identify a procedure",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "When the procedure occurred or is occurring",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "The Encounter during which this Procedure was created",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "A unique identifier for a procedure",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "Instantiates FHIR protocol or definition",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "Instantiates external protocol or definition",
+        "type": "uri"
+      },
+      {
+        "code": "location",
+        "description": "Where the procedure happened",
+        "type": "reference"
+      },
+      {
+        "code": "part-of",
+        "description": "Part of referenced event",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Search by subject when Patient",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Who performed the procedure",
+        "type": "reference"
+      },
+      {
+        "code": "reason-code",
+        "description": "Reference to a concept (by class)",
+        "type": "token"
+      },
+      {
+        "code": "reason-reference",
+        "description": "Reference to a resource (by instance)",
+        "type": "reference"
+      },
+      {
+        "code": "report",
+        "description": "Any report resulting from the procedure",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "preparation | in-progress | not-done | on-hold | stopped | completed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Search by subject",
+        "type": "reference"
+      }
+    ],
+    "Provenance": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "activity",
+        "description": "Activity that occurred",
+        "type": "token"
+      },
+      {
+        "code": "agent",
+        "description": "Who participated",
+        "type": "reference"
+      },
+      {
+        "code": "agent-role",
+        "description": "What the agents role was",
+        "type": "token"
+      },
+      {
+        "code": "agent-type",
+        "description": "How the agent participated",
+        "type": "token"
+      },
+      {
+        "code": "based-on",
+        "description": "An activity that this activity was part of",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter related to the activity",
+        "type": "reference"
+      },
+      {
+        "code": "entity",
+        "description": "Specific instance of resource involved",
+        "type": "reference"
+      },
+      {
+        "code": "location",
+        "description": "Where the activity occurred",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The patient for this provenance record",
+        "type": "reference"
+      },
+      {
+        "code": "recorded",
+        "description": "When the activity was recorded",
+        "type": "date"
+      },
+      {
+        "code": "signature-type",
+        "description": "The type of signature",
+        "type": "token"
+      },
+      {
+        "code": "target",
+        "description": "Target reference(s) usually version specific",
+        "type": "reference"
+      },
+      {
+        "code": "when",
+        "description": "When the activity occurred",
+        "type": "date"
+      }
+    ],
+    "Questionnaire": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "combo-code",
+        "description": "Code for item and its components and answers",
+        "type": "token"
+      },
+      {
+        "code": "context",
+        "description": "A use context assigned to the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "context-type",
+        "description": "A type of use context assigned to the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "The questionnaire publication date",
+        "type": "date"
+      },
+      {
+        "code": "definition",
+        "description": "Element definition URI for a questionnaire item",
+        "type": "uri"
+      },
+      {
+        "code": "description",
+        "description": "Natural language description of the questionnaire",
+        "type": "string"
+      },
+      {
+        "code": "effective",
+        "description": "The time during which the questionnaire is intended to be in use",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifiers for the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "item-code",
+        "description": "Code for items in the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "jurisdiction",
+        "description": "Intended jurisdiction for the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "Name for this questionnaire (computer friendly)",
+        "type": "string"
+      },
+      {
+        "code": "publisher",
+        "description": "Name of the publisher of the questionnaire",
+        "type": "string"
+      },
+      {
+        "code": "questionnaire-code",
+        "description": "Code for the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "The current status of the questionnaire",
+        "type": "token"
+      },
+      {
+        "code": "subject-type",
+        "description": "Resource that can be subject of QuestionnaireResponse",
+        "type": "token"
+      },
+      {
+        "code": "title",
+        "description": "Name for this questionnaire (human friendly)",
+        "type": "string"
+      },
+      {
+        "code": "url",
+        "description": "The uri that identifies the questionnaire",
+        "type": "uri"
+      },
+      {
+        "code": "version",
+        "description": "The business version of the questionnaire",
+        "type": "token"
+      }
+    ],
+    "QuestionnaireResponse": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "author",
+        "description": "The author of the questionnaire response",
+        "type": "reference"
+      },
+      {
+        "code": "authored",
+        "description": "When the questionnaire response was last changed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Plan/proposal/order fulfilled by this questionnaire response",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter associated with the questionnaire response",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The unique identifier for the questionnaire response",
+        "type": "token"
+      },
+      {
+        "code": "item-subject",
+        "description": "Item answer reference when item has isSubject extension",
+        "type": "reference"
+      },
+      {
+        "code": "part-of",
+        "description": "Procedure or observation this response was performed as part of",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The patient that is the subject of the questionnaire response",
+        "type": "reference"
+      },
+      {
+        "code": "questionnaire",
+        "description": "The questionnaire the answers are provided for",
+        "type": "reference"
+      },
+      {
+        "code": "source",
+        "description": "The individual providing the information in the response",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "in-progress | completed | amended | entered-in-error | stopped",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The subject of the questionnaire response",
+        "type": "reference"
+      }
+    ],
+    "RelatedPerson": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether the related person record is active",
+        "type": "token"
+      },
+      {
+        "code": "address",
+        "description": "A server defined search that may match any of the string fields in the Address",
+        "type": "string"
+      },
+      {
+        "code": "address-city",
+        "description": "A city specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-country",
+        "description": "A country specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-postalcode",
+        "description": "A postal code specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-state",
+        "description": "A state specified in an address",
+        "type": "string"
+      },
+      {
+        "code": "address-use",
+        "description": "A use code specified in an address",
+        "type": "token"
+      },
+      {
+        "code": "birthdate",
+        "description": "The Related Person's date of birth",
+        "type": "date"
+      },
+      {
+        "code": "email",
+        "description": "A value in an email contact",
+        "type": "token"
+      },
+      {
+        "code": "family",
+        "description": "A portion of the family name",
+        "type": "string"
+      },
+      {
+        "code": "gender",
+        "description": "Gender of the related person",
+        "type": "token"
+      },
+      {
+        "code": "given",
+        "description": "A portion of the given name",
+        "type": "string"
+      },
+      {
+        "code": "identifier",
+        "description": "A related person identifier",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A server defined search that may match any of the string fields in the HumanName",
+        "type": "string"
+      },
+      {
+        "code": "patient",
+        "description": "The patient this related person is about",
+        "type": "reference"
+      },
+      {
+        "code": "phone",
+        "description": "A value in a phone contact",
+        "type": "token"
+      },
+      {
+        "code": "phonetic",
+        "description": "A portion of name using a phonetic matching algorithm (Soundex)",
+        "type": "token"
+      },
+      {
+        "code": "relationship",
+        "description": "The relationship between the patient and the related person",
+        "type": "token"
+      },
+      {
+        "code": "telecom",
+        "description": "The value in any kind of contact",
+        "type": "token"
+      }
+    ],
+    "RequestOrchestration": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "author",
+        "description": "The author of the request orchestration",
+        "type": "reference"
+      },
+      {
+        "code": "authored",
+        "description": "The date the request orchestration was authored",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "What this request fulfills",
+        "type": "reference"
+      },
+      {
+        "code": "code",
+        "description": "The code of the request orchestration",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "The encounter the request orchestration applies to",
+        "type": "reference"
+      },
+      {
+        "code": "group-identifier",
+        "description": "The group identifier for the request orchestration",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifiers for the request orchestration",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "The FHIR-based definition from which the request orchestration is realized",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "The external definition from which the request orchestration is realized",
+        "type": "uri"
+      },
+      {
+        "code": "intent",
+        "description": "The intent of the request orchestration",
+        "type": "token"
+      },
+      {
+        "code": "participant",
+        "description": "The participant in the requests in the orchestration",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a patient to search for request orchestrations",
+        "type": "reference"
+      },
+      {
+        "code": "priority",
+        "description": "The priority of the request orchestration",
+        "type": "token"
+      },
+      {
+        "code": "status",
+        "description": "The status of the request orchestration",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The subject that the request orchestration is about",
+        "type": "reference"
+      }
+    ],
+    "ResearchStudy": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "classifier",
+        "description": "Classification for the study",
+        "type": "token"
+      },
+      {
+        "code": "condition",
+        "description": "Condition being studied",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "When the study began and ended",
+        "type": "date"
+      },
+      {
+        "code": "description",
+        "description": "Detailed narrative of the study",
+        "type": "string"
+      },
+      {
+        "code": "eligibility",
+        "description": "Inclusion and exclusion criteria",
+        "type": "reference"
+      },
+      {
+        "code": "focus-code",
+        "description": "Drugs, devices, etc. under study, as a code",
+        "type": "token"
+      },
+      {
+        "code": "focus-reference",
+        "description": "Drugs, devices, etc. under study, as a reference",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business Identifier for study",
+        "type": "token"
+      },
+      {
+        "code": "keyword",
+        "description": "Used to search for the study",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "Name for this study",
+        "type": "string"
+      },
+      {
+        "code": "objective-description",
+        "description": "Free text description of the objective of the study",
+        "type": "string"
+      },
+      {
+        "code": "objective-type",
+        "description": "The kind of study objective",
+        "type": "token"
+      },
+      {
+        "code": "part-of",
+        "description": "Part of larger study",
+        "type": "reference"
+      },
+      {
+        "code": "phase",
+        "description": "The stage in the progression of a study",
+        "type": "token"
+      },
+      {
+        "code": "progress-status-state-actual",
+        "description": "Status of study by state and actual",
+        "type": "composite"
+      },
+      {
+        "code": "progress-status-state-period",
+        "description": "Status of study by state and period",
+        "type": "composite"
+      },
+      {
+        "code": "progress-status-state-period-actual",
+        "description": "Status of study by state, period and actual",
+        "type": "composite"
+      },
+      {
+        "code": "protocol",
+        "description": "Steps followed in executing study",
+        "type": "reference"
+      },
+      {
+        "code": "recruitment-actual",
+        "description": "Actual number of participants enrolled across all groups",
+        "type": "number"
+      },
+      {
+        "code": "recruitment-target",
+        "description": "Target number of participants enrolled across all groups",
+        "type": "number"
+      },
+      {
+        "code": "region",
+        "description": "Geographic area for the study",
+        "type": "token"
+      },
+      {
+        "code": "site",
+        "description": "Facility where study activities are conducted",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "active | administratively-completed | approved | ...",
+        "type": "token"
+      },
+      {
+        "code": "study-design",
+        "description": "Classifications of the study design characteristics",
+        "type": "token"
+      },
+      {
+        "code": "title",
+        "description": "The human readable name of the research study",
+        "type": "string"
+      }
+    ],
+    "ResearchSubject": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "date",
+        "description": "Start and end of participation",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Business Identifier for research subject in a study",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who or what is part of study (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "draft | active | retired | unknown",
+        "type": "token"
+      },
+      {
+        "code": "study",
+        "description": "Study subject is part of",
+        "type": "reference"
+      },
+      {
+        "code": "subject",
+        "description": "Who or what is part of study",
+        "type": "reference"
+      },
+      {
+        "code": "subject_state",
+        "description": "candidate | on-study | screening | withdrawn | ...",
+        "type": "token"
+      }
+    ],
+    "RiskAssessment": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "condition",
+        "description": "Condition assessed for risk",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "When was assessment made (occurrenceDateTime)",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter during which the assessment was made",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier for this risk assessment",
+        "type": "token"
+      },
+      {
+        "code": "method",
+        "description": "Evaluation mechanism",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Who/what the assessment is about (Patient subject)",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Who performed the assessment",
+        "type": "reference"
+      },
+      {
+        "code": "probability",
+        "description": "Likelihood of specified outcome (decimal probability)",
+        "type": "number"
+      },
+      {
+        "code": "risk",
+        "description": "Likelihood of specified outcome (qualitative)",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Who/what the assessment is about",
+        "type": "reference"
+      }
+    ],
+    "Schedule": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "active",
+        "description": "Whether this schedule is in active use (Schedule.active)",
+        "type": "token"
+      },
+      {
+        "code": "actor",
+        "description": "The individual(HealthcareService, Practitioner, Location, \u2026) to find a Schedule for (Schedule.actor). 8 possible target types.\n",
+        "type": "reference"
+      },
+      {
+        "code": "date",
+        "description": "Search for Schedule resources that have a planningHorizon Period that contains this date (Schedule.planningHorizon).\n",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "A Schedule Identifier (Schedule.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "name",
+        "description": "A portion of the Schedule name (Schedule.name)",
+        "type": "string"
+      },
+      {
+        "code": "service-category",
+        "description": "High-level category of service (Schedule.serviceCategory)",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "The type (by coding) of appointments that can be booked into associated slot(s) \u2014 Schedule.serviceType.concept (CodeableReference's concept arm).\n",
+        "type": "token"
+      },
+      {
+        "code": "service-type-reference",
+        "description": "The type (by HealthcareService) of appointments that can be booked \u2014 Schedule.serviceType.reference (CodeableReference's reference arm).\n",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "Type of specialty needed (Schedule.specialty)",
+        "type": "token"
+      }
+    ],
+    "ServiceRequest": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "authored",
+        "description": "Date request signed",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "What request fulfills",
+        "type": "reference"
+      },
+      {
+        "code": "body-site",
+        "description": "Location for service",
+        "type": "token"
+      },
+      {
+        "code": "body-structure",
+        "description": "Body structure to be treated",
+        "type": "reference"
+      },
+      {
+        "code": "category",
+        "description": "Classification of service",
+        "type": "token"
+      },
+      {
+        "code": "code-concept",
+        "description": "Service requested (concept arm of CodeableReference)",
+        "type": "token"
+      },
+      {
+        "code": "code-reference",
+        "description": "Service requested (reference arm of CodeableReference)",
+        "type": "reference"
+      },
+      {
+        "code": "encounter",
+        "description": "Encounter during which request was created",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Business identifier for service request",
+        "type": "token"
+      },
+      {
+        "code": "instantiates-canonical",
+        "description": "Instantiates FHIR protocol or definition",
+        "type": "reference"
+      },
+      {
+        "code": "instantiates-uri",
+        "description": "Instantiates external protocol or definition",
+        "type": "uri"
+      },
+      {
+        "code": "intent",
+        "description": "proposal | plan | directive | order | original-order | reflex-order",
+        "type": "token"
+      },
+      {
+        "code": "occurrence",
+        "description": "When service should occur",
+        "type": "date"
+      },
+      {
+        "code": "patient",
+        "description": "Search by subject when Patient",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Requested performer",
+        "type": "reference"
+      },
+      {
+        "code": "performer-type",
+        "description": "Performer role",
+        "type": "token"
+      },
+      {
+        "code": "priority",
+        "description": "routine | urgent | asap | stat",
+        "type": "token"
+      },
+      {
+        "code": "replaces",
+        "description": "Request(s) replaced by this request",
+        "type": "reference"
+      },
+      {
+        "code": "requester",
+        "description": "Who/what is requesting service",
+        "type": "reference"
+      },
+      {
+        "code": "requisition",
+        "description": "Composite Request ID",
+        "type": "token"
+      },
+      {
+        "code": "specimen",
+        "description": "Procedure Samples",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Search by subject",
+        "type": "reference"
+      }
+    ],
+    "Slot": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "appointment-type",
+        "description": "The style of appointment or patient that may be booked in the slot (Slot.appointmentType \u2014 CodeableConcept[]).\n",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "A Slot Identifier (Slot.identifier)",
+        "type": "token"
+      },
+      {
+        "code": "schedule",
+        "description": "The Schedule resource that this slot defines an interval of status information for (Slot.schedule). Single target: Schedule.\n",
+        "type": "reference"
+      },
+      {
+        "code": "service-category",
+        "description": "High-level category of the service (Slot.serviceCategory)",
+        "type": "token"
+      },
+      {
+        "code": "service-type",
+        "description": "The type (by coding) of appointments that can be booked into the slot \u2014 Slot.serviceType.concept (CodeableReference's concept arm).\n",
+        "type": "token"
+      },
+      {
+        "code": "service-type-reference",
+        "description": "The type (by HealthcareService) of appointments that can be booked \u2014 Slot.serviceType.reference (CodeableReference's reference arm).\n",
+        "type": "reference"
+      },
+      {
+        "code": "specialty",
+        "description": "The specialty required to perform this appointment (Slot.specialty)",
+        "type": "token"
+      },
+      {
+        "code": "start",
+        "description": "Appointment date/time (Slot.start \u2014 instant, queried directly)",
+        "type": "date"
+      },
+      {
+        "code": "status",
+        "description": "The free/busy status of the slot (Slot.status)",
+        "type": "token"
+      }
+    ],
+    "Specimen": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "accession",
+        "description": "The accession number associated with the specimen",
+        "type": "token"
+      },
+      {
+        "code": "bodysite",
+        "description": "Anatomical collection site (BodyStructure reference)",
+        "type": "reference"
+      },
+      {
+        "code": "collected",
+        "description": "The date the specimen was collected",
+        "type": "date"
+      },
+      {
+        "code": "collector",
+        "description": "Who collected the specimen",
+        "type": "reference"
+      },
+      {
+        "code": "container-device",
+        "description": "The device associated with the specimen container",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "The unique identifier associated with the specimen",
+        "type": "token"
+      },
+      {
+        "code": "parent",
+        "description": "The parent of the specimen",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "The patient the specimen comes from",
+        "type": "reference"
+      },
+      {
+        "code": "procedure",
+        "description": "The procedure that collected the specimen",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "available | unavailable | unsatisfactory | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The subject of the specimen",
+        "type": "reference"
+      },
+      {
+        "code": "type",
+        "description": "The specimen type",
+        "type": "token"
+      }
+    ],
+    "Substance": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "category",
+        "description": "The category of the substance",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Returns substances for a specific code (concept or ingredient)",
+        "type": "token"
+      },
+      {
+        "code": "code-reference",
+        "description": "Returns substances for a specific substance definition reference",
+        "type": "reference"
+      },
+      {
+        "code": "expiry",
+        "description": "When no longer valid to use",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Returns substances with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "quantity",
+        "description": "Amount of substance in the package",
+        "type": "quantity"
+      },
+      {
+        "code": "status",
+        "description": "Returns substances for this status",
+        "type": "token"
+      },
+      {
+        "code": "substance-reference",
+        "description": "Returns substances that contain the specified ingredient substance",
+        "type": "reference"
+      }
+    ],
+    "SupplyDelivery": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "External identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "Patient for whom the item is supplied",
+        "type": "reference"
+      },
+      {
+        "code": "receiver",
+        "description": "Who collected the Supply",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "in-progress | completed | abandoned | entered-in-error",
+        "type": "token"
+      },
+      {
+        "code": "supplier",
+        "description": "Dispenser",
+        "type": "reference"
+      }
+    ],
+    "SupplyRequest": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "category",
+        "description": "The kind of supply (central, non-stock, etc.)",
+        "type": "token"
+      },
+      {
+        "code": "date",
+        "description": "When the request was made",
+        "type": "date"
+      },
+      {
+        "code": "identifier",
+        "description": "Business Identifier for SupplyRequest",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The patient or subject for whom the supply is destined",
+        "type": "reference"
+      },
+      {
+        "code": "requester",
+        "description": "Individual making the request",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "draft | active | suspended +",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "The destination of the supply",
+        "type": "reference"
+      },
+      {
+        "code": "supplier",
+        "description": "Who is intended to fulfill the request",
+        "type": "reference"
+      }
+    ],
+    "Task": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "actor",
+        "description": "Search by specific performer (performer.actor)",
+        "type": "reference"
+      },
+      {
+        "code": "authored-on",
+        "description": "Search by creation date",
+        "type": "date"
+      },
+      {
+        "code": "based-on",
+        "description": "Search by requests this task is based on",
+        "type": "reference"
+      },
+      {
+        "code": "business-status",
+        "description": "Search by business status",
+        "type": "token"
+      },
+      {
+        "code": "code",
+        "description": "Search by task code",
+        "type": "token"
+      },
+      {
+        "code": "encounter",
+        "description": "Search by encounter",
+        "type": "reference"
+      },
+      {
+        "code": "focus",
+        "description": "Search by task focus",
+        "type": "reference"
+      },
+      {
+        "code": "group-identifier",
+        "description": "Search by group identifier",
+        "type": "token"
+      },
+      {
+        "code": "identifier",
+        "description": "Search for task by identifier",
+        "type": "token"
+      },
+      {
+        "code": "intent",
+        "description": "Search for task by intent",
+        "type": "token"
+      },
+      {
+        "code": "modified",
+        "description": "Search by last modification date",
+        "type": "date"
+      },
+      {
+        "code": "output",
+        "description": "Search by task output references",
+        "type": "reference"
+      },
+      {
+        "code": "owner",
+        "description": "Search by task owner",
+        "type": "reference"
+      },
+      {
+        "code": "part-of",
+        "description": "Search by parent task",
+        "type": "reference"
+      },
+      {
+        "code": "patient",
+        "description": "Search by patient (for when Patient)",
+        "type": "reference"
+      },
+      {
+        "code": "performer",
+        "description": "Search by recommended performer type (requestedPerformer.concept)",
+        "type": "token"
+      },
+      {
+        "code": "period",
+        "description": "Search by execution period",
+        "type": "date"
+      },
+      {
+        "code": "priority",
+        "description": "Search by task priority",
+        "type": "token"
+      },
+      {
+        "code": "requestedperformer-reference",
+        "description": "Search by specific requested performer reference",
+        "type": "reference"
+      },
+      {
+        "code": "requester",
+        "description": "Search by task requester",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "Search by task status",
+        "type": "token"
+      },
+      {
+        "code": "subject",
+        "description": "Search by subject (for)",
+        "type": "reference"
+      }
+    ],
+    "VisionPrescription": [
+      {
+        "code": "_id",
+        "description": "Logical id of this artifact",
+        "type": "token"
+      },
+      {
+        "code": "_lastUpdated",
+        "description": "When the resource version last changed",
+        "type": "date"
+      },
+      {
+        "code": "datewritten",
+        "description": "Return prescriptions written on this date",
+        "type": "date"
+      },
+      {
+        "code": "encounter",
+        "description": "Return prescriptions with this encounter identifier",
+        "type": "reference"
+      },
+      {
+        "code": "identifier",
+        "description": "Return prescriptions with this external identifier",
+        "type": "token"
+      },
+      {
+        "code": "patient",
+        "description": "The identity of a patient to list dispenses for",
+        "type": "reference"
+      },
+      {
+        "code": "prescriber",
+        "description": "Who authorized the vision prescription",
+        "type": "reference"
+      },
+      {
+        "code": "status",
+        "description": "The status of the vision prescription",
+        "type": "token"
+      }
+    ]
+  },
+  "source": "src/fhir_search_to_mql/configs/*.yaml"
+}

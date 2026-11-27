@@ -153,4 +153,3 @@ class IBMCompositionUnflattener:
             instances_by_path.setdefault(path_val, []).append(data)
 
         return root_obj or {}
-
