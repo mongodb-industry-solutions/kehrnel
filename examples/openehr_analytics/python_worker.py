@@ -17,6 +17,8 @@ from kehrnel.engine.domains.openehr.analytics.setup import worker_environment
 
 def process_partition(job_specs, environment, config):
     """environment is resolved locally in the Python worker, not stored in rule JSON."""
+    if config.get("source", {}).get("mode", "upload") != "mongodb":
+        raise ValueError("process_partition requires a MongoDB source; use process_composition for uploaded documents")
     environment = worker_environment(environment, config)
     source_client, target_client, source, store = connect(environment, settings=config)
     try:
@@ -34,8 +36,9 @@ def process_partition(job_specs, environment, config):
                     spec[name] = utc(spec[name])
             run_backfill(source, store, converter, Backfill(**spec))
     finally:
-        source_client.close()
-        target_client.close()
+        for client in (source_client, target_client):
+            if client is not None:
+                client.close()
 
 
 def process_composition(document, accepted_at, converter, store):

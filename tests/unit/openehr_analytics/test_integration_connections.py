@@ -67,3 +67,15 @@ def test_store_initialization_failure_closes_both_clients(monkeypatch):
         connect(environment())
     source.close.assert_called_once()
     target.close.assert_called_once()
+
+
+@pytest.mark.parametrize('source', [{'format': 'canonical'}, {'format': 'canonical', 'mode': 'upload'}])
+def test_batch_worker_rejects_upload_configs_before_connecting(monkeypatch, source):
+    import runpy
+    from pathlib import Path
+    worker = runpy.run_path(str(Path(__file__).resolve().parents[3] / 'examples/openehr_analytics/python_worker.py'))['process_partition']
+    client = MagicMock()
+    monkeypatch.setitem(worker.__globals__, 'connect', client)
+    with pytest.raises(ValueError, match='use process_composition'):
+        worker([], {}, {'source': source})
+    client.assert_not_called()
