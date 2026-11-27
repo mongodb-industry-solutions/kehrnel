@@ -59,6 +59,27 @@ def test_connection_resolved_only_from_same_owner_without_writes(monkeypatch):
     assert all(call[0].endswith('find_one') or call[0] == '__getitem__' for collection in db.values() for call in collection.mock_calls)
 
 
+@pytest.mark.parametrize('runtime', [None, {}])
+def test_registered_external_source_needs_no_runtime_metadata(monkeypatch, runtime):
+    config = {'collections': {'compositions': {'name': 'Compositions'},
+              'codes': {'name': 'ArchetypeCodes'}, 'shortcuts': {'name': 'CodedValues'}},
+              'sourceReader': {'dictionary_format': 'ctti_rows'}}
+    source = profile(config=config)
+    db, holder = store(source)
+    holder['environments'][1]['strategyLinks'] = [
+        {'domain': 'other', 'kehrnel': None},
+        {'strategyId': 'openehr.rps_dual_ibm', 'executionMode': 'external',
+         'deployment': {'kind': 'existing_source'}, 'activationId': None,
+         'kehrnel': runtime, 'configOverrides': config},
+    ]
+    monkeypatch.setattr('kehrnel.engine.core.integrations.hdl.bindings_resolver._decrypt_sealed_uri', lambda value: 'synthetic://connection')
+    assert _analytics_source_uri(db, 'analytics', source) == 'synthetic://connection'
+    assert all(call[0].endswith('find_one') for collection in db.values() for call in collection.mock_calls)
+    source['collection'] = 'unreviewed'
+    with pytest.raises(ValueError, match='configuration changed'):
+        _analytics_source_uri(db, 'analytics', source)
+
+
 @pytest.mark.parametrize('case', ['other_owner', 'paused', 'drift', 'forged', 'same_environment', 'removed', 'unknown_control'])
 def test_source_binding_fails_closed(case):
     db, holder = store(paused=case == 'paused')

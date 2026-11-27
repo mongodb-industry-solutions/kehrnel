@@ -57,7 +57,9 @@ def source_from_strategy(*, environment_id, database, strategy_id, config):
 
 def configuration_for_link(link):
     result = {}
-    values = [link.get('mergedConfig'), link.get('configOverrides')] if link.get('configurationSource') == 'authored' else [link.get('kehrnel', {}).get('config'), link.get('mergedConfig'), link.get('configOverrides')]
+    # Existing-source registrations deliberately have no runtime activation.
+    runtime = link.get('kehrnel') or {}
+    values = [link.get('mergedConfig'), link.get('configOverrides')] if link.get('configurationSource') == 'authored' else [runtime.get('config'), link.get('mergedConfig'), link.get('configOverrides')]
     for value in values:
         if isinstance(value, dict): result = merge(result, value)
     return result
