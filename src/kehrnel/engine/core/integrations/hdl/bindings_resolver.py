@@ -242,7 +242,7 @@ def _analytics_source_uri(db, destination_id, source):
     control = db['environment_controls'].find_one({'envId': source_id}) or {}
     if control.get('mode', 'normal') not in ('normal', 'read_only'):
         raise ValueError('The source environment is unavailable')
-    link = next((l for l in environment.get('strategyLinks', []) if (l.get('strategyId') or l.get('kehrnel', {}).get('strategyId')) == source['strategy_id']), None)
+    link = next((l for l in environment.get('strategyLinks', []) if (l.get('strategyId') or (l.get('kehrnel') or {}).get('strategyId')) == source['strategy_id']), None)
     if not link:
         raise ValueError('The source operational strategy is no longer configured')
     current = source_from_strategy(environment_id=source_id, database=environment['database'],
