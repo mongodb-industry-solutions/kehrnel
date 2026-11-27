@@ -1,6 +1,7 @@
 # src/kehrnel/api/strategies/openehr/rps_dual_ibm/synthetic/routes.py
 
 import json
+import logging
 import time
 from functools import lru_cache
 from pathlib import Path
@@ -22,6 +23,11 @@ from kehrnel.api.strategies.openehr.rps_dual.synthetic.models import (
 )
 from kehrnel.api.strategies.openehr.rps_dual.synthetic.service import generate_synthetic_data
 
+logger = logging.getLogger(__name__)
+
+
+from kehrnel.api.domains.openehr.composition.dependencies import get_composition_config
+from kehrnel.api.strategies.openehr.rps_dual.synthetic.context import request_flattener
 
 router = APIRouter(
     prefix="/synthetic",
@@ -30,15 +36,7 @@ router = APIRouter(
 
 
 async def get_flattener(request: Request) -> Any:
-    """Retrieve the strategy-scoped flattener initialized for the active IBM runtime."""
-    await resolve_active_openehr_context(request, ensure_ingestion=True)
-    flattener = getattr(request.app.state, "flattener", None)
-    if flattener is None:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Ingestion runtime is not initialized. Configure strategy ingestion first.",
-        )
-    return flattener
+    return await request_flattener(request, expected='openehr.rps_dual_ibm')
 
 
 @lru_cache(maxsize=1)
@@ -117,10 +115,12 @@ async def generate_synthetic_data_endpoint(
     if not base_composition:
         base_composition = get_default_vaccination_composition()
 
-    target_search = request.app.state.config.get("target", {})
+    context = await resolve_active_openehr_context(request, ensure_ingestion=False)
+    db = context["db"]
+    target_search = (context["activation"].config or {}).get("target", {})
     merge_search = target_search.get("search_compositions_merge", False)
 
-    db = getattr(request.app.state, "target_db", db)
+    config = await get_composition_config(request)
 
     try:
         created_records = await generate_synthetic_data(
@@ -128,13 +128,14 @@ async def generate_synthetic_data_endpoint(
             base_composition=base_composition,
             count=synthetic_request.count,
             flattener=flattener,
+            config=config,
             merge_search_docs=merge_search,
         )
 
         end_time = time.time()
         generation_time = end_time - start_time
 
-        record_models = [SyntheticDataRecord(**record) for record in created_records]
+        record_models = [SyntheticDataRecord(**{**record, **({"error": "Synthetic record generation failed."} if record.get("error") else {})}) for record in created_records]
         successful_records = [r for r in record_models if r.error is None]
         failed_records = [r for r in record_models if r.error is not None]
 
@@ -149,9 +150,10 @@ async def generate_synthetic_data_endpoint(
         return response
 
     except Exception as exc:
+        logger.error("IBM synthetic generation failed (%s)", type(exc).__name__)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to generate synthetic data: {str(exc)}",
+            detail="Failed to generate synthetic data. Check the environment configuration.",
         )
 
 

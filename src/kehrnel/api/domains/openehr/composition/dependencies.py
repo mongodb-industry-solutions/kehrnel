@@ -32,16 +32,17 @@ async def get_composition_config(request: Request = None) -> CompositionCollecti
     if request is not None:
         try:
             context = await resolve_active_openehr_context(request, ensure_ingestion=False)
-            strategy_cfg = normalize_config(getattr(context.get("activation"), "config", {}) or {})
+            activation_config = getattr(context.get("activation"), "config", {}) or {}
+            strategy_cfg = normalize_config(activation_config)
             return CompositionCollectionNames(
                 database=context.get("database_name") or settings.MONGODB_DB,
-                compositions=settings.COMPOSITIONS_COLL_NAME,
-                flatten_compositions=settings.FLAT_COMPOSITIONS_COLL_NAME,
-                search_compositions=settings.SEARCH_COMPOSITIONS_COLL_NAME,
-                contributions=settings.EHR_CONTRIBUTIONS_COLL,
-                ehr=settings.EHR_COLL_NAME,
+                compositions=context["synced"]["canonical_collection"],
+                flatten_compositions=context["synced"]["flat_collection"],
+                search_compositions=context["synced"]["search_collection"],
+                contributions=context["synced"]["contributions_collection"],
+                ehr=context["synced"]["ehr_collection"],
                 dictionaries=strategy_cfg.collections.codes.name or settings.search_config.codes_collection or "dictionaries",
-                merge_search_docs=bool(settings.search_config.search_compositions_merge),
+                merge_search_docs=bool((activation_config.get("target") or {}).get("search_compositions_merge", False)),
                 composition_fields=FieldMappingConfig(
                     nodes=strategy_cfg.fields.document.cn,
                     data=strategy_cfg.fields.node.data,
@@ -61,8 +62,9 @@ async def get_composition_config(request: Request = None) -> CompositionCollecti
                     score="score",
                 ),
             )
-        except Exception as e:
-            logger.warning(f"Failed to resolve request-scoped composition configuration, using settings fallback: {e}")
+        except Exception:
+            # A scoped request must never fall back to process-wide settings.
+            raise
 
     if settings.USE_DYNAMIC_CONFIG:
         try:

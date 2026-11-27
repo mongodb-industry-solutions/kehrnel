@@ -40,7 +40,7 @@ def source_from_strategy(*, environment_id, database, strategy_id, config):
         'dictionary_format': reader.get('dictionary_format', 'kehrnel_documents'),
         'codes_collection': cfg['collections']['codes']['name'],
         'values_collection': cfg['collections']['shortcuts']['name'],
-        'fields': {'composition_id': '_id', 'patient_id': document['ehr_id'],
+        'fields': {'composition_id': '_id' if ibm else document['comp_id'], 'patient_id': document['ehr_id'],
                    'template': document['tid'], 'template_id': 'template_id' if ibm else document['tid'],
                    'version': document['v'], 'committed_at': document['time_committed'],
                    **reader.get('fields', {})},

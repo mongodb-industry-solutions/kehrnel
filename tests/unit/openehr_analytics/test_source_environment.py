@@ -59,13 +59,23 @@ def test_connection_resolved_only_from_same_owner_without_writes(monkeypatch):
     assert all(call[0].endswith('find_one') or call[0] == '__getitem__' for collection in db.values() for call in collection.mock_calls)
 
 
-@pytest.mark.parametrize('case', ['other_owner', 'paused', 'drift', 'forged', 'same_environment'])
+@pytest.mark.parametrize('case', ['other_owner', 'paused', 'drift', 'forged', 'same_environment', 'removed', 'unknown_control'])
 def test_source_binding_fails_closed(case):
     db, holder = store(paused=case == 'paused')
     source = profile()
+    if case in ('removed', 'unknown_control'): db['environment_controls'].find_one.return_value = {'mode': case}
     if case == 'other_owner': holder['environments'] = holder['environments'][:1]
     if case == 'drift': holder['environments'][1]['database'] = 'changed'
     if case == 'forged': source['collection'] = 'another'
     if case == 'same_environment': source['environment_id'] = 'analytics'
     with pytest.raises(ValueError): _analytics_source_uri(db, 'analytics', source)
     db['environment_secrets'].find_one.assert_not_called()
+
+
+def test_standard_source_uses_configured_composition_identity():
+    assert profile(strategy_id='openehr.rps_dual')['fields']['composition_id'] == 'comp_id'
+    p = profile(strategy_id='openehr.rps_dual', config={'fields': {'document': {'comp_id': 'composition_uid'}}})
+    assert p['fields']['composition_id'] == 'composition_uid'
+    override = profile(strategy_id='openehr.rps_dual', config={'sourceReader': {'fields': {'composition_id': 'stable_source_id'}}})
+    assert override['fields']['composition_id'] == 'stable_source_id'
+    assert profile()['fields']['composition_id'] == '_id'
