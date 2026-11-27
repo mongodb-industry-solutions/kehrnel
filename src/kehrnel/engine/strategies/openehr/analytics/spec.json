@@ -1,0 +1,411 @@
+{
+  "meta": {
+    "strategyId": "openehr.analytics",
+    "specVersion": "1.0",
+    "title": "openEHR Analytical Facts",
+    "domain": "openEHR",
+    "summary": "Clinical facts, composition activity, patient snapshots and shared provenance in a separate analytics database."
+  },
+  "logicalModel": {
+    "source": {
+      "types": [
+        {
+          "id": "openehr-composition",
+          "kind": "document"
+        }
+      ]
+    },
+    "concepts": [
+      {
+        "id": "clinical-fact",
+        "meaning": "One reviewed ENTRY, EVENT, ACTIVITY or CLUSTER instance with related values kept together."
+      }
+    ]
+  },
+  "storageModel": {
+    "stores": [
+      {
+        "id": "facts",
+        "collection": "analytics_facts",
+        "meaning": "Independent clinically scoped facts",
+        "title": "analytics_facts",
+        "role": "analytical"
+      },
+      {
+        "id": "activity",
+        "collection": "analytics_activity",
+        "meaning": "One current composition, not one hospital encounter",
+        "title": "analytics_activity",
+        "role": "analytical"
+      },
+      {
+        "id": "patients",
+        "collection": "analytics_patients",
+        "meaning": "Separately maintained patient snapshots",
+        "title": "analytics_patients",
+        "role": "analytical"
+      },
+      {
+        "id": "source_refs",
+        "collection": "analytics_source_refs",
+        "meaning": "Shared source and mapping provenance",
+        "title": "analytics_source_refs",
+        "role": "analytical"
+      },
+      {
+        "id": "rule_revisions",
+        "collection": "analytics_rule_revisions",
+        "meaning": "Immutable reviewed mappings",
+        "title": "analytics_rule_revisions",
+        "role": "support"
+      },
+      {
+        "id": "projection_state",
+        "collection": "analytics_projection_state",
+        "meaning": "Source/rule versions and conversion outcome",
+        "title": "analytics_projection_state",
+        "role": "support"
+      },
+      {
+        "id": "activity_rollups",
+        "collection": "analytics_activity_rollups",
+        "meaning": "Partitioned daily composition counts",
+        "title": "analytics_activity_rollups",
+        "role": "support"
+      },
+      {
+        "id": "jobs",
+        "collection": "analytics_jobs",
+        "meaning": "Backfill checkpoints and leases",
+        "title": "analytics_jobs",
+        "role": "support"
+      },
+      {
+        "id": "issues",
+        "collection": "analytics_issues",
+        "meaning": "Processing diagnostics",
+        "title": "analytics_issues",
+        "role": "support"
+      },
+      {
+        "id": "model_binding",
+        "collection": "analytics_model_binding",
+        "meaning": "One source namespace and fixed counter partition policy",
+        "title": "analytics_model_binding",
+        "role": "support"
+      },
+      {
+        "id": "streams",
+        "collection": "analytics_streams",
+        "meaning": "Incremental resume tokens and leases",
+        "title": "analytics_streams",
+        "role": "support"
+      }
+    ]
+  },
+  "transformModel": {
+    "steps": [
+      "Read canonical openEHR compositions through the configured source adapter",
+      "Select an effective immutable template rule",
+      "Project correlated clinical blocks and typed values",
+      "Atomically replace output and apply composition-count deltas",
+      "Checkpoint only after acknowledged publication"
+    ],
+    "pipeline": [
+      {
+        "id": "1",
+        "title": "Read and decode",
+        "op": "source adapter",
+        "visual": {
+          "notes": "Read canonical openEHR JSON directly, or use the configured source strategy to reconstruct it. Preserve source identity and do not modify the source."
+        }
+      },
+      {
+        "id": "2",
+        "title": "Choose reviewed rules",
+        "op": "effective rule selection",
+        "visual": {
+          "notes": "Use the exact template identity, accepted time and immutable rule revision."
+        }
+      },
+      {
+        "id": "3",
+        "title": "Project clinical blocks",
+        "op": "Converter.convert",
+        "visual": {
+          "notes": "Keep related values and their repeated-instance identity together. Uncovered clinical content holds facts for review."
+        }
+      },
+      {
+        "id": "4",
+        "title": "Publish a composition",
+        "op": "MongoProjectionStore",
+        "visual": {
+          "notes": "Atomically replace facts, activity, provenance and state; apply composition-count deltas."
+        }
+      },
+      {
+        "id": "5",
+        "title": "Advance the checkpoint",
+        "op": "acknowledged publication",
+        "visual": {
+          "notes": "Advance batch or stream position only after successful publication. Patient snapshots use their own feed."
+        }
+      }
+    ]
+  },
+  "queryModel": {
+    "engine": "MongoDB aggregation over produced collections",
+    "compilerIncluded": false
+  },
+  "samples": {
+    "configuration": "examples/openehr_analytics/config.canonical.json"
+  },
+  "visualization": {
+    "canvas": {
+      "views": [
+        {
+          "id": "architecture"
+        },
+        {
+          "id": "collections"
+        },
+        {
+          "id": "transform"
+        }
+      ]
+    },
+    "collectionModel": {
+      "entities": [
+        {
+          "id": "facts",
+          "store": "facts",
+          "label": "analytics_facts",
+          "description": "Independent clinically scoped facts",
+          "fields": [
+            "_id",
+            "context",
+            "clinical",
+            "quality (when needed)",
+            "lineage",
+            "expires_at (when configured)"
+          ],
+          "links": [
+            {
+              "target": "activity",
+              "on": "context.composition_id → _id"
+            },
+            {
+              "target": "patients",
+              "on": "context.patient_id → _id"
+            },
+            {
+              "target": "source_refs",
+              "on": "lineage.source_ref → _id"
+            }
+          ],
+          "badges": [
+            "analytical"
+          ]
+        },
+        {
+          "id": "activity",
+          "store": "activity",
+          "label": "analytics_activity",
+          "description": "One current composition, not one hospital encounter",
+          "fields": [
+            "_id",
+            "context",
+            "business",
+            "quality (when needed)",
+            "lineage"
+          ],
+          "links": [
+            {
+              "target": "source_refs",
+              "on": "lineage.source_ref → _id"
+            }
+          ],
+          "badges": [
+            "analytical"
+          ]
+        },
+        {
+          "id": "patients",
+          "store": "patients",
+          "label": "analytics_patients",
+          "description": "Separately maintained patient snapshots",
+          "fields": [
+            "_id",
+            "snapshot",
+            "demographics",
+            "conditions",
+            "population"
+          ],
+          "links": [],
+          "badges": [
+            "analytical"
+          ]
+        },
+        {
+          "id": "source_refs",
+          "store": "source_refs",
+          "label": "analytics_source_refs",
+          "description": "Shared source and mapping provenance",
+          "fields": [
+            "_id",
+            "template_name",
+            "template_id",
+            "source_version",
+            "rule_revision",
+            "rule_epoch",
+            "source_namespace",
+            "source_digest",
+            "dictionary_revision",
+            "source_metadata_compatibility (when needed)"
+          ],
+          "links": [
+            {
+              "target": "rule_revisions",
+              "on": "rule_revision → _id"
+            }
+          ],
+          "badges": [
+            "analytical"
+          ]
+        },
+        {
+          "id": "rule_revisions",
+          "store": "rule_revisions",
+          "label": "analytics_rule_revisions",
+          "description": "Immutable reviewed mappings",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        },
+        {
+          "id": "projection_state",
+          "store": "projection_state",
+          "label": "analytics_projection_state",
+          "description": "Source/rule versions and conversion outcome",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        },
+        {
+          "id": "activity_rollups",
+          "store": "activity_rollups",
+          "label": "analytics_activity_rollups",
+          "description": "Partitioned daily composition counts",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        },
+        {
+          "id": "jobs",
+          "store": "jobs",
+          "label": "analytics_jobs",
+          "description": "Backfill checkpoints and leases",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        },
+        {
+          "id": "issues",
+          "store": "issues",
+          "label": "analytics_issues",
+          "description": "Processing diagnostics",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        },
+        {
+          "id": "model_binding",
+          "store": "model_binding",
+          "label": "analytics_model_binding",
+          "description": "One source namespace and fixed counter partition policy",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        },
+        {
+          "id": "streams",
+          "store": "streams",
+          "label": "analytics_streams",
+          "description": "Incremental resume tokens and leases",
+          "fields": [],
+          "links": [],
+          "badges": [
+            "support"
+          ]
+        }
+      ]
+    },
+    "architecture": {
+      "inputs": [
+        {
+          "title": "Compositions",
+          "body": "Canonical openEHR JSON, supplied directly or reconstructed by the configured source strategy."
+        },
+        {
+          "title": "Reviewed OPT rules",
+          "body": "Fact boundaries, selected fields, conversions, effective dates and retention."
+        },
+        {
+          "title": "Patient feed",
+          "body": "Separately governed demographic and population snapshots."
+        }
+      ],
+      "processor": {
+        "title": "Decode → validate → project",
+        "body": "One deterministic conversion path for historical batches and new compositions."
+      },
+      "relationships": [
+        "facts.context.composition_id → activity._id",
+        "facts.context.patient_id → patients._id",
+        "facts.lineage.source_ref → source_refs._id",
+        "source_refs.rule_revision → rule_revisions._id"
+      ],
+      "notes": [
+        "One activity document represents a composition, not necessarily a hospital admission.",
+        "One fact represents a reviewed clinical block instance. Related values remain together inside clinical.",
+        "Detailed lineage is shared through source_refs. Empty quality objects are omitted.",
+        "The shown names use the default analytics_ prefix. Patient payload fields depend on the governed patient feed."
+      ],
+      "entryProfiles": [
+        {
+          "type": "OBSERVATION",
+          "grain": "Usually one EVENT. Keep systolic and diastolic together; a reviewed repeated CLUSTER can define a finer block."
+        },
+        {
+          "type": "EVALUATION",
+          "grain": "One recorded assessment, or a reviewed repeated clinical block."
+        },
+        {
+          "type": "ACTION",
+          "grain": "One performed action instance with its time and state."
+        },
+        {
+          "type": "INSTRUCTION",
+          "grain": "One planned ACTIVITY; it does not mean the action happened."
+        },
+        {
+          "type": "ADMIN_ENTRY",
+          "grain": "One administrative entry, or a reviewed repeated block."
+        }
+      ]
+    }
+  }
+}

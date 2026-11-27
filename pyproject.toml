@@ -80,6 +80,7 @@ all = [
 ]
 
 [project.scripts]
+kehrnel-openehr-analytics = "kehrnel.engine.domains.openehr.analytics.cli:main"
 kehrnel = "kehrnel.cli.unified:main"
 kehrnel-api      = "kehrnel.api.app:main"
 

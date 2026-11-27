@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "database",
+    "source_namespace",
+    "collection_prefix",
+    "rollup_partitions",
+    "max_transaction_bytes",
+    "max_transaction_facts",
+    "source",
+    "rules"
+  ],
+  "properties": {
+    "database": {
+      "type": "string",
+      "minLength": 1,
+      "title": "Analytics database",
+      "description": "Analytics output on the environment connection. The source CDR remains separate.",
+      "default": "openehr_analytics",
+      "maxLength": 63,
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "x-ui": {
+        "useAsActivationDefault": true,
+        "independentFromDomain": true
+      }
+    },
+    "source_namespace": {
+      "type": "string",
+      "minLength": 1,
+      "title": "Source identifier",
+      "description": "Stable identity for this source dataset, for example catsalut-pre. Keep it unchanged after ingestion; a different source requires a separate analytics target.",
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "collection_prefix": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$",
+      "x-ui": {
+        "hidden": true
+      }
+    },
+    "rollup_partitions": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4096,
+      "x-ui": {
+        "hidden": true
+      }
+    },
+    "max_transaction_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 67108864,
+      "x-ui": {
+        "hidden": true
+      }
+    },
+    "max_transaction_facts": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000,
+      "x-ui": {
+        "hidden": true
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format"
+      ],
+      "properties": {
+        "format": {
+          "enum": [
+            "canonical",
+            "ibm"
+          ]
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "composition_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "patient_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "template": {
+              "type": "string",
+              "minLength": 1
+            },
+            "template_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "committed_at": {
+              "type": "string",
+              "minLength": 1
+            },
+            "provider": {
+              "type": "string",
+              "minLength": 1
+            },
+            "canonical": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "nodes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nodes": {
+              "type": "string",
+              "minLength": 1
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "instances": {
+              "type": "string",
+              "minLength": 1
+            },
+            "keys": {
+              "type": "string",
+              "minLength": 1
+            },
+            "data": {
+              "type": "string",
+              "minLength": 1
+            },
+            "separator": {
+              "type": "string",
+              "minLength": 1
+            },
+            "instance_mode": {
+              "enum": [
+                "full_chain",
+                "local_preorder"
+              ]
+            },
+            "value_prefix": {
+              "type": "string"
+            },
+            "at_prefixes": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "codes": {
+          "type": "object"
+        },
+        "shortcuts": {
+          "type": "object"
+        },
+        "codes_document": {
+          "type": "string"
+        },
+        "shortcuts_document": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "codes_collection": {
+          "type": "string"
+        },
+        "values_collection": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "upload",
+            "mongodb"
+          ],
+          "default": "upload"
+        },
+        "connection_ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,80}$",
+          "maxLength": 128
+        },
+        "database": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,63}$"
+        },
+        "collection": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*$"
+        },
+        "environment_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "strategy_id": {
+          "enum": [
+            "openehr.rps_dual",
+            "openehr.rps_dual_ibm"
+          ]
+        },
+        "source_config_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "dictionary_format": {
+          "enum": [
+            "ctti_rows",
+            "kehrnel_documents"
+          ]
+        }
+      },
+      "x-ui": {
+        "hidden": true
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "epoch",
+          "effective_at",
+          "catalog"
+        ],
+        "properties": {
+          "epoch": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "effective_at": {
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1
+          },
+          "revision": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "object",
+            "required": [
+              "templates",
+              "variables"
+            ]
+          },
+          "retention": {
+            "type": "object"
+          }
+        }
+      },
+      "x-ui": {
+        "hidden": true
+      }
+    }
+  },
+  "title": "openEHR analytics configuration",
+  "x-ui": {
+    "activationFields": [
+      "database",
+      "source_namespace"
+    ],
+    "activeFields": [],
+    "activationMessage": "Choose the destination and source identity. Template facts, field selection, conversions and retention are configured in Data Model Catalog \u2192 Analytics. This screen does not edit clinical rules or decoder internals.",
+    "activeMessage": "Destination and source identity are fixed for this activation. Maintain fact rules in Data Model Catalog \u2192 Analytics. Changing the source or storage layout requires a new deployment and an explicit migration.",
+    "readOnlyTitle": "Storage and source \u00b7 read-only",
+    "readOnlyFields": [
+      {
+        "path": "source.format",
+        "title": "Source format",
+        "description": "Canonical compositions by default. IBM ingestion uses a validated, dictionary-pinned source profile supplied by the integrator."
+      },
+      {
+        "path": "collection_prefix",
+        "title": "Collection prefix",
+        "description": "The strategy owns collection structure and internal processing limits."
+      }
+    ],
+    "activeReadOnlyFields": [
+      {
+        "path": "database",
+        "title": "Analytics database",
+        "description": "The activated target."
+      },
+      {
+        "path": "source_namespace",
+        "title": "Source identifier",
+        "description": "Identity shared by conversion, publication and replay."
+      }
+    ],
+    "guidance": [
+      {
+        "title": "Template rules",
+        "body": "Facts, fields, conversions and retention belong in each template\u2019s Analytics tab."
+      },
+      {
+        "title": "Patient context",
+        "body": "Patient snapshots are a separate input. They are not copied into every fact."
+      },
+      {
+        "title": "Internal settings",
+        "body": "Decoder details, counter partitions and transaction limits are maintained by the integration configuration."
+      }
+    ]
+  }
+}

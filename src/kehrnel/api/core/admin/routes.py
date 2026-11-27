@@ -460,7 +460,7 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
         should_bootstrap = (
             is_rps_dual and any(bootstrap_payload.get(key) != "none" for key in ("codes", "shortcuts"))
         ) or (not is_rps_dual and apply_shortcuts)
-        if should_bootstrap:
+        if should_bootstrap and activation.strategy_id != "openehr.analytics":
             dict_result = await rt.dispatch(
                 env_id,
                 "op",
@@ -2080,5 +2080,46 @@ async def cancel_synthetic_job(env_id: str, job_id: str, request: Request):
         _enforce_synthetic_team_scope(identity, existing)
         job = await manager.cancel_job(job_id)
         return {"ok": True, "job": job}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/environments/{env_id}/authoring/openehr.analytics/{op}", tags=["openEHR analytics authoring"])
+async def analytics_authoring(env_id: str, op: str, request: Request):
+    """Bounded, stateless authoring; never auto-activates or opens a MongoDB adapter."""
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        allowed = {"analytics_source_from_strategy", "analytics_validate_setup", "analytics_default_mapping", "analytics_validate_draft",
+                   "analytics_preview_draft", "analytics_validate_configuration", "analytics_reprocessing_plan",
+                   "analytics_business_catalog", "analytics_source_inspection_plan", "analytics_source_coverage",
+                   "analytics_workbench_plan", "analytics_review_draft"}
+        if op not in allowed:
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="Not a read-only analytics authoring operation")
+        raw = bytearray()
+        async for chunk in request.stream():
+            raw.extend(chunk)
+            if len(raw) > 25 * 1024 * 1024:
+                raise KehrnelError(code="PAYLOAD_TOO_LARGE", status=413, message="Authoring request exceeds 25 MiB")
+        try:
+            body = json.loads(raw)
+        except (ValueError, UnicodeDecodeError):
+            raise KehrnelError(code="INVALID_INPUT", status=422, message="Invalid JSON authoring request")
+        if not isinstance(body, dict) or set(body) - {"payload", "config"}:
+            raise KehrnelError(code="INVALID_INPUT", status=422, message="Use payload and optional preview config")
+        from kehrnel.engine.core.types import StrategyContext
+        from kehrnel.engine.strategies.openehr.analytics.strategy import OpenEHRAnalyticsStrategy
+        import jsonschema
+        strategy = OpenEHRAnalyticsStrategy()
+        config = body.get("config", {})
+        if not isinstance(config, dict):
+            raise KehrnelError(code="INVALID_INPUT", status=422, message="Configuration must be an object")
+        try:
+            result = await strategy.run_op(StrategyContext(env_id, config), op, body.get("payload", {}))
+        except jsonschema.ValidationError as exc:
+            raise KehrnelError(code="INVALID_INPUT", status=422, message=exc.message)
+        except (ValueError, KeyError, TypeError) as exc:
+            raise KehrnelError(code="INVALID_RULE", status=422, message=str(exc))
+        return _json_safe(result)
     except Exception as exc:
         return _error_response(exc)

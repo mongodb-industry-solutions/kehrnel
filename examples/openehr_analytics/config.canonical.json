@@ -1,0 +1,101 @@
+{
+  "database": "openehr_analytics",
+  "source_namespace": "synthetic-reference",
+  "collection_prefix": "analytics_",
+  "rollup_partitions": 64,
+  "max_transaction_bytes": 33554432,
+  "max_transaction_facts": 50000,
+  "source": {
+    "format": "canonical",
+    "fields": {},
+    "nodes": {}
+  },
+  "rules": [
+    {
+      "epoch": 1,
+      "effective_at": "2020-01-01T00:00:00Z",
+      "schema_version": 1,
+      "retention": {
+        "mode": "retain"
+      },
+      "catalog": {
+        "variables": [
+          {
+            "key": "blood_pressure.systolic",
+            "label": "Systolic",
+            "type": "quantity",
+            "unit": "mm[Hg]",
+            "rm_types": [
+              "DV_QUANTITY"
+            ]
+          },
+          {
+            "key": "blood_pressure.diastolic",
+            "label": "Diastolic",
+            "type": "quantity",
+            "unit": "mm[Hg]",
+            "rm_types": [
+              "DV_QUANTITY"
+            ]
+          }
+        ],
+        "templates": [
+          {
+            "template_name": "Analytics Blood Pressure.v1",
+            "family": "vital_signs",
+            "phase": "recorded",
+            "model_contract": "openehr-fact-model/v1",
+            "groups": [
+              {
+                "kind": "blood_pressure",
+                "subject": "patient",
+                "anchor": "/content[openEHR-EHR-OBSERVATION.blood_pressure.v2]/data[at0001]/events[at0006]",
+                "definition": {
+                  "entry_type": "OBSERVATION",
+                  "entry_path": "/content[openEHR-EHR-OBSERVATION.blood_pressure.v2]",
+                  "subject": "patient",
+                  "subject_mode": "ehr_owner",
+                  "time": "nearest_recorded_time",
+                  "time_key": null,
+                  "allow_composition_time": false,
+                  "required_fields": [
+                    "blood_pressure.systolic",
+                    "blood_pressure.diastolic"
+                  ],
+                  "missing_required": "reject_composition"
+                },
+                "fields": [
+                  {
+                    "key": "blood_pressure.systolic",
+                    "path": "/content[openEHR-EHR-OBSERVATION.blood_pressure.v2]/data[at0001]/events[at0006]/data[at0003]/items[at0004]",
+                    "scope": "block",
+                    "conversions": {
+                      "unit_conversions": {
+                        "kPa": {
+                          "scale": 7.50061683
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "key": "blood_pressure.diastolic",
+                    "path": "/content[openEHR-EHR-OBSERVATION.blood_pressure.v2]/data[at0001]/events[at0006]/data[at0003]/items[at0005]",
+                    "scope": "block",
+                    "conversions": {
+                      "unit_conversions": {
+                        "kPa": {
+                          "scale": 7.50061683
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "activity_fields": []
+          }
+        ]
+      }
+    }
+  ]
+}
