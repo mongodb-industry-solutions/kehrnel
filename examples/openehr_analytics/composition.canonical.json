@@ -1,0 +1,228 @@
+{
+  "_id": "reference-composition-1",
+  "ehr_id": "reference-owner-1",
+  "template_name": "Analytics Blood Pressure.v1",
+  "template_id": "reference-template-1",
+  "composition_version": "1",
+  "composition_date": "2026-11-01T11:00:00Z",
+  "provider_id": "Hospital A",
+  "synthetic": true,
+  "canonicalJSON": {
+    "_type": "COMPOSITION",
+    "archetype_node_id": "openEHR-EHR-COMPOSITION.encounter.v1",
+    "name": {
+      "_type": "DV_TEXT",
+      "value": "Reference encounter"
+    },
+    "archetype_details": {
+      "archetype_id": {
+        "value": "openEHR-EHR-COMPOSITION.encounter.v1"
+      },
+      "template_id": {
+        "value": "Analytics Blood Pressure.v1"
+      }
+    },
+    "context": {
+      "start_time": {
+        "_type": "DV_DATE_TIME",
+        "value": "2026-11-01T10:00:00Z"
+      }
+    },
+    "content": [
+      {
+        "_type": "OBSERVATION",
+        "archetype_node_id": "openEHR-EHR-OBSERVATION.blood_pressure.v2",
+        "name": {
+          "_type": "DV_TEXT",
+          "value": "Blood pressure"
+        },
+        "subject": {
+          "_type": "PARTY_SELF"
+        },
+        "data": {
+          "_type": "HISTORY",
+          "archetype_node_id": "at0001",
+          "events": [
+            {
+              "_type": "POINT_EVENT",
+              "archetype_node_id": "at0006",
+              "time": {
+                "_type": "DV_DATE_TIME",
+                "value": "2026-11-01T10:00:00Z"
+              },
+              "data": {
+                "_type": "ITEM_TREE",
+                "archetype_node_id": "at0003",
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0004",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0004"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 150,
+                      "units": "mm[Hg]"
+                    }
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0005",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0005"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 65,
+                      "units": "mm[Hg]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "_type": "POINT_EVENT",
+              "archetype_node_id": "at0006",
+              "time": {
+                "_type": "DV_DATE_TIME",
+                "value": "2026-11-01T10:01:00Z"
+              },
+              "data": {
+                "_type": "ITEM_TREE",
+                "archetype_node_id": "at0003",
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0004",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0004"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 127,
+                      "units": "mm[Hg]"
+                    }
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0005",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0005"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 92,
+                      "units": "mm[Hg]"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "_type": "OBSERVATION",
+        "archetype_node_id": "openEHR-EHR-OBSERVATION.blood_pressure.v2",
+        "name": {
+          "_type": "DV_TEXT",
+          "value": "Blood pressure"
+        },
+        "subject": {
+          "_type": "PARTY_SELF"
+        },
+        "data": {
+          "_type": "HISTORY",
+          "archetype_node_id": "at0001",
+          "events": [
+            {
+              "_type": "POINT_EVENT",
+              "archetype_node_id": "at0006",
+              "time": {
+                "_type": "DV_DATE_TIME",
+                "value": "2026-11-01T10:00:00Z"
+              },
+              "data": {
+                "_type": "ITEM_TREE",
+                "archetype_node_id": "at0003",
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0004",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0004"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 135,
+                      "units": "mm[Hg]"
+                    }
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0005",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0005"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 80,
+                      "units": "mm[Hg]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "_type": "POINT_EVENT",
+              "archetype_node_id": "at0006",
+              "time": {
+                "_type": "DV_DATE_TIME",
+                "value": "2026-11-01T10:01:00Z"
+              },
+              "data": {
+                "_type": "ITEM_TREE",
+                "archetype_node_id": "at0003",
+                "items": [
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0004",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0004"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 120,
+                      "units": "mm[Hg]"
+                    }
+                  },
+                  {
+                    "_type": "ELEMENT",
+                    "archetype_node_id": "at0005",
+                    "name": {
+                      "_type": "DV_TEXT",
+                      "value": "at0005"
+                    },
+                    "value": {
+                      "_type": "DV_QUANTITY",
+                      "magnitude": 75,
+                      "units": "mm[Hg]"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

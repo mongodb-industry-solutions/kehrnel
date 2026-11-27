@@ -205,10 +205,54 @@ def resolve_hdl_bindings(
             "Could not determine database name from bindings_ref, URI, activation config, or environment metadata"
         )
 
-    return {
-        "db": {
-            "provider": "mongodb",
-            "uri": uri,
-            "database": db_name,
-        }
-    }
+    result = {"db": {"provider": "mongodb", "uri": uri, "database": db_name}}
+    # Source and destination secrets are independent and scoped to this same
+    # workspace. Only the analytics strategy receives the source binding.
+    config = (context or {}).get("activation_config") or {}
+    source = config.get("source") or {}
+    if strategy_id == "openehr.analytics" and source.get("mode") == "mongodb":
+        if source.get('environment_id'):
+            source_uri = _analytics_source_uri(store.db, ref_env_id, source)
+            result['extras'] = {'analytics_source': {'connection_ref': source['connection_ref'], 'uri': source_uri}}
+    return result
+
+
+def _analytics_source_uri(db, destination_id, source):
+    """Read another environment only inside the destination's current owner.
+
+    The source strategy is never activated, deployed or written. Its persisted
+    profile must still match the explicit snapshot approved by the destination.
+    """
+    from kehrnel.engine.domains.openehr.analytics.source_environment import source_from_strategy, configuration_for_link
+
+    source_id = source['environment_id']
+    if source_id == destination_id:
+        raise ValueError('Select a different source environment')
+    matches = []
+    for collection, owner_type in [('teams', 'team'), ('users', 'user')]:
+        holder = db[collection].find_one({'environments.id': destination_id})
+        if holder:
+            matches.append((holder, owner_type))
+    if len(matches) != 1:
+        raise ValueError('The analytics environment owner could not be resolved uniquely')
+    holder, owner_type = matches[0]
+    environment = next((e for e in holder.get('environments', []) if e.get('id') == source_id), None)
+    if environment is None:
+        raise ValueError('The source environment does not belong to this workspace')
+    control = db['environment_controls'].find_one({'envId': source_id}) or {}
+    if control.get('mode', 'normal') not in ('normal', 'read_only'):
+        raise ValueError('The source environment is unavailable')
+    link = next((l for l in environment.get('strategyLinks', []) if (l.get('strategyId') or l.get('kehrnel', {}).get('strategyId')) == source['strategy_id']), None)
+    if not link:
+        raise ValueError('The source operational strategy is no longer configured')
+    current = source_from_strategy(environment_id=source_id, database=environment['database'],
+        strategy_id=source['strategy_id'], config=configuration_for_link(link))
+    if current != source:
+        raise ValueError('The source environment configuration changed; review and save the analytics setup again')
+    secret = db['environment_secrets'].find_one({'envId': source_id, 'ownerType': owner_type, 'ownerId': str(holder['_id'])})
+    if not secret:
+        secret = db['environment_secrets'].find_one({'envId': source_id, 'ownerType': {'$exists': False}, 'ownerId': {'$exists': False}})
+    sealed = environment.get('sealedUri') or (secret or {}).get('sealedUri')
+    if not sealed:
+        raise ValueError('The source environment has no saved connection')
+    return _decrypt_sealed_uri(sealed)

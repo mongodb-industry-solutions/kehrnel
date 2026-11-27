@@ -1,0 +1,1001 @@
+{
+  "id": "openehr.analytics",
+  "name": "openEHR Analytical Facts",
+  "version": "0.1.0",
+  "domain": "openEHR",
+  "maturity": "published",
+  "pack_format": "strategy-pack/v1",
+  "spec": {
+    "path": "spec.json",
+    "version": "1.0"
+  },
+  "summary": "Versioned clinical facts, composition activity and lineage from openEHR compositions through configured source adapters.",
+  "entrypoint": "kehrnel.engine.strategies.openehr.analytics.strategy:OpenEHRAnalyticsStrategy",
+  "config": {
+    "strategy": {
+      "schema": "schema.json",
+      "defaults": "defaults.json",
+      "description": "Reviewed clinical block rules and analytics destination"
+    }
+  },
+  "capabilities": [
+    "transform",
+    "ingest",
+    "plan",
+    "apply"
+  ],
+  "adapters": {
+    "storage": [
+      "mongodb"
+    ],
+    "search": [],
+    "vector": [],
+    "queue": []
+  },
+  "compatibility": {
+    "packFormat": "strategy-pack/v1",
+    "requires": [
+      "storage.mongo"
+    ],
+    "optional": []
+  },
+  "ops": [
+    {
+      "name": "analytics_source_from_strategy",
+      "kind": "utility",
+      "summary": "Resolve a portable read profile from an operational source environment without activation",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "environment_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "database": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,63}$"
+          },
+          "strategy_id": {
+            "enum": [
+              "openehr.rps_dual",
+              "openehr.rps_dual_ibm"
+            ]
+          },
+          "config": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "environment_id",
+          "database",
+          "strategy_id",
+          "config"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_preview",
+      "kind": "transform",
+      "summary": "Preview one composition through the configured source adapter without writing",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "document",
+          "accepted_at"
+        ],
+        "properties": {
+          "document": {
+            "type": "object"
+          },
+          "accepted_at": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "analytics_ingest",
+      "kind": "ingest",
+      "summary": "Atomically publish one versioned composition using reviewed rules",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "document",
+          "accepted_at"
+        ],
+        "properties": {
+          "document": {
+            "type": "object"
+          },
+          "accepted_at": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "analytics_rules",
+      "kind": "query",
+      "summary": "Inspect immutable rule revisions and their activation times",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "analytics_coverage",
+      "kind": "query",
+      "summary": "Read a bounded page of compositions awaiting template rules",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "analytics_default_mapping",
+      "summary": "Propose all clinical fields from an OPT; no activation or source writes",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "opt_xml",
+          "effective_at"
+        ],
+        "properties": {
+          "opt_xml": {
+            "type": "string",
+            "maxLength": 16777216
+          },
+          "effective_at": {
+            "type": "string"
+          },
+          "epoch": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "aliases": {
+            "type": "object",
+            "maxProperties": 100000,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "kind": "utility"
+    },
+    {
+      "name": "analytics_validate_draft",
+      "kind": "utility",
+      "summary": "Compile selected OPT blocks and preview edited rules without activation or database writes",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "opt_xml",
+          "effective_at"
+        ],
+        "properties": {
+          "opt_xml": {
+            "type": "string",
+            "maxLength": 16777216
+          },
+          "effective_at": {
+            "type": "string"
+          },
+          "epoch": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "aliases": {
+            "type": "object",
+            "maxProperties": 100000,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "edits": {
+            "type": "object"
+          },
+          "proposal_revision": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_preview_draft",
+      "kind": "utility",
+      "summary": "Compile selected OPT blocks and preview edited rules without activation or database writes",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "opt_xml",
+          "effective_at",
+          "document",
+          "accepted_at"
+        ],
+        "properties": {
+          "opt_xml": {
+            "type": "string",
+            "maxLength": 16777216
+          },
+          "effective_at": {
+            "type": "string"
+          },
+          "epoch": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "aliases": {
+            "type": "object",
+            "maxProperties": 100000,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "edits": {
+            "type": "object"
+          },
+          "proposal_revision": {
+            "type": "string"
+          },
+          "document": {
+            "type": "object"
+          },
+          "accepted_at": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_validate_configuration",
+      "kind": "utility",
+      "summary": "Validate the full immutable rule set and produce a native index plan without applying it",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "config"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "config": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "name": "analytics_jobs",
+      "kind": "query",
+      "summary": "Read one bounded page of external worker job status",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ready",
+              "running",
+              "failed",
+              "complete"
+            ]
+          },
+          "template": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    {
+      "name": "analytics_reprocessing_plan",
+      "kind": "utility",
+      "summary": "Plan a template-scoped historical job; no automatic execution",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "job_id",
+          "template",
+          "rule_revision",
+          "accepted_at",
+          "committed_from",
+          "committed_until"
+        ],
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "template": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "not": {
+              "const": "*"
+            }
+          },
+          "rule_revision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "accepted_at": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "committed_from": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "committed_until": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "batch_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 128
+          }
+        }
+      }
+    },
+    {
+      "name": "analytics_business_catalog",
+      "kind": "utility",
+      "summary": "Read a metadata-only page of business variables or exact rule bindings",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "as_of"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_source_inspection_plan",
+      "kind": "utility",
+      "summary": "Plan an indexed, bounded source metadata read; does not connect to the source",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "template": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "committed_from": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "committed_until": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "max_time_ms": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_source_coverage",
+      "kind": "utility",
+      "summary": "Report exact template coverage within bounded metadata supplied by an authorized source reader",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "headers": {
+            "type": "array",
+            "maxItems": 1000,
+            "items": {
+              "type": "object"
+            }
+          },
+          "opts": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "type": "object",
+              "properties": {
+                "template": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "source_digest": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                }
+              },
+              "required": [
+                "template",
+                "source_digest"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "as_of": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        },
+        "required": [
+          "headers",
+          "opts",
+          "as_of"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_workbench_plan",
+      "kind": "utility",
+      "summary": "Compile a scoped row read with native index requirements without execution",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dataset": {
+            "enum": [
+              "facts",
+              "activity"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "provider_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "patient_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "template_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "start": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "end": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "variables": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "max_time_ms": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000
+          }
+        },
+        "required": [
+          "dataset",
+          "scope",
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_workbench",
+      "kind": "query",
+      "summary": "Read bounded rows from the active analytics target with exact MQL and measured telemetry",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "dataset": {
+            "enum": [
+              "facts",
+              "activity"
+            ]
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "provider_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "patient_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "template_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "start": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "end": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "variables": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "max_time_ms": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5000
+          }
+        },
+        "required": [
+          "dataset",
+          "scope",
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_review_draft",
+      "kind": "utility",
+      "summary": "Recompute a draft preview and check review acknowledgements; no approval or persistence",
+      "input_schema": {
+        "type": "object",
+        "required": [
+          "opt_xml",
+          "effective_at",
+          "document",
+          "accepted_at",
+          "acknowledgements"
+        ],
+        "properties": {
+          "opt_xml": {
+            "type": "string",
+            "maxLength": 16777216
+          },
+          "effective_at": {
+            "type": "string"
+          },
+          "epoch": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "aliases": {
+            "type": "object",
+            "maxProperties": 100000,
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "edits": {
+            "type": "object"
+          },
+          "proposal_revision": {
+            "type": "string"
+          },
+          "document": {
+            "type": "object"
+          },
+          "accepted_at": {
+            "type": "string"
+          },
+          "acknowledgements": {
+            "type": "object",
+            "properties": {
+              "revision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "topics": {
+                "type": "array",
+                "maxItems": 4,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                }
+              }
+            },
+            "required": [
+              "revision",
+              "topics"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_validate_setup",
+      "kind": "utility",
+      "summary": "validate setup",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_test_source",
+      "kind": "query",
+      "summary": "test source",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_prepare",
+      "kind": "maintenance",
+      "summary": "prepare",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_process_documents",
+      "kind": "ingest",
+      "summary": "process documents",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 25,
+            "items": {
+              "type": "object"
+            }
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "write": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "documents",
+          "accepted_at"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_source_sample",
+      "kind": "ingest",
+      "summary": "source sample",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "template": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "write": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "template",
+          "limit",
+          "accepted_at"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analytics_backfill",
+      "kind": "ingest",
+      "summary": "backfill",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "job": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "template": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "not": {
+                  "const": "*"
+                }
+              },
+              "rule_revision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "source_namespace": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "accepted_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "committed_from": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "committed_until": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "batch_size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 25,
+                "default": 25
+              }
+            },
+            "required": [
+              "job_id",
+              "template",
+              "rule_revision",
+              "source_namespace",
+              "accepted_at"
+            ],
+            "additionalProperties": false
+          },
+          "max_batches": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "required": [
+          "job",
+          "max_batches"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "ui": {
+    "activatable": true,
+    "domain_badge": "openEHR",
+    "docs": "/guide/docs/openehr-analytics-strategy",
+    "tags": [
+      "openEHR",
+      "analytics"
+    ],
+    "constraints": [
+      "Use a separate analytics environment; the operational AQL activation remains independent.",
+      "Transactions require a replica set or sharded MongoDB deployment.",
+      "Real-source compatibility and billion-composition throughput require deployment qualification.",
+      "This pack ingests analytics documents; it does not implement an AQL or SQL query compiler."
+    ],
+    "status_message": "Published for configuration and activation. Validate source compatibility, query performance and throughput on the target deployment before production rollout.",
+    "story": "Clinical analytics needs meaningful variables without navigating an entire openEHR composition. This strategy projects reviewed clinical blocks into independent fact documents, retaining related values and small nested objects together. A blood-pressure reading keeps systolic and diastolic in the same fact.\n\nThe activity collection represents the current version of each composition, with its hospital, patient, template and time. Patient snapshots and shared provenance live in separate collections. The original CDR remains the source of record.\n\nOfficial source strategies can supply canonical compositions through their retrieval or reverse-transform interfaces. For example, openEHR RPS Dual can reconstruct a composition before analytics rules are applied. Source-specific adapters are selected in the environment configuration.",
+    "how_it_works": "1. Choose a separate analytics database and a stable source identifier.\n\n2. Add exact OPTs in Data Model Catalog. In each Analytics tab, review the proposed fact blocks, select fields, set supported conversions and retention, then validate and preview one composition.\n\n3. Save a draft and approve a release. Integration clients download approved configuration through the environment developer-key API.\n\n4. The same Python converter supports historical batches and new compositions. Publication replaces the previous composition output atomically and updates daily activity counts. Missing rules or uncovered clinical content hold facts for review.",
+    "benefits": [
+      "Related measurements stay together; typed values can retain nested JSON and arrays.",
+      "Explicit business-variable reuse supports approved cross-template analysis.",
+      "Shared source references avoid repeating complete paths and provenance in every fact.",
+      "One conversion path supports backfill, incremental ingestion and versioned rule changes."
+    ],
+    "ideal_for": [
+      "Clinical fact analysis across mapped templates, composition activity and patient cohorts.",
+      "A separate analytics environment with governed template rules and an external ingestion worker."
+    ],
+    "consider_alternatives": [
+      "Keep full AQL and canonical retrieval in the operational CDR.",
+      "Validate index plans, patient feeds, rule coverage and throughput against the intended deployment. Atlas Search and vectors are not provisioned by this strategy pack."
+    ]
+  },
+  "distribution": "official"
+}

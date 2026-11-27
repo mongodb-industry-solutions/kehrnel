@@ -16,6 +16,7 @@ from typing import Any, Dict, List
 import yaml
 from lxml import etree
 from bson import ObjectId
+from bson.binary import Binary, UuidRepresentation
 
 from kehrnel.engine.core.manifest import StrategyManifest
 from kehrnel.engine.core.errors import KehrnelError
@@ -31,6 +32,10 @@ from kehrnel.engine.domains.openehr.templates.validator import kehrnelValidator
 from kehrnel.api.bridge.app.core.config import settings as bridge_settings
 from kehrnel.engine.core.redaction import redact_sensitive
 
+from kehrnel.contracts.deployment_configuration import DeploymentCompilationRequest
+from kehrnel.engine.core.deployment_configuration import compile_deployment_configuration
+from kehrnel.engine.core.deployment_identity import SUPPORTED_STRATEGIES, package_identity
+
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
@@ -39,6 +44,21 @@ RPS_DUAL_STRATEGY_IDS = {"openehr.rps_dual", "openehr.rps_dual_ibm"}
 
 def _is_rps_dual_strategy_id(strategy_id: Any) -> bool:
     return str(strategy_id or "").strip().lower() in RPS_DUAL_STRATEGY_IDS
+
+
+@router.post("/strategies/{strategy_id}/deployment-config/compile")
+async def compile_strategy_deployment(strategy_id: str, request: Request, body: DeploymentCompilationRequest):
+    """Compile supplied configuration only; never activate or connect to a target database."""
+    try:
+        _require_admin_access(request)
+        rt = getattr(request.app.state, "strategy_runtime", None)
+        manifest = rt.registry.get_manifest(strategy_id) if rt else None
+        if manifest is None:
+            raise KehrnelError(code="STRATEGY_NOT_FOUND", status=404, message="Strategy is not installed")
+        return await compile_deployment_configuration(manifest, body)
+    except Exception as exc:
+        return _error_response(exc)
+
 
 
 ALLOWED_DOC_EXTENSIONS = {".xml", ".csv", ".cda", ".json", ".txt", ".hl7"}
@@ -108,7 +128,13 @@ def _json_safe_binary(value: bytes) -> Dict[str, str]:
 
 def _json_safe(payload: Any) -> Any:
     """Encode runtime payloads so BSON/ObjectId values do not break API responses."""
-    return jsonable_encoder(payload, custom_encoder={ObjectId: str, bytes: _json_safe_binary})
+    def encode_binary(value: Binary):
+        try:
+            return str(value.as_uuid(UuidRepresentation.STANDARD))
+        except ValueError:
+            return _json_safe_binary(value)
+
+    return jsonable_encoder(payload, custom_encoder={ObjectId: str, Binary: encode_binary, bytes: _json_safe_binary})
 
 
 def _require_admin_access(request: Request) -> None:
@@ -474,7 +500,7 @@ async def _initialize_activation_artifacts(rt, env_id: str, activation) -> Dict[
         should_bootstrap = (
             is_rps_dual and any(bootstrap_payload.get(key) != "none" for key in ("codes", "shortcuts"))
         ) or (not is_rps_dual and apply_shortcuts and has_ensure_dicts)
-        if should_bootstrap:
+        if should_bootstrap and activation.strategy_id != "openehr.analytics":
             dict_result = await rt.dispatch(
                 env_id,
                 "op",
@@ -1261,6 +1287,8 @@ async def get_strategy(strategy_id: str, request: Request):
         if not manifest:
             raise KeyError("Strategy not found")
         data = manifest.model_dump()
+        if manifest.id in SUPPORTED_STRATEGIES:
+            data.update(package_identity(manifest))
         if hasattr(manifest, "pack_spec") and manifest.pack_spec:
             data["pack_spec"] = manifest.pack_spec
         return data
@@ -1999,7 +2027,7 @@ async def create_synthetic_job(env_id: str, request: Request, body: Dict[str, An
                 db_bindings = bindings.get("db")
             else:
                 db_bindings = getattr(bindings, "db", None)
-            
+
             if db_bindings:
                 if isinstance(db_bindings, dict):
                     target_database = db_bindings.get("database") or db_bindings.get("name")
@@ -2107,5 +2135,46 @@ async def cancel_synthetic_job(env_id: str, job_id: str, request: Request):
         _enforce_synthetic_team_scope(identity, existing)
         job = await manager.cancel_job(job_id)
         return {"ok": True, "job": job}
+    except Exception as exc:
+        return _error_response(exc)
+
+
+@router.post("/environments/{env_id}/authoring/openehr.analytics/{op}", tags=["openEHR analytics authoring"])
+async def analytics_authoring(env_id: str, op: str, request: Request):
+    """Bounded, stateless authoring; never auto-activates or opens a MongoDB adapter."""
+    try:
+        _require_admin_access(request)
+        _require_env_access(request, env_id)
+        allowed = {"analytics_source_from_strategy", "analytics_validate_setup", "analytics_default_mapping", "analytics_validate_draft",
+                   "analytics_preview_draft", "analytics_validate_configuration", "analytics_reprocessing_plan",
+                   "analytics_business_catalog", "analytics_source_inspection_plan", "analytics_source_coverage",
+                   "analytics_workbench_plan", "analytics_review_draft"}
+        if op not in allowed:
+            raise KehrnelError(code="INVALID_INPUT", status=400, message="Not a read-only analytics authoring operation")
+        raw = bytearray()
+        async for chunk in request.stream():
+            raw.extend(chunk)
+            if len(raw) > 25 * 1024 * 1024:
+                raise KehrnelError(code="PAYLOAD_TOO_LARGE", status=413, message="Authoring request exceeds 25 MiB")
+        try:
+            body = json.loads(raw)
+        except (ValueError, UnicodeDecodeError):
+            raise KehrnelError(code="INVALID_INPUT", status=422, message="Invalid JSON authoring request")
+        if not isinstance(body, dict) or set(body) - {"payload", "config"}:
+            raise KehrnelError(code="INVALID_INPUT", status=422, message="Use payload and optional preview config")
+        from kehrnel.engine.core.types import StrategyContext
+        from kehrnel.engine.strategies.openehr.analytics.strategy import OpenEHRAnalyticsStrategy
+        import jsonschema
+        strategy = OpenEHRAnalyticsStrategy()
+        config = body.get("config", {})
+        if not isinstance(config, dict):
+            raise KehrnelError(code="INVALID_INPUT", status=422, message="Configuration must be an object")
+        try:
+            result = await strategy.run_op(StrategyContext(env_id, config), op, body.get("payload", {}))
+        except jsonschema.ValidationError as exc:
+            raise KehrnelError(code="INVALID_INPUT", status=422, message=exc.message)
+        except (ValueError, KeyError, TypeError) as exc:
+            raise KehrnelError(code="INVALID_RULE", status=422, message=str(exc))
+        return _json_safe(result)
     except Exception as exc:
         return _error_response(exc)

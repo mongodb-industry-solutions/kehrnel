@@ -4,8 +4,15 @@
   "version": "0.2.0",
   "maturity": "published",
   "pack_format": "strategy-pack/v1",
-  "spec": { "path": "spec.json", "version": "1.1" },
-  "variants": ["composition.codedpath", "search.codedpath", "search.shortcuts"],
+  "spec": {
+    "path": "spec.json",
+    "version": "1.1"
+  },
+  "variants": [
+    "composition.codedpath",
+    "search.codedpath",
+    "search.shortcuts"
+  ],
   "domain": "openEHR",
   "summary": "A balanced approach to clinical data storage that keeps your original records intact while enabling fast searches across your entire patient population.",
   "description": "This strategy preserves the complete clinical narrative in each patient record while maintaining a streamlined search layer for population health queries, research, and analytics.",
@@ -32,9 +39,17 @@
   ],
   "entrypoint": "kehrnel.engine.strategies.openehr.rps_dual.strategy:RPSDualStrategy",
   "ui": {
-    "tags": ["openEHR", "reversed-paths", "atlas-search", "dual-collection", "slim-search"],
+    "tags": [
+      "openEHR",
+      "reversed-paths",
+      "atlas-search",
+      "dual-collection",
+      "slim-search"
+    ],
     "domain_badge": "openEHR",
-    "works_with": ["atlas_search_dual"],
+    "works_with": [
+      "atlas_search_dual"
+    ],
     "docs": "/guide/docs/strategies/openehr/rps-dual",
     "links": {
       "strategy_base": "/api/strategies/openehr/rps_dual",
@@ -70,16 +85,24 @@
       "searchSpecPath": "storageModel.stores[].search",
       "configResolved": true,
       "summary": "Required and recommended MongoDB indexes are declared in the strategy spec with logical field aliases. Runtime plan/apply resolves collection names and fields from the active environment config.",
-      "requiredForOptimizedAql": ["idx_patient_path", "idx_template_commit_version"],
-      "recommendedForOptimizedAql": ["idx_template_node_commit", "idx_patient_sort"],
-      "optionalForOptimizedAql": ["idx_template_commit"],
+      "requiredForOptimizedAql": [
+        "idx_patient_path",
+        "idx_template_commit_version"
+      ],
+      "recommendedForOptimizedAql": [
+        "idx_template_node_commit",
+        "idx_patient_sort"
+      ],
+      "optionalForOptimizedAql": [
+        "idx_template_commit"
+      ],
       "conditionalSearchIndex": "collections.search.atlasIndex"
     },
-    "story": "Clinical teams need to access individual patient histories quickly and completely, while research and population health teams need to search across thousands of patients efficiently. This strategy solves both needs by storing the full clinical record for patient care, alongside a compact search layer optimized for population queries.\n\nWhen a clinician opens a patient chart, they get the complete record exactly as it was documented—every observation, every medication, every note preserved with full fidelity. When a researcher searches for patients with specific conditions, the system uses an optimized search layer to return results in seconds rather than minutes, without ever compromising the integrity of the source data.\n\nThe result is a single source of truth that serves both operational and analytical workloads. Clinical teams trust it for patient care because nothing is lost or transformed. Research teams trust it for population health because queries are fast and comprehensive. IT teams appreciate it because there's no ETL pipeline to maintain, no data warehouse to synchronize, and no risk of operational and analytical systems drifting apart.",
-    "how_it_works": "Your data lives in two synchronized collections that work together seamlessly. The primary collection stores complete clinical documents—each composition preserved as a single document with every field, every nested structure, exactly as the source system created it. This collection is optimized for patient-scoped queries: when you need everything about one patient, the system retrieves it instantly using efficient B-tree indexes.\n\nThe search collection maintains a streamlined projection of the same data, purpose-built for population queries. It contains just enough information to find patients matching complex criteria—diagnoses, medications, lab values, dates—without the overhead of full document storage. Atlas Search indexes this collection, enabling sub-second queries across millions of records.\n\nThe system automatically routes each query to the right collection. Ask for a specific patient's records, and it goes to the primary collection. Search for all patients with a particular condition, and it uses the search collection. You write standard AQL queries; the routing happens transparently.",
+    "story": "Clinical teams need to access individual patient histories quickly and completely, while research and population health teams need to search across thousands of patients efficiently. This strategy solves both needs by storing the full clinical record for patient care, alongside a compact search layer optimized for population queries.\n\nWhen a clinician opens a patient chart, they get the complete record exactly as it was documented\u2014every observation, every medication, every note preserved with full fidelity. When a researcher searches for patients with specific conditions, the system uses an optimized search layer to return results in seconds rather than minutes, without ever compromising the integrity of the source data.\n\nThe result is a single source of truth that serves both operational and analytical workloads. Clinical teams trust it for patient care because nothing is lost or transformed. Research teams trust it for population health because queries are fast and comprehensive. IT teams appreciate it because there's no ETL pipeline to maintain, no data warehouse to synchronize, and no risk of operational and analytical systems drifting apart.",
+    "how_it_works": "Your data lives in two synchronized collections that work together seamlessly. The primary collection stores complete clinical documents\u2014each composition preserved as a single document with every field, every nested structure, exactly as the source system created it. This collection is optimized for patient-scoped queries: when you need everything about one patient, the system retrieves it instantly using efficient B-tree indexes.\n\nThe search collection maintains a streamlined projection of the same data, purpose-built for population queries. It contains just enough information to find patients matching complex criteria\u2014diagnoses, medications, lab values, dates\u2014without the overhead of full document storage. Atlas Search indexes this collection, enabling sub-second queries across millions of records.\n\nThe system automatically routes each query to the right collection. Ask for a specific patient's records, and it goes to the primary collection. Search for all patients with a particular condition, and it uses the search collection. You write standard AQL queries; the routing happens transparently.",
     "benefits": [
       "Complete clinical records are preserved exactly as documented, supporting full audit trails, legal requirements, and the clinical fidelity that healthcare demands.",
-      "Population searches run fast—cohort identification, quality metrics, and research queries complete in seconds even across large patient populations.",
+      "Population searches run fast\u2014cohort identification, quality metrics, and research queries complete in seconds even across large patient populations.",
       "You get a single system for both patient care and analytics, eliminating the ETL pipelines and data warehouses that traditionally create synchronization headaches and data drift.",
       "Standard AQL queries work seamlessly throughout, automatically routed to whichever storage layer serves them best."
     ],
@@ -98,7 +121,9 @@
         {
           "type": "paper",
           "title": "A Document-First openEHR Persistence Layer for Operational Patient and Cross-Patient Workloads",
-          "authors": ["Mateu Amengual et al."],
+          "authors": [
+            "Mateu Amengual et al."
+          ],
           "venue": "IEEE",
           "year": 2025,
           "status": "peer-reviewed",
@@ -111,9 +136,18 @@
     "tabs": {
       "overview": {
         "cards": [
-          { "title": "Querying", "body": "Dual pipelines: $match for patient scope, $search for population with slim docs." },
-          { "title": "Ingest", "body": "Stores canonical compositions and optional slim search documents." },
-          { "title": "Indexes", "body": "Spec-declared B-tree and Atlas Search indexes are resolved from the active collection and field configuration." }
+          {
+            "title": "Querying",
+            "body": "Dual pipelines: $match for patient scope, $search for population with slim docs."
+          },
+          {
+            "title": "Ingest",
+            "body": "Stores canonical compositions and optional slim search documents."
+          },
+          {
+            "title": "Indexes",
+            "body": "Spec-declared B-tree and Atlas Search indexes are resolved from the active collection and field configuration."
+          }
         ]
       }
     }
@@ -128,12 +162,20 @@
         "properties": {
           "codes": {
             "type": "string",
-            "enum": ["none", "ensure", "seed"],
+            "enum": [
+              "none",
+              "ensure",
+              "seed"
+            ],
             "description": "Bootstrap mode for the codes dictionary"
           },
           "shortcuts": {
             "type": "string",
-            "enum": ["none", "ensure", "seed"],
+            "enum": [
+              "none",
+              "ensure",
+              "seed"
+            ],
             "description": "Bootstrap mode for the shortcuts dictionary"
           }
         },
@@ -142,21 +184,31 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
+          "ok": {
+            "type": "boolean"
+          },
           "created": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "seeded": {
             "type": "object",
             "properties": {
-              "codes": { "type": "integer" },
-              "shortcuts": { "type": "integer" }
+              "codes": {
+                "type": "integer"
+              },
+              "shortcuts": {
+                "type": "integer"
+              }
             }
           },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -178,11 +230,17 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "updated": { "type": "integer" },
+          "ok": {
+            "type": "boolean"
+          },
+          "updated": {
+            "type": "integer"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -204,11 +262,17 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "updated": { "type": "integer" },
+          "ok": {
+            "type": "boolean"
+          },
+          "updated": {
+            "type": "integer"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -230,12 +294,20 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "definition": { "type": "object" },
-          "metadata": { "type": "object" },
+          "ok": {
+            "type": "boolean"
+          },
+          "definition": {
+            "type": "object"
+          },
+          "metadata": {
+            "type": "object"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -247,7 +319,9 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "index_name": { "type": "string" },
+          "index_name": {
+            "type": "string"
+          },
           "recreate": {
             "type": "boolean",
             "default": false
@@ -258,11 +332,17 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "result": { "type": "object" },
+          "ok": {
+            "type": "boolean"
+          },
+          "result": {
+            "type": "object"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -284,12 +364,20 @@
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "processed": { "type": "integer" },
-          "inserted": { "type": "integer" },
+          "ok": {
+            "type": "boolean"
+          },
+          "processed": {
+            "type": "integer"
+          },
+          "inserted": {
+            "type": "integer"
+          },
           "warnings": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -320,7 +408,9 @@
           },
           "source_templates": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "source_sample_size": {
             "type": "integer",
@@ -343,7 +433,13 @@
           },
           "generation_mode": {
             "type": "string",
-            "enum": ["auto", "from_source", "from_models", "source", "models"]
+            "enum": [
+              "auto",
+              "from_source",
+              "from_models",
+              "source",
+              "models"
+            ]
           },
           "dry_run": {
             "type": "boolean",
@@ -369,9 +465,15 @@
           "model_source": {
             "type": "object",
             "properties": {
-              "database_name": { "type": "string" },
-              "catalog_collection": { "type": "string" },
-              "links_collection": { "type": "string" }
+              "database_name": {
+                "type": "string"
+              },
+              "catalog_collection": {
+                "type": "string"
+              },
+              "links_collection": {
+                "type": "string"
+              }
             },
             "additionalProperties": true
           },
@@ -381,14 +483,33 @@
             "items": {
               "type": "object",
               "properties": {
-                "model_id": { "type": "string" },
-                "template_id": { "type": "string" },
-                "min_per_patient": { "type": "integer", "minimum": 0 },
-                "max_per_patient": { "type": "integer", "minimum": 0 },
-                "weight": { "type": "number", "minimum": 0 },
-                "sample_pool_size": { "type": "integer", "minimum": 0, "default": 25 }
+                "model_id": {
+                  "type": "string"
+                },
+                "template_id": {
+                  "type": "string"
+                },
+                "min_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sample_pool_size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 25
+                }
               },
-              "required": ["model_id"],
+              "required": [
+                "model_id"
+              ],
               "additionalProperties": false
             }
           },
@@ -398,8 +519,12 @@
             "items": {
               "type": "object",
               "properties": {
-                "template_id": { "type": "string" },
-                "templateId": { "type": "string" },
+                "template_id": {
+                  "type": "string"
+                },
+                "templateId": {
+                  "type": "string"
+                },
                 "min_per_patient": {
                   "type": "integer",
                   "minimum": 0
@@ -434,60 +559,143 @@
             "items": {
               "type": "object",
               "properties": {
-                "from": { "type": "string" },
-                "from_model_id": { "type": "string" },
-                "to": { "type": "string" },
-                "to_model_id": { "type": "string" },
-                "probability": { "type": "number", "minimum": 0, "maximum": 1 },
-                "min_to_per_patient": { "type": "integer", "minimum": 0 },
-                "type": { "type": "string" }
+                "from": {
+                  "type": "string"
+                },
+                "from_model_id": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "to_model_id": {
+                  "type": "string"
+                },
+                "probability": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "min_to_per_patient": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "type": {
+                  "type": "string"
+                }
               },
               "additionalProperties": true
             }
           }
         },
         "anyOf": [
-          { "required": ["patient_count"] },
-          { "required": ["patients"] }
+          {
+            "required": [
+              "patient_count"
+            ]
+          },
+          {
+            "required": [
+              "patients"
+            ]
+          }
         ],
         "additionalProperties": false
       },
       "output_schema": {
         "type": "object",
         "properties": {
-          "ok": { "type": "boolean" },
-          "dry_run": { "type": "boolean" },
-          "plan_only": { "type": "boolean" },
-          "source_collection": { "type": "string" },
-          "source_database": { "type": ["string", "null"] },
+          "ok": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "plan_only": {
+            "type": "boolean"
+          },
+          "source_collection": {
+            "type": "string"
+          },
+          "source_database": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "target": {
             "type": "object",
             "properties": {
-              "canonical": { "type": ["string", "null"] },
-              "compositions": { "type": ["string", "null"] },
-              "search": { "type": ["string", "null"] }
+              "canonical": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "compositions": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "search": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
             }
           },
-          "patients": { "type": "integer" },
-          "estimated_docs": { "type": "integer" },
-          "generated_docs": { "type": "integer" },
-          "inserted_canonical": { "type": "integer" },
-          "inserted_base": { "type": "integer" },
-          "inserted_search": { "type": "integer" },
-          "estimated_canonical_bytes": { "type": "integer" },
-          "estimated_base_bytes": { "type": "integer" },
-          "estimated_search_bytes": { "type": "integer" },
-          "estimated_total_bytes": { "type": "integer" },
-          "links_applied": { "type": "integer" },
+          "patients": {
+            "type": "integer"
+          },
+          "estimated_docs": {
+            "type": "integer"
+          },
+          "generated_docs": {
+            "type": "integer"
+          },
+          "inserted_canonical": {
+            "type": "integer"
+          },
+          "inserted_base": {
+            "type": "integer"
+          },
+          "inserted_search": {
+            "type": "integer"
+          },
+          "estimated_canonical_bytes": {
+            "type": "integer"
+          },
+          "estimated_base_bytes": {
+            "type": "integer"
+          },
+          "estimated_search_bytes": {
+            "type": "integer"
+          },
+          "estimated_total_bytes": {
+            "type": "integer"
+          },
+          "links_applied": {
+            "type": "integer"
+          },
           "models": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "model_id": { "type": "string" },
-                "template_id": { "type": "string" },
-                "min": { "type": "integer" },
-                "max": { "type": "integer" }
+                "model_id": {
+                  "type": "string"
+                },
+                "template_id": {
+                  "type": "string"
+                },
+                "min": {
+                  "type": "integer"
+                },
+                "max": {
+                  "type": "integer"
+                }
               }
             }
           },
@@ -498,8 +706,12 @@
               "additionalProperties": true
             }
           },
-          "by_template": { "type": "object" },
-          "by_model": { "type": "object" }
+          "by_template": {
+            "type": "object"
+          },
+          "by_model": {
+            "type": "object"
+          }
         }
       }
     }

@@ -1,5 +1,6 @@
 """Composition flattener for the rps_dual persistence strategy."""
 
+from copy import deepcopy
 import json
 import logging
 import re
@@ -92,8 +93,8 @@ class CompositionFlattener:
         self.sf_nodes = s_fields.get("nodes", "sn")
         self.sf_data  = s_fields.get("data", "data")
         self.sf_path  = s_fields.get("path", "p")
-        self.sf_pi    = s_fields.get("path_instance", self.cf_pi)
-        self.sf_kp    = s_fields.get("keyPath") or s_fields.get("key_path") or "kp"
+        self.sf_pi = s_fields.get("path_instance", self.cf_pi)
+        self.sf_kp = s_fields.get("keyPath") or s_fields.get("key_path") or "kp"
         self.sf_ap    = s_fields.get("archetype_path")
         self.sf_anc   = s_fields.get("ancestors", "anc")
         self.sf_ehr   = s_fields.get("ehr_id", "ehr_id")
@@ -110,7 +111,7 @@ class CompositionFlattener:
         self.shortcut_keys: Dict[str, str] = {}
         self.shortcut_vals: Dict[str, str] = {}
         self.simple_fields: Dict[str, List[dict]] = {}
-        self.path_separator = (config.get("paths") or {}).get("separator", ".")
+        self.path_separator = (config.get("paths") or {}).get("separator", ":")
         collections_cfg = config.get("collections", {}) or {}
         self.search_encoding_profile = collections_cfg.get("search", {}).get("encodingProfile")
         self.composition_encoding_profile = collections_cfg.get("compositions", {}).get("encodingProfile")
@@ -119,6 +120,14 @@ class CompositionFlattener:
         self.template_fields: Dict[str, List[dict]] = {}
         self.compiled_template_rules: Dict[str, List[dict]] = {}
         self.catalog_mappings_spec: Optional[Dict[str, Any]] = None
+        envelope_cfg = config.get("envelope_fields", {}) if isinstance(config, dict) else {}
+        envelope_cfg = envelope_cfg if isinstance(envelope_cfg, dict) else {}
+        self.base_envelope_fields = (
+            envelope_cfg.get("base") if isinstance(envelope_cfg.get("base"), dict) else {}
+        ) or {}
+        self.search_envelope_fields = (
+            envelope_cfg.get("search") if isinstance(envelope_cfg.get("search"), dict) else {}
+        ) or {}
 
         # Load mappings synchronously from file or inline content
         self._load_mappings(mappings_path, mappings_content)
@@ -173,16 +182,18 @@ class CompositionFlattener:
         rules = self._compiled_rules_for_template(template_name)
         sn: List[dict] = []
         if search_enabled and rules:
+            ancestors = {}
             for node in cn:
                 path_val = node.get(self.cf_path)
                 dblock = node.get(self.cf_data, {})
                 if not path_val:
                     continue
                 parts = str(path_val).split(self.path_separator)
+                ancestors[str(path_val)] = node
                 pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
 
                 for rule in rules:
-                    if self._rule_matches(rule, pc_set, parts, dblock):
+                    if self._rule_matches(rule, pc_set, parts, dblock, ancestors=ancestors):
                         slim = self._apply_rule(rule, node, dblock)
                         if slim:
                             sn.append(slim)
@@ -236,7 +247,105 @@ class CompositionFlattener:
                 node_map=self.field_map.get("search_nodes", {}),
             )
 
+        source_envelope = raw_doc.get("_source_envelope") if isinstance(raw_doc, dict) else None
+        if not isinstance(source_envelope, dict):
+            source_envelope = raw_doc if isinstance(raw_doc, dict) else {}
+        self._apply_envelope_fields(base_doc, source_envelope, self.base_envelope_fields)
+        if search_doc is not None:
+            self._apply_envelope_fields(search_doc, source_envelope, self.search_envelope_fields)
+
         return base_doc, search_doc
+
+    def project_search_from_flattened(self, base_doc: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Rebuild a slim search document from an already flattened base document.
+
+        Stored base documents may already have shortcuted keys applied, so search
+        projection must resolve analytics extracts against the persisted shape
+        rather than the pre-shortcut in-memory representation used during live
+        ingest.
+        """
+        if not isinstance(base_doc, dict):
+            return None
+
+        collections_cfg = (self.config.get("collections") or {}) if isinstance(self.config, dict) else {}
+        search_enabled = bool((collections_cfg.get("search") or {}).get("enabled", True))
+        if not search_enabled:
+            return None
+
+        template_name = (
+            base_doc.get(self.sf_tmpl)
+            or base_doc.get(self.cf_tmpl)
+            or base_doc.get("template")
+            or base_doc.get("tid")
+        )
+        if not template_name:
+            return None
+
+        rules = self._compiled_rules_for_template(str(template_name))
+        if not rules:
+            return None
+
+        nodes = base_doc.get(self.cf_nodes)
+        if not isinstance(nodes, list):
+            nodes = base_doc.get("cn")
+        if not isinstance(nodes, list) or not nodes:
+            return None
+
+        sn: List[dict] = []
+        ancestors = {}
+        for node in nodes:
+            if not isinstance(node, dict):
+                continue
+
+            path_val = node.get(self.cf_path) or node.get("p")
+            dblock = node.get(self.cf_data, {})
+            if not path_val:
+                continue
+            if not isinstance(dblock, dict):
+                dblock = {}
+
+            parts = str(path_val).split(self.path_separator)
+            ancestors[str(path_val)] = node
+            pc_set = {self.path_separator.join(parts[:i]) for i in range(1, len(parts) + 1)}
+
+            for rule in rules:
+                if self._rule_matches(rule, pc_set, parts, dblock, ancestors=ancestors):
+                    slim = self._apply_rule_to_flattened_node(rule, node, dblock)
+                    if slim:
+                        sn.append(slim)
+
+        if not sn:
+            return None
+
+        search_doc: Dict[str, Any] = {
+            self.sf_nodes: sn,
+        }
+
+        # An explicit identity envelope (IBM) owns _id. Otherwise ingest uses
+        # the composition ID for the sidecar even when MongoDB assigns a base _id.
+        doc_id = base_doc.get("_id") if "_id" in self.base_envelope_fields else base_doc.get(self.cf_cid, base_doc.get("_id"))
+        if doc_id is not None:
+            search_doc["_id"] = doc_id
+
+        ehr_value = base_doc.get(self.sf_ehr, base_doc.get(self.cf_ehr))
+        if ehr_value is not None:
+            search_doc[self.sf_ehr] = ehr_value
+
+        comp_value = base_doc.get(self.sf_cid, base_doc.get(self.cf_cid))
+        if comp_value is not None:
+            search_doc[self.sf_cid] = comp_value
+
+        template_value = base_doc.get(self.sf_tmpl, base_doc.get(self.cf_tmpl))
+        if template_value is not None:
+            search_doc[self.sf_tmpl] = template_value
+
+        sort_value = base_doc.get(self.sf_sort_time, base_doc.get(self.cf_time_committed))
+        if sort_value is not None:
+            search_doc[self.sf_sort_time] = sort_value
+
+        self._copy_search_envelope_fields_from_base(base_doc, search_doc)
+        return search_doc
 
 
     async def _load_codes_from_db(self):
@@ -582,11 +691,76 @@ class CompositionFlattener:
 
         return renamed
 
+    @staticmethod
+    def _lookup_envelope_value(source: Dict[str, Any], dotted_path: str) -> tuple[bool, Any]:
+        if not isinstance(source, dict) or not isinstance(dotted_path, str) or not dotted_path:
+            return False, None
+
+        current: Any = source
+        for part in dotted_path.split("."):
+            if isinstance(current, dict) and part in current:
+                current = current[part]
+            else:
+                return False, None
+        return True, current
+
+    @staticmethod
+    def _assign_envelope_value(target: Dict[str, Any], dotted_path: str, value: Any) -> None:
+        if not isinstance(target, dict) or not isinstance(dotted_path, str) or not dotted_path:
+            return
+
+        parts = dotted_path.split(".")
+        cursor = target
+        for part in parts[:-1]:
+            next_value = cursor.get(part)
+            if not isinstance(next_value, dict):
+                next_value = {}
+                cursor[part] = next_value
+            cursor = next_value
+        cursor[parts[-1]] = deepcopy(value)
+
+    def _apply_envelope_fields(
+        self,
+        target: Dict[str, Any],
+        source_envelope: Dict[str, Any],
+        mapping: Dict[str, str],
+    ) -> None:
+        if not isinstance(target, dict) or not isinstance(source_envelope, dict) or not isinstance(mapping, dict):
+            return
+
+        for source_path, target_path in mapping.items():
+            found, value = self._lookup_envelope_value(source_envelope, source_path)
+            if found:
+                self._assign_envelope_value(target, target_path, value)
+
+    def _copy_search_envelope_fields_from_base(
+        self,
+        base_doc: Dict[str, Any],
+        search_doc: Dict[str, Any],
+    ) -> None:
+        seen: set[str] = set()
+        for target_path in (self.search_envelope_fields or {}).values():
+            if not isinstance(target_path, str) or not target_path or target_path in seen:
+                continue
+            seen.add(target_path)
+            found, value = self._lookup_envelope_value(base_doc, target_path)
+            if found:
+                self._assign_envelope_value(search_doc, target_path, deepcopy(value))
+
     def _at_code_to_int(self, at: str) -> Any:
         s = at.lower()
         if s in self.code_book["at"]:
             return self.code_book["at"][s]
         if self.role != "primary":
+            # These encodings are deterministic and do not allocate dictionary
+            # entries. Sequential/dotted numeric codes still require a snapshot.
+            if self.at_strategy == "literal":
+                return s
+            if self.at_strategy == "compact_prefix":
+                return self._encode_at_compact(s)
+            root = _AT_ROOT.match(s)
+            if self.at_strategy == "negative_int" and root:
+                return -int(root.group(1))
             raise UnknownCodeError("at", s)
 
         strategy = self.at_strategy
@@ -616,6 +790,19 @@ class CompositionFlattener:
         return code
 
     def _encode_at_compact(self, s: str) -> str:
+        if self.path_separator == "/":
+            digits = s[2:] if s.startswith("at") else s
+            significant = digits.lstrip("0") or "0"
+            if len(significant) == 1:
+                prefix = "D"
+            elif len(significant) == 2:
+                prefix = "C"
+            elif len(significant) == 3:
+                prefix = "B"
+            else:
+                prefix = "A"
+            return f"{prefix}{significant}"
+
         if s.startswith("at000"):
             return "A" + s[5:]
         if s.startswith("at00"):
@@ -911,7 +1098,7 @@ class CompositionFlattener:
         selectors = self._parse_path_selectors(path)
 
         if infer_extract and not extract:
-            extract = self._infer_extract_from_path(path)
+            extract = self._infer_extract_from_path(path, field.get("rmType"))
         if not extract:
             return None
 
@@ -929,15 +1116,52 @@ class CompositionFlattener:
                 "copy": copy_fields,
                 "_root_only": not selectors,
             }
+            labels = []
+            for index, selector in enumerate(selectors):
+                if selector.get("name") is not None:
+                    labels.append({"path": [self._seg_to_int(item["selector"]) for item in reversed(selectors[:index + 1])], "name": selector["name"]})
+            if labels:
+                compiled_rule["_labels"] = labels
             return compiled_rule
         except (ValueError, UnknownCodeError):
             return None
 
-    def _infer_extract_from_path(self, path: str) -> str:
+    @staticmethod
+    def _path_segments(path: str) -> List[str]:
+        # AQL predicates can contain both name/value and quoted labels with '/'.
+        segments = []
+        start = depth = 0
+        quote = None
+        escaped = False
+        for index, char in enumerate(path):
+            if quote:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == quote:
+                    quote = None
+            elif char in "'\"" and depth:
+                quote = char
+            elif char == "[":
+                depth += 1
+            elif char == "]":
+                depth -= 1
+            elif char == "/" and depth == 0:
+                if index > start:
+                    segments.append(path[start:index])
+                start = index + 1
+        if quote or depth:
+            raise ValueError("Unclosed analytics path predicate")
+        if start < len(path):
+            segments.append(path[start:])
+        return segments
+
+    def _infer_extract_from_path(self, path: str, rm_type: Optional[str] = None) -> str:
         """
         Derive the relative data path (post-leaf archetype) from an openEHR path.
         """
-        segments = [seg for seg in path.split("/") if seg]
+        segments = self._path_segments(path)
         last_bracket_idx = -1
         for idx, seg in enumerate(segments):
             if "[" in seg and "]" in seg:
@@ -953,20 +1177,31 @@ class CompositionFlattener:
             base, _ = self._split_segment(seg)
             if base:
                 pieces.append(base)
-        return ".".join(pieces)
+        extract = ".".join(pieces)
+        # Older HDL selections identify the DV object at /value, rather than
+        # its scalar leaf. Resolve that object using its declared RM type.
+        if extract == "value":
+            suffix = {"DV_QUANTITY": "magnitude", "DV_COUNT": "magnitude", "DV_CODED_TEXT": "defining_code.code_string", "DV_IDENTIFIER": "id"}.get(str(rm_type or "").upper())
+            if not suffix and str(rm_type or "").upper() in {"DV_DATE", "DV_DATE_TIME", "DV_TIME", "DV_DURATION", "DV_TEXT", "DV_PARAGRAPH", "DV_BOOLEAN", "DV_ORDINAL", "DV_URI", "DV_EHR_URI"}:
+                suffix = "value"
+            if suffix:
+                extract += "." + suffix
+        return extract
 
     def _parse_path_selectors(self, path: str) -> List[dict]:
         """
         Parse a canonical openEHR path into selector tokens with archetype hints.
         """
         selectors: List[dict] = []
-        segments = [seg for seg in path.split("/") if seg]
+        segments = self._path_segments(path)
         for seg in segments:
             _, selector = self._split_segment(seg)
             if selector:
-                selectors.append(
-                    {"selector": selector, "is_archetype": selector.upper().startswith("OPENEHR-EHR-")}
-                )
+                item = {"selector": selector, "is_archetype": selector.upper().startswith("OPENEHR-EHR-")}
+                named = re.search(r'''(?:,\s*|\band\s+name/value\s*=\s*)(?:'((?:\\.|[^'])*)'|"((?:\\.|[^"])*)")''', seg)
+                if named:
+                    item["name"] = re.sub(r"\\(['\"\\])", r"\1", named.group(1) if named.group(1) is not None else named.group(2))
+                selectors.append(item)
         return selectors
         
     def _seg_to_int(self, seg: str | int) -> Any:
@@ -1000,8 +1235,23 @@ class CompositionFlattener:
                 return coll[0] if len(coll) == 1 else coll
             return None
         return walk(obj, 0)
+
+    def _shortcut_path(self, path: str) -> str:
+        if not path or not self.apply_shortcuts or not self.shortcut_keys:
+            return path
+        return ".".join(self.shortcut_keys.get(part, part) for part in path.split(".") if part)
+
+    @staticmethod
+    def _assign_nested_value(target: Dict[str, Any], dotted_path: str, value: Any) -> None:
+        cur = target
+        parts = [part for part in dotted_path.split(".") if part]
+        if not parts:
+            return
+        for part in parts[:-1]:
+            cur = cur.setdefault(part, {})
+        cur[parts[-1]] = value
         
-    def _rule_matches(self, rule, pc_set, parts, dblock) -> bool:
+    def _rule_matches(self, rule, pc_set, parts, dblock, *, ancestors=None) -> bool:
         if rule.get("_root_only") and len(parts) != 1:
             return False
         if rule["_path"] and self.path_separator.join(str(x) for x in rule["_path"]) not in pc_set:
@@ -1013,6 +1263,23 @@ class CompositionFlattener:
                     j += 1
                     if j == len(rule["_cont"]): break
             if j != len(rule["_cont"]): return False
+
+        for label in rule.get("_labels", []):
+            pattern = [str(code) for code in label["path"]]
+            matches = False
+            for index in range(len(parts) - len(pattern) + 1):
+                if parts[index:index + len(pattern)] != pattern:
+                    continue
+                ancestor = (ancestors or {}).get(self.path_separator.join(parts[index:]))
+                data = dblock if index == 0 else (ancestor or {}).get(self.cf_data, {})
+                name = self._dpath_get(data, "name.value")
+                if name is None:
+                    name = self._dpath_get(data, self._shortcut_path("name.value"))
+                if name == label["name"]:
+                    matches = True
+                    break
+            if not matches:
+                return False
         
         # Wrap dblock to match "data.value" expectation in rules
         if any(self._dpath_get({"data": dblock}, path) != val_req for path, val_req in rule["_extra"]):
@@ -1087,6 +1354,8 @@ class CompositionFlattener:
         sel = rest.split("]", 1)[0]
         if "," in sel:
             sel = sel.split(",", 1)[0]
+        if " and " in sel:
+            sel = sel.split(" and ", 1)[0]
         sel = sel.strip().strip("'\"")
         return base, sel
 
@@ -1110,7 +1379,7 @@ class CompositionFlattener:
         if self.sf_anc and "_anc" in node:
              slim[self.sf_anc] = node["_anc"]
 
-        # 3b. Lineage metadata for exact post-search correlation.
+        # Retain exact post-search correlation metadata from live ingestion.
         if self.sf_kp and "kp" in node:
             slim[self.sf_kp] = node["kp"]
         if self.cf_pi in node:
@@ -1131,6 +1400,63 @@ class CompositionFlattener:
                 cur[path_parts[-1]] = val
 
         # 5. Labels / RM type (if provided on rule)
+        if rule.get("label"):
+            slim["label"] = rule["label"]
+        if rule.get("rmType"):
+            slim["rmType"] = rule["rmType"]
+        if rule.get("index"):
+            slim["index"] = rule["index"]
+
+        return slim
+
+    def _apply_rule_to_flattened_node(self, rule, node, dblock) -> dict:
+        """
+        Creates a slim search node from a stored flattened node.
+
+        Stored flattened documents may already have shortcuted data keys, so we
+        resolve analytics extracts against the persisted shortcut shape and write
+        the shortcuted keys directly into the rebuilt search document.
+        """
+        slim: dict = {}
+
+        if self.sf_path and "p" in rule["copy"]:
+            slim[self.sf_path] = self._encode_path_for_profile(node.get(self.cf_path), self.search_encoding_profile)
+
+        if self.sf_ap and self.cf_ap and self.cf_ap in node:
+            slim[self.sf_ap] = node[self.cf_ap]
+
+        if self.sf_anc:
+            if "_anc" in node:
+                slim[self.sf_anc] = node["_anc"]
+            else:
+                # Ingest removes its temporary lineage after building the sidecar.
+                # Persisted reversed paths retain the root-to-parent code sequence.
+                ancestors = list(reversed(str(node.get(self.cf_path) or "").split(self.path_separator)[1:]))
+                archetype_value = dblock.get(self._shortcut_path("archetype_node_id"), dblock.get("archetype_node_id"))
+                if isinstance(archetype_value, int):
+                    ancestors = [int(code) if code.lstrip("-").isdigit() else code for code in ancestors]
+                slim[self.sf_anc] = ancestors
+
+        if self.sf_kp and "kp" in node:
+            slim[self.sf_kp] = node["kp"]
+        if self.cf_pi in node:
+            slim[self.sf_pi] = node[self.cf_pi]
+
+        for expr in rule["copy"]:
+            if not expr.startswith("data."):
+                continue
+
+            sub = expr[5:]
+            stored_sub = self._shortcut_path(sub)
+            val = self._dpath_get(dblock, stored_sub)
+            if val is None and stored_sub != sub:
+                val = self._dpath_get(dblock, sub)
+            if val is None:
+                continue
+
+            cur = slim.setdefault(self.sf_data, {})
+            self._assign_nested_value(cur, stored_sub, val)
+
         if rule.get("label"):
             slim["label"] = rule["label"]
         if rule.get("rmType"):

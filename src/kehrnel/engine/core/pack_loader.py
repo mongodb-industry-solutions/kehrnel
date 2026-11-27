@@ -55,6 +55,7 @@ def load_strategy(strategy_id: Optional[str], pack_path: str | Path) -> Strategy
                 pass
 
     manifest = StrategyManifest(**manifest_data)
+    manifest.pack_root = str(base.resolve())
     if strategy_id and manifest.id != strategy_id:
         raise KehrnelError(
             code="STRATEGY_ID_MISMATCH",

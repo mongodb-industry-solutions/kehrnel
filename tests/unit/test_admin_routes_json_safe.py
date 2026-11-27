@@ -24,3 +24,11 @@ def test_json_safe_encodes_binary_values_as_base64():
         "$binary": "7wE=",
         "encoding": "base64",
     }
+
+
+def test_json_safe_preserves_bson_uuid_identity():
+    import uuid
+    from bson.binary import UuidRepresentation
+    expected = uuid.uuid4()
+    encoded = _json_safe({"ehrId": Binary.from_uuid(expected, uuid_representation=UuidRepresentation.STANDARD)})
+    assert encoded["ehrId"] == str(expected)

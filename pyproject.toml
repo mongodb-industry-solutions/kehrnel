@@ -94,6 +94,7 @@ fhir-gen = { path = "./src/kehrnel/engine/domains/fhir/libs/fhir-data-generation
 fhir-search-to-mql = { path = "./src/kehrnel/engine/domains/fhir/libs/fhir-search-to-mql", editable = true }
 
 [project.scripts]
+kehrnel-openehr-analytics = "kehrnel.engine.domains.openehr.analytics.cli:main"
 kehrnel = "kehrnel.cli.unified:main"
 kehrnel-api      = "kehrnel.api.app:main"
 

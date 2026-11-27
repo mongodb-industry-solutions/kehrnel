@@ -1,0 +1,12 @@
+# Copy to .env.analytics.local in the project; never commit credentials.
+ANALYTICS_SOURCE_URI=
+ANALYTICS_SOURCE_DATABASE=PRE
+ANALYTICS_SOURCE_COLLECTION=Compositions
+# The CTTI legacy profile defines ArchetypeCodes/CodedValues in its source profile.
+# These overrides apply to the current RPS full-chain profile:
+ANALYTICS_CODES_COLLECTION=_codes
+ANALYTICS_SHORTCUTS_COLLECTION=_shortcuts
+ANALYTICS_TARGET_URI=
+ANALYTICS_TARGET_DATABASE=openehr_analytics
+ANALYTICS_COLLECTION_PREFIX=analytics_
+ANALYTICS_SOURCE_NAMESPACE=ctti-ibm-pre

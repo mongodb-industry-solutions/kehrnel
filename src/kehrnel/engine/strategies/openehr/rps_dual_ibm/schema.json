@@ -11,26 +11,99 @@
     },
     "idEncoding": {
       "type": "string",
-      "enum": ["string", "objectid", "uuid", "uuidbin"],
+      "enum": [
+        "string",
+        "objectid",
+        "uuid",
+        "uuidbin"
+      ],
       "default": "string"
     },
     "pathSeparator": {
       "type": "string",
-      "enum": [".", "/", ":", "|", "~"],
-      "default": ":"
+      "enum": [
+        ".",
+        "/",
+        ":",
+        "|",
+        "~"
+      ],
+      "default": "/"
     },
     "encodingProfile": {
       "type": "string",
-      "enum": ["profile.codedpath", "profile.search_shortcuts"]
+      "enum": [
+        "profile.codedpath",
+        "profile.search_shortcuts"
+      ]
     },
     "envelopePathMap": {
       "type": "object",
       "description": "Maps source envelope paths to final output field paths using dot notation.",
-      "additionalProperties": { "type": "string" },
+      "additionalProperties": {
+        "type": "string"
+      },
       "default": {}
     }
   },
   "properties": {
+    "sourceReader": {
+      "type": "object",
+      "title": "Source reader compatibility",
+      "description": "Used when another environment reads this operational database for analytics. This does not rewrite source data. For IBM PRE/PRO row dictionaries, select ctti_rows and set collections.codes.name to ArchetypeCodes and collections.shortcuts.name to CodedValues.",
+      "properties": {
+        "dictionary_format": {
+          "type": "string",
+          "title": "Dictionary storage",
+          "enum": [
+            "kehrnel_documents",
+            "ctti_rows"
+          ],
+          "default": "kehrnel_documents",
+          "description": "kehrnel_documents: Kehrnel _codes/_shortcuts documents. ctti_rows: legacy IBM ArchetypeCodes/CodedValues rows."
+        },
+        "fields": {
+          "type": "object",
+          "title": "Source metadata field overrides",
+          "additionalProperties": false,
+          "properties": {
+            "composition_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "patient_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "template": {
+              "type": "string",
+              "minLength": 1
+            },
+            "template_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "committed_at": {
+              "type": "string",
+              "minLength": 1
+            },
+            "provider": {
+              "type": "string",
+              "minLength": 1
+            },
+            "canonical": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "collections": {
       "type": "object",
       "description": "MongoDB collection configuration",
@@ -39,44 +112,85 @@
           "type": "object",
           "description": "Canonical compositions store",
           "properties": {
-            "name": { "type": "string", "description": "Collection name", "default": "compositions_rps" },
-            "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.codedpath" }
+            "name": {
+              "type": "string",
+              "description": "Collection name",
+              "default": "compositions_rps_ibm"
+            },
+            "encodingProfile": {
+              "$ref": "#/definitions/encodingProfile",
+              "default": "profile.codedpath"
+            }
           },
-          "required": ["name"]
+          "required": [
+            "name"
+          ]
         },
         "search": {
           "type": "object",
           "description": "Slim search store for cross-patient queries",
           "properties": {
-            "name": { "type": "string", "description": "Collection name", "default": "compositions_search" },
-            "encodingProfile": { "$ref": "#/definitions/encodingProfile", "default": "profile.search_shortcuts" },
-            "enabled": { "type": "boolean", "default": true },
+            "name": {
+              "type": "string",
+              "description": "Collection name",
+              "default": "compositions_search_ibm"
+            },
+            "encodingProfile": {
+              "$ref": "#/definitions/encodingProfile",
+              "default": "profile.search_shortcuts"
+            },
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
             "atlasIndex": {
               "type": "object",
               "properties": {
-                "name": { "type": "string", "description": "Atlas Search index name" },
+                "name": {
+                  "type": "string",
+                  "description": "Atlas Search index name"
+                },
                 "definition": {
                   "oneOf": [
-                    { "$ref": "#/definitions/uriRef" },
-                    { "type": "object", "description": "Inline index definition" },
-                    { "type": "null" }
+                    {
+                      "$ref": "#/definitions/uriRef"
+                    },
+                    {
+                      "type": "object",
+                      "description": "Inline index definition"
+                    },
+                    {
+                      "type": "null"
+                    }
                   ]
                 }
               }
             }
           },
-          "required": ["name"]
+          "required": [
+            "name"
+          ]
         },
         "codes": {
           "type": "object",
           "description": "Dictionary collection for path code mappings",
           "properties": {
-            "name": { "type": "string", "default": "_codes" },
+            "name": {
+              "type": "string",
+              "default": "_codes"
+            },
             "seed": {
               "oneOf": [
-                { "$ref": "#/definitions/uriRef" },
-                { "type": "object", "description": "Inline seed data" },
-                { "type": "null" }
+                {
+                  "$ref": "#/definitions/uriRef"
+                },
+                {
+                  "type": "object",
+                  "description": "Inline seed data"
+                },
+                {
+                  "type": "null"
+                }
               ],
               "description": "Optional pre-populated dictionary data"
             }
@@ -86,36 +200,60 @@
           "type": "object",
           "description": "Shortcuts collection for key/value compaction",
           "properties": {
-            "name": { "type": "string", "default": "_shortcuts" },
+            "name": {
+              "type": "string",
+              "default": "_shortcuts"
+            },
             "seed": {
               "oneOf": [
-                { "$ref": "#/definitions/uriRef" },
-                { "type": "object", "description": "Inline seed data" },
-                { "type": "null" }
+                {
+                  "$ref": "#/definitions/uriRef"
+                },
+                {
+                  "type": "object",
+                  "description": "Inline seed data"
+                },
+                {
+                  "type": "null"
+                }
               ],
               "description": "Optional pre-populated shortcuts"
             }
           }
         }
       },
-      "required": ["compositions", "search"]
+      "required": [
+        "compositions",
+        "search"
+      ]
     },
     "ids": {
       "type": "object",
       "description": "ID field encoding strategy",
       "properties": {
-        "ehr_id": { "$ref": "#/definitions/idEncoding" },
-        "composition_id": { "$ref": "#/definitions/idEncoding" }
+        "ehr_id": {
+          "$ref": "#/definitions/idEncoding"
+        },
+        "composition_id": {
+          "$ref": "#/definitions/idEncoding"
+        }
       },
-      "default": { "ehr_id": "string", "composition_id": "objectid" }
+      "default": {
+        "ehr_id": "uuidbin",
+        "composition_id": "uuidbin"
+      }
     },
     "paths": {
       "type": "object",
       "description": "Path encoding settings",
       "properties": {
-        "separator": { "$ref": "#/definitions/pathSeparator" }
+        "separator": {
+          "$ref": "#/definitions/pathSeparator"
+        }
       },
-      "default": { "separator": ":" }
+      "default": {
+        "separator": "/"
+      }
     },
     "fields": {
       "type": "object",
@@ -125,23 +263,63 @@
           "type": "object",
           "description": "Document-level field names",
           "properties": {
-            "ehr_id": { "type": "string", "default": "ehr_id" },
-            "comp_id": { "type": "string", "default": "_id", "description": "Document identity field used to join slim search rows back to IBM semiflattened compositions. IBM exact-model data stores the UUID in _id while version is the openEHR OBJECT_VERSION_ID string." },
-            "tid": { "type": "string", "default": "tid" },
-            "v": { "type": "string", "default": "v" },
-            "time_committed": { "type": "string", "default": "time_c", "description": "Server commit time for the version represented by this document" },
-            "sort_time": { "type": "string", "default": "sort_time", "description": "Primary search-side sort field, typically version commit time" },
-            "cn": { "type": "string", "default": "cn", "description": "Canonical nodes array" },
-            "sn": { "type": "string", "default": "sn", "description": "Search nodes array" }
+            "ehr_id": {
+              "type": "string",
+              "default": "ehr_id"
+            },
+            "comp_id": {
+              "type": "string",
+              "default": "_id"
+            },
+            "tid": {
+              "type": "string",
+              "default": "template"
+            },
+            "v": {
+              "type": "string",
+              "default": "version"
+            },
+            "time_committed": {
+              "type": "string",
+              "default": "creation_date",
+              "description": "IBM creation timestamp / commit time field"
+            },
+            "sort_time": {
+              "type": "string",
+              "default": "creation_date",
+              "description": "IBM primary sort field"
+            },
+            "cn": {
+              "type": "string",
+              "default": "cn",
+              "description": "Canonical nodes array"
+            },
+            "sn": {
+              "type": "string",
+              "default": "sn",
+              "description": "Search nodes array"
+            }
           }
         },
         "node": {
           "type": "object",
           "description": "Node-level field names (inside cn/sn arrays)",
           "properties": {
-            "p": { "type": "string", "default": "p", "description": "Reversed path" },
-            "pi": { "type": "string", "default": "li", "description": "Configured path instance field. IBM exact-model data uses scalar local list index 'li'; newer RPS data may use array lineage 'pi'." },
-            "data": { "type": "string", "default": "data", "description": "Payload fragment" }
+            "p": {
+              "type": "string",
+              "default": "p",
+              "description": "Reversed path"
+            },
+            "pi": {
+              "type": "string",
+              "default": "li",
+              "description": "IBM sibling list index field"
+            },
+            "data": {
+              "type": "string",
+              "default": "data",
+              "description": "Payload fragment"
+            }
           }
         }
       }
@@ -152,9 +330,16 @@
       "properties": {
         "mappings": {
           "oneOf": [
-            { "$ref": "#/definitions/uriRef" },
-            { "type": "object", "description": "Inline mapping definition" },
-            { "type": "null" }
+            {
+              "$ref": "#/definitions/uriRef"
+            },
+            {
+              "type": "object",
+              "description": "Inline mapping definition"
+            },
+            {
+              "type": "null"
+            }
           ],
           "description": "Field mappings: file://path, collection://name, or inline object"
         },
@@ -167,7 +352,11 @@
               "properties": {
                 "strategy": {
                   "type": "string",
-                  "enum": ["sequential", "short_prefix", "literal"],
+                  "enum": [
+                    "sequential",
+                    "short_prefix",
+                    "literal"
+                  ],
                   "default": "sequential"
                 },
                 "prefix_replace": {
@@ -175,10 +364,17 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "from": { "type": "string" },
-                      "to": { "type": "string" }
+                      "from": {
+                        "type": "string"
+                      },
+                      "to": {
+                        "type": "string"
+                      }
                     },
-                    "required": ["from", "to"]
+                    "required": [
+                      "from",
+                      "to"
+                    ]
                   },
                   "description": "Prefix replacements for literal strategy"
                 }
@@ -189,7 +385,12 @@
               "properties": {
                 "strategy": {
                   "type": "string",
-                  "enum": ["negative_int", "sequential", "literal", "compact_prefix"],
+                  "enum": [
+                    "negative_int",
+                    "sequential",
+                    "literal",
+                    "compact_prefix"
+                  ],
                   "default": "negative_int"
                 },
                 "store_original": {
@@ -210,11 +411,18 @@
           "type": "object",
           "description": "Optional passthrough mappings from the original ingest envelope into the final base/search documents.",
           "properties": {
-            "base": { "$ref": "#/definitions/envelopePathMap" },
-            "search": { "$ref": "#/definitions/envelopePathMap" }
+            "base": {
+              "$ref": "#/definitions/envelopePathMap"
+            },
+            "search": {
+              "$ref": "#/definitions/envelopePathMap"
+            }
           },
           "additionalProperties": false,
-          "default": { "base": {}, "search": {} }
+          "default": {
+            "base": {},
+            "search": {}
+          }
         }
       }
     },
@@ -228,15 +436,23 @@
           "properties": {
             "codes": {
               "type": "string",
-              "enum": ["none", "ensure", "seed"],
+              "enum": [
+                "none",
+                "ensure",
+                "seed"
+              ],
               "default": "ensure",
-              "description": "Create only the codes collection, or also pre-seed it from the configured source"
+              "description": "Create the codes collection by default; use seed only when you intentionally want to replace or initialize the configured IBM-compatible dictionary payload"
             },
             "shortcuts": {
               "type": "string",
-              "enum": ["none", "ensure", "seed"],
-              "default": "seed",
-              "description": "Shortcuts should typically be seeded up front so flatten/unflatten stays consistent"
+              "enum": [
+                "none",
+                "ensure",
+                "seed"
+              ],
+              "default": "ensure",
+              "description": "Create the shortcuts collection by default; use seed only when you intentionally want to replace or initialize the configured IBM-compatible shortcuts payload"
             }
           },
           "additionalProperties": false
@@ -245,6 +461,8 @@
       "additionalProperties": false
     }
   },
-  "required": ["collections"],
+  "required": [
+    "collections"
+  ],
   "additionalProperties": false
 }

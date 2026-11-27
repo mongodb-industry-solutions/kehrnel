@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "DeploymentTemplate": {
+      "additionalProperties": false,
+      "properties": {
+        "templateId": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Templateid",
+          "type": "string"
+        },
+        "fields": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "maxItems": 10000,
+          "title": "Fields",
+          "type": "array"
+        },
+        "provenance": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Provenance",
+          "type": "object"
+        }
+      },
+      "required": [
+        "templateId"
+      ],
+      "title": "DeploymentTemplate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Version"
+    },
+    "packageDigest": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Packagedigest"
+    },
+    "config": {
+      "additionalProperties": true,
+      "title": "Config",
+      "type": "object"
+    },
+    "templates": {
+      "items": {
+        "$ref": "#/$defs/DeploymentTemplate"
+      },
+      "maxItems": 2000,
+      "title": "Templates",
+      "type": "array"
+    },
+    "dictionaries": {
+      "additionalProperties": true,
+      "title": "Dictionaries",
+      "type": "object"
+    }
+  },
+  "title": "DeploymentCompilationRequest",
+  "type": "object"
+}

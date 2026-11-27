@@ -327,7 +327,9 @@ def _load_manifests() -> tuple[list[StrategyManifest], list[dict[str, object]], 
             errors.append(f"Duplicate strategy id detected during discovery: {mid}")
         if not errors:
             seen.add(mid)
-            unique.append(StrategyManifest(**data))
+            manifest = StrategyManifest(**data)
+            manifest.pack_root = str(manifest_path.parent.resolve())
+            unique.append(manifest)
             if mid:
                 asset_dirs[mid] = str(manifest_path.parent)
         diagnostics.append(
@@ -353,6 +355,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
     from kehrnel.api.internal.routes import router as internal_runtime_router
     from kehrnel.api.domains.openehr.routes import router as openehr_domain_router
     from kehrnel.api.domains.snomedct.routes import router as snomedct_domain_router
+    from kehrnel.api.strategies.openehr.rps_dual_ibm.routes import router as openehr_rps_dual_ibm_router
     from kehrnel.api.strategies.openehr.rps_dual.routes import router as openehr_rps_dual_router
 
     # Disable built-in docs handlers so we can control the HTML (favicon, titles, etc.)
@@ -689,6 +692,7 @@ def create_app(registry_path: str | None = None, bundle_path: str | None = None)
         openehr_domain_router,
         snomedct_domain_router,
         openehr_rps_dual_router,
+        openehr_rps_dual_ibm_router,
     ]
 
     # Backward/forward compatibility:
