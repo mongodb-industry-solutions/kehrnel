@@ -146,3 +146,14 @@ def test_runtime_decoder_cache_does_not_cross_environments(config, monkeypatch):
     assert strategy.converter(b) == 'decoder-b'
     assert strategy.converter(a) == 'decoder-a'
     assert loaded == ['decoder-a', 'decoder-b', 'decoder-a']
+
+
+@pytest.mark.parametrize('secret', [
+    {'apiKey': 'synthetic'},
+    {'nested': [{'access_token': 'synthetic'}]},
+    {'label': 'https://user:synthetic@example.test'},
+])
+def test_nested_credentials_are_rejected_by_sdk_setup(config, secret):
+    config['source']['codes'] = secret
+    with pytest.raises(ValueError, match='bindings'):
+        run(config, 'analytics_validate_setup', {})

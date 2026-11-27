@@ -29,12 +29,13 @@ def validate_setup(config, schema):
     def inspect(value):
         if isinstance(value, dict):
             for k, v in value.items():
-                if k.lower() in ('uri', 'password', 'connectionstring', 'connection_string'):
+                normalized = re.sub(r'[_-]', '', k).lower()
+                if k not in ('DV_URI', 'DV_EHR_URI') and re.search(r'(?:uri|tokens?|passwords?|passwd|credentials?|secrets?|apikeys?|servicekeys?|privatekeys?|connectionstring|authorization|bindings|bindingsref)$', normalized):
                     raise ValueError('Connection secrets belong in bindings, not configuration')
                 inspect(v)
         elif isinstance(value, list):
             for v in value: inspect(v)
-        elif isinstance(value, str) and re.search(r'mongodb(?:\+srv)?://', value, re.I):
+        elif isinstance(value, str) and re.search(r'mongodb(?:\+srv)?://|[a-z][a-z0-9+.-]*://[^/\s]*@|-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----', value, re.I):
             raise ValueError('Connection strings belong in bindings, not configuration')
     inspect(config)
     return deepcopy(config)
