@@ -883,3 +883,9 @@ async def test_ibm_rebuild_codes_uses_ibm_strategy_bundle_dir(monkeypatch):
     assert captured["ref"] == "file://bundles/dictionaries/_codes.json"
     assert captured["base_dir"] == DEFAULTS_PATH.parent.resolve()
     assert "ar_code" in db["_codes"].docs
+
+
+def test_ibm_reverse_transform_rejects_unresolved_value_shortcuts():
+    unflattener = IBMCompositionUnflattener(codec=PathCodec(ar_codes={}, at_codes={}, separator='/'), shortcuts={}, value_shortcuts={})
+    with pytest.raises(ValueError, match='Unknown IBM value shortcut'):
+        unflattener.unflatten({'cn': [{'p': '1', 'data': {'value': {'value': '$>unknown'}}}]})

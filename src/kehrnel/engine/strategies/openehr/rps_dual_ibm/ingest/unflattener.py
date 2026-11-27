@@ -77,7 +77,10 @@ class IBMCompositionUnflattener:
         if isinstance(obj, list):
             return [self._expand_value_shortcuts(item) for item in obj]
         if isinstance(obj, str) and obj.startswith("$>"):
-            return self.inv_value_shortcuts.get(obj[2:], obj[2:])
+            token = obj[2:]
+            if token not in self.inv_value_shortcuts:
+                raise ValueError("Unknown IBM value shortcut; load the source dictionary")
+            return self.inv_value_shortcuts[token]
         return obj
 
     def _restore_archetype_details(self, data: Dict[str, Any]) -> Dict[str, Any]:

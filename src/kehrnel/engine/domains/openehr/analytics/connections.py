@@ -28,7 +28,9 @@ def connect(config, *, target=True, settings=None):
     config = worker_environment(config, settings)
     from pymongo import MongoClient
 
-    upload = settings.get("source", {}).get("mode") == "upload"
+    # Portable configurations use the schema default; legacy environment-only
+    # callers keep their explicit source connection workflow.
+    upload = settings.get("source", {}).get("mode", "upload" if "source" in settings else "mongodb") == "upload"
     required = [] if upload else [
         "ANALYTICS_SOURCE_URI",
         "ANALYTICS_SOURCE_DATABASE",
@@ -59,42 +61,51 @@ def connect(config, *, target=True, settings=None):
     if (settings.get("collection_prefix") and config.get("ANALYTICS_COLLECTION_PREFIX")
             and settings["collection_prefix"] != config["ANALYTICS_COLLECTION_PREFIX"]):
         raise ValueError("Configuration and environment collection prefixes differ")
-    source_client = source = None
-    if not upload:
-        source_client = MongoClient(
-            config["ANALYTICS_SOURCE_URI"],
-            uuidRepresentation="standard",
-            tz_aware=True,
-            serverSelectionTimeoutMS=10000,
-            appname="kehrnel-analytics-source",
-        )
-        source = source_client[config["ANALYTICS_SOURCE_DATABASE"]][
-            config["ANALYTICS_SOURCE_COLLECTION"]
-        ]
-    target_client = None
-    store = None
-    if target:
-        if not upload and config["ANALYTICS_SOURCE_DATABASE"] == config["ANALYTICS_TARGET_DATABASE"]:
-            raise ValueError("Use a separate analytics database")
-        target_client = MongoClient(
-            config["ANALYTICS_TARGET_URI"],
-            uuidRepresentation="standard",
-            tz_aware=True,
-            serverSelectionTimeoutMS=10000,
-            appname="kehrnel-analytics-target",
-        )
-        store = MongoProjectionStore(
-            target_client[config["ANALYTICS_TARGET_DATABASE"]],
-            source_namespace=config["ANALYTICS_SOURCE_NAMESPACE"],
-            prefix=settings.get(
-                "collection_prefix",
-                config.get("ANALYTICS_COLLECTION_PREFIX", "analytics_"),
-            ),
-            max_bytes=settings.get("max_transaction_bytes", 33554432),
-            max_facts=settings.get("max_transaction_facts", 50000),
-            rollup_partitions=settings.get("rollup_partitions", 64),
-        )
-    return source_client, target_client, source, store
+    source_client = target_client = source = None
+    try:
+        if not upload:
+            source_client = MongoClient(
+                config["ANALYTICS_SOURCE_URI"],
+                uuidRepresentation="standard",
+                tz_aware=True,
+                serverSelectionTimeoutMS=10000,
+                appname="kehrnel-analytics-source",
+            )
+            source = source_client[config["ANALYTICS_SOURCE_DATABASE"]][
+                config["ANALYTICS_SOURCE_COLLECTION"]
+            ]
+        store = None
+        if target:
+            if not upload and config["ANALYTICS_SOURCE_DATABASE"] == config["ANALYTICS_TARGET_DATABASE"]:
+                raise ValueError("Use a separate analytics database")
+            target_client = MongoClient(
+                config["ANALYTICS_TARGET_URI"],
+                uuidRepresentation="standard",
+                tz_aware=True,
+                serverSelectionTimeoutMS=10000,
+                appname="kehrnel-analytics-target",
+            )
+            store = MongoProjectionStore(
+                target_client[config["ANALYTICS_TARGET_DATABASE"]],
+                source_namespace=config["ANALYTICS_SOURCE_NAMESPACE"],
+                prefix=settings.get(
+                    "collection_prefix",
+                    config.get("ANALYTICS_COLLECTION_PREFIX", "analytics_"),
+                ),
+                max_bytes=settings.get("max_transaction_bytes", 33554432),
+                max_facts=settings.get("max_transaction_facts", 50000),
+                rollup_partitions=settings.get("rollup_partitions", 64),
+            )
+        return source_client, target_client, source, store
+
+    except Exception:
+        for client in (target_client, source_client):
+            if client is not None:
+                try:
+                    client.close()
+                except Exception:
+                    pass
+        raise
 
 
 def create_converter(config, source_collection, rule_values, source_profile):

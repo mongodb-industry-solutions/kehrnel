@@ -36,3 +36,34 @@ def test_destination_matches_reviewed_settings(monkeypatch):
     assert store.namespace == "test-cdr"
     source_client.close()
     target_client.close()
+
+
+def test_canonical_source_defaults_to_upload_without_source_credentials(monkeypatch):
+    client = MagicMock()
+    monkeypatch.setattr('pymongo.MongoClient', client)
+    env = {k: v for k, v in environment().items() if not k.startswith('ANALYTICS_SOURCE_')}
+    settings = {'database': 'analytics_target', 'source_namespace': 'test-cdr', 'source': {'format': 'canonical'}}
+    source_client, target_client, source, store = connect(env, settings=settings)
+    assert source_client is None and source is None
+    assert client.call_count == 1
+    assert store.namespace == 'test-cdr'
+    target_client.close()
+
+
+def test_target_connection_failure_closes_open_source_client(monkeypatch):
+    source = MagicMock()
+    client = MagicMock(side_effect=[source, RuntimeError('target unavailable')])
+    monkeypatch.setattr('pymongo.MongoClient', client)
+    with pytest.raises(RuntimeError, match='target unavailable'):
+        connect(environment())
+    source.close.assert_called_once()
+
+
+def test_store_initialization_failure_closes_both_clients(monkeypatch):
+    source, target = MagicMock(), MagicMock()
+    monkeypatch.setattr('pymongo.MongoClient', MagicMock(side_effect=[source, target]))
+    monkeypatch.setattr('kehrnel.engine.domains.openehr.analytics.connections.MongoProjectionStore', MagicMock(side_effect=RuntimeError('invalid store')))
+    with pytest.raises(RuntimeError, match='invalid store'):
+        connect(environment())
+    source.close.assert_called_once()
+    target.close.assert_called_once()

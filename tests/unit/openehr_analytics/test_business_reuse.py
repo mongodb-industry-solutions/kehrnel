@@ -134,3 +134,10 @@ def test_reuse_cannot_collapse_source_array(mapping):
     lab,payload,field=mapping
     payload['edits']['reuse_variables'][field['field_id']]['shape_policy']='first'
     with pytest.raises(ValueError,match='cannot collapse'): compile_draft(payload,[lab])
+
+
+def test_catalog_returns_scheduled_bindings_when_all_rules_are_in_the_future(mapping):
+    lab, _, _ = mapping
+    page = catalog_page([lab], as_of='2026-01-01T00:00:00Z', key=KEY)
+    assert page['items']
+    assert {item['applicability'] for item in page['items']} == {'scheduled'}
